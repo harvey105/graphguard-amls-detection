@@ -66,6 +66,10 @@ Ngoài ra, các package `__init__.py` và `.gitkeep` cho thư mục dữ liệu/
 
 ## 3. SAU KHI PULL VỀ
 
+> ⚠️ **Lưu ý:** Nếu bạn CHƯA pull code mới, cứ tiếp tục làm việc với venv cũ
+> và code cũ bình thường. Chỉ khi pull code mới về thì mới cần chạy verify lại.
+> Không cần xóa venv trong bất kỳ trường hợp nào (trừ lỗi hiếm gặp ở Bước 2).
+
 ### Bước 1: Pull code mới
 
 ```powershell
@@ -73,10 +77,23 @@ cd <đường-dẫn-repo-của-bạn>\graphguard-amls-detection
 git pull origin main
 ```
 
-### Bước 2: Kích hoạt môi trường và kiểm tra
+### Bước 2: Activate venv (KHÔNG cần tạo lại)
+
+Venv cũ vẫn hoạt động bình thường sau khi pull, vì refactor chỉ đổi vị trí
+code, không ảnh hưởng đến package đã cài.
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
+```
+
+**KHÔNG xóa và tạo lại venv** trừ khi:
+- Gặp lỗi `ModuleNotFoundError` với package đã cài (không phải code của dự án).
+- Đã đổi Python version (ví dụ: 3.10 -> 3.11).
+- Venv bị corrupt hoặc lỗi lạ không rõ nguyên nhân.
+
+### Bước 3: Verify Task 1
+
+```powershell
 python -m src.paysim.graph_analysis --sample
 ```
 
@@ -86,7 +103,7 @@ Kỳ vọng cuối log:
 [+] Task 1 Completed Successfully. GraphFrame is fully operational.
 ```
 
-### Bước 3: Chạy các task tiếp theo
+### Bước 4: Chạy các task tiếp theo
 
 ```powershell
 python -m src.paysim.metrics
@@ -95,6 +112,27 @@ python -m src.paysim.community_detection
 ```
 
 Các module Task 2-4 hiện là placeholder, chờ người phụ trách triển khai.
+
+### Bước 5: Nếu gặp lỗi import kỳ lạ (không phải lỗi venv)
+
+Nếu thấy lỗi kiểu:
+
+```
+ModuleNotFoundError: No module named 'utils'
+ImportError: cannot import name 'etl_mapping' from 'utils'
+```
+
+Nguyên nhân có thể là **Python bytecode cache** (`__pycache__/`) còn lưu
+import path cũ. Cách fix, **không xóa venv**:
+
+```powershell
+# Xóa __pycache__ trong src/ và tests/
+Get-ChildItem -Path src, tests -Filter "__pycache__" -Recurse -Directory |
+	Remove-Item -Recurse -Force
+
+# Chạy lại verify
+python -m src.paysim.graph_analysis --sample
+```
 
 ---
 
