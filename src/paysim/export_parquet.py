@@ -16,8 +16,8 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, IntegerType, DoubleType, ShortType
 )
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.utils.etl_mapping import build_vertices_df, build_edges_df
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.paysim.etl_mapping import build_vertices_df, build_edges_df
 
 # Known-good reference values, confirmed exhaustively in Task 2.1 / verified
 # again in the 2.2 and 2.3 validation runs. Used for the quality-report
@@ -53,7 +53,10 @@ def main():
     spark = create_spark_session()
     spark.sparkContext.setLogLevel("WARN")
 
-    raw_path = "data/raw/PS_20174392719_1491204439457_log.csv"
+    raw_path = "data/raw/paysim/PS_20174392719_1491204439457_log.csv"
+    if not os.path.exists(raw_path):
+        raw_path = "data/raw/PS_20174392719_1491204439457_log.csv"
+        print(f"[WARN] Preferred raw path not found; using {raw_path}.")
     if not os.path.exists(raw_path):
         print(f"[ERROR] Cannot find raw CSV at: {raw_path}")
         sys.exit(1)
@@ -147,8 +150,8 @@ def main():
         sys.exit(1)
 
     # 4. Export Full Parquet Datasets
-    full_v_path = "data/processed/vertices.parquet"
-    full_e_path = "data/processed/edges.parquet"
+    full_v_path = "data/processed/paysim/vertices.parquet"
+    full_e_path = "data/processed/paysim/edges.parquet"
 
     print("\n[4/6] Writing full datasets to Parquet (Snappy compressed)...")
     vertices_df.write.mode("overwrite").parquet(full_v_path)
@@ -184,8 +187,8 @@ def main():
     else:
         print(f"      [OK] Sample is self-contained: all {sample_node_count:,} node ids resolved.")
 
-    sample_v_path = "data/processed/sample/vertices.parquet"
-    sample_e_path = "data/processed/sample/edges.parquet"
+    sample_v_path = "data/processed/sample/paysim/vertices.parquet"
+    sample_e_path = "data/processed/sample/paysim/edges.parquet"
 
     sample_vertices.coalesce(1).write.mode("overwrite").parquet(sample_v_path)
     sample_edges.coalesce(1).write.mode("overwrite").parquet(sample_e_path)

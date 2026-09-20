@@ -34,8 +34,8 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, IntegerType, DoubleType, ShortType
 )
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.utils.etl_mapping import build_vertices_df, build_edges_df
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.paysim.etl_mapping import build_vertices_df, build_edges_df
 
 try:
     from graphframes import GraphFrame
@@ -91,13 +91,21 @@ def create_graph_spark_session(app_name: str = "GraphGuard-GraphConstruction") -
 
 
 def load_from_parquet(spark: SparkSession, sample: bool = False):
-    base_dir = "data/processed/sample" if sample else "data/processed"
+    preferred_dir = "data/processed/sample/paysim" if sample else "data/processed/paysim"
+    legacy_dir = "data/processed/sample" if sample else "data/processed"
+    preferred_v_path = os.path.join(preferred_dir, "vertices.parquet")
+    preferred_e_path = os.path.join(preferred_dir, "edges.parquet")
+    if os.path.exists(preferred_v_path) and os.path.exists(preferred_e_path):
+        base_dir = preferred_dir
+    else:
+        base_dir = legacy_dir
+        print(f"[WARN] Preferred path not found: {preferred_dir}; using {legacy_dir}.")
     v_path = os.path.join(base_dir, "vertices.parquet")
     e_path = os.path.join(base_dir, "edges.parquet")
 
     if not os.path.exists(v_path) or not os.path.exists(e_path):
         print(f"[ERROR] Cannot find Parquet files at {base_dir}.")
-        print("        Run 'python src/export_parquet.py' first or use '--from-raw'.")
+        print("        Run 'python -m src.paysim.export_parquet' first or use '--from-raw'.")
         sys.exit(1)
 
     print(f"[*] Loading Graph Data from Parquet [{base_dir}]...")
@@ -169,7 +177,10 @@ def main():
     raw_df = None
 
     if args.from_raw:
-        raw_csv_path = "data/raw/PS_20174392719_1491204439457_log.csv"
+        raw_csv_path = "data/raw/paysim/PS_20174392719_1491204439457_log.csv"
+        if not os.path.exists(raw_csv_path):
+            raw_csv_path = "data/raw/PS_20174392719_1491204439457_log.csv"
+            print(f"[WARN] Preferred raw path not found; using {raw_csv_path}.")
         raw_df, vertices_df, edges_df = load_from_raw_csv(spark, raw_csv_path)
         if args.sample:
             print("[*] --sample requested with --from-raw: inducing a ~100k-edge "

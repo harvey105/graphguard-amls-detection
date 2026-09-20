@@ -14,7 +14,7 @@ from pyspark.sql.types import (
 
 # Make src/ importable when running this file directly from tests/
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.utils.etl_mapping import build_vertices_df
+from src.paysim.etl_mapping import build_vertices_df
 
 
 def main():
@@ -29,7 +29,9 @@ def main():
     )
     spark.sparkContext.setLogLevel("WARN")
 
-    raw_path = "data/raw/PS_20174392719_1491204439457_log.csv"  # adjust if needed
+    raw_path = "data/raw/paysim/PS_20174392719_1491204439457_log.csv"
+    if not os.path.exists(raw_path):
+        raw_path = "data/raw/PS_20174392719_1491204439457_log.csv"
     if not os.path.exists(raw_path):
         print(f"[ERROR] Cannot find raw CSV at: {raw_path}")
         sys.exit(1)

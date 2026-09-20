@@ -29,13 +29,24 @@ checkpoints/
 # Raw Data (Bắt buộc ignore)
 data/raw/*
 !data/raw/README.md
+!data/raw/paysim/
+!data/raw/paysim/.gitkeep
+!data/raw/ibm_aml/
+!data/raw/ibm_aml/.gitkeep
 
 # Full Processed Data (File nặng 273MB - Bắt buộc ignore)
 data/processed/vertices.parquet/
 data/processed/edges.parquet/
 data/processed/*.parquet
 
+# Generated results
+results/**/*.parquet
+data/processed/paysim/
+data/processed/ibm_aml/
+
 # Tracked Sample Data (Giữ lại bản mẫu 100k dòng để demo và chấm điểm)
 !data/processed/sample/
 !data/processed/sample/**
 !data/processed/README.md
+!data/processed/sample/ibm_aml/
+!data/processed/sample/ibm_aml/.gitkeep
