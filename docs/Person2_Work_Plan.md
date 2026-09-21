@@ -8,9 +8,6 @@
 ## How task numbering works in this plan
 Tasks are labeled `2.x` = Person 2's x-th subtask, mapped directly to the Week-by-Week PCCV rows assigned to "Người 2". Each task lists **Objective → Input → Method/Notes → Expected Output → Dependency/Handoff → Teammate Communication**.
 
-## A note on working solo vs. waiting for teammates
-You can execute every task below without waiting for anyone else's output — the raw CSV is all you need to start. But "not waiting" and "not communicating" are different things: Tasks 2.2–2.5 are officially **jointly credited with Person 1** in the PCCV (Task 1 = 15 pts, shared). If you build the full pipeline solo to save time, that's fine and genuinely helpful — just don't present the finished script as a closed deliverable. Push your work early and often as "here's a working draft, review when you can" so Person 1 stays a real co-owner instead of finding out later they were bypassed on a shared grade item. The **Teammate Communication** line under each task tells you exactly what to send and to whom.
-
 ---
 
 ### TASK 2.1 — Dataset Survey & Validation
