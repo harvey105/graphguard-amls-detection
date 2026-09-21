@@ -18,6 +18,9 @@ ehthumbs.db
 Desktop.ini
 .DS_Store
 
+# Local assignment plan (used for scheduling, never published)
+/BDA - PCCV - Trang tính1.csv
+
 # Spark runtime & metastore artifacts
 spark-warehouse/
 metastore_db/
@@ -33,6 +36,7 @@ data/raw/*
 !data/raw/paysim/.gitkeep
 !data/raw/ibm_aml/
 !data/raw/ibm_aml/.gitkeep
+data/raw/**/*.csv
 
 # Full Processed Data (File nặng 273MB - Bắt buộc ignore)
 data/processed/vertices.parquet/

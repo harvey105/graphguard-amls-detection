@@ -76,4 +76,6 @@ if (-not ((Test-Path $winutils) -and (Test-Path $hadoopDll))) {
 Assert-Hash $winutils $winutilsHash
 Assert-Hash $hadoopDll $dllHash
 
-Write-Host 'Windows environment is ready. Run: & .\.venv\Scripts\python.exe -m src.motif.toy_cycle'
+Write-Host 'Windows environment is ready.'
+Write-Host 'Next: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1'
+Write-Host 'N4 demo: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_n4.ps1'
