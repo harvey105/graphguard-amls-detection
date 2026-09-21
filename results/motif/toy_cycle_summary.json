@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "pattern": "(a)-[e1]->(b);(b)-[e2]->(c);(c)-[e3]->(a)",
+  "vertices": [
+    "A",
+    "B",
+    "C"
+  ],
+  "edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ],
+    [
+      "C",
+      "A"
+    ]
+  ],
+  "raw_match_count": 3,
+  "raw_matches": [
+    [
+      "A",
+      "B",
+      "C"
+    ],
+    [
+      "B",
+      "C",
+      "A"
+    ],
+    [
+      "C",
+      "A",
+      "B"
+    ]
+  ],
+  "unique_cycle_count": 1,
+  "unique_cycles": [
+    [
+      "A",
+      "B",
+      "C"
+    ]
+  ]
+}

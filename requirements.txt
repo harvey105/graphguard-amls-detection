@@ -3,7 +3,6 @@ colorama==0.4.6
 comm==0.2.3
 debugpy==1.8.21
 executing==2.2.1
-graphframes==0.6
 graphframes-py==0.12.2
 ipykernel==7.3.0
 ipython==9.17.1

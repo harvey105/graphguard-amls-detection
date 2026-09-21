@@ -36,6 +36,7 @@ from pyspark.sql.types import (
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.paysim.etl_mapping import build_vertices_df, build_edges_df
+from src.common.windows_runtime import prepare_windows_spark
 
 try:
     from graphframes import GraphFrame
@@ -74,6 +75,7 @@ def resolve_graphframes_coordinate() -> str:
 
 
 def create_graph_spark_session(app_name: str = "GraphGuard-GraphConstruction") -> SparkSession:
+    prepare_windows_spark()
     coord = resolve_graphframes_coordinate()
     print(f"[*] Detected PySpark {pyspark.__version__} -> resolving GraphFrames package: {coord}")
     print("    (Maven Central hosts this directly -- no spark-packages.org repository needed.")

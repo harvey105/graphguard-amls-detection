@@ -2,9 +2,12 @@
 
 from pyspark.sql import SparkSession
 
+from src.common.windows_runtime import prepare_windows_spark
+
 
 def get_graph_session(app_name: str = "GraphGuard-Analytics") -> SparkSession:
     """Khởi tạo SparkSession với GraphFrames 0.12.2."""
+    prepare_windows_spark()
     return (
         SparkSession.builder
         .appName(app_name)
