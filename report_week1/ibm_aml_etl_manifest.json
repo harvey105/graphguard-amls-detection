@@ -1,0 +1,27 @@
+{
+  "dataset": "IBM AML HI-Small",
+  "raw_transactions": 5078345,
+  "vertices": 515088,
+  "edges": 5078345,
+  "laundering_edges": 5177,
+  "self_loops": 591212,
+  "cross_bank_edges": 4387090,
+  "null_vertices": 0,
+  "duplicate_vertex_ids": 0,
+  "null_required_edge_fields": 0,
+  "dangling_src": 0,
+  "dangling_dst": 0,
+  "checks": {
+    "raw_count_matches_expected": true,
+    "edge_count_matches_raw": true,
+    "no_null_vertices": true,
+    "unique_vertex_ids": true,
+    "no_null_required_edge_fields": true,
+    "zero_dangling_src": true,
+    "zero_dangling_dst": true,
+    "parquet_round_trip": true
+  },
+  "all_passed": true,
+  "persisted_vertices": 515088,
+  "persisted_edges": 5078345
+}

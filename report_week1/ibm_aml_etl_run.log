@@ -1,0 +1,187 @@
+:: loading settings :: url = jar:file:/G:/.venv/Lib/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: C:\Users\ADMIN\.ivy2\cache
+The jars for the packages stored in: C:\Users\ADMIN\.ivy2\jars
+io.graphframes#graphframes-spark3_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-5245ffff-9c83-44e2-b0e0-146aa0f4b268;1.0
+	confs: [default]
+	found io.graphframes#graphframes-spark3_2.12;0.12.2 in central
+	found io.graphframes#graphframes-graphx-spark3_2.12;0.12.2 in central
+	found org.apache.datasketches#datasketches-java;6.2.0 in central
+	found org.apache.datasketches#datasketches-memory;3.0.2 in central
+:: resolution report :: resolve 526ms :: artifacts dl 25ms
+	:: modules in use:
+	io.graphframes#graphframes-graphx-spark3_2.12;0.12.2 from central in [default]
+	io.graphframes#graphframes-spark3_2.12;0.12.2 from central in [default]
+	org.apache.datasketches#datasketches-java;6.2.0 from central in [default]
+	org.apache.datasketches#datasketches-memory;3.0.2 from central in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   4   |   0   |   0   |   0   ||   4   |   0   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-5245ffff-9c83-44e2-b0e0-146aa0f4b268
+	confs: [default]
+	0 artifacts copied, 4 already retrieved (0kB/27ms)
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[Stage 0:>                                                        (0 + 20) / 20]26/09/23 11:32:01 WARN CSVHeaderChecker: CSV header does not conform to the schema.
+ Header: Timestamp, From Bank, Account, To Bank, Account, Amount Received, Receiving Currency, Amount Paid, Payment Currency, Payment Format, Is Laundering
+ Schema: timestamp_raw, from_bank, from_account, to_bank, to_account, amount_received, receiving_currency, amount_paid, payment_currency, payment_format, is_laundering
+Expected: timestamp_raw but found: Timestamp
+CSV file: file:///G:/data/raw/ibm_aml/HI-Small_Trans.csv
+[Stage 0:==>                                                      (1 + 19) / 20][Stage 0:===============================>                         (11 + 9) / 20][Stage 1:>                                                        (0 + 20) / 20][Stage 1:=======================================>                 (14 + 6) / 20]                                                                                [Stage 4:>                                                        (0 + 20) / 40][Stage 4:=>                                                       (1 + 20) / 40][Stage 4:=======>                                                 (5 + 20) / 40][Stage 4:==============>                                         (10 + 20) / 40][Stage 4:=======================>                                (17 + 20) / 40][Stage 4:============================>                           (20 + 20) / 40][Stage 4:===============================================>         (33 + 7) / 40][Stage 6:>                                                          (0 + 8) / 8]                                                                                [Stage 12:>                                                       (0 + 20) / 20][Stage 12:==>                                                     (1 + 19) / 20][Stage 12:=====>                                                  (2 + 18) / 20][Stage 12:==========================================>             (15 + 5) / 20]                                                                                [Stage 22:==============>                                           (2 + 6) / 8]                                                                                [Stage 31:==>                                                     (1 + 19) / 20]                                                                                [Stage 36:>                                                       (0 + 20) / 20][Stage 36:===============================================>        (17 + 3) / 20]                                                                                [Stage 49:>                                                         (0 + 8) / 8]                                                                                [Stage 50:>                                                       (0 + 20) / 20][Stage 50:==>                                                     (1 + 19) / 20][Stage 50:===========>                                            (4 + 16) / 20]                                                                                26/09/23 11:32:52 WARN SparkEnv: Exception while deleting Spark temp dir: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\userFiles-da924968-03cd-4f99-9e84-469c5c252d9c
+java.io.IOException: Failed to delete: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\userFiles-da924968-03cd-4f99-9e84-469c5c252d9c\org.apache.datasketches_datasketches-memory-3.0.2.jar
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:146)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:129)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.SparkEnv.stop(SparkEnv.scala:108)
+	at org.apache.spark.SparkContext.$anonfun$stop$25(SparkContext.scala:2310)
+	at org.apache.spark.util.Utils$.tryLogNonFatalError(Utils.scala:1375)
+	at org.apache.spark.SparkContext.stop(SparkContext.scala:2310)
+	at org.apache.spark.SparkContext.stop(SparkContext.scala:2216)
+	at org.apache.spark.api.java.JavaSparkContext.stop(JavaSparkContext.scala:550)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+[*] Reading data/raw/ibm_aml/HI-Small_Trans.csv
+
+====================================================================
+IBM AML HI-SMALL — WEEK 1 ETL VALIDATION
+====================================================================
+  [PASS] raw_count_matches_expected
+  [PASS] edge_count_matches_raw
+  [PASS] no_null_vertices
+  [PASS] unique_vertex_ids
+  [PASS] no_null_required_edge_fields
+  [PASS] zero_dangling_src
+  [PASS] zero_dangling_dst
+--------------------------------------------------------------------
+  raw_transactions            : 5,078,345
+  vertices                    : 515,088
+  edges                       : 5,078,345
+  laundering_edges            : 5,177
+  self_loops                  : 591,212
+  cross_bank_edges            : 4,387,090
+  dangling_src                : 0
+  dangling_dst                : 0
+====================================================================
+[OK] Validation manifest: report_week1/ibm_aml_etl_manifest.json
+[*] Writing data\processed\ibm_aml\vertices.parquet
+[*] Writing data\processed\ibm_aml\edges.parquet
+[PASS] Parquet round-trip: vertices=515,088, edges=5,078,345
+[PASS] IBM AML week-1 ETL completed.
+26/09/23 11:32:52 ERROR ShutdownHookManager: Exception while deleting Spark temp dir: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\userFiles-da924968-03cd-4f99-9e84-469c5c252d9c
+java.io.IOException: Failed to delete: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\userFiles-da924968-03cd-4f99-9e84-469c5c252d9c\org.apache.datasketches_datasketches-memory-3.0.2.jar
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:146)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:129)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:65)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:62)
+	at scala.collection.IndexedSeqOptimized.foreach(IndexedSeqOptimized.scala:36)
+	at scala.collection.IndexedSeqOptimized.foreach$(IndexedSeqOptimized.scala:33)
+	at scala.collection.mutable.ArrayOps$ofRef.foreach(ArrayOps.scala:198)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:62)
+	at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:214)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1928)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:188)
+	at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:178)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26/09/23 11:32:52 ERROR ShutdownHookManager: Exception while deleting Spark temp dir: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d
+java.io.IOException: Failed to delete: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\userFiles-da924968-03cd-4f99-9e84-469c5c252d9c\org.apache.datasketches_datasketches-memory-3.0.2.jar
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:146)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:129)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:129)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:65)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:62)
+	at scala.collection.IndexedSeqOptimized.foreach(IndexedSeqOptimized.scala:36)
+	at scala.collection.IndexedSeqOptimized.foreach$(IndexedSeqOptimized.scala:33)
+	at scala.collection.mutable.ArrayOps$ofRef.foreach(ArrayOps.scala:198)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:62)
+	at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:214)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1928)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:188)
+	at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:178)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26/09/23 11:32:52 ERROR ShutdownHookManager: Exception while deleting Spark temp dir: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\pyspark-443f7ae6-f4e6-49d4-ae86-68234269d006
+java.nio.file.NoSuchFileException: C:\Users\ADMIN\AppData\Local\Temp\spark-331937aa-2e65-42ed-841d-149fc328594d\pyspark-443f7ae6-f4e6-49d4-ae86-68234269d006
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:199)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1851)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:124)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:65)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:62)
+	at scala.collection.IndexedSeqOptimized.foreach(IndexedSeqOptimized.scala:36)
+	at scala.collection.IndexedSeqOptimized.foreach$(IndexedSeqOptimized.scala:33)
+	at scala.collection.mutable.ArrayOps$ofRef.foreach(ArrayOps.scala:198)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:62)
+	at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:214)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1928)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:188)
+	at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:178)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+SUCCESS: The process with PID 16796 (child process of PID 3300) has been terminated.
+SUCCESS: The process with PID 3300 (child process of PID 9188) has been terminated.
+SUCCESS: The process with PID 9188 (child process of PID 372) has been terminated.

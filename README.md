@@ -29,7 +29,10 @@ flowchart LR
 
 ## Trạng thái và phạm vi
 
-Mốc hiện tại là **N4 toy motif ngày 21/09/2026**. Demo `A → B → C → A`, PowerShell runtime và notebook đã có thể chạy độc lập. Các module PaySim/IBM cho Task 2–4 đã được đặt đúng vị trí để phối hợp nhóm, nhưng những file có `TODO` vẫn là scaffold theo lịch phân công; README này không coi các deadline sau 21/09 là đã hoàn thành.
+Các deliverable **tuần 1** đã được tổng hợp tại `report_week1/`: demo
+`A → B → C → A`, lý thuyết 3.2–3.4 cùng review, đánh giá community feasibility
+PaySim và IBM AML ETL. Các module Task 2–4 còn `TODO` vẫn là scaffold theo lịch
+tuần sau; hoàn thành tuần 1 không đồng nghĩa hoàn thành các task đó.
 
 Hai dataset được dùng:
 
@@ -98,6 +101,19 @@ Task 1 PaySim sample hiện có thể gọi bằng:
 & .\.venv\Scripts\python.exe -m src.paysim.graph_analysis --sample
 ```
 
+IBM AML HI-Small ETL tuần 1 chạy bằng:
+
+```powershell
+# Build + validate + ghi full Parquet + đọc lại kiểm count
+& .\.venv\Scripts\python.exe -m src.ibm_aml.etl
+
+# Chỉ validate, không ghi lại Parquet
+& .\.venv\Scripts\python.exe -m src.ibm_aml.etl --validate-only
+```
+
+Output full nằm ở `data\processed\ibm_aml\` và bị Git ignore; manifest/log kiểm
+chứng nằm trong `report_week1\`.
+
 ## Cấu trúc repository và phân công code
 
 ```text
@@ -158,4 +174,5 @@ graphguard-amls-detection/
 - `docs/N4_Motif_Toy_2026-09-21.md`: demo và kết quả motif N4.
 - `docs/PartA_Theory.md`: nền tảng GraphX/GraphFrames, partitioning, PageRank, CC/LPA.
 - `docs/HANDOFF_2026-09-20_Refactor.md`: thay đổi layout và import paths.
+- `report_week1/README.md`: checklist và bằng chứng hoàn thành tuần 1.
 - `AGENTS.md`: quy ước làm việc trong repository.

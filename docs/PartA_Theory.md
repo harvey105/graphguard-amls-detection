@@ -7,9 +7,9 @@
 | Mục | Nội dung | Phụ trách | Review | Trạng thái |
 |---|---|---|---|---|
 | 3.1 | GraphX vs GraphFrames | N1 | N7 | chưa bắt đầu |
-| 3.2 | Graph Partitioning: Vertex Cut vs Edge Cut | N7 | N1 | chưa bắt đầu |
-| **3.3** | **Dẫn xuất công thức PageRank** | **N3** | **N4** | **draft — bản này** |
-| 3.4 | Connected Components vs LPA | N5, N6 | N6 | chưa bắt đầu |
+| 3.2 | Graph Partitioning: Vertex Cut vs Edge Cut | N7 | N1 | final + reviewed — `report_week1/` |
+| **3.3** | **Dẫn xuất công thức PageRank** | **N3** | **N4** | **reviewed; minor fix applied** |
+| 3.4 | Connected Components vs LPA | N5, N6 | N6 | final + reviewed — `report_week1/` |
 
 ---
 
@@ -23,7 +23,9 @@
 
 ## 3.2 — Graph Partitioning: Vertex Cut vs Edge Cut
 
-> Phụ trách **N7**, review **N1**. Chưa bắt đầu.
+> Phụ trách **N7**, review **N1**. Bản final và review nằm tại
+> `report_week1/PartA_3.2_Vertex_Cut_vs_Edge_Cut.md` và
+> `report_week1/Review_3.2_3.3_3.4.md`.
 
 *Nội dung cần có (theo đề bài):* Spark phân tán graph lớn ra cluster bằng chiến lược Vertex Cut hay Edge Cut để giảm network shuffle; liên hệ với phân phối degree lệch mạnh của PaySim (max in-degree 113, max out-degree 3).
 
@@ -31,7 +33,8 @@
 
 ## 3.3 — Dẫn xuất công thức PageRank
 
-> Phụ trách **N3**, review **N4**. Bản draft 22/9/2026; lịch final 28/9/2026.
+> Phụ trách **N3**, review **N4**. Draft 22/9/2026; đã review và sửa minor
+> LaTeX issue trong tuần 1. Biên bản: `report_week1/Review_3.2_3.3_3.4.md`.
 > Trả lời hai yêu cầu của đề bài: *"Derive the iterative PageRank formulation"* và *"Explain how the damping factor (d = 0.85) prevents sink node trapping."*
 
 ### Đáp án trực tiếp hai câu hỏi của đề bài
@@ -125,8 +128,7 @@ Tức $\mathbf{r}$ là **eigenvector** của $M$ ứng **eigenvalue** $\lambda =
 
 Viết ra từng thành phần, $\mathbf{r} = M\mathbf{r}$ cho **dạng đệ quy** — đây là "bản chất" của PageRank trước khi có bất kỳ cách giải quyết nào:
 
-$$r(u) \;=\; \sum_{v} M_{uv}\,r(v) \;=\; \sum_{v\in B(u)} rac{A_{vu}\,r(v)}{d_{out}(v)} \qquad\left(	ext{simple graph: } \sum_{v\in B(u)}rac{r(v)}{L(v)}
-ight).$$
+$$r(u) \;=\; \sum_{v} M_{uv}\,r(v) \;=\; \sum_{v\in B(u)} \frac{A_{vu}\,r(v)}{d_{out}(v)} \qquad\left(\text{simple graph: } \sum_{v\in B(u)}\frac{r(v)}{L(v)}\right).$$
 
 *(Dangling node không đóng góp gì vì cột của chúng toàn 0 — và chính điều đó là vấn đề ở Bước 4.)*
 
@@ -706,6 +708,7 @@ Mục này bắt buộc phải có vì Task 2 sẽ dẫn lại.
 
 ## 3.4 — Connected Components vs LPA
 
-> Phụ trách **N5** (lý thuyết) và **N6** (kiểm chứng), review **N6**. Chưa bắt đầu.
+> Phụ trách **N5** (lý thuyết) và **N6** (kiểm chứng), review **N6**. Bản final
+> đã review nằm tại `report_week1/PartA_3.4_CC_vs_LPA.md`.
 
 *Nội dung cần có (theo đề bài):* phân biệt Connected Components (reachability chính xác) với Label Propagation Algorithm (community detection dựa trên đồng thuận lân cận); nêu vì sao đề bài nhắc cả hai.
