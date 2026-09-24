@@ -2,7 +2,7 @@
 * **Người thực hiện (Author):** Person 2 (Data Engineering Lead)
 * **Người tiếp nhận (Target Audience):** Person 1 (Lead), Person 3, Person 4, Person 5, Person 6, Person 7
 * **Trạng thái (Status):** Đã hoàn tất & Kiểm định 100% (Fully Verified & Certified)
-* **Phạm vi hoàn thành (Deliverables):** `src/utils/etl_mapping.py`, `src/export_parquet.py`, `src/graph_analysis.py` (Đạt 15/15 điểm Task 1, PaySim), `src/ibm_aml/etl.py` (Bonus — IBM AML, đã sửa bug Bank ID).
+* **Phạm vi hoàn thành (Deliverables):** `src/paysim/etl_mapping.py`, `src/paysim/export_parquet.py`, `src/paysim/graph_analysis.py` (Task 1 PaySim) và `src/ibm_aml/etl.py` (IBM AML HI-Small, đã sửa bug Bank ID).
 
 ---
 
@@ -13,38 +13,38 @@ Do Person 2 là người khởi tạo dự án và đẩy mã nguồn (push code
 ### 1.1. Sao chép mã nguồn (Clone Repository) & Cài đặt môi trường
 ```powershell
 # 1. Clone repository về máy
-git clone <URL_REPO_CUA_NHOM>
-cd graphguard_amls_detection
+git clone https://github.com/harvey105/graphguard-amls-detection.git
+Set-Location '.\graphguard-amls-detection'
 
-# 2. Khởi tạo môi trường ảo Python (Virtual Environment)
-python -m venv .venv
+# 2. Cài môi trường Windows Python 3.12, JDK 17 và dependency đã pin
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_windows.ps1
 
-# 3. Kích hoạt môi trường (Windows PowerShell)
-.\.venv\Scripts\Activate.ps1
-
-# 4. Cài đặt các gói phụ thuộc bắt buộc (Dependencies)
-pip install -r requirements.txt
+# 3. Tải/kiểm tra đủ PaySim CSV và 3 file IBM HI-Small
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1 -VerifyOnly
 ```
-*Yêu cầu môi trường:* Python $\ge 3.10$, Java JDK $\ge 8$ (khuyến nghị JDK 11 hoặc 17), `pyspark==3.5.1`, `graphframes-py==0.12.2`.
+*Yêu cầu môi trường:* Windows Python 3.12, JDK 17, `pyspark==3.5.1`, `graphframes-py==0.12.2`. Dùng `.venv\Scripts\python.exe` của repo; không cần activate.
 
 ### 1.2. Cơ chế lưu trữ & Đồng bộ dữ liệu (Data Sync & Git Policy)
 Để tuân thủ giới hạn dung lượng của GitHub và tối ưu hóa thời gian tải mã nguồn, cấu hình `.gitignore` đã phân tách dữ liệu thành 2 tầng:
 
 | Thư mục / Tệp tin | Trạng thái Git | Dung lượng | Giải thích & Cách thức truy cập |
 | :--- | :---: | :---: | :--- |
-| `data/raw/` | **Bị loại trừ (Ignored)** | ~493.5 MB (PaySim) + ~500 MB (IBM AML) | Chứa file CSV gốc. Không đẩy lên GitHub. |
-| `data/processed/*.parquet` (PaySim) | **Bị loại trừ (Ignored)** | ~273 MB | Đồ thị PaySim đầy đủ đã làm sạch. Không đẩy lên GitHub. |
+| `data/raw/**/*.csv` | **Bị loại trừ (Ignored)** | ~493.5 MB (PaySim) + ~510 MB (IBM HI-Small) | Chứa 1 CSV PaySim và 2 CSV IBM (Trans/accounts). Không đẩy lên GitHub. |
+| `data/raw/ibm_aml/HI-Small_Patterns.txt` | **Được theo dõi (Tracked)** | ~0.32 MB | Kịch bản gốc dùng cho audit motif; downloader cũng kiểm tra/tải lại nếu thiếu. |
+| `data/processed/paysim/*.parquet` | **Bị loại trừ (Ignored)** | ~273 MB | Đồ thị PaySim đầy đủ đã làm sạch. Không đẩy lên GitHub. |
 | `data/processed/ibm_aml/*.parquet` | **Bị loại trừ (Ignored)** | ~192.3 MB | Đồ thị IBM AML đầy đủ đã làm sạch (đã sửa bug Bank ID). Không đẩy lên GitHub. |
 | `data/processed/sample/` (cả 2 dataset) | **Được theo dõi (Tracked)** | ~6.5 MB (PaySim) + ~4.8 MB (IBM) | **ĐÃ CÓ SẴN TRÊN REPO.** Đồ thị mẫu thu nhỏ (~100k cạnh mỗi bộ) để lập trình thử nghiệm. |
 
-#### Cách sở hữu Đồ thị Đầy đủ (`data/processed/*.parquet`):
+#### Cách sở hữu Đồ thị Đầy đủ (`data/processed/paysim/`, `data/processed/ibm_aml/`):
 Các thành viên có thể lựa chọn 1 trong 2 phương án:
-* **Cách 1 (Tự sinh cục bộ - Khuyến nghị):** Sau khi kéo repo về, tải file CSV gốc từ Kaggle bỏ vào `data/raw/`, rồi chạy:
+* **Cách 1 (Tự sinh cục bộ - Khuyến nghị):** Sau khi chạy downloader ở Mục 1.1, dùng PowerShell và `.venv` của repo:
   ```powershell
-  python src/export_parquet.py        # PaySim, ~90-120 giây
-  python src/ibm_aml/etl.py            # IBM AML, ~60-90 giây
+  & .\.venv\Scripts\python.exe -m src.paysim.export_parquet
+  & .\.venv\Scripts\python.exe -m src.ibm_aml.etl
   ```
-* **Cách 2 (Tải trực tiếp qua Google Drive):** Tải thư mục nén `processed.zip` do Person 2 cung cấp qua liên kết Google Drive chung của nhóm, giải nén trực tiếp vào thư mục `data/processed/`.
+  IBM dùng ba file `HI-Small_Trans.csv`, `HI-Small_accounts.csv`, `HI-Small_Patterns.txt`; hai CSV tạo graph, còn Patterns phục vụ audit/kịch bản motif. Các biến thể HI-Medium/HI-Large và LI-* là tập dữ liệu thay thế, không cần tải cho pipeline này.
+* **Cách 2 (Nếu nhóm có bản Parquet chia sẻ riêng):** Đặt các thư mục full graph đúng đường dẫn `data/processed/paysim/` và `data/processed/ibm_aml/`, rồi chạy kiểm định trước khi dùng. Repo không cung cấp link tải Parquet full.
 
 ---
 
@@ -53,7 +53,7 @@ Các thành viên có thể lựa chọn 1 trong 2 phương án:
 Toàn bộ dữ liệu thô đã được chuyển đổi sang định dạng nén tối ưu **Parquet (Snappy compressed)**, đảm bảo toàn vẹn tham chiếu (Referential Integrity), không có cạnh treo (0 dangling edges), không có giá trị rỗng (0 null values).
 
 ### 2.1. Bảng cấu trúc Đỉnh: `vertices.parquet`
-* **Đầy đủ (Full):** 9.073.900 đỉnh | **Bản mẫu (Sample):** 193.143 đỉnh
+* **Đầy đủ (Full):** 9.073.900 đỉnh | **Bản mẫu đã commit:** 194.195 đỉnh
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
@@ -62,7 +62,7 @@ Toàn bộ dữ liệu thô đã được chuyển đổi sang định dạng n�
 | `balance` | `Double` | Số dư tài khoản đã giải quyết | Đã áp dụng quy tắc số dư tại mốc thời gian mới nhất (xem Mục 4). |
 
 ### 2.2. Bảng cấu trúc Cạnh: `edges.parquet`
-* **Đầy đủ (Full):** 6.362.620 cạnh (8.213 nhãn gian lận) | **Bản mẫu (Sample):** 100.111 cạnh (153 nhãn gian lận)
+* **Đầy đủ (Full):** 6.362.620 cạnh (8.213 nhãn gian lận) | **Bản mẫu đã commit:** 100.729 cạnh (153 nhãn gian lận)
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
@@ -79,10 +79,10 @@ Toàn bộ dữ liệu thô đã được chuyển đổi sang định dạng n�
 
 Tất cả các thành viên phụ trách các tác vụ downstream **không đọc file CSV thô nữa**, chỉ cần tái sử dụng khối mã nguồn chuẩn hóa sau đây trong các tệp tin được phân công tương ứng:
 
-* `src/metrics.py` (Áp dụng cho **Person 3** — Task 2: PageRank & Degree Distribution)
-* `src/motif_finding.py` (Áp dụng cho **Person 4** — Task 3: Motif Search)
-* `src/community_detection.py` (Áp dụng cho **Person 5 & Person 6** — Task 4: LPA & Connected Components)
-* `src/graph_analysis.py` (Áp dụng cho **Person 1** — Kiểm tra, đánh giá đồ thị tổng thể)
+* `src/paysim/metrics.py` (Áp dụng cho **Person 3** — Task 2: PageRank & Degree Distribution)
+* `src/paysim/motif_finding.py` (Áp dụng cho **Person 4** — Task 3: Motif Search)
+* `src/paysim/community_detection.py` (Áp dụng cho **Person 5 & Person 6** — Task 4: LPA & Connected Components)
+* `src/paysim/graph_analysis.py` (Áp dụng cho **Person 1** — Kiểm tra, đánh giá đồ thị tổng thể)
 
 ```python
 """
@@ -109,8 +109,8 @@ def get_graph_session(app_name: str) -> SparkSession:
 spark = get_graph_session("GraphGuard-Analytics")
 spark.sparkContext.setLogLevel("WARN")
 
-# 2. Đường dẫn dữ liệu (Dùng "data/processed/sample" khi dev/test, đổi sang "data/processed" khi chạy báo cáo)
-DATA_DIR = "data/processed/sample"  # <-- Đổi thành "data/processed" cho Full Graph
+# 2. Đường dẫn dữ liệu (PaySim sample khi dev/test, full graph khi chạy báo cáo)
+DATA_DIR = "data/processed/sample/paysim"  # Đổi thành "data/processed/paysim" cho Full Graph
 
 # 3. Tải đồ thị (Thời gian tải < 3 giây nhờ định dạng Parquet)
 vertices_df = spark.read.parquet(f"{DATA_DIR}/vertices.parquet")
@@ -144,8 +144,8 @@ Trong quá trình triển khai, Person 2 đã chủ động phát hiện và x�
 ## 5. CẢNH BÁO & YÊU CẦU HÀNH ĐỘNG THEO TỪNG TASK — PAYSIM
 
 ### 5.1. Dành cho Person 1 (Lead & Đồng phụ trách Task 1)
-* Mã nguồn kiểm định chính thức cho **Task 1 (15 điểm)** nằm tại `src/graph_analysis.py`.
-* Chạy lệnh `python src/graph_analysis.py` để lấy toàn bộ log kiểm chứng `[PASS]` đưa vào Báo cáo. Chạy thêm `python src/graph_analysis.py --from-raw --sample` để lấy kết quả kiểm tra chéo với dữ liệu gốc (Raw Spot-check).
+* Mã nguồn kiểm định chính thức cho **Task 1 (15 điểm)** nằm tại `src/paysim/graph_analysis.py`.
+* Chạy `& .\.venv\Scripts\python.exe -m src.paysim.graph_analysis` để lấy log `[PASS]`; chạy thêm `& .\.venv\Scripts\python.exe -m src.paysim.graph_analysis --from-raw --sample` để kiểm tra chéo với dữ liệu gốc.
 
 ### 5.2. Dành cho Person 3 (Task 2: Degree Distribution & PageRank)
 * **Phân phối bậc lệch mạnh (Heavy Power-law Degree Distribution):**
@@ -213,7 +213,7 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 
 | Bộ dữ liệu | Bản Đầy đủ (Full Graph) — Chạy báo cáo | Bản Mẫu (Sample Subgraph) — Dùng để Dev/Debug |
 | :--- | :--- | :--- |
-| **PaySim** | `data/processed/` (`vertices.parquet`, `edges.parquet`) — 272.9 MB | `data/processed/sample/` (~100k cạnh, 0 dangling) |
+| **PaySim** | `data/processed/paysim/` (`vertices.parquet`, `edges.parquet`) — 272.9 MB | `data/processed/sample/paysim/` (~100k cạnh, 0 dangling) |
 | **IBM AML (HI-Small)** | `data/processed/ibm_aml/` (`vertices.parquet`, `edges.parquet`) — khoảng **192 MB** (có thể đổi nhẹ khi ghi lại Parquet) | `data/processed/sample/ibm_aml/` (~100k cạnh, 0 dangling, **89 fraud** theo cách lấy mẫu mới) |
 
 > ⚠️ **NGUYÊN TẮC HIỆU NĂNG SỐNG CÒN (SPARK CACHING):**
@@ -249,7 +249,7 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 
 ## **3. Bảng Đối chiếu Ngữ nghĩa Kỹ thuật (PaySim vs. IBM AML)**
 
-| Thuộc tính / Khía cạnh | PaySim (`data/processed/`) | IBM AML (`data/processed/ibm_aml/`) | Lưu ý kỹ thuật cho Developer |
+| Thuộc tính / Khía cạnh | PaySim (`data/processed/paysim/`) | IBM AML (`data/processed/ibm_aml/`) | Lưu ý kỹ thuật cho Developer |
 | :--- | :--- | :--- | :--- |
 | **Trường thời gian (`step`)** | Số nguyên $1 \dots 744$ (Giờ mô phỏng 30 ngày) | Số nguyên Epoch Seconds (`1661965200` $\to$ `1663492680`) | **Tuyệt đối KHÔNG** áp điều kiện `step <= 744` trên IBM AML. Chỉ dùng toán tử so sánh thứ tự thời gian ($e_1.step \le e_2.step$). |
 | **Đơn vị tiền tệ (`amount`)** | 1 đồng tiền duy nhất | **15 loại ngoại tệ khác nhau** | Khi lọc giá trị (`amount > threshold`), **bắt buộc phải lọc đồng nhất loại tiền tệ trước** trên tất cả các cạnh — và với IBM, nên kiểm tra phân phối tiền tệ *trong tập gian lận cụ thể* trước khi chốt ngưỡng (Mục 3.3.B). |
@@ -270,7 +270,7 @@ from src.common.graph_utils import load_graph, check_integrity
 spark = get_graph_session("Task-Runner", checkpoint_dir="checkpoints")
 
 # 1. Nạp đồ thị (Khuyến nghị dev trên bản sample trước, sau đó đổi sang full):
-# PaySim: load_graph(spark, "data/processed")
+# PaySim: load_graph(spark, "data/processed/paysim")
 graph = load_graph(spark, "data/processed/sample/ibm_aml")
 
 # 2. Cache để tránh recompute:

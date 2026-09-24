@@ -6,7 +6,7 @@ Muc dich: Do luong chinh xac 100% so lieu thuc nghiem sau khi fix loi Bank ID:
   3. Kiem chung chu trinh 3 dinh (3-node cycle):
      - Dem so giao dich chu trinh trong file kich ban goc (HI-Small_Patterns.txt),
        PHAN THEO DO DAI CHU TRINH (vi CYCLE pattern trong dataset nay co the dai
-       toi 10 hop, khong phai tat ca deu la 3-node cycle).
+       toi 12 hop, khong phai tat ca deu la 3-node cycle).
      - Chay truy van Motif thuc te tren GraphFrame de dem so chu trinh 3 dinh thuc te.
 """
 
@@ -36,8 +36,8 @@ def audit_patterns_txt(patterns_path: str):
       - cycle_tx_total: tong so dong giao dich nam trong TAT CA chuoi CYCLE
       - blocks_by_length: dict {do dai chu trinh (so hop): so chuoi co do dai do}
         Dung de tach rieng chu trinh DUNG 3 dinh (khop Task 3) khoi chu trinh dai
-        hon. LUU Y: theo tai lieu cong khai ve AMLworld/HI-Small, CYCLE pattern
-        duoc cay co do dai tu 3 den toi da 10 hop -- KHONG phai tat ca deu la
+        hon. Theo file HI-Small_Patterns.txt, CYCLE pattern co do dai tu 2 den
+        12 hop -- KHONG phai tat ca deu la
         3-node cycle, nen so sanh truc tiep blocks/cycle_tx_total voi ket qua
         motif 3-node se khong khop 1:1. So nen dung de doi chieu Task 3 la
         blocks_by_length.get(3, 0).
@@ -149,14 +149,14 @@ def main():
             print(f"           {length}-hop: {by_length[length]} chuoi")
         print(f"       + CHU TRINH DUNG 3 DINH (so nen doi chieu voi Task 3): "
               f"{three_hop_blocks} chuoi")
-        print("       (Luu y: CYCLE pattern trong HI-Small co the dai toi 10 hop --")
+        print("       (Luu y: CYCLE pattern trong HI-Small co the dai toi 12 hop --")
         print(f"        KHONG ky vong {blocks} hoac {total_tx} khop truc tiep voi so")
         print("        chu trinh 3 dinh do duoc o buoc (b) duoi day. Con so nen dung")
         print(f"        de so sanh la {three_hop_blocks}.)")
     else:
         print("    a) Khong tim thay HI-Small_Patterns.txt de doi chieu kich ban.")
-        print("       (File nay co the chua duoc tai -- README chi dinh tai Trans.csv")
-        print("        va accounts.csv, khong tai Patterns.txt. Can tai rieng tu Kaggle.)")
+        print(r"       Chay .\scripts\download_datasets.ps1 -Dataset IbmAml de tai/kiem tra")
+        print("       du ca 3 file HI-Small (Trans, accounts, Patterns).")
 
     print("\n    b) Chay truy van Motif Finding thuc te tren do thi da sua (Full Graph)...")
     full_graph = load_graph(spark, "data/processed/ibm_aml")

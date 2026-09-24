@@ -2,6 +2,8 @@
 param(
     [ValidateSet('All', 'PaySim', 'IbmAml')]
     [string]$Dataset = 'All',
+    [ValidateSet('PS_20174392719_1491204439457_log.csv', 'HI-Small_Trans.csv', 'HI-Small_accounts.csv', 'HI-Small_Patterns.txt')]
+    [string]$FileName,
     [switch]$VerifyOnly,
     [switch]$Force
 )
@@ -50,11 +52,26 @@ $datasets = @(
         MinimumBytes = 30MB
         ExpectedRows = 518581L
         Header = @('Bank Name', 'Bank ID', 'Account Number', 'Entity ID', 'Entity Name')
+    },
+    [pscustomobject]@{
+        Key = 'IbmAml'
+        Handle = 'ealtman2019/ibm-transactions-for-anti-money-laundering-aml'
+        FileName = 'HI-Small_Patterns.txt'
+        Destination = Join-Path $repo 'data\raw\ibm_aml\HI-Small_Patterns.txt'
+        MinimumBytes = 300KB
+        ExpectedCycleBlocks = 54
+        ExpectedAttemptBlocks = 370
     }
 )
 
 if ($Dataset -ne 'All') {
     $datasets = @($datasets | Where-Object { $_.Key -eq $Dataset })
+}
+if ($FileName) {
+    $datasets = @($datasets | Where-Object { $_.FileName -eq $FileName })
+    if ($datasets.Count -eq 0) {
+        throw "File $FileName does not belong to dataset $Dataset."
+    }
 }
 
 function Test-GraphGuardDataset {
@@ -72,6 +89,25 @@ function Test-GraphGuardDataset {
     $file = Get-Item -LiteralPath $Path
     if ($file.Length -lt $Spec.MinimumBytes) {
         throw "Dataset is too small and may be incomplete: $Path ($($file.Length) bytes)"
+    }
+
+    if ($Spec.PSObject.Properties.Name -contains 'ExpectedCycleBlocks') {
+        $reader = [System.IO.File]::OpenText($Path)
+        try {
+            [long]$cycleBlocks = 0
+            [long]$attemptBlocks = 0
+            while ($null -ne ($line = $reader.ReadLine())) {
+                if ($line.StartsWith('BEGIN LAUNDERING ATTEMPT')) { $attemptBlocks++ }
+                if ($line.StartsWith('BEGIN LAUNDERING ATTEMPT - CYCLE')) { $cycleBlocks++ }
+            }
+        } finally {
+            $reader.Dispose()
+        }
+        if ($cycleBlocks -ne $Spec.ExpectedCycleBlocks -or $attemptBlocks -ne $Spec.ExpectedAttemptBlocks) {
+            throw "Unexpected IBM pattern counts in $Path. Expected $($Spec.ExpectedCycleBlocks) CYCLE / $($Spec.ExpectedAttemptBlocks) attempts; got $cycleBlocks / $attemptBlocks."
+        }
+        Write-Host "[PASS] $($Spec.FileName): $cycleBlocks CYCLE blocks, $attemptBlocks attempts"
+        return
     }
 
     $reader = [System.IO.File]::OpenText($Path)
@@ -122,7 +158,7 @@ handle, file_name, output_dir, minimum_bytes = sys.argv[1:5]
 destination = Path(output_dir) / file_name
 
 # kagglehub 1.0.2 on Windows can save a server-side ZIP wrapper with the
-# requested .csv name. Reuse a complete staged file after an interrupted run.
+# requested file name. Reuse a complete staged file after an interrupted run.
 if not destination.exists() or destination.stat().st_size < int(minimum_bytes):
     destination.unlink(missing_ok=True)
     destination = Path(kagglehub.dataset_download(

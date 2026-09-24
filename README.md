@@ -7,7 +7,7 @@ GraphGuard là dự án Big Data xây dựng đồ thị giao dịch có hướn
 ```mermaid
 flowchart LR
     P["PaySim CSV<br/>6,362,620 transactions"]
-    I["IBM AML HI-Small CSVs<br/>transactions + accounts"]
+    I["IBM AML HI-Small<br/>transactions + accounts + patterns"]
     D["PowerShell downloader<br/>download + schema/row validation"]
     R["data/raw<br/>Git-ignored"]
     E["Dataset ETL<br/>src/paysim + src/ibm_aml"]
@@ -36,9 +36,9 @@ Hai dataset được dùng:
 | Dataset | Vai trò | File local | Ghi chú |
 |---|---|---|---|
 | [PaySim](https://www.kaggle.com/datasets/ealaxi/paysim1) | Dataset chính; fraud trong mobile-money simulation | `data/raw/paysim/PS_20174392719_1491204439457_log.csv` | 6,362,620 giao dịch; `step` là giờ mô phỏng |
-| [IBM Transactions for AML](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) | Mở rộng để phân tích cycle/typology AML | `data/raw/ibm_aml/HI-Small_Trans.csv` và `HI-Small_accounts.csv` | Cả hai file **HI-Small** đều cần cho ETL; không tải toàn bộ archive |
+| [IBM Transactions for AML](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) | Mở rộng để phân tích cycle/typology AML | `data/raw/ibm_aml/HI-Small_Trans.csv`, `HI-Small_accounts.csv`, `HI-Small_Patterns.txt` | `Trans` + `accounts` cho ETL; `Patterns` cho audit/kịch bản motif |
 
-Raw CSV và full Parquet không được commit. Hãy đọc điều khoản/license trên trang nguồn trước khi sử dụng hoặc chia sẻ dữ liệu.
+IBM AML có 18 file, gồm 6 biến thể HI/LI × Small/Medium/Large, mỗi biến thể có `Trans`, `accounts`, `Patterns`. Project và bảng phân công dùng **HI-Small** xuyên suốt; ba file của biến thể này là bộ đầy đủ cần thiết. 15 file còn lại là các biến thể thay thế, không phải phần bổ sung cho HI-Small; tải cả archive 41,61 GB không phục vụ pipeline hiện tại. PaySim chỉ cần CSV giao dịch trong bảng trên. Raw CSV và full Parquet không được commit; `HI-Small_Patterns.txt` nhỏ nên đã được track trong repo. Hãy đọc điều khoản/license trên trang nguồn trước khi sử dụng hoặc chia sẻ dữ liệu.
 
 ## Cài đặt trên Windows PowerShell 5.1+
 
@@ -61,7 +61,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_windows.
 
 ## Tải và kiểm tra hai datasets
 
-Script dùng `kagglehub` từ `.venv` để tải ba CSV cần thiết (một PaySim, hai IBM AML), rồi kiểm tra dung lượng, header và số dòng. Public dataset thường tải được không cần đăng nhập; nếu Kaggle yêu cầu consent/xác thực, tạo token tại Kaggle Settings và đặt `$env:KAGGLE_API_TOKEN` trước khi chạy.
+Script dùng `kagglehub` từ `.venv` để bảo đảm đủ **4 file**: một CSV PaySim và ba file IBM HI-Small. Nó kiểm tra dung lượng, header/số dòng của CSV và số khối kịch bản trong Patterns; chỉ tải file còn thiếu hoặc không đạt kiểm tra. Public dataset thường tải được không cần đăng nhập; nếu Kaggle yêu cầu consent/xác thực, tạo token tại Kaggle Settings và đặt `$env:KAGGLE_API_TOKEN` trước khi chạy.
 
 ```powershell
 # Tải cả PaySim và IBM AML HI-Small, sau đó tự kiểm tra
@@ -73,6 +73,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datas
 # Tải/kiểm tra riêng từng dataset khi cần
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1 -Dataset PaySim
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1 -Dataset IbmAml
+
+# Tải lại đúng một file, ví dụ file kịch bản IBM
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1 -Dataset IbmAml -FileName HI-Small_Patterns.txt -Force
 
 # Chủ động tải lại bản sạch
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datasets.ps1 -Force
@@ -116,7 +119,7 @@ graphguard-amls-detection/
 ├── data/
 │   ├── raw/                               # CSV tải local, Git-ignored
 │   │   ├── paysim/                        # PS_201743..._log.csv
-│   │   └── ibm_aml/                       # HI-Small_Trans.csv + HI-Small_accounts.csv
+│   │   └── ibm_aml/                       # HI-Small_Trans.csv + HI-Small_accounts.csv + HI-Small_Patterns.txt
 │   └── processed/sample/paysim/           # Sample vertices/edges Parquet đã track
 ├── docs/                                  # Part A/B, handoff và báo cáo N4
 ├── notebooks/
@@ -127,7 +130,7 @@ graphguard-amls-detection/
 │   └── paysim/                            # Log/kết quả pipeline PaySim
 ├── scripts/
 │   ├── setup_windows.ps1                  # Python 3.12 + deps + Hadoop native tools
-│   ├── download_datasets.ps1              # Tải và verify 3 raw CSV
+│   ├── download_datasets.ps1              # Tải và verify 4 file raw cần thiết
 │   ├── run_n4.ps1                         # Entry point PowerShell cho demo N4
 │   └── run_n4_notebook.py                 # Execute notebook bằng Windows kernel
 ├── src/
