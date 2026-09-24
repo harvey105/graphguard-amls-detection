@@ -168,8 +168,11 @@ def main():
     fraud_cycles = fraud_graph.find("(a)-[e1]->(b); (b)-[e2]->(c); (c)-[e3]->(a)") \
         .filter("a.id != b.id AND b.id != c.id AND a.id != c.id")
     fraud_cycle_count = fraud_cycles.count()
-    print(f"       + So chu trinh 3 dinh trong mang luoi gian lan (isFraud=1): "
-          f"{fraud_cycle_count:,} chu trinh")
+    distinct_node_sets = fraud_cycles.select(
+        F.array_sort(F.array(F.col("a.id"), F.col("b.id"), F.col("c.id"))).alias("nodes")
+    ).distinct().count()
+    print(f"       + Motif rows tho (isFraud=1): {fraud_cycle_count:,}")
+    print(f"       + Bo ba dinh duy nhat (khong tinh phep xoay/da canh): {distinct_node_sets:,}")
 
     # 2. Truy van chu trinh rua tien USD gia tri cao (>10k) theo dung Task 3
     usd_cycles = full_graph.find("(a)-[e1]->(b); (b)-[e2]->(c); (c)-[e3]->(a)") \

@@ -67,15 +67,6 @@ def build_ibm_edges(spark: SparkSession, trans_csv_path: str) -> DataFrame:
     from_bank_norm = F.col("From Bank").cast("long").cast("string")
     to_bank_norm = F.col("To Bank").cast("long").cast("string")
 
-    # xóa hoặc comment đoạn kiểm tra cast_fail_count này, vì kết quả `probe_bank_ids.py`` đã chứng minh 100% Bank ID là các chữ số hợp lệ, không có giá trị nào bị cast thành NULL
-    # cast_fail_count = raw_trans.filter(
-    #     F.col("From Bank").cast("long").isNull() | F.col("To Bank").cast("long").isNull()
-    # ).count()
-    # if cast_fail_count > 0:
-    #     print(f"[!] CANH BAO: {cast_fail_count} dong co 'From Bank'/'To Bank' KHONG ep duoc "
-    #           f"sang so (vd chua ky tu khong phai chu so) -- kiem tra lai raw data, cac dong "
-    #           f"nay se bi mat phan Bank ID trong composite key (concat_ws bo qua NULL).")
-
     edges_df = raw_trans.select(
         F.concat_ws("_", from_bank_norm, F.col("Account")).alias("src"),
         F.concat_ws("_", to_bank_norm, F.col("Account_Dest")).alias("dst"),
@@ -127,8 +118,7 @@ def build_ibm_vertices(spark: SparkSession, accounts_csv_path: str, edges_df: Da
     bank_id_norm = F.col("Bank ID").cast("long").cast("string")
     bank_id_cast_fail = raw_acc.filter(F.col("Bank ID").cast("long").isNull()).count()
     if bank_id_cast_fail > 0:
-        print(f"[!] CANH BAO: {bank_id_cast_fail} dong trong accounts.csv co 'Bank ID' "
-              f"khong ep duoc sang so -- kiem tra lai raw data.")
+        raise ValueError(f"{bank_id_cast_fail} Bank ID trong accounts.csv khong ep duoc sang so")
 
     explicit_vertices = raw_acc.select(
         F.concat_ws("_", bank_id_norm, F.col("Account Number")).alias("id"),
@@ -151,6 +141,24 @@ def build_ibm_vertices(spark: SparkSession, accounts_csv_path: str, edges_df: Da
 
     final_vertices = explicit_vertices.unionByName(fallback_vertices).dropDuplicates(["id"])
     return final_vertices
+
+
+def sample_ibm_edges(edges_df: DataFrame, target_edges: int = 100_000,
+                     target_fraud: int = 89, seed: int = 42) -> DataFrame:
+    """Lay ~target_edges canh, voi dung target_fraud canh gian lan."""
+    fraud_edges = edges_df.filter(F.col("isFraud") == 1)
+    benign_edges = edges_df.filter(F.col("isFraud") == 0)
+    fraud_count = fraud_edges.count()
+    benign_count = benign_edges.count()
+    if fraud_count < target_fraud or benign_count == 0:
+        raise ValueError("Khong du canh gian lan/hop le de tao IBM AML sample")
+
+    # Fraud duoc chon theo noi dung canh, khong phu thuoc thu tu partition Spark.
+    chosen_fraud = fraud_edges.orderBy(
+        F.xxhash64(*[F.col(name) for name in edges_df.columns])
+    ).limit(target_fraud)
+    benign_fraction = min(1.0, max(0.0, (target_edges - target_fraud) / benign_count))
+    return benign_edges.sample(False, benign_fraction, seed).unionByName(chosen_fraud)
 
 
 def main():
@@ -198,6 +206,12 @@ def main():
     ).count()
     checks["No null src/dst/amount"] = (null_e == 0, f"{null_e} nulls")
 
+    invalid_ids = edges_df.filter(
+        ~F.col("src").rlike(r"^[0-9]+_.+") | ~F.col("dst").rlike(r"^[0-9]+_.+")
+    ).count()
+    checks["Valid composite edge IDs"] = (invalid_ids == 0, f"{invalid_ids} invalid IDs")
+    checks["No fallback vertices"] = (fallback_count == 0, f"{fallback_count} fallback vertices")
+
     dangling_src = edges_df.join(vertices_df, edges_df["src"] == vertices_df["id"], "left_anti").count()
     dangling_dst = edges_df.join(vertices_df, edges_df["dst"] == vertices_df["id"], "left_anti").count()
     checks["Referential integrity (both src and dst)"] = (
@@ -205,7 +219,10 @@ def main():
         f"{dangling_src} dangling src, {dangling_dst} dangling dst",
     )
 
-    checks["Edge count matches raw row count"] = (e_count > 0, f"{e_count:,} edges")
+    raw_row_count = spark.read.csv(trans_path, header=True).count()
+    checks["Edge count matches raw row count"] = (
+        e_count == raw_row_count, f"{e_count:,} edges vs {raw_row_count:,} raw rows"
+    )
 
     self_loops = edges_df.filter(F.col("src") == F.col("dst")).count()
     checks["Self-loop audit (informational -- expected > 0, unlike PaySim)"] = (
@@ -248,7 +265,7 @@ def main():
     edges_df.repartition(8).write.mode("overwrite").parquet(os.path.join(out_dir, "edges.parquet"))
 
     def dir_size_mb(path):
-        return sum(os.path.getsize(os.path.join(d, f)) for d, _, files in os.walk(sys.path) for f in files) / (1024 * 1024)
+        return sum(os.path.getsize(os.path.join(d, f)) for d, _, files in os.walk(path) for f in files) / (1024 * 1024)
     print(f"      [OK] {out_dir}/vertices.parquet  ({dir_size_mb(out_dir + '/vertices.parquet'):.2f} MB on disk)")
     print(f"      [OK] {out_dir}/edges.parquet     ({dir_size_mb(out_dir + '/edges.parquet'):.2f} MB on disk)")
 
@@ -256,8 +273,7 @@ def main():
 
     # 4. Tao Subgraph Sample (~100k canh) cho Team
     print(f"\n[*] Dang tao Sample Subgraph (~100k edges) tai {out_sample_dir}...")
-    sample_fraction = min(1.0, 100000.0 / e_count)
-    sample_edges = edges_df.sample(withReplacement=False, fraction=sample_fraction, seed=42).cache()
+    sample_edges = sample_ibm_edges(edges_df).cache()
 
     sample_ids = sample_edges.select(F.col("src").alias("id")) \
         .union(sample_edges.select(F.col("dst").alias("id"))).distinct()
@@ -277,6 +293,7 @@ def main():
     sample_edges.coalesce(1).write.mode("overwrite").parquet(os.path.join(out_sample_dir, "edges.parquet"))
     print(f"      Sample Vertices: {sample_v_count:,} rows")
     print(f"      Sample Edges:    {sample_edges.count():,} rows")
+    print(f"      Sample Fraud:    {sample_edges.filter(F.col('isFraud') == 1).count():,} rows")
     print("[+] Luu Sample Parquet THANH CONG.")
 
     print("\n" + "=" * 65)

@@ -7,7 +7,7 @@ GraphGuard là dự án Big Data xây dựng đồ thị giao dịch có hướn
 ```mermaid
 flowchart LR
     P["PaySim CSV<br/>6,362,620 transactions"]
-    I["IBM AML HI-Small CSV<br/>5,078,345 transactions"]
+    I["IBM AML HI-Small CSVs<br/>transactions + accounts"]
     D["PowerShell downloader<br/>download + schema/row validation"]
     R["data/raw<br/>Git-ignored"]
     E["Dataset ETL<br/>src/paysim + src/ibm_aml"]
@@ -36,7 +36,7 @@ Hai dataset được dùng:
 | Dataset | Vai trò | File local | Ghi chú |
 |---|---|---|---|
 | [PaySim](https://www.kaggle.com/datasets/ealaxi/paysim1) | Dataset chính; fraud trong mobile-money simulation | `data/raw/paysim/PS_20174392719_1491204439457_log.csv` | 6,362,620 giao dịch; `step` là giờ mô phỏng |
-| [IBM Transactions for AML](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) | Mở rộng để phân tích cycle/typology AML | `data/raw/ibm_aml/HI-Small_Trans.csv` | Chỉ tải biến thể **HI-Small**, không tải toàn bộ archive |
+| [IBM Transactions for AML](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) | Mở rộng để phân tích cycle/typology AML | `data/raw/ibm_aml/HI-Small_Trans.csv` và `HI-Small_accounts.csv` | Cả hai file **HI-Small** đều cần cho ETL; không tải toàn bộ archive |
 
 Raw CSV và full Parquet không được commit. Hãy đọc điều khoản/license trên trang nguồn trước khi sử dụng hoặc chia sẻ dữ liệu.
 
@@ -61,7 +61,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_windows.
 
 ## Tải và kiểm tra hai datasets
 
-Script dùng `kagglehub` từ `.venv`, chỉ tải hai CSV mà pipeline cần, rồi kiểm tra dung lượng, header và số dòng. Public dataset thường tải được không cần đăng nhập; nếu Kaggle yêu cầu consent/xác thực, tạo token tại Kaggle Settings và đặt `$env:KAGGLE_API_TOKEN` trước khi chạy.
+Script dùng `kagglehub` từ `.venv` để tải ba CSV cần thiết (một PaySim, hai IBM AML), rồi kiểm tra dung lượng, header và số dòng. Public dataset thường tải được không cần đăng nhập; nếu Kaggle yêu cầu consent/xác thực, tạo token tại Kaggle Settings và đặt `$env:KAGGLE_API_TOKEN` trước khi chạy.
 
 ```powershell
 # Tải cả PaySim và IBM AML HI-Small, sau đó tự kiểm tra
@@ -98,6 +98,16 @@ Task 1 PaySim sample hiện có thể gọi bằng:
 & .\.venv\Scripts\python.exe -m src.paysim.graph_analysis --sample
 ```
 
+IBM AML HI-Small dùng cả transactions và accounts CSV; chạy ETL và kiểm tra bằng PowerShell:
+
+```powershell
+& .\.venv\Scripts\python.exe -m src.ibm_aml.etl
+& .\.venv\Scripts\python.exe .\tests\test_ibm_aml_etl.py
+& .\.venv\Scripts\python.exe .\tests\test_ibm_aml_etl.py --sample
+```
+
+ETL ghi full Parquet vào `data/processed/ibm_aml/` và sample vào `data/processed/sample/ibm_aml/`. Với bản HI-Small hiện tại, full graph có 518.581 tài khoản, 5.078.345 giao dịch, 0 `External/Unknown`; sample có 89 giao dịch gắn nhãn gian lận. Trên IBM, `step` là Unix epoch seconds và `amount` giữ nguyên tiền tệ gốc: lọc ngưỡng tiền phải kèm `payment_currency`. Truy vấn 3-cycle trên các cạnh `isFraud=1` cho 7.473 motif rows thô nhưng chỉ 45 bộ ba đỉnh duy nhất sau khi khử phép xoay và đa cạnh; đây là tín hiệu theo nhãn, không tự chứng minh 45 vòng rửa tiền thật. Xem `docs/person2_handoff.md` để biết cách đếm đúng.
+
 ## Cấu trúc repository và phân công code
 
 ```text
@@ -106,18 +116,18 @@ graphguard-amls-detection/
 ├── data/
 │   ├── raw/                               # CSV tải local, Git-ignored
 │   │   ├── paysim/                        # PS_201743..._log.csv
-│   │   └── ibm_aml/                       # HI-Small_Trans.csv
+│   │   └── ibm_aml/                       # HI-Small_Trans.csv + HI-Small_accounts.csv
 │   └── processed/sample/paysim/           # Sample vertices/edges Parquet đã track
 ├── docs/                                  # Part A/B, handoff và báo cáo N4
 ├── notebooks/
-│   ├── 01_dataset_exploration.ipynb       # Khám phá dữ liệu
+│   ├── 00_dataset_exploration.ipynb       # Khám phá dữ liệu
 │   └── 02_n4_toy_motif.ipynb              # N4 toy 3-cycle, mốc 21/09
 ├── results/
 │   ├── motif/toy_cycle_summary.json       # Bằng chứng máy đọc được của N4
 │   └── paysim/                            # Log/kết quả pipeline PaySim
 ├── scripts/
 │   ├── setup_windows.ps1                  # Python 3.12 + deps + Hadoop native tools
-│   ├── download_datasets.ps1              # Tải và verify đúng 2 raw CSV
+│   ├── download_datasets.ps1              # Tải và verify 3 raw CSV
 │   ├── run_n4.ps1                         # Entry point PowerShell cho demo N4
 │   └── run_n4_notebook.py                 # Execute notebook bằng Windows kernel
 ├── src/

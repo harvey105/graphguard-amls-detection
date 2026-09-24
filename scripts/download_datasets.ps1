@@ -41,6 +41,15 @@ $datasets = @(
             'Amount Received', 'Receiving Currency', 'Amount Paid',
             'Payment Currency', 'Payment Format', 'Is Laundering'
         )
+    },
+    [pscustomobject]@{
+        Key = 'IbmAml'
+        Handle = 'ealtman2019/ibm-transactions-for-anti-money-laundering-aml'
+        FileName = 'HI-Small_accounts.csv'
+        Destination = Join-Path $repo 'data\raw\ibm_aml\HI-Small_accounts.csv'
+        MinimumBytes = 30MB
+        ExpectedRows = 518581L
+        Header = @('Bank Name', 'Bank ID', 'Account Number', 'Entity ID', 'Entity Name')
     }
 )
 
@@ -109,12 +118,12 @@ from pathlib import Path
 
 import kagglehub
 
-handle, file_name, output_dir = sys.argv[1:4]
+handle, file_name, output_dir, minimum_bytes = sys.argv[1:5]
 destination = Path(output_dir) / file_name
 
 # kagglehub 1.0.2 on Windows can save a server-side ZIP wrapper with the
 # requested .csv name. Reuse a complete staged file after an interrupted run.
-if not destination.exists() or destination.stat().st_size < 100_000_000:
+if not destination.exists() or destination.stat().st_size < int(minimum_bytes):
     destination.unlink(missing_ok=True)
     destination = Path(kagglehub.dataset_download(
         handle,
@@ -169,7 +178,7 @@ foreach ($spec in $datasets) {
     New-Item -ItemType Directory -Path $temporaryDirectory -Force | Out-Null
 
     Write-Host "[DOWNLOAD] $($spec.Key) / $($spec.FileName)"
-    & $python -c $downloadCode $spec.Handle $spec.FileName $temporaryDirectory
+    & $python -c $downloadCode $spec.Handle $spec.FileName $temporaryDirectory $spec.MinimumBytes
     if ($LASTEXITCODE -ne 0) {
         throw "Kaggle download failed for $($spec.Key)."
     }

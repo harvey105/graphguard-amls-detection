@@ -203,7 +203,7 @@ Chuẩn hóa Bank ID về cùng dạng trước khi ghép composite key ở **c�
 ### ⚠️ Hành động bắt buộc cho MỌI người khi viết code liên quan IBM AML
 * **KHÔNG** tự ý tự viết lại logic ghép `Bank_ID + Account_Number` từ raw CSV — luôn dùng `build_ibm_vertices()`/`build_ibm_edges()` trong `src/ibm_aml/etl.py`, đã được sửa đúng.
 * Nếu bất kỳ ai load raw CSV thủ công để debug (không qua `etl.py`), **phải tự chuẩn hóa Bank ID (bỏ số 0 đầu) trước khi so sánh/join theo Account ID**, nếu không sẽ tái tạo lại đúng bug này.
-* Hằng số kiểm định trong `tests/test_ibm_aml_etl.py` đã cập nhật: `EXPECTED_VERTEX_COUNT = 518_581`, `EXPECTED_FALLBACK_COUNT = 0`.
+* Kiểm định trong `tests/test_ibm_aml_etl.py` yêu cầu đúng `EXPECTED_VERTEX_COUNT = 518_581` và đếm trực tiếp `External/Unknown == 0`.
 
 ---
 
@@ -214,7 +214,7 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 | Bộ dữ liệu | Bản Đầy đủ (Full Graph) — Chạy báo cáo | Bản Mẫu (Sample Subgraph) — Dùng để Dev/Debug |
 | :--- | :--- | :--- |
 | **PaySim** | `data/processed/` (`vertices.parquet`, `edges.parquet`) — 272.9 MB | `data/processed/sample/` (~100k cạnh, 0 dangling) |
-| **IBM AML (HI-Small)** | `data/processed/ibm_aml/` (`vertices.parquet`, `edges.parquet`) — **192.29 MB** (đã đo thật sau fix) | `data/processed/sample/ibm_aml/` (~100k cạnh, 0 dangling, **89 fraud**) |
+| **IBM AML (HI-Small)** | `data/processed/ibm_aml/` (`vertices.parquet`, `edges.parquet`) — khoảng **192 MB** (có thể đổi nhẹ khi ghi lại Parquet) | `data/processed/sample/ibm_aml/` (~100k cạnh, 0 dangling, **89 fraud** theo cách lấy mẫu mới) |
 
 > ⚠️ **NGUYÊN TẮC HIỆU NĂNG SỐNG CÒN (SPARK CACHING):**
 > Các hàm kiểm định (`check_integrity`) hoặc thuật toán lặp (PageRank, LPA, Motif) gọi rất nhiều action `.count()`. Nếu GraphFrame chưa được lưu trong RAM, Spark sẽ đọc lại từ đĩa và tính lại toàn bộ pipeline 6–7 lần liên tiếp.
@@ -225,7 +225,7 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 *(Bảng tương đương Mục 2 của PaySim ở trên — bổ sung vì phiên bản trước của tài liệu này chưa có bảng đặc tả riêng cho IBM.)*
 
 ### 2.1. Bảng cấu trúc Đỉnh: `vertices.parquet`
-* **Đầy đủ (Full):** 518.581 đỉnh, **0 fallback** | **Bản mẫu (Sample):** 119.146 đỉnh
+* **Đầy đủ (Full):** 518.581 đỉnh, **0 fallback** | **Bản mẫu đã commit:** 119.146 đỉnh (bản tái tạo có thể dao động nhẹ)
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
@@ -235,7 +235,7 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 | `balance` | `Double` | Luôn = `0.0` | IBM AML **không cung cấp** số dư hiện tại — khác PaySim, đừng dùng cột này cho phân tích số dư. |
 
 ### 2.2. Bảng cấu trúc Cạnh: `edges.parquet`
-* **Đầy đủ (Full):** 5.078.345 cạnh (5.177 nhãn gian lận) | **Bản mẫu (Sample):** 99.883 cạnh (89 nhãn gian lận)
+* **Đầy đủ (Full):** 5.078.345 cạnh (5.177 nhãn gian lận) | **Bản mẫu đã commit:** 99.883 cạnh (89 nhãn gian lận; bản tái tạo giữ đúng 89 fraud, số cạnh còn lại có thể dao động nhẹ)
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
@@ -310,10 +310,10 @@ relay_motifs = graph_paysim.find("(a)-[e1]->(b); (b)-[e2]->(c)") \
 | Truy vấn | Kết quả |
 | :--- | :---: |
 | 3-node cycle theo thiết kế gốc (từ Patterns.txt) | **9** |
-| 3-node cycle trên toàn mạng gian lận (`isFraud=1`, không lọc tiền tệ/ngưỡng) | **7.473** (⚠️ thô, chưa khử trùng — xem cảnh báo dưới) |
+| 3-node cycle trên toàn mạng gian lận (`isFraud=1`, không lọc tiền tệ/ngưỡng) | **7.473 motif rows thô**; **45 bộ ba đỉnh duy nhất** sau khi khử phép xoay và đa cạnh |
 | 3-node cycle với `currency='US Dollar' AND amount>10000` trên cả 3 cạnh (nguyên bản Task 3) | **0** |
 
-⚠️ **CẢNH BÁO 1 — Đếm trùng do Multigraph:** IBM AML cho phép nhiều giao dịch lặp lại giữa cùng 2 tài khoản. `graph.find()` đếm mọi **tổ hợp cạnh** khớp mẫu, không khử trùng theo tam giác đỉnh. Một vòng rửa tiền thật với nhiều giao dịch lặp (đặc trưng hành vi Structuring) có thể tự nhân lên thành hàng nghìn "kết quả" giả. **Bắt buộc chạy dòng sau trước khi báo cáo số liệu:**
+⚠️ **CẢNH BÁO 1 — Đếm trùng do Multigraph và phép xoay:** IBM AML cho phép nhiều giao dịch giữa cùng 2 tài khoản. `graph.find()` đếm mọi **tổ hợp cạnh** khớp mẫu và mỗi chu trình có ba điểm bắt đầu. Trên bản hiện tại, 7.473 rows thô tương ứng 162 bộ ba có thứ tự sau `.select("a.id", "b.id", "c.id").distinct()`, nhưng chỉ **45 bộ ba tài khoản duy nhất** khi chuẩn hóa thứ tự ba ID. Số 45 là cấu trúc đồ thị trong tập gắn nhãn gian lận, không tự chứng minh 45 vụ rửa tiền độc lập. Dùng cách sau trước khi báo cáo số liệu:
 
 ```python
 # 1. Nạp và cache đồ thị đầy đủ MỘT LẦN, dùng lại cho cả 2 truy vấn dưới đây
@@ -326,13 +326,16 @@ fraud_graph = full_graph.filterEdges("isFraud = 1")
 fraud_cycles = fraud_graph.find("(a)-[e1]->(b); (b)-[e2]->(c); (c)-[e3]->(a)") \
     .filter("a.id != b.id AND b.id != c.id AND a.id != c.id")
 
-# 3. BẮT BUỘC: khử trùng theo tam giác đỉnh để ra số VÒNG RỬA TIỀN THỰC SỰ,
-#    không phải số cạnh khớp mẫu:
-distinct_fraud_rings = fraud_cycles.select("a.id", "b.id", "c.id").distinct().count()
-print(f"So vong rua tien 3 dinh THUC SU khac nhau: {distinct_fraud_rings:,}")
+# 3. Sắp xếp ID để ba phép xoay của cùng một chu trình có chung khóa;
+#    distinct loại thêm các tổ hợp đa cạnh trên cùng bộ ba đỉnh.
+from pyspark.sql import functions as F
+distinct_node_sets = fraud_cycles.select(
+    F.array_sort(F.array(F.col("a.id"), F.col("b.id"), F.col("c.id"))).alias("nodes")
+).distinct().count()
+print(f"So bo ba dinh duy nhat trong fraud subgraph: {distinct_node_sets:,}")
 ```
 
-⚠️ **CẢNH BÁO 2 — Ngưỡng $10.000 (giả thuyết, chưa kiểm chứng độc lập):** Việc lọc `amount > 10000 AND currency='US Dollar'` trên cả 3 cạnh trả về đúng $0$, phù hợp (nhưng chưa chứng minh) với giả thuyết **Structuring/Smurfing** — chia nhỏ giao dịch để né ngưỡng khai báo CTR $10.000. Cũng có thể đơn giản là do giao dịch gian lận tập trung ở tiền tệ khác USD. **Trước khi đưa giả thuyết này vào báo cáo, chạy đối chiếu:**
+⚠️ **CẢNH BÁO 2 — Ngưỡng $10.000 (giả thuyết, chưa kiểm chứng độc lập):** Truy vấn trên toàn đồ thị với cả ba cạnh USD và `amount > 10000` trả về $0$; truy vấn `isFraud=1` không lọc tiền tệ/ngưỡng cho 7.473 rows thô. Vì cả tập cạnh lẫn điều kiện lọc đều khác, hai số này không chứng minh hành vi **Structuring/Smurfing**. **Trước khi đưa giả thuyết này vào báo cáo, chạy đối chiếu:**
 
 ```python
 full_graph.edges.filter("isFraud = 1").groupBy("payment_currency") \
@@ -340,7 +343,7 @@ full_graph.edges.filter("isFraud = 1").groupBy("payment_currency") \
     .orderBy(F.desc("n")).show(20)
 ```
 
-**Khuyến nghị cụ thể cho Người 4:** Không copy nguyên ngưỡng `$10.000` từ đề bài PaySim. Sau khi chạy đối chiếu ở trên, chọn ngưỡng phù hợp với phân phối `amount` thực tế của tập gian lận IBM AML (nhiều khả năng thấp hơn $10.000 đáng kể), và luôn báo cáo `distinct_fraud_rings` (Cảnh báo 1) thay vì số cạnh khớp mẫu thô.
+**Khuyến nghị cụ thể cho Người 4:** Không copy nguyên ngưỡng `$10.000` từ đề bài PaySim. Sau khi chạy đối chiếu ở trên, chọn ngưỡng phù hợp với phân phối `amount` thực tế theo từng `payment_currency`, và báo cáo rõ cả số motif rows thô lẫn `distinct_node_sets` (Cảnh báo 1). Không diễn giải số 0 ở ngưỡng USD >$10.000 thành bằng chứng tội phạm cố tình chia nhỏ giao dịch.
 
 ### **4.4. Hướng dẫn Task 4 (Community Detection / LPA) — @Người 5 & @Người 6**
 

@@ -24,13 +24,14 @@ from graphframes import GraphFrame
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.common.spark_session import get_graph_session
 from src.common.graph_utils import load_graph, check_integrity
-from src.ibm_aml.etl import build_ibm_edges, build_ibm_vertices
+from src.ibm_aml.etl import build_ibm_edges, build_ibm_vertices, sample_ibm_edges
 
 # Ground-truth constants đã nghiệm thu (Edges, Fraud, Loops giữ nguyên)
 # Cập nhật số liệu thực chứng chính xác sau khi chuẩn hóa Bank ID:
 EXPECTED_VERTEX_COUNT = 518_581   # 100% khớp với số lượng tài khoản trong accounts.csv
 EXPECTED_EDGE_COUNT = 5_078_345
 EXPECTED_FRAUD_COUNT = 5_177
+EXPECTED_SAMPLE_FRAUD_COUNT = 89
 EXPECTED_SELF_LOOPS = 591_212
 EXPECTED_CURRENCY_COUNT = 15
 EXPECTED_STEP_MIN = 1_661_965_200
@@ -39,9 +40,7 @@ EXPECTED_STEP_MAX = 1_663_492_680
 
 def induce_sample(vertices_df: DataFrame, edges_df: DataFrame, target_edges: int = 100_000, seed: int = 42):
     """Tạo subgraph mẫu ~100k cạnh tự đóng (self-contained) khi dùng --from-raw --sample."""
-    total_edges = edges_df.count()
-    fraction = min(1.0, target_edges / total_edges)
-    sample_edges = edges_df.sample(withReplacement=False, fraction=fraction, seed=seed).cache()
+    sample_edges = sample_ibm_edges(edges_df, target_edges=target_edges, seed=seed).cache()
     sample_ids = sample_edges.select(F.col("src").alias("id")) \
         .union(sample_edges.select(F.col("dst").alias("id"))).distinct()
     sample_vertices = vertices_df.join(sample_ids, on="id", how="inner").cache()
@@ -100,6 +99,11 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
     null_v_type = vertices_df.filter(F.col("account_type").isNull()).count()
     test_results["No Null Account Types"] = (null_v_type == 0, f"{null_v_type} nulls")
 
+    fallback_count = vertices_df.filter(F.col("account_type") == "External/Unknown").count()
+    test_results["No Fallback Vertices (Real Account Match)"] = (
+        fallback_count == 0, f"{fallback_count} External/Unknown vertices"
+    )
+
     null_e_amount = edges_df.filter(F.col("amount").isNull()).count()
     test_results["No Null Edge Amount"] = (null_e_amount == 0, f"{null_e_amount} nulls")
 
@@ -125,7 +129,7 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
     ).count()
 
     test_results["Formerly-Padded Banks Successfully Matched"] = (
-        matched_padded_banks > 0 or is_sample,
+        matched_padded_banks > 0,
         f"Found {matched_padded_banks:,} vertices from banks {sample_banks} correctly resolved to real account_type"
     )
 
@@ -144,9 +148,10 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
             fraud_count == EXPECTED_FRAUD_COUNT, f"{fraud_count:,} vs expected {EXPECTED_FRAUD_COUNT:,}"
         )
 
-        # Số lượng đỉnh hợp lệ: phải có ít nhất 518,581 đỉnh nội bộ từ accounts.csv
-        test_results["Valid Vertex Population (>518k)"] = (
-            v_count >= 518_581, f"Total unique vertices: {v_count:,}"
+        # HI-Small co dung 518,581 tai khoan; fallback duoc kiem tra rieng o tren.
+        test_results["Exact Vertex Population"] = (
+            v_count == EXPECTED_VERTEX_COUNT,
+            f"Total unique vertices: {v_count:,} vs expected {EXPECTED_VERTEX_COUNT:,}"
         )
 
         # Vòng lặp tự thân
@@ -171,6 +176,11 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
     else:
         test_results["Sample Size Check"] = (
             e_count > 0 and v_count > 0, f"Sample: {v_count:,} vertices, {e_count:,} edges"
+        )
+        sample_fraud_count = edges_df.filter(F.col("isFraud") == 1).count()
+        test_results["Sample Ground-truth Fraud Count"] = (
+            sample_fraud_count == EXPECTED_SAMPLE_FRAUD_COUNT,
+            f"{sample_fraud_count:,} vs expected {EXPECTED_SAMPLE_FRAUD_COUNT:,}"
         )
 
     # -------------------------------------------------------------

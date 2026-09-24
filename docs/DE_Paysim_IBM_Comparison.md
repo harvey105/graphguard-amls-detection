@@ -152,25 +152,28 @@ Khác với PaySim chỉ có Khách hàng (`Customer`) và Người bán (`Merch
 | Truy vấn | Kết quả | Diễn giải |
 | :--- | :---: | :--- |
 | 3-node cycle trong kịch bản gốc (thiết kế) | **9 chu trình** | Con số nền chuẩn để đối chiếu — chắc chắn đúng vì lấy trực tiếp từ file kịch bản IBM cấy sẵn. |
-| 3-node cycle trên **toàn mạng gian lận** (`isFraud=1`, không lọc tiền tệ/ngưỡng) | **7.473 kết quả thô** | ⚠️ **CHƯA khử trùng theo multigraph** — xem cảnh báo Mục 5.3. KHÔNG được báo cáo là "7.473 vòng rửa tiền". |
+| 3-node cycle trên **toàn mạng gian lận** (`isFraud=1`, không lọc tiền tệ/ngưỡng) | **7.473 motif rows thô; 45 bộ ba đỉnh duy nhất** | Ba phép xoay và nhiều cạnh giữa cùng hai tài khoản làm tăng số rows. Đây là cấu trúc đồ thị trong tập gắn nhãn gian lận, không phải số vụ rửa tiền đã được xác minh. |
 | 3-node cycle với `payment_currency='US Dollar' AND amount>10000` trên **cả 3 cạnh** (đúng nguyên bản Task 3) | **0 chu trình** | Ngưỡng $10k gốc từ đề bài PaySim không phù hợp trực tiếp với IBM AML — xem giả thuyết Mục 5.4. |
 
-#### 5.3. ⚠️ Cảnh báo phương pháp: 7.473 rất có thể là số đếm phóng đại (multigraph over-count)
+#### 5.3. ⚠️ Cảnh báo phương pháp: 7.473 là số motif rows, không phải số bộ ba đỉnh
 
-IBM AML là **đa đồ thị (multigraph)** — hai tài khoản có thể có nhiều giao dịch lặp lại ở nhiều mốc thời gian khác nhau. `graph.find()` của GraphFrames đếm **mọi tổ hợp cạnh khớp mẫu**, không khử trùng theo tam giác đỉnh (node-triple). Một vòng rửa tiền thật gồm 3 tài khoản $(A,B,C)$ nhưng có, ví dụ, 20 giao dịch $A \to B$, 15 giao dịch $B \to C$, 10 giao dịch $C \to A$ sẽ tạo ra $20 \times 15 \times 10 = 3.000$ "chu trình" khớp mẫu — dù về bản chất chỉ là **một** vòng rửa tiền duy nhất, lặp lại nhiều lần (đúng đặc trưng hành vi *Structuring*).
+IBM AML là **đa đồ thị (multigraph)** — hai tài khoản có thể có nhiều giao dịch ở nhiều mốc thời gian. `graph.find()` của GraphFrames đếm **mọi tổ hợp cạnh khớp mẫu** và ba phép xoay điểm bắt đầu. Ví dụ, 20 giao dịch $A \to B$, 15 giao dịch $B \to C$, 10 giao dịch $C \to A$ tạo $20 \times 15 \times 10 \times 3 = 9.000$ motif rows thô, dù chỉ có một bộ ba tài khoản $(A,B,C)$. Trên dữ liệu hiện tại: **7.473 rows thô**, **162 bộ ba có thứ tự** sau `.select("a.id", "b.id", "c.id").distinct()`, và **45 bộ ba đỉnh duy nhất** sau khi sắp xếp ID của ba đỉnh rồi `distinct()`.
 
 $\to$ **Hành động bắt buộc cho Person 4 trước khi đưa số liệu vào báo cáo:**
 ```python
-# Đếm số VÒNG RỬA TIỀN THẬT (theo tam giác đỉnh duy nhất), không phải số cạnh khớp mẫu:
-distinct_fraud_rings = fraud_cycles.select("a.id", "b.id", "c.id").distinct().count()
-print(f"Số vòng rửa tiền 3 đỉnh THỰC SỰ khác nhau: {distinct_fraud_rings:,}")
+# Đếm bộ ba đỉnh duy nhất, khử cả đa cạnh và ba phép xoay:
+from pyspark.sql import functions as F
+distinct_node_sets = fraud_cycles.select(
+    F.array_sort(F.array(F.col("a.id"), F.col("b.id"), F.col("c.id"))).alias("nodes")
+).distinct().count()
+print(f"Số bộ ba đỉnh duy nhất trong fraud subgraph: {distinct_node_sets:,}")
 ```
 
 #### 5.4. Giả thuyết (chưa kiểm chứng độc lập): Structuring / Smurfing để né ngưỡng khai báo $10.000
 
-Việc truy vấn với `amount > 10000` trên cả 3 cạnh trả về đúng $0$ kết quả, trong khi bỏ điều kiện này (chỉ giữ `isFraud=1`) cho ra 7.473 kết quả thô, **phù hợp** với một kỹ thuật rửa tiền có thật gọi là *Structuring/Smurfing*: chia nhỏ giao dịch dưới ngưỡng phải khai báo (Currency Transaction Report — CTR, luật Mỹ quy định ngưỡng $10.000) để tránh bị hệ thống giám sát gắn cờ tự động.
+Truy vấn trên **toàn đồ thị** với cả ba cạnh USD và `amount > 10000` trả về $0$ kết quả; truy vấn trên **các cạnh `isFraud=1`** không lọc tiền tệ/ngưỡng cho 7.473 motif rows thô. Hai truy vấn thay đổi cả tập cạnh, tiền tệ lẫn ngưỡng nên không thể suy nguyên nhân từ phép so sánh này. Chia nhỏ giao dịch (*Structuring/Smurfing*) chỉ là giả thuyết cần kiểm tra bằng phân phối tiền tệ và số tiền.
 
-> ⚠️ **Đây là một giả thuyết hợp lý về mặt nghiệp vụ, KHÔNG phải một kết luận đã kiểm chứng.** Việc trả về 0 kết quả cũng có thể đơn giản là do các giao dịch gian lận tập trung ở các đồng tiền khác ngoài USD (dataset có 15 loại tiền tệ), không nhất thiết do cố tình chia nhỏ số tiền. **Trước khi đưa giả thuyết structuring vào báo cáo chính thức**, Person 4 nên chạy thêm truy vấn đối chiếu:
+> ⚠️ **Đây là giả thuyết nghiệp vụ, KHÔNG phải kết luận đã kiểm chứng.** Kết quả 0 còn có thể do cách kết hợp điều kiện trên cả ba cạnh; dataset có 15 loại tiền tệ. **Trước khi đưa giả thuyết structuring vào báo cáo chính thức**, Person 4 nên chạy thêm truy vấn đối chiếu:
 > ```python
 > # Kiểm tra phân phối tiền tệ VÀ số tiền trong 5.177 giao dịch gian lận,
 > # để xác định 0-kết-quả là do ngưỡng $10k hay do lệch tiền tệ (hoặc cả hai):
@@ -187,11 +190,11 @@ $\to$ **Khuyến nghị cho Task 3 trên IBM AML:** Ngưỡng `$10.000` sao ché
 
 | | Vertices Parquet | Edges Parquet | Tổng |
 | :--- | :---: | :---: | :---: |
-| **Full dataset** | 5.63 MB | 186.66 MB | **192.29 MB** |
-| **Sample subgraph** | 1.23 MB | 3.61 MB | **4.84 MB** |
+| **Full dataset (lần đo 24/09/2026)** | 5.63 MB | 186.41 MB | **192.04 MB** |
+| **Sample đã commit trước checkpoint** | 1.23 MB | 3.61 MB | **4.84 MB** |
 
 * Số liệu Vertices Parquet cũ (`≈25MB`, ước lượng từ thời còn bug) đã được thay bằng số đo thật (`5.63MB`) — không cố quy đổi tỷ lệ chính xác với số đỉnh cũ, vì hiệu ứng nén Parquet (dictionary/run-length encoding) không tuyến tính theo số dòng.
-* Sample subgraph: **89 cạnh gian lận** (Tỷ lệ $0.0891\%$) trên $99.883$ cạnh / $119.146$ đỉnh — con số này **thay cho ước lượng cũ "101 fraud"**, được đo trực tiếp từ Parquet đã xuất bản, không phải ước lượng.
+* Sample đã commit có **89 cạnh gian lận** (Tỷ lệ $0.0891\%$) trên $99.883$ cạnh / $119.146$ đỉnh. ETL hiện lấy đúng **89 fraud** mỗi lần tái tạo; tổng cạnh/đỉnh của phần không gian lận có thể dao động nhẹ theo thứ tự partition Spark. Dung lượng Parquet cũng có thể đổi nhẹ giữa các lần ghi.
 
 ---
 
@@ -207,8 +210,8 @@ $\to$ **Khuyến nghị cho Task 3 trên IBM AML:** Ngưỡng `$10.000` sao ché
 | **2. QUY MÔ & TỐI ƯU BIG DATA** | | | |
 | **Số lượng Cạnh (Edges)** | **$6.362.620$ giao dịch** | **$5.078.345$ giao dịch** | Cả 2 đều đạt quy mô $>5\text{M}$ records, đáp ứng chuẩn bài toán Big Data. |
 | **Số lượng Đỉnh (Vertices)** | **$9.073.900$ đỉnh** | **$518.581$ đỉnh** *(đã sửa từ 1.033.669 — xem Mục 0)* | Đồ thị PaySim có số đỉnh gấp **~17.5 lần** IBM; mật độ cạnh/đỉnh của IBM dày hơn PaySim khoảng **~14 lần** ($9.79$ vs $0.70$ cạnh/đỉnh). Cả hai tỷ lệ này đã được tính lại — số cũ ("gấp 9 lần", "gấp 7 lần") bị loại bỏ vì dựa trên số đỉnh còn bug. |
-| **Kích thước Parquet (Full)** | $110.3\text{ MB}$ (V) + $162.6\text{ MB}$ (E) = **$272.9\text{ MB}$** | $5.63\text{ MB}$ (V) + $186.66\text{ MB}$ (E) = **$192.29\text{ MB}$** *(đo thật, thay ước lượng cũ ≈175MB)* | Vertices của IBM co lại đáng kể sau khi bỏ ~515K đỉnh trùng lặp; Edges không đổi vì số cạnh không bị ảnh hưởng bởi bug. |
-| **Kích thước Sample Subgraph** | $100.729$ cạnh / $194.195$ đỉnh ($153$ fraud) | $99.883$ cạnh / $119.146$ đỉnh (**$89$ fraud**, đã sửa từ ước lượng cũ "101") | Bản sample của cả 2 đều đảm bảo $0$ dangling edges, sẵn sàng cho việc test code nhẹ. |
+| **Kích thước Parquet (Full)** | $110.3\text{ MB}$ (V) + $162.6\text{ MB}$ (E) = **$272.9\text{ MB}$** | Khoảng **$192\text{ MB}$** (lần đo 24/09: $5.63 + 186.41\text{ MB}$) | Vertices của IBM co lại đáng kể sau khi bỏ ~515K đỉnh trùng lặp; kích thước file có thể đổi nhẹ khi ghi lại. |
+| **Kích thước Sample Subgraph** | $100.729$ cạnh / $194.195$ đỉnh ($153$ fraud) | Bản đã commit: $99.883$ cạnh / $119.146$ đỉnh (**$89$ fraud**); bản tái tạo có thể dao động nhẹ số cạnh/đỉnh | Bản sample của cả 2 đều đảm bảo $0$ dangling edges, sẵn sàng cho việc test code nhẹ. |
 | **3. MÔ HÌNH THỰC THỂ & ĐỊNH DANH** | | | |
 | **Không gian định danh (Namespace)** | **Toàn cục đơn lẻ:** Định danh trực tiếp qua `nameOrig`, `nameDest`. | **Khóa phức hợp (Composite Key):** Bắt buộc ghép `Bank_ID` + `Account_ID`, **phải chuẩn hóa Bank ID về cùng dạng số nguyên trước khi ghép** (xem Mục 0 — nguồn gốc bug lớn nhất của dataset này). | IBM yêu cầu bảo toàn chuỗi `StringType` cho Bank ID để tránh mất số $0$ đầu, NHƯNG cũng phải chuẩn hóa nhất quán giữa 2 file nguồn, nếu không sẽ tách đôi danh tính tài khoản. |
 | **Phân loại thực thể (`account_type`)** | **2 loại cơ bản:** `Customer` ($76.3\%$), `Merchant` ($23.7\%$). | **6 loại doanh nghiệp:** `Partnership`, `Corporation`, `Sole Proprietorship`, `Country`, `Individual`, `Direct` — nay chiếm **100%** tổng đỉnh (không còn `External/Unknown`). | IBM phản ánh chân thực các loại hình pháp nhân dùng để lập công ty bình phong (Shell companies). |
@@ -216,7 +219,7 @@ $\to$ **Khuyến nghị cho Task 3 trên IBM AML:** Ngưỡng `$10.000` sao ché
 | **4. CẤU TRÚC ĐỒ THỊ (TOPOLOGY)** | | | |
 | **Hình thái cấu trúc** | **Acyclic (Cây phi chu trình):** Cấu trúc phân nhánh hướng tâm. | **Directed Multigraph (Đa đồ thị):** Dày đặc, đa cạnh song song, có vòng. | IBM phức tạp hơn nhiều về mặt quan hệ topo học. |
 | **Giao dịch tự thân (Self-loops)** | **$0$ giao dịch ($0.0\%$)** | **$591.212$ giao dịch ($11.64\%$)** — không đổi, không bị ảnh hưởng bởi bug Bank ID. | IBM phản ánh các nghiệp vụ tài chính thực tế: Reinvestment, Sweeping, Sub-accounts. |
-| **Chu trình 3 đỉnh ($A \to B \to C \to A$)** | **$0$ chu trình (Khảo sát vét cạn toàn đồ thị)** | **$9$ chu trình chuẩn cấy theo thiết kế** (trong $54$ chuỗi CYCLE mọi độ dài, $2$–$12$ hop, tổng $287$ giao dịch — đây là nguồn gốc thật của "287"); truy vấn thực tế cho **7.473 kết quả thô** trên tập gian lận (chưa khử trùng multigraph, xem Mục 5.3) nhưng **$0$ kết quả** với ngưỡng gốc $10k+USD của Task 3 (giả thuyết structuring, xem Mục 5.4). | Minh chứng cốt lõi giải thích vì sao nhóm mở rộng sang IBM để cứu Task 3 — nhưng cần điều chỉnh ngưỡng lọc, không dùng nguyên $10k+USD của PaySim. |
+| **Chu trình 3 đỉnh ($A \to B \to C \to A$)** | **$0$ chu trình (Khảo sát vét cạn toàn đồ thị)** | **$9$ kịch bản CYCLE dài 3 hop được cấy** (trong $54$ chuỗi mọi độ dài, tổng $287$ giao dịch); truy vấn trên tập gian lận cho **7.473 motif rows thô / 45 bộ ba đỉnh duy nhất** (Mục 5.3), còn truy vấn cả ba cạnh USD >$10k cho **$0$ rows** (Mục 5.4). | Cần chọn điều kiện lọc dựa trên phân phối tiền tệ và số tiền thực tế; số motif không tự chứng minh hành vi phạm tội. |
 | **Độ lệch bậc (Degree Skewness)** | Lệch cực đại: In-Degree max = $113$, Out-Degree max = $3$. | Chưa đo lại số cụ thể sau khi sửa bug (số đỉnh đã đổi, phân phối bậc thực tế cần chạy lại `metrics.py` để có số chính xác). | PaySim minh họa hoàn hảo cho Vertex Cut; số liệu IBM cần đo lại — không dùng số cũ vì đỉnh đã thay đổi. |
 | **5. HÀNH VI TỘI PHẠM & GIAN LẬN** | | | |
 | **Tỷ lệ gian lận (Fraud Rate)** | **$0.1291\%$** ($8.213$ giao dịch gian lận) | **$0.1019\%$** ($5.177$ giao dịch gian lận) — không đổi, không bị ảnh hưởng bởi bug. | Tỷ lệ gian lận ở mức $\sim 0.1\%$ phản ánh đúng hiện thực cực đoan của bài toán Imbalanced Data. |
