@@ -2,17 +2,18 @@
 =================================================================
 TASK 1: GRAPHFRAME CONSTRUCTION & VALIDATION PIPELINE
 =================================================================
-[*] Loading Graph Data from Parquet [data/processed/sample/paysim]...
+[*] Running End-to-End ETL from raw CSV [data/raw/paysim/PS_20174392719_1491204439457_log.csv]...
+[*] --sample requested with --from-raw: inducing a ~100k-edge subgraph in-memory (raw_df stays full-size for spot-checks below)...
 [*] Instantiating GraphFrame(vertices, edges)...
 -----------------------------------------------------------------
 GRAPHFRAME TOPOLOGY SUMMARY
 -----------------------------------------------------------------
-Total Graph Vertices (|V|): 194,195
-Total Graph Edges    (|E|): 100,729
+Total Graph Vertices (|V|): 193,721
+Total Graph Edges    (|E|): 100,482
 Vertices Schema:
 root
  |-- id: string (nullable = true)
- |-- account_type: string (nullable = true)
+ |-- account_type: string (nullable = false)
  |-- balance: double (nullable = true)
 Edges Schema:
 root
@@ -31,29 +32,32 @@ VERIFICATION CHECKS
 -----------------------------------------------------------------
 RAW-TRANSACTION SPOT-CHECK
 -----------------------------------------------------------------
-  Skipped -- no raw_df loaded in fast/parquet mode.
-  Run with --from-raw for a full validation pass against the source CSV.
+  [PASS] C1509309988 -> M1643141512 @ step 1, amount=1876.44: 1 matching raw row(s)
+  [PASS] C1112456099 -> C1225616405 @ step 1, amount=26004.52: 1 matching raw row(s)
+  [PASS] C1458091526 -> C747464370 @ step 1, amount=323105.08: 1 matching raw row(s)
+  [PASS] C201677908 -> C451111351 @ step 1, amount=480222.51: 1 matching raw row(s)
+  [PASS] C1574873161 -> M1591916281 @ step 1, amount=1239.06: 1 matching raw row(s)
 -----------------------------------------------------------------
 SAMPLE VERTICES (Top 5 Customer & Merchant):
 -----------------------------------------------------------------
-+-----------+------------+----------+
-|id         |account_type|balance   |
-+-----------+------------+----------+
-|C484199463 |Customer    |1942.02   |
-|C892931811 |Customer    |1966.02   |
-|C1747053097|Customer    |7858787.73|
-|C130721104 |Customer    |25985.64  |
-|C361571676 |Customer    |0.0       |
-+-----------+------------+----------+
++-----------+------------+---------+
+|id         |account_type|balance  |
++-----------+------------+---------+
+|C1574873161|Customer    |395146.94|
+|C1692375649|Customer    |57949.84 |
+|C1532554556|Customer    |26833.9  |
+|C338620258 |Customer    |42855.47 |
+|C502891368 |Customer    |0.0      |
++-----------+------------+---------+
 only showing top 5 rows
 +-----------+------------+-------+
 |id         |account_type|balance|
 +-----------+------------+-------+
-|M842957574 |Merchant    |0.0    |
-|M1457148583|Merchant    |0.0    |
-|M870593736 |Merchant    |0.0    |
-|M1305777754|Merchant    |0.0    |
-|M312529481 |Merchant    |0.0    |
+|M80026551  |Merchant    |0.0    |
+|M1315795813|Merchant    |0.0    |
+|M75356024  |Merchant    |0.0    |
+|M56510351  |Merchant    |0.0    |
+|M1808527451|Merchant    |0.0    |
 +-----------+------------+-------+
 only showing top 5 rows
 -----------------------------------------------------------------
@@ -62,11 +66,11 @@ SAMPLE EDGES (Top 5 Fraudulent Transactions):
 +-----------+-----------+----------+----+--------+-------+
 |src        |dst        |amount    |step|type    |isFraud|
 +-----------+-----------+----------+----+--------+-------+
-|C576782065 |C2090737806|508782.2  |18  |CASH_OUT|1      |
-|C618768599 |C1191948500|91637.51  |122 |TRANSFER|1      |
-|C1444276641|C1067127400|37119.58  |113 |TRANSFER|1      |
-|C743239060 |C1443003835|1627389.26|164 |TRANSFER|1      |
-|C2141349568|C862273791 |590229.26 |199 |TRANSFER|1      |
+|C140702728 |C634210724 |14949.84  |2   |TRANSFER|1      |
+|C2079232448|C585834595 |12461.0   |11  |TRANSFER|1      |
+|C1137669976|C1526507740|65488.05  |14  |CASH_OUT|1      |
+|C494334546 |C428725863 |2701905.3 |16  |TRANSFER|1      |
+|C1218322192|C1107369132|1144089.37|18  |TRANSFER|1      |
 +-----------+-----------+----------+----+--------+-------+
 only showing top 5 rows
 -----------------------------------------------------------------
@@ -76,22 +80,22 @@ GRAPHFRAMES FUNCTIONAL INTEGRITY PROBE
 +-----------+--------+
 |         id|inDegree|
 +-----------+--------+
-|C1675375648|       6|
-| C746062580|       6|
-|C1374807407|       5|
-| C389378891|       5|
-|C2073764942|       5|
+| C938993659|       6|
+|C2030602460|       6|
+| C617718970|       5|
+| C694839216|       5|
+| C785371581|       5|
 +-----------+--------+
 only showing top 5 rows
 [*] Probing Out-Degrees (Top 5 Sender Hubs):
 +-----------+---------+
 |         id|outDegree|
 +-----------+---------+
-|C2050217908|        2|
-|C1231762984|        1|
-|C1592328987|        1|
-| C871947554|        1|
-| C557481287|        1|
+|C1432853687|        2|
+|C1109429562|        2|
+| C928182170|        2|
+| C726386047|        2|
+|C1574873161|        1|
 +-----------+---------+
 only showing top 5 rows
 =================================================================

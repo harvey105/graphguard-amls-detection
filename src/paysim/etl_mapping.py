@@ -1,5 +1,5 @@
 """
-File: src/utils/etl_mapping.py
+File: src/paysim/etl_mapping.py
 Role: Person 2 — ETL Mapping Functions for PaySim -> GraphFrames Schema (Section 4.1)
 """
 
