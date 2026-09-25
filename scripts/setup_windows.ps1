@@ -19,21 +19,43 @@ function Assert-Hash($Path, $Expected) {
 
 if (-not (Test-Path $python)) {
     $py = Get-Command py.exe -ErrorAction SilentlyContinue
+    $created = $false
+
     if ($py) {
-        & $py.Source -3.12 -m venv $venv
-    } else {
-        $fallback = Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312\python.exe'
-        if (-not (Test-Path $fallback)) {
-            throw 'Python 3.12 Windows was not found. Install it with winget install --id Python.Python.3.12 --exact.'
+        # Try 3.11 first (recommended for PySpark 3.5.1), fallback 3.12
+        foreach ($ver in @('3.11', '3.12')) {
+            & $py.Source -$ver -m venv $venv 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                $created = $true
+                Write-Host "Created .venv with Python $ver"
+                break
+            }
         }
-        & $fallback -m venv $venv
     }
-    if ($LASTEXITCODE -ne 0) { throw 'Could not create Windows .venv.' }
+
+    if (-not $created) {
+        # Fallback: look for direct Python install
+        foreach ($ver in @('Python311', 'Python312')) {
+            $fallback = Join-Path $env:LOCALAPPDATA "Programs\Python\$ver\python.exe"
+            if (Test-Path $fallback) {
+                & $fallback -m venv $venv
+                if ($LASTEXITCODE -eq 0) {
+                    $created = $true
+                    Write-Host "Created .venv with $ver"
+                    break
+                }
+            }
+        }
+    }
+
+    if (-not $created) {
+        throw 'Python 3.11 or 3.12 Windows was not found. Install with: winget install --id Python.Python.3.11 --exact'
+    }
 }
 
 $version = & $python --version 2>&1
-if ($LASTEXITCODE -ne 0 -or $version -notmatch 'Python 3\.12\.') {
-    throw ".venv must contain Windows Python 3.12. Found: $version"
+if ($LASTEXITCODE -ne 0 -or $version -notmatch 'Python 3\.(11|12)\.') {
+    throw ".venv must contain Windows Python 3.11 or 3.12. Found: $version"
 }
 
 $javaHome = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'Machine')
