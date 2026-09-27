@@ -83,7 +83,7 @@ Dạng rút gọn mà đề bài đưa ra, $PR(u) = \frac{1-d}{N} + d\sum_{v\in 
 
 > "We assume there is a 'random surfer' who is given a web page at random and keeps clicking on links, never hitting 'back' but eventually gets bored and starts on another random page. The probability that the random surfer visits a page is its PageRank."
 
-Hai chi tiết: **"never hitting back"** là giả định mô hình được tuyên bố rõ — quá trình **memoryless**, chỉ phụ thuộc vị trí hiện tại, tức một **Markov chain**; và xác suất thăm một trang **chính là** PageRank, nên PageRank là một **phân phối xác suất trên $V$**.
+Hai chi tiết: **"never hitting back"** nói rằng surfer không dùng nút Back; tính **memoryless/Markov** đến từ quy tắc chọn bước kế tiếp chỉ theo node hiện tại, **không** suy ra chỉ từ câu "never hitting back". Xác suất thăm một trang **chính là** PageRank, nên PageRank là một **phân phối xác suất trên $V$**.
 
 > **Cảnh báo trích dẫn.** Brin & Page viết tiếp: *"the $d$ damping factor is the probability at each page the 'random surfer' will get bored and request another random page."* Câu này đọc sát chữ **ngược với chính công thức của họ**: với $d = 0{,}85$ trong $PR(A) = (1-d) + d(\cdots)$ thì $d$ là xác suất **đi tiếp theo link**. Nhóm dùng quy ước của GraphFrames, Langville & Meyer và *Mining of Massive Datasets*: $d$ = xác suất follow link, $1-d$ = xác suất teleport.
 
@@ -125,8 +125,7 @@ Tức $\mathbf{r}$ là **eigenvector** của $M$ ứng **eigenvalue** $\lambda =
 
 Viết ra từng thành phần, $\mathbf{r} = M\mathbf{r}$ cho **dạng đệ quy** — đây là "bản chất" của PageRank trước khi có bất kỳ cách giải quyết nào:
 
-$$r(u) \;=\; \sum_{v} M_{uv}\,r(v) \;=\; \sum_{v\in B(u)} rac{A_{vu}\,r(v)}{d_{out}(v)} \qquad\left(	ext{simple graph: } \sum_{v\in B(u)}rac{r(v)}{L(v)}
-ight).$$
+$$r(u) \;=\; \sum_{v} M_{uv}\,r(v) \;=\; \sum_{v\in B(u)} \frac{A_{vu}\,r(v)}{d_{out}(v)} \qquad\left(\text{simple graph: } \sum_{v\in B(u)}\frac{r(v)}{L(v)}\right).$$
 
 *(Dangling node không đóng góp gì vì cột của chúng toàn 0 — và chính điều đó là vấn đề ở Bước 4.)*
 
@@ -231,7 +230,7 @@ $$\boxed{\;G \;=\; d\,S \;+\; (1-d)\,\frac{1}{N}\,J\;}, \qquad J = \mathbf{e}\ma
 
 $G$ gọi là **Google matrix**, với $G_{uv} = d\,S_{uv} + \frac{1-d}{N}$. Dạng tổng quát: $G = dS + (1-d)\mathbf{v}\mathbf{e}^{T}$. Chọn $\mathbf{v}$ tập trung vào một node cho **personalized PageRank** — chính là tham số `sourceId` của GraphFrames.
 
-> **Ràng buộc $0 < d < 1$ là CHẶT.** Tại $d = 1$ ta có $G = S$: vẫn stochastic nhưng *"most likely reducible"*, khi đó có thể **dao động vĩnh viễn** (closed class tuần hoàn), **toàn bộ mass bị hấp thụ vào một absorbing state**, hoặc **nghiệm không duy nhất**. Ở đầu kia, $d \to 0$ làm $\mathbf{r} \to \frac1N\mathbf{e}$, mất hết sức phân biệt. **Toàn bộ tác dụng của damping nằm ở chỗ $1-d > 0$.**
+> **Để vừa giữ thông tin cạnh vừa bảo đảm hội tụ, chọn $0 < d < 1$.** Tại $d = 1$ ta có $G = S$: vẫn stochastic nhưng có thể reducible hoặc tuần hoàn, khiến mass bị hấp thụ, nghiệm không duy nhất, hoặc phép lặp dao động. Tại $d = 0$, $G = J/N$ vẫn primitive và hội tụ ngay, nhưng mọi node có điểm bằng nhau, mất sức phân biệt. Điều kiện bảo đảm chống trapping là $1-d > 0$.
 
 #### 3.3.5.2 Bốn tính chất của $G$
 
@@ -241,7 +240,7 @@ $G$ gọi là **Google matrix**, với $G_{uv} = d\,S_{uv} + \frac{1-d}{N}$. D�
 
 **(3) Aperiodic.** **Period** của state $u$ là $\gcd\{n\ge 1 : (G^n)_{uu} > 0\}$. Ở đây $G_{uu} \ge \frac{1-d}{N} > 0$ nên $\gcd = 1$.
 
-> **Mâu thuẫn biểu kiến phải xử lý dứt điểm.** Nhóm đo được PaySim có **self-loop $= 0$**. Điều đó đúng cho $M$ và $S$ (đường chéo bằng 0), nhưng **sai hoàn toàn cho $G$**: chính teleportation tạo ra self-loop nhân tạo $G_{uu} \ge (1-d)/N > 0$, và đó mới là nguồn gốc tính aperiodic. Viết "PaySim không có self-loop" rồi vẫn dùng lập luận aperiodicity là **mâu thuẫn logic**.
+> **Phân biệt cạnh gốc và bước chuyển nhân tạo.** PaySim có **0 self-loop trong dữ liệu**, nên đường chéo $M$ bằng 0. Nhưng $S_{uu}=1/N$ tại mỗi dangling node $u$ (và bằng 0 tại node còn lại), do phép vá dangling. Sau teleportation, $G_{uu} \ge (1-d)/N > 0$ với **mọi** node; đó là bảo đảm aperiodicity, không phụ thuộc self-loop trong dữ liệu.
 
 **(4) Primitive.** Theo **tiêu chuẩn Frobenius** (*"$A \ge 0$ is primitive if and only if $A^{m} > 0$ for some $m > 0$"*), vì $G_{uv} \ge \frac{1-d}{N} > 0$ nên $G > 0$ và tiêu chuẩn thoả với $m = 1$.
 
@@ -350,7 +349,7 @@ $$\sum_u \tilde{r}^{(t+1)}(u) \;=\; 1 - d\sum_{v\in D} r^{(t)}(v) \;<\; 1 .$$
 
 - **(H1)** Tại fixed point, **thứ hạng hai dạng TRÙNG KHÍT**. Task 2 chỉ cần top-10 hub — một bài toán **thứ hạng** — nên thiếu số hạng dangling **không** làm hỏng kết quả ở điểm dừng. Cái hỏng là **giá trị tuyệt đối**.
 - **(H2)** Đây là chứng minh sạch cho khẳng định "rescale một lần ở cuối tương đương tái-phân-phối mỗi vòng, **tại** fixed point" (§3.3.11).
-- **(H3)** Tương đương **chỉ đúng tại fixed point**. Ở `maxIter` hữu hạn nhỏ hai dãy khác nhau. *(Ngoại lệ: nếu $M$ **nilpotent** bậc $K \le$ `maxIter` thì cả hai đã đứng yên đúng tại fixed point.)*
+- **(H3)** Tương đương **chỉ đúng tại fixed point**. Ở `maxIter` hữu hạn nhỏ hai dãy khác nhau. Nếu $M$ nilpotent bậc $K$, dãy **rút gọn** đứng yên sau $K$ vòng từ mọi khởi tạo; dãy đầy đủ vẫn có thể tiếp tục đổi do dangling mass.
 
 **Khai triển Neumann.** Vì $\rho(dM) < 1$, $(I-dM)^{-1} = \sum_{k\ge0}(dM)^k$, do đó
 
@@ -386,13 +385,13 @@ $$\boxed{\;\sum_{u\in C} r(u) \;\le\; d \;+\; (1-d)\frac{\lvert C\rvert}{N} \;\l
 
 **(iii) Ép $G$ primitive, biến phép lặp thành ánh xạ co.** $G > 0$ nên vừa irreducible vừa aperiodic; Perron–Frobenius cho $\mathbf{r}^{*} > 0$ duy nhất và hội tụ từ mọi khởi tạo; cận co cho $\lVert\mathbf{r}^{(t)}-\mathbf{r}^{*}\rVert_1 \le 2d^{\,t} \to 0$, **không cần giả thiết gì về graph**. Không có damping ($d = 1$) thì hệ số co bằng 1 và lập luận không còn hiệu lực.
 
-**(iv) Theo ngôn ngữ random surfer — thời gian kẹt hữu hạn với xác suất 1.** Gọi $T$ = số node walker ghé thăm trong một chặng đi theo link, tính cả node xuất phát. $T$ là biến **geometric** trên $\{1,2,\dots\}$ tham số $1-d$:
+**(iv) Theo ngôn ngữ random surfer — thời gian kẹt hữu hạn với xác suất 1.** Gọi $T$ = số lần quyết định Bernoulli cho phép tiếp tục trước lần **damping teleport** đầu tiên, cộng 1. $T$ là biến **geometric** trên $\{1,2,\dots\}$ tham số $1-d$; số bước thực sự đi theo link có thể **ngắn hơn** nếu walker gặp dangling node và phải teleport sớm:
 
 $$\Pr[T = k] = d^{\,k-1}(1-d),\qquad \mathbb{E}[T] = \frac{1}{1-d} \approx 6{,}67,\qquad \Pr[T > k] = 0{,}85^{k}.$$
 
 Đuôi tắt theo cấp số nhân, nên **xác suất walker ở lại vĩnh viễn trong bất kỳ cụm nào bằng 0**.
 
-> **Dùng đúng thuật ngữ xác suất:** $1/(1-d) \approx 6{,}67$ là **KỲ VỌNG**, không phải **cận trên**. Biến geometric **không bị chặn trên**. Viết "thời gian kẹt bị chặn trên bởi 6,67" là sai.
+> **Dùng đúng thuật ngữ xác suất:** $1/(1-d) \approx 6{,}67$ là **KỲ VỌNG** của $T$, không phải **cận trên** của thời gian kẹt thực tế. Biến geometric **không bị chặn trên**. Viết "thời gian kẹt bị chặn trên bởi 6,67" là sai.
 
 Molloy et al. (2016) diễn giải damping theo ngôn ngữ tài chính, dùng được trực tiếp cho PaySim: *"In financial transactions, the damping factor can be used to model an account saving."* Tức $1-d$ là xác suất một đồng tiền **dừng lại và được giữ** thay vì tiếp tục lưu thông.
 
@@ -404,7 +403,7 @@ Chữ "trapping" che ba cấu hình khác nhau:
 - **(b) Sink CÓ self-loop — một absorbing state thật, mass bị GIỮ LẠI chứ không leakage.** Ma trận vẫn stochastic (tổng luôn $=1$), nhưng sink hút **toàn bộ** mass; mọi node khác về 0. Đây là cấu hình khớp **sát chữ nhất** với cụm từ của đề bài. → **Ví dụ 2, §3.3.9.2.**
 - **(c) Cụm đóng nhiều node (spider trap) — tổng vẫn bằng 1 nhưng dồn hết vào cụm**, và nếu cụm tuần hoàn thì dãy lặp còn **không hội tụ**.
 
-Damping xử lý cả ba theo đúng một cách: cộng $\frac{1-d}{N} > 0$ vào **mọi** phần tử ma trận, phá mọi cấu trúc đóng và mọi chu kỳ cùng lúc.
+Damping cộng $\frac{1-d}{N} > 0$ vào **mọi** phần tử của ma trận **đã vá dangling** $S$, phá cấu trúc đóng và chu kỳ. Với trường hợp (a), phải vá leakage trước; damping đơn lẻ không bảo toàn tổng.
 
 #### 3.3.7.3 Sắc thái bắt buộc: damping xử lý trapping, không xử lý leakage
 
@@ -442,7 +441,7 @@ Số liệu là **Table 5.1 của Langville & Meyer (2006)**, *"Effect of $\alph
 |---|---|---|---|---|---|---|---|---|
 | số vòng lặp | 34 | 81 | 104 | **142** | 219 | 449 | 2.292 | 23.015 |
 
-**Đọc thành mệnh đề định lượng.** Hàm $t(d) = -\tau/\log_{10}d$ **trơn và lồi**, **không có điểm gãy** tại $0{,}85$. Câu đúng: chi phí lặp **tăng đơn điệu và tăng tốc khi $d\to1$** — $+54\%$ khi lên $0{,}90$, gấp $3{,}16$ lần khi lên $0{,}95$, gấp $162$ lần khi lên $0{,}999$. $0{,}85$ là **giá trị mặc định do tác giả công bố**; các con số cho thấy **cái giá phải trả** nếu đẩy $d$ cao hơn, chứ không chứng minh $0{,}85$ là tối ưu.
+**Đọc thành mệnh đề định lượng.** Hàm $t(d) = -\tau/\log_{10}d$ **trơn và tăng** trên $(0,1)$, **không có điểm gãy** tại $0{,}85$ (hàm lồi trên dải giá trị trong bảng, nhưng không lồi trên toàn $(0,1)$). Chi phí lặp tăng nhanh khi $d\to1$: $+54\%$ khi lên $0{,}90$, gấp $3{,}16$ lần khi lên $0{,}95$, gấp $162$ lần khi lên $0{,}999$. $0{,}85$ là **giá trị mặc định do tác giả công bố**; các con số cho thấy **cái giá phải trả** nếu đẩy $d$ cao hơn, chứ không chứng minh $0{,}85$ là tối ưu.
 
 Boldi, Santini & Vigna (2005) còn cho thấy — *"contradicting the common beliefs"* — trên graph thực, $d$ gần 1 **không** cho ranking có ý nghĩa hơn.
 
@@ -575,7 +574,7 @@ Số **đo trực tiếp** in đậm; số **dẫn xuất** đánh dấu **(\*)*
 >
 > **Chứng minh.** Lấy chu trình $v_0\to v_1\to\cdots\to v_0$. Mỗi đỉnh $v_i$ có ít nhất một cạnh vào (từ $v_{i-1}$) và một cạnh ra (tới $v_{i+1}$), nên là node dual-role. $\blacksquare$
 
-**Ba hệ quả:** (1) câu hỏi "PaySim có spider trap không" **quy về một lệnh SCC trên đúng $1\,769$ đỉnh** — vài giây, thay vì quét $6{,}36$ triệu cạnh; (2) nếu acyclic thì $M$ **nilpotent**, chuỗi Neumann hữu hạn, và phép lặp rút gọn cho **nghiệm đúng** sau $K$ vòng; (3) mọi node trung gian của một đường đi đều phải là dual-role, nên đường đi dài nhất **bị chặn trên bởi $1\,770$ cạnh**.
+**Ba hệ quả:** (1) có thể kiểm chu trình trên đồ thị con cảm sinh bởi $1\,769$ đỉnh dual-role (gồm kiểm cả self-loop; không thể suy ra thời gian chạy chỉ từ số đỉnh); (2) nếu graph gốc acyclic thì $M$ nilpotent và phép lặp rút gọn đạt nghiệm đúng sau $K$ vòng, với $K$ là bậc nilpotent; (3) một **đường đi đơn** có nhiều nhất $1\,769$ đỉnh trung gian dual-role, nên dài nhiều nhất $1\,770$ cạnh. Nếu có chu trình, độ dài của walk nói chung không bị chặn như vậy.
 
 > **Mệnh đề (dạng gần-đóng).** Đặt $\beta = \frac{1-d}{N} + \frac{d}{N}\sum_{v\in D}r(v)$ (phần phi-link, giống nhau cho mọi node) và $w(u) = \sum_{v:d_{out}(v)>0}\frac{A_{vu}}{d_{out}(v)}$ (**weighted in-degree**). Nếu **mọi** in-neighbour của $u$ là "người gửi thuần" (in-degree $= 0$) thì tại nghiệm dừng
 > $$r(u) \;=\; \beta\,\bigl(1 + d\,w(u)\bigr).$$
@@ -584,7 +583,7 @@ Số **đo trực tiếp** in đậm; số **dẫn xuất** đánh dấu **(\*)*
 
 **Đúng CHÍNH XÁC cho ít nhất $99{,}94\%$ node PaySim:** một node chỉ **không** thoả khi có ít nhất một in-neighbour dual-role; mỗi node dual-role có out-degree $\le 3$ nên gửi tới nhiều nhất 3 đích, vậy số node bị loại nhiều nhất là $3\times1\,769 = 5\,307$ (\*), tức $(9\,073\,900-5\,307)/9\,073\,900 = \mathbf{99{,}94\%}$.
 
-**Hai hệ quả định lượng:** (1) PageRank là hàm **affine đơn điệu tăng** của weighted in-degree, nên **top-10 PageRank $=$ top-10 weighted in-degree** cho $\ge 99{,}94\%$ graph; (2) vì $w(u) \le \text{indeg}(u) \le 113$, ta có $r(u)/\beta = 1 + d\,w(u) \le 1 + 0{,}85\times113 = \mathbf{97{,}05}$ — node cao điểm nhất chỉ hơn baseline **nhiều nhất $\approx 97$ lần**, một dự đoán Task 2 đo được.
+**Phạm vi của hệ quả:** Trên **tập node thoả điều kiện của mệnh đề** (ít nhất $99{,}94\%$), PageRank là hàm affine tăng của weighted in-degree và $r(u)/\beta \le 1 + 0{,}85\times113 = 97{,}05$. **Không** suy ra top-10 của toàn graph trùng top-10 weighted in-degree, hoặc node có PageRank cao nhất bị chặn bởi $97{,}05\beta$: một trong tối đa $5\,307$ node còn lại có thể đứng đầu.
 
 ---
 
@@ -606,10 +605,10 @@ Số **đo trực tiếp** in đậm; số **dẫn xuất** đánh dấu **(\*)*
 | 2 | Cột `weight` của edges | $= 1/d_{out}(\text{src})$, chỉ nhận $\{1{,}0;\,0{,}5;\,0{,}333\}$; $\ge 99{,}85\%$ cạnh có `weight` $= 1{,}0$ (\*) |
 | 3 | `edges.groupBy("src","dst").count().filter("count > 1").count()` | nhỏ, $\le 9\,313$ (\*); nếu $= 0$ thì PaySim là simple graph |
 | 4 | `N - g.outDegrees.count()` và `N - g.inDegrees.count()` | đúng $2\,720\,593$ và $6\,351\,538$ |
-| 5 | **SCC trên đồ thị con $1\,769$ node dual-role** | **acyclic** — đóng **bốn** chỗ cùng lúc |
-| 6 | `result.vertices.orderBy(desc("pagerank")).limit(10)` | node đứng đầu là **`C1286084959`**, **không** phải một Merchant |
+| 5 | Kiểm chu trình trên đồ thị con $1\,769$ node dual-role (SCC và self-loop) | Chưa có kết quả; nếu acyclic, tính thêm độ dài đường đi lớn nhất để biết bậc nilpotent |
+| 6 | `result.vertices.orderBy(desc("pagerank")).limit(10)` trên **full graph** | Chưa xác định: max in-degree không đủ để dự đoán node đứng đầu PageRank |
 
-**Dự đoán 5 đáng giá nhất.** Theo Bổ đề chu trình, mọi chu trình nằm trong $1\,769$ đỉnh đó, nên một lệnh SCC trả lời dứt điểm bốn câu hỏi bài đang phải phát biểu có điều kiện: (i) PaySim có spider trap không; (ii) $\rho(M) < 1$ có đúng không; (iii) $M$ có nilpotent không và bậc bao nhiêu; (iv) `maxIter = 10` là xấp xỉ hay nghiệm đúng.
+**Kiểm tra 5 đáng giá nhất.** Theo Bổ đề chu trình, mọi chu trình nằm trong $1\,769$ đỉnh đó. Kiểm SCC **và self-loop** xác định graph có acyclic hay không; nếu acyclic thì $M$ nilpotent và $\rho(M)=0$. Riêng bậc nilpotent $K$ cần tính thêm độ dài đường đi lớn nhất trong DAG, chứ SCC không trả lời được. Nếu có chu trình, chỉ riêng SCC cũng không quyết định được $\rho(M)<1$ hoặc mức hội tụ sau 10 vòng.
 
 #### `maxIter = 10`: lập luận ba chiều
 
@@ -617,7 +616,7 @@ Số **đo trực tiếp** in đậm; số **dẫn xuất** đánh dấu **(\*)*
 - **Chiều ủng hộ 1:** thứ hạng hội tụ nhanh hơn giá trị — Haveliwala (1999), *"As few as 10 iterations produced a good approximate ordering"*. *(Trích dẫn **gián tiếp** qua Langville & Meyer, nên là luận cứ hỗ trợ.)*
 - **Chiều ủng hộ 2, MẠNH NHẤT và tự chứa:** nếu dự đoán 5 xác nhận acyclic thì $M$ **nilpotent** bậc $K$, chuỗi Neumann hữu hạn, và $\tilde{\mathbf{r}}^{(t)} = \tilde{\mathbf{r}}^{*}$ với **mọi** $t \ge K$ — **không xấp xỉ, không phụ thuộc khởi tạo**. Nếu thêm $K \le 10$ thì `maxIter = 10` **KHÔNG phải xấp xỉ mà là NGHIỆM ĐÚNG**. Ví dụ 1 ở §3.3.9.1 là trường hợp đã kiểm được của chính lập luận này: $M^{4} = 0$ và dãy rút gọn đứng yên chính xác từ $t = 4$.
 
-> **Phát biểu đúng, để không tự mâu thuẫn:** `maxIter = 10` là **chính đáng cho mục tiêu lấy TOP-10 HUB** — một bài toán **thứ hạng**. Nhưng **chừng nào dự đoán 5 chưa chạy**, **không được công bố giá trị PageRank như số đã hội tụ**. Hai điều này không mâu thuẫn vì nói về **hai đại lượng khác nhau**.
+> **Phát biểu thận trọng:** `maxIter = 10` cho **top-10 tạm thời**; độ ổn định thứ hạng cần so với số vòng lặp lớn hơn hoặc có chứng minh $M$ nilpotent bậc $K \le 10$. Không được công bố giá trị PageRank như số đã hội tụ chỉ dựa vào cận $0{,}85^{10}$.
 
 ---
 
@@ -632,7 +631,7 @@ Mục này bắt buộc phải có vì Task 2 sẽ dẫn lại.
 
 **Lập luận cấu trúc mạnh nhất, dùng làm câu chốt:** PageRank chấm điểm mỗi **vertex**, trong khi `isFraud` là nhãn trên mỗi **edge**. Molloy et al. nói thẳng: *"One can view SNA as focused on identifying anomalous/special nodes while fraud detection finds anomalous edges."* Đây là **sai khác về đối tượng đo**, không chỉ là vấn đề độ chính xác. **Top-10 hub là danh sách nút trung tâm của mạng, không phải danh sách nghi vấn.**
 
-Ánh xạ sang PaySim: vì thứ hạng PageRank gần như trùng thứ hạng weighted in-degree (§3.3.10), node đứng đầu bảng nhiều khả năng là `C1286084959` — một tài khoản **Customer** — chứ không phải một Merchant. Đây là **dự đoán 6** ở §3.3.11.
+Ánh xạ sang PaySim: do §3.3.10 chỉ cho công thức chính xác trên một tập con node, **chưa thể xác định** node đứng đầu PageRank của full graph từ max in-degree; cần kết quả Task 2 để kiểm tra.
 
 > **Nhưng phải nêu cả vế thứ hai.** Luật ngưỡng tĩnh `isFlaggedFraud` (`amount > 200.000`) chỉ bắt **16/8.213** cạnh gian lận — **recall $0{,}19\%$**. Một luật cục bộ trên thuộc tính đơn lẻ gần như không phát hiện được gì. PageRank **không** thay thế nó một-đổi-một (nó chấm **vertex** còn `isFraud` gán nhãn **edge**), nhưng cho một chiều thông tin **CẤU TRÚC** mà mọi luật ngưỡng theo hàng đều không có. Đây là lý do chính đáng để nhóm dùng graph analytics.
 
@@ -645,7 +644,7 @@ Mục này bắt buộc phải có vì Task 2 sẽ dẫn lại.
 | Bước | Nội dung | Kết quả |
 |---|---|---|
 | 1 | Random walk / random surfer model | $\Pr[v\to u] = A_{vu}/d_{out}(v)$ |
-| 2 | Transition matrix column-stochastic | $\mathbf{r}^{(t+1)} = M\mathbf{r}^{(t)}$; $M$ **substochastic**, với PaySim thì **không** stochastic |
+| 2 | Transition matrix thô | $\mathbf{r}^{(t+1)} = M\mathbf{r}^{(t)}$; $M$ **substochastic**, với PaySim thì **không** stochastic |
 | 3 | Stationary distribution | $\mathbf{r} = M\mathbf{r}$, eigenvector ứng $\lambda = 1$ — **với giả thiết $M$ stochastic**, mà PaySim **không thoả** |
 | 4 | Ba vấn đề + stochasticity adjustment | $S = M + \frac1N\mathbf{e}\mathbf{a}^{T}$ — stochastic, nhưng có thể reducible |
 | 5 | Teleportation + primitivity adjustment | $G = dS + (1-d)\frac1N J$ — $G > 0$, primitive; Perron–Frobenius cho $\mathbf{r}$ dương duy nhất; ánh xạ co nên $\lVert\mathbf{r}^{(t)}-\mathbf{r}^{*}\rVert_1 \le 2d^{t}$; $\lvert\lambda_2(G)\rvert \le d$ |
@@ -655,8 +654,8 @@ Mục này bắt buộc phải có vì Task 2 sẽ dẫn lại.
 
 1. Chỉ ra **dạng rút gọn của đề bài là trường hợp riêng** ($D = \varnothing$, không parallel edges), và **PaySim vi phạm giả thiết mang tính quyết định** — $\lvert D\rvert = 2\,720\,593$ (\*), gần 30% graph — kèm chứng minh số ở §3.3.9.1.
 2. Tách bạch **hai cách giải quyết** cho **hai vấn đề** khác nhau, chỉ ra **thứ tự là bắt buộc**, rồi **hoà giải** chúng thành một cơ chế duy nhất qua cùng một teleportation vector (§3.3.7.3) — trả lời câu hỏi của đề bài bằng **bốn bất đẳng thức kiểm chứng được** và **hai ví dụ tính tay**, trong đó ví dụ 2 là bằng chứng số cho **đúng chữ "sink node trapping"**.
-3. **Mệnh đề tỉ lệ** $\mathbf{r} \parallel \tilde{\mathbf{r}}$ (§3.3.6.4) và **khai triển Neumann**: hai dạng cho cùng nghiệm dừng sau chuẩn hoá với **mọi** graph. Hệ quả: **sai về SCALE không đồng nghĩa sai về THỨ HẠNG** — lý do `maxIter = 10` **vẫn** cho top-10 hub dùng được, và cũng là lý do **không được công bố GIÁ TRỊ PageRank**.
-4. **Hai kết quả cấu trúc riêng cho PaySim** (§3.3.10) rút từ con số $1\,769$ dual-role: **Bổ đề chu trình** (thu câu hỏi spider trap về một lệnh SCC vài giây) và **dạng gần-đóng** $r(u) = \beta(1 + d\,w(u))$ đúng cho $\ge 99{,}94\%$ node, kéo theo cận $r(u)/\beta \le 97{,}05$ , và hệ quả là **top-10 PageRank trùng top-10 weighted in-degree** cho phần áp đảo graph.
+3. **Mệnh đề tỉ lệ** $\mathbf{r} \parallel \tilde{\mathbf{r}}$ (§3.3.6.4) và **khai triển Neumann**: hai dạng cho cùng nghiệm dừng sau chuẩn hoá với **mọi** graph. Sai về scale không đồng nghĩa sai về thứ hạng **tại nghiệm dừng**; với `maxIter = 10`, thứ hạng và giá trị đều cần kiểm chứng hội tụ.
+4. **Hai kết quả cấu trúc riêng cho PaySim** (§3.3.10) rút từ con số $1\,769$ dual-role: **Bổ đề chu trình** (thu kiểm tra chu trình về đồ thị con dual-role) và **dạng gần-đóng** $r(u) = \beta(1 + d\,w(u))$ đúng cho $\ge 99{,}94\%$ node. Cận $r(u)/\beta \le 97{,}05$ chỉ áp dụng cho tập node này, không phải toàn graph hay top-10.
 
 ---
 
