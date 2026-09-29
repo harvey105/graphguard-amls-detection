@@ -24,7 +24,9 @@ from graphframes import GraphFrame
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.common.spark_session import get_graph_session
 from src.common.graph_utils import load_graph, check_integrity
-from src.ibm_aml.etl import build_ibm_edges, build_ibm_vertices, sample_ibm_edges
+from src.ibm_aml.etl import (
+    build_ibm_edges, build_ibm_vertices, invalid_required_values, sample_ibm_edges,
+)
 
 # Ground-truth constants đã nghiệm thu (Edges, Fraud, Loops giữ nguyên)
 # Cập nhật số liệu thực chứng chính xác sau khi chuẩn hóa Bank ID:
@@ -63,10 +65,11 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
     # -------------------------------------------------------------
     # 1. KIỂM TRA SCHEMA
     # -------------------------------------------------------------
-    expected_v_cols = {"id", "account_type", "bank_name", "balance"}
+    expected_v_cols = {"id", "bank_id", "account_type", "bank_name", "balance"}
     expected_e_cols = {
         "src", "dst", "amount", "amount_received",
-        "payment_currency", "receiving_currency", "step", "type", "isFraud"
+        "payment_currency", "receiving_currency", "currency", "step",
+        "timestamp", "type", "payment_format", "isFraud", "isLaundering",
     }
 
     v_schema_ok = expected_v_cols.issubset(set(vertices_df.columns))
@@ -77,6 +80,15 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
     )
     test_results["Edges Schema Conformance"] = (
         e_schema_ok, f"Columns: {sorted(list(expected_e_cols))}"
+    )
+    expected_types = {
+        "bank_id": "string", "timestamp": "timestamp", "currency": "string",
+        "payment_format": "string", "isLaundering": "smallint",
+    }
+    actual_types = dict(vertices_df.dtypes + edges_df.dtypes)
+    test_results["IBM Contract Types"] = (
+        all(actual_types.get(name) == value for name, value in expected_types.items()),
+        str({name: actual_types.get(name) for name in expected_types}),
     )
 
     # -------------------------------------------------------------
@@ -106,6 +118,29 @@ def run_tests(spark: SparkSession, vertices_df: DataFrame, edges_df: DataFrame, 
 
     null_e_amount = edges_df.filter(F.col("amount").isNull()).count()
     test_results["No Null Edge Amount"] = (null_e_amount == 0, f"{null_e_amount} nulls")
+    null_v_fields = invalid_required_values(vertices_df, vertices_df.columns)
+    null_e_fields = invalid_required_values(edges_df, edges_df.columns)
+    test_results["No Null/Blank Fields in All Vertices"] = (
+        all(value == 0 for value in null_v_fields.values()), str(null_v_fields)
+    )
+    test_results["No Null/Blank Fields in All Edges"] = (
+        all(value == 0 for value in null_e_fields.values()), str(null_e_fields)
+    )
+    alias_errors = edges_df.filter(
+        (F.col("currency") != F.col("payment_currency")) |
+        (F.col("payment_format") != F.col("type")) |
+        (F.col("isLaundering") != F.col("isFraud")) |
+        (F.col("timestamp").cast("long") != F.col("step"))
+    ).count()
+    test_results["IBM Contract Aliases Match GraphGuard Fields"] = (
+        alias_errors == 0, f"{alias_errors} inconsistent edges"
+    )
+    bank_id_errors = vertices_df.filter(
+        F.split(F.col("id"), "_").getItem(0) != F.col("bank_id")
+    ).count()
+    test_results["Vertex Bank ID Matches Composite ID"] = (
+        bank_id_errors == 0, f"{bank_id_errors} inconsistent vertices"
+    )
 
     # -------------------------------------------------------------
     # 3. KIỂM TRA CHUẨN HÓA BANK ID & KHỚP TÀI KHOẢN (LOGIC MỚI CHUẨN XÁC)

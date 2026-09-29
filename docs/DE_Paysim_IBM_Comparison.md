@@ -191,10 +191,11 @@ $\to$ **Khuyến nghị cho Task 3 trên IBM AML:** Ngưỡng `$10.000` sao ché
 | | Vertices Parquet | Edges Parquet | Tổng |
 | :--- | :---: | :---: | :---: |
 | **Full dataset (lần đo 24/09/2026)** | 5.63 MB | 186.41 MB | **192.04 MB** |
-| **Sample đã commit trước checkpoint** | 1.23 MB | 3.61 MB | **4.84 MB** |
+| **Full dataset sau bổ sung contract 29/09/2026** | 6.36 MB | 199.06 MB | **205.42 MB** |
+| **Sample tái tạo sau fix 29/09/2026** | 1.32 MB | 3.90 MB | **5.22 MB** |
 
 * Số liệu Vertices Parquet cũ (`≈25MB`, ước lượng từ thời còn bug) đã được thay bằng số đo thật (`5.63MB`) — không cố quy đổi tỷ lệ chính xác với số đỉnh cũ, vì hiệu ứng nén Parquet (dictionary/run-length encoding) không tuyến tính theo số dòng.
-* Sample đã commit có **89 cạnh gian lận** (Tỷ lệ $0.0891\%$) trên $99.883$ cạnh / $119.146$ đỉnh. ETL hiện lấy đúng **89 fraud** mỗi lần tái tạo; tổng cạnh/đỉnh của phần không gian lận có thể dao động nhẹ theo thứ tự partition Spark. Dung lượng Parquet cũng có thể đổi nhẹ giữa các lần ghi.
+* Sample sau fix 29/09 có **89 cạnh gian lận** (Tỷ lệ $0.0891\%$) trên $99.869$ cạnh / $119.043$ đỉnh. ETL hiện lấy đúng **89 fraud** mỗi lần tái tạo; tổng cạnh/đỉnh của phần không gian lận có thể dao động nhẹ theo thứ tự partition Spark. Dung lượng Parquet cũng có thể đổi nhẹ giữa các lần ghi.
 
 ---
 
@@ -210,8 +211,8 @@ $\to$ **Khuyến nghị cho Task 3 trên IBM AML:** Ngưỡng `$10.000` sao ché
 | **2. QUY MÔ & TỐI ƯU BIG DATA** | | | |
 | **Số lượng Cạnh (Edges)** | **$6.362.620$ giao dịch** | **$5.078.345$ giao dịch** | Cả 2 đều đạt quy mô $>5\text{M}$ records, đáp ứng chuẩn bài toán Big Data. |
 | **Số lượng Đỉnh (Vertices)** | **$9.073.900$ đỉnh** | **$518.581$ đỉnh** *(đã sửa từ 1.033.669 — xem Mục 0)* | Đồ thị PaySim có số đỉnh gấp **~17.5 lần** IBM; mật độ cạnh/đỉnh của IBM dày hơn PaySim khoảng **~14 lần** ($9.79$ vs $0.70$ cạnh/đỉnh). Cả hai tỷ lệ này đã được tính lại — số cũ ("gấp 9 lần", "gấp 7 lần") bị loại bỏ vì dựa trên số đỉnh còn bug. |
-| **Kích thước Parquet (Full)** | $110.3\text{ MB}$ (V) + $162.6\text{ MB}$ (E) = **$272.9\text{ MB}$** | Khoảng **$192\text{ MB}$** (lần đo 24/09: $5.63 + 186.41\text{ MB}$) | Vertices của IBM co lại đáng kể sau khi bỏ ~515K đỉnh trùng lặp; kích thước file có thể đổi nhẹ khi ghi lại. |
-| **Kích thước Sample Subgraph** | $100.729$ cạnh / $194.195$ đỉnh ($153$ fraud) | Bản đã commit: $99.883$ cạnh / $119.146$ đỉnh (**$89$ fraud**); bản tái tạo có thể dao động nhẹ số cạnh/đỉnh | Bản sample của cả 2 đều đảm bảo $0$ dangling edges, sẵn sàng cho việc test code nhẹ. |
+| **Kích thước Parquet (Full)** | $110.3\text{ MB}$ (V) + $162.6\text{ MB}$ (E) = **$272.9\text{ MB}$** | **205.42 MB** (lần đo 29/09 sau bổ sung contract: $6.36 + 199.06\text{ MB}$) | Vertices của IBM co lại đáng kể sau khi bỏ ~515K đỉnh trùng lặp; kích thước tăng khi bổ sung cột contract. |
+| **Kích thước Sample Subgraph** | $100.729$ cạnh / $194.195$ đỉnh ($153$ fraud) | Bản sau fix 29/09: $99.869$ cạnh / $119.043$ đỉnh (**$89$ fraud**); bản tái tạo có thể dao động nhẹ số cạnh/đỉnh | Bản sample của cả 2 đều đảm bảo $0$ dangling edges, sẵn sàng cho việc test code nhẹ. |
 | **3. MÔ HÌNH THỰC THỂ & ĐỊNH DANH** | | | |
 | **Không gian định danh (Namespace)** | **Toàn cục đơn lẻ:** Định danh trực tiếp qua `nameOrig`, `nameDest`. | **Khóa phức hợp (Composite Key):** Bắt buộc ghép `Bank_ID` + `Account_ID`, **phải chuẩn hóa Bank ID về cùng dạng số nguyên trước khi ghép** (xem Mục 0 — nguồn gốc bug lớn nhất của dataset này). | IBM yêu cầu bảo toàn chuỗi `StringType` cho Bank ID để tránh mất số $0$ đầu, NHƯNG cũng phải chuẩn hóa nhất quán giữa 2 file nguồn, nếu không sẽ tách đôi danh tính tài khoản. |
 | **Phân loại thực thể (`account_type`)** | **2 loại cơ bản:** `Customer` ($76.3\%$), `Merchant` ($23.7\%$). | **6 loại doanh nghiệp:** `Partnership`, `Corporation`, `Sole Proprietorship`, `Country`, `Individual`, `Direct` — nay chiếm **100%** tổng đỉnh (không còn `External/Unknown`). | IBM phản ánh chân thực các loại hình pháp nhân dùng để lập công ty bình phong (Shell companies). |
