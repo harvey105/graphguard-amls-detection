@@ -33,7 +33,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\download_datas
 | `data/raw/**/*.csv` | **Bị loại trừ (Ignored)** | ~493.5 MB (PaySim) + ~510 MB (IBM HI-Small) | Chứa 1 CSV PaySim và 2 CSV IBM (Trans/accounts). Không đẩy lên GitHub. |
 | `data/raw/ibm_aml/HI-Small_Patterns.txt` | **Được theo dõi (Tracked)** | ~0.32 MB | Kịch bản gốc dùng cho audit motif; downloader cũng kiểm tra/tải lại nếu thiếu. |
 | `data/processed/paysim/*.parquet` | **Bị loại trừ (Ignored)** | ~273 MB | Đồ thị PaySim đầy đủ đã làm sạch. Không đẩy lên GitHub. |
-| `data/processed/ibm_aml/*.parquet` | **Bị loại trừ (Ignored)** | ~192.3 MB | Đồ thị IBM AML đầy đủ đã làm sạch (đã sửa bug Bank ID). Không đẩy lên GitHub. |
+| `data/processed/ibm_aml/*.parquet` | **Bị loại trừ (Ignored)** | ~205.42 MB sau fix 29/09 | Đồ thị IBM AML đầy đủ đã làm sạch, gồm các cột IBM adapter contract. Không đẩy lên GitHub. |
 | `data/processed/sample/` (cả 2 dataset) | **Được theo dõi (Tracked)** | ~6.5 MB (PaySim) + ~4.8 MB (IBM) | **ĐÃ CÓ SẴN TRÊN REPO.** Đồ thị mẫu thu nhỏ (~100k cạnh mỗi bộ) để lập trình thử nghiệm. |
 
 #### Cách sở hữu Đồ thị Đầy đủ (`data/processed/paysim/`, `data/processed/ibm_aml/`):
@@ -225,17 +225,18 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 *(Bảng tương đương Mục 2 của PaySim ở trên — bổ sung vì phiên bản trước của tài liệu này chưa có bảng đặc tả riêng cho IBM.)*
 
 ### 2.1. Bảng cấu trúc Đỉnh: `vertices.parquet`
-* **Đầy đủ (Full):** 518.581 đỉnh, **0 fallback** | **Bản mẫu đã commit:** 119.146 đỉnh (bản tái tạo có thể dao động nhẹ)
+* **Đầy đủ (Full):** 518.581 đỉnh, **0 fallback** | **Bản mẫu sau fix 29/09:** 119.043 đỉnh (bản tái tạo có thể dao động nhẹ)
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
 | `id` | `String` | `Bank_ID + "_" + Account_Number` (composite key, đã chuẩn hóa) | Bank ID đã bỏ số 0 đầu ở cả 2 phía trước khi ghép (Mục 0). |
+| `bank_id` | `String` | Bank ID đã chuẩn hóa | Khớp phần đầu của `id`; bổ sung theo IBM adapter contract mục 9.2. |
 | `account_type` | `String` | Loại pháp nhân | 6 giá trị: `Partnership`, `Corporation`, `Sole Proprietorship`, `Country`, `Individual`, `Direct`. **Không còn `External/Unknown`** sau fix. |
 | `bank_name` | `String` | Tên ngân hàng sở hữu tài khoản | Lấy trực tiếp từ `accounts.csv`. |
 | `balance` | `Double` | Luôn = `0.0` | IBM AML **không cung cấp** số dư hiện tại — khác PaySim, đừng dùng cột này cho phân tích số dư. |
 
 ### 2.2. Bảng cấu trúc Cạnh: `edges.parquet`
-* **Đầy đủ (Full):** 5.078.345 cạnh (5.177 nhãn gian lận) | **Bản mẫu đã commit:** 99.883 cạnh (89 nhãn gian lận; bản tái tạo giữ đúng 89 fraud, số cạnh còn lại có thể dao động nhẹ)
+* **Đầy đủ (Full):** 5.078.345 cạnh (5.177 nhãn gian lận) | **Bản mẫu sau fix 29/09:** 99.869 cạnh (89 nhãn gian lận; bản tái tạo giữ đúng 89 fraud, số cạnh còn lại có thể dao động nhẹ)
 
 | Tên trường (Field) | Kiểu dữ liệu | Ý nghĩa nghiệp vụ | Ghi chú kỹ thuật |
 | :--- | :---: | :--- | :--- |
@@ -244,8 +245,12 @@ Toàn bộ dữ liệu thô đã được làm sạch và xuất xưởng dướ
 | `amount_received` | `Double` | Số tiền nhận được (`Amount Received`) | Có thể khác `amount` nếu 2 phía dùng tiền tệ khác nhau (phí quy đổi/tỷ giá). |
 | `payment_currency` / `receiving_currency` | `String` | Tiền tệ giao dịch (2 phía) | **15 giá trị khác nhau** (`US Dollar`, `Euro`, `Yuan`...). Bắt buộc lọc theo cột này trước khi so sánh `amount`. |
 | `step` | `Integer` | Unix Epoch Seconds | `min=1661965200, max=1663492680`. **KHÁC PaySim** — không phải giờ mô phỏng, không giới hạn `<=744`. |
+| `timestamp` | `Timestamp` | Thời điểm giao dịch gốc | Cùng thời điểm với `step`, bổ sung theo IBM adapter contract. |
 | `type` | `String` | `Payment Format` gốc | `ACH`, `Wire`, `Credit Card`, `Cheque`, `Reinvestment`... |
+| `payment_format` | `String` | Bản sao của `type` | Bổ sung theo IBM adapter contract. |
 | `isFraud` | `Short` | `Is Laundering` gốc | `1`: Rửa tiền đã xác thực; `0`: Bình thường. |
+| `isLaundering` | `Short` | Bản sao của `isFraud` | Bổ sung theo IBM adapter contract. |
+| `currency` | `String` | Bản sao của `payment_currency` | Tiền tệ của `amount`, bổ sung theo IBM adapter contract. |
 
 ## **3. Bảng Đối chiếu Ngữ nghĩa Kỹ thuật (PaySim vs. IBM AML)**
 

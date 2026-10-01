@@ -20,6 +20,7 @@ QUAN TRONG -- khac biet ngu nghia so voi PaySim (doc truoc khi dung o Task 2-4):
      xac nhan Task 2.1). Xem so luong duoc in ra trong QUALITY REPORT.
 """
 
+import csv
 import os
 import sys
 from pyspark.sql import DataFrame, SparkSession
@@ -31,10 +32,39 @@ from pyspark.sql.types import (
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.common.spark_session import get_graph_session
 
+TRANS_HEADER = [
+    "Timestamp", "From Bank", "Account", "To Bank", "Account",
+    "Amount Received", "Receiving Currency", "Amount Paid",
+    "Payment Currency", "Payment Format", "Is Laundering",
+]
+ACCOUNTS_HEADER = [
+    "Bank Name", "Bank ID", "Account Number", "Entity ID", "Entity Name",
+]
+
+
+def validate_csv_header(path: str, expected: list[str]) -> None:
+    """Validate the ordered raw header before Spark maps duplicate Account columns by position."""
+    with open(path, newline="", encoding="utf-8-sig") as stream:
+        actual = next(csv.reader(stream), None)
+    if actual != expected:
+        raise ValueError(
+            f"Unexpected CSV header in {path}: expected {expected!r}, got {actual!r}"
+        )
+
+
+def invalid_required_values(df: DataFrame, columns: list[str]) -> dict[str, int]:
+    """Count nulls and blank strings in every required output column in one scan."""
+    counts = df.agg(*[
+        F.sum((F.col(name).isNull() | (F.trim(F.col(name).cast("string")) == "")).cast("long")).alias(name)
+        for name in columns
+    ]).first()
+    return {name: counts[name] or 0 for name in columns}
+
 
 def build_ibm_edges(spark: SparkSession, trans_csv_path: str) -> DataFrame:
     """Xay dung DataFrame Edges tu HI-Small_Trans.csv"""
     print(f"[*] Dang xu ly Edges tu: {trans_csv_path}")
+    validate_csv_header(trans_csv_path, TRANS_HEADER)
 
     schema = StructType([
         StructField("Timestamp", StringType(), True),
@@ -68,8 +98,8 @@ def build_ibm_edges(spark: SparkSession, trans_csv_path: str) -> DataFrame:
     to_bank_norm = F.col("To Bank").cast("long").cast("string")
 
     edges_df = raw_trans.select(
-        F.concat_ws("_", from_bank_norm, F.col("Account")).alias("src"),
-        F.concat_ws("_", to_bank_norm, F.col("Account_Dest")).alias("dst"),
+        F.concat(from_bank_norm, F.lit("_"), F.col("Account")).alias("src"),
+        F.concat(to_bank_norm, F.lit("_"), F.col("Account_Dest")).alias("dst"),
         F.col("Amount Paid").alias("amount"),
         # Giu them Amount Received + ca 2 currency de doi chieu/loc theo don
         # vi tien te sau nay -- KHONG duoc so sanh amount qua lai neu currency
@@ -77,10 +107,14 @@ def build_ibm_edges(spark: SparkSession, trans_csv_path: str) -> DataFrame:
         F.col("Amount Received").alias("amount_received"),
         F.col("Payment Currency").alias("payment_currency"),
         F.col("Receiving Currency").alias("receiving_currency"),
+        F.col("Payment Currency").alias("currency"),
         # Unix epoch second, KHONG PHAI hour-index nhu PaySim -- xem docstring
         F.unix_timestamp(F.col("Timestamp"), "yyyy/MM/dd HH:mm").cast("integer").alias("step"),
+        F.to_timestamp(F.col("Timestamp"), "yyyy/MM/dd HH:mm").alias("timestamp"),
         F.col("Payment Format").alias("type"),
+        F.col("Payment Format").alias("payment_format"),
         F.col("Is Laundering").alias("isFraud"),
+        F.col("Is Laundering").alias("isLaundering"),
     )
 
     return edges_df
@@ -92,6 +126,7 @@ def build_ibm_vertices(spark: SparkSession, accounts_csv_path: str, edges_df: Da
     Ket hop ra soat canh (edges_df) de bo sung cac dinh vang mat (External nodes).
     """
     print(f"[*] Dang xu ly Vertices tu: {accounts_csv_path}")
+    validate_csv_header(accounts_csv_path, ACCOUNTS_HEADER)
 
     # Schema tuong minh -- KHONG dung inferSchema=True. Bank ID trong file nay
     # co the co so 0 dau (vd "012", xem HI-Small_Patterns.txt: From Bank =
@@ -121,7 +156,8 @@ def build_ibm_vertices(spark: SparkSession, accounts_csv_path: str, edges_df: Da
         raise ValueError(f"{bank_id_cast_fail} Bank ID trong accounts.csv khong ep duoc sang so")
 
     explicit_vertices = raw_acc.select(
-        F.concat_ws("_", bank_id_norm, F.col("Account Number")).alias("id"),
+        F.concat(bank_id_norm, F.lit("_"), F.col("Account Number")).alias("id"),
+        bank_id_norm.alias("bank_id"),
         F.trim(F.split(F.col("Entity Name"), "#").getItem(0)).alias("account_type"),
         F.col("Bank Name").alias("bank_name"),
     ).withColumn("balance", F.lit(0.0))  # IBM khong cung cap balance hien tai
@@ -134,6 +170,7 @@ def build_ibm_vertices(spark: SparkSession, accounts_csv_path: str, edges_df: Da
 
     fallback_vertices = missing_ids.select(
         F.col("id"),
+        F.split(F.col("id"), "_").getItem(0).alias("bank_id"),
         F.lit("External/Unknown").alias("account_type"),
         F.lit(None).cast("string").alias("bank_name"),
         F.lit(0.0).alias("balance"),
@@ -197,19 +234,31 @@ def main():
     print("DATA QUALITY REPORT")
     print("-" * 65)
     checks = {}
+    checks["Non-empty graph"] = (
+        v_count > 0 and e_count > 0, f"{v_count:,} vertices, {e_count:,} edges"
+    )
 
-    null_v = vertices_df.filter(F.col("id").isNull()).count()
-    checks["No null vertex ids"] = (null_v == 0, f"{null_v} nulls")
-
-    null_e = edges_df.filter(
-        F.col("src").isNull() | F.col("dst").isNull() | F.col("amount").isNull()
-    ).count()
-    checks["No null src/dst/amount"] = (null_e == 0, f"{null_e} nulls")
+    null_v = invalid_required_values(vertices_df, vertices_df.columns)
+    null_e = invalid_required_values(edges_df, edges_df.columns)
+    checks["No null/blank vertex fields"] = (
+        all(value == 0 for value in null_v.values()), str(null_v)
+    )
+    checks["No null/blank edge fields"] = (
+        all(value == 0 for value in null_e.values()), str(null_e)
+    )
 
     invalid_ids = edges_df.filter(
         ~F.col("src").rlike(r"^[0-9]+_.+") | ~F.col("dst").rlike(r"^[0-9]+_.+")
     ).count()
     checks["Valid composite edge IDs"] = (invalid_ids == 0, f"{invalid_ids} invalid IDs")
+    invalid_vertex_ids = vertices_df.filter(
+        ~F.col("id").rlike(r"^[0-9]+_.+") |
+        ~F.col("bank_id").rlike(r"^[0-9]+$") |
+        (F.split(F.col("id"), "_").getItem(0) != F.col("bank_id"))
+    ).count()
+    checks["Valid composite vertex IDs"] = (
+        invalid_vertex_ids == 0, f"{invalid_vertex_ids} invalid IDs"
+    )
     checks["No fallback vertices"] = (fallback_count == 0, f"{fallback_count} fallback vertices")
 
     dangling_src = edges_df.join(vertices_df, edges_df["src"] == vertices_df["id"], "left_anti").count()
@@ -222,6 +271,11 @@ def main():
     raw_row_count = spark.read.csv(trans_path, header=True).count()
     checks["Edge count matches raw row count"] = (
         e_count == raw_row_count, f"{e_count:,} edges vs {raw_row_count:,} raw rows"
+    )
+    raw_account_count = spark.read.csv(accounts_path, header=True).count()
+    checks["Unique vertices match raw accounts"] = (
+        v_count == raw_account_count and fallback_count == 0,
+        f"{v_count:,} vertices vs {raw_account_count:,} raw accounts",
     )
 
     self_loops = edges_df.filter(F.col("src") == F.col("dst")).count()
