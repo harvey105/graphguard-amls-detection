@@ -166,7 +166,7 @@ def plot_degree_distribution(degree_distribution):
     ax.spines[["top", "right"]].set_visible(False)
     ax.spines[["left", "bottom"]].set_color("#cbd5e1")
     ax.tick_params(axis="both", labelsize=11)
-    ax.set_xlabel("Total degree (in-degree + out-degree)", fontsize=12, labelpad=10)
+    ax.set_xlabel("Total degree (in-degree + out-degree; log scale)", fontsize=12, labelpad=10)
     ax.set_ylabel("Number of accounts (log scale)", fontsize=12, labelpad=10)
     ax.set_title(
         "PaySim Degree Distribution\n"
