@@ -1,0 +1,2 @@
+dataset,scope,vertices,edges,fraud_edges,fraud_cycle_raw_rows,fraud_ordered_account_triples,fraud_directed_account_cycles,fraud_unordered_account_sets,fraud_transaction_combinations,fraud_cycle_csv_rows,usd_amount_gt,usd_cycle_raw_rows
+IBM AML HI-Small,full,518581,5078345,5177,7473,162,54,45,2491,54,10000.0,0

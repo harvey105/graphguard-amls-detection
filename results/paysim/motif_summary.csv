@@ -1,0 +1,2 @@
+dataset,scope,vertices,edges,cycle_raw_rows,cycle_directed_account_cycles,relay_raw_rows,relay_same_hour_rows,relay_strict_later_rows,relay_csv_rows,relay_amount_gt,relay_max_gap_hours,relay_time_rule
+PaySim,full,9073900,6362620,0,0,30,2,28,30,10000.0,24,transfer_step <= cashout_step; same-hour order unknown
