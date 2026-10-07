@@ -1,0 +1,4 @@
+edge_order,src,dst,timestamp,amount,payment_currency,amount_received,receiving_currency,payment_format,isFraud,source_line,source_file
+1,148350_811FFF630,148350_812D0C3C0,2022-09-05 18:42,48308.70,Saudi Riyal,48308.70,Saudi Riyal,ACH,1,2070,HI-Small_Patterns.txt
+2,148350_812D0C3C0,50528_812D0C600,2022-09-07 12:52,43816.98,Saudi Riyal,43816.98,Saudi Riyal,ACH,1,2071,HI-Small_Patterns.txt
+3,50528_812D0C600,148350_811FFF630,2022-09-07 18:12,42928.76,Saudi Riyal,42928.76,Saudi Riyal,ACH,1,2072,HI-Small_Patterns.txt
