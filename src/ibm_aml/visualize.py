@@ -18,7 +18,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from matplotlib.patches import FancyArrowPatch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -86,85 +86,41 @@ def select_example(cycles: list[list[dict]], cycle_csv: Path) -> list[dict]:
 
 
 def draw_cycle(payments: list[dict], output_path: Path) -> None:
-    """Render graph, numbered payments and source/scope notes in one PNG."""
+    """Render the three accounts, directed cycle and original-currency amounts."""
     currency = payments[0]["payment_currency"]
-    currency_label = "Saudi Riyal (SAR)" if currency == "Saudi Riyal" else currency
     short_currency = "SAR" if currency == "Saudi Riyal" else currency
     colors = ["#2563eb", "#7c3aed", "#0f766e"]
-    positions = [(0.50, 0.85), (0.85, 0.23), (0.15, 0.23)]
-    labels = "ABC"
-    edge_label_positions = [(0.79, 0.60), (0.50, 0.32), (0.21, 0.60)]
+    positions = [(0.50, 0.85), (0.80, 0.20), (0.20, 0.20)]
+    edge_labels = [(0.77, 0.60), (0.50, 0.28), (0.23, 0.60)]
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11})
-    fig = plt.figure(figsize=(14, 8.5), facecolor="white")
+    fig, ax = plt.subplots(figsize=(8.8, 6.5), facecolor="white")
     try:
-        fig.text(0.055, 0.93, "IBM AML: a directed three-account cycle",
-                 fontsize=23, weight="bold", color="#0f172a")
-        fig.text(0.055, 0.885, "HI-Small  |  One documented synthetic laundering scenario",
-                 fontsize=12, color="#475569")
-        graph_ax = fig.add_axes((0.055, 0.23, 0.59, 0.60))
-        graph_ax.set(xlim=(0, 1), ylim=(0, 1))
-        graph_ax.axis("off")
+        fig.subplots_adjust(left=0.035, right=0.965, bottom=0.04, top=0.88)
+        ax.set(xlim=(0, 1), ylim=(0, 1))
+        ax.axis("off")
+        fig.suptitle("IBM AML: a three-node cycle", fontsize=20,
+                     weight="bold", color="#0f172a", y=0.96)
         for i, payment in enumerate(payments):
-            graph_ax.add_patch(FancyArrowPatch(
+            ax.add_patch(FancyArrowPatch(
                 positions[i], positions[(i + 1) % 3], arrowstyle="-|>",
                 mutation_scale=25, linewidth=2.8, color=colors[i],
-                shrinkA=45, shrinkB=45, zorder=1,
+                shrinkA=85 if i == 1 else 38,
+                shrinkB=85 if i == 1 else 38, zorder=1,
             ))
-            x, y = edge_label_positions[i]
-            graph_ax.text(
-                x, y, f"{i + 1}  |  {payment['amount']:,.2f} {short_currency}\n"
-                f"{payment['timestamp']:%d %b, %H:%M}",
-                ha="center", va="center", fontsize=10.5, color=colors[i],
-                linespacing=1.6, bbox={"facecolor": "white", "edgecolor": "none", "pad": 5},
+            ax.text(
+                *edge_labels[i], f"{payment['amount']:,.2f} {short_currency}",
+                ha="center", va="center", fontsize=11, color=colors[i],
+                bbox={"facecolor": "white", "edgecolor": "none", "pad": 4},
             )
-        for label, position, payment in zip(labels, positions, payments):
-            bank, account = payment["src"].split("_", 1)
-            graph_ax.text(
-                *position, f"{label}\nBank {bank}\n{account}", ha="center", va="center",
-                fontsize=11, weight="bold", color="#0f172a", linespacing=1.65,
-                bbox={"boxstyle": "round,pad=0.75", "facecolor": "#f1f5f9",
+        for label, position, payment in zip("ABC", positions, payments):
+            ax.text(
+                *position, f"{label}\n{payment['src']}", ha="center", va="center",
+                fontsize=11, weight="bold", color="#0f172a", linespacing=1.8,
+                bbox={"boxstyle": "round,pad=0.7", "facecolor": "#f1f5f9",
                       "edgecolor": "#94a3b8", "linewidth": 1.2}, zorder=3,
             )
-        graph_ax.text(0.5, 0.50, "A → B → C → A\n3 accounts · 3 payments",
-                      ha="center", va="center", color="#475569", fontsize=12,
-                      linespacing=1.8)
-
-        detail_ax = fig.add_axes((0.70, 0.245, 0.25, 0.585))
-        detail_ax.set(xlim=(0, 1), ylim=(0, 1))
-        detail_ax.axis("off")
-        detail_ax.text(0.02, 0.98, "PAYMENT SEQUENCE", fontsize=11,
-                       color="#475569", weight="bold", va="top")
-        for i, payment in enumerate(payments):
-            top = 0.89 - i * 0.27
-            detail_ax.add_patch(FancyBboxPatch(
-                (0.01, top - 0.225), 0.96, 0.22,
-                boxstyle="round,pad=0.008", facecolor="#f8fafc", edgecolor="#e2e8f0",
-            ))
-            detail_ax.text(0.065, top - 0.045,
-                           f"{i + 1:02d}   {labels[i]} → {labels[(i + 1) % 3]}",
-                           color=colors[i], weight="bold", fontsize=12, va="top")
-            detail_ax.text(0.065, top - 0.105,
-                           f"{payment['amount']:,.2f} {short_currency}",
-                           color="#0f172a", weight="bold", fontsize=15, va="top")
-            detail_ax.text(0.065, top - 0.17,
-                           f"{payment['timestamp']:%Y-%m-%d %H:%M}  ·  {payment['payment_format']}",
-                           color="#475569", fontsize=10, va="top")
-
-        fig.text(0.055, 0.19,
-                 f"All three payments: amount > 10,000 in {currency_label}; Is Laundering = 1.",
-                 fontsize=11, color="#0f172a")
-        fig.text(0.055, 0.15,
-                 "Amounts retain their source currency. This is not the USD-only threshold result.",
-                 fontsize=10.5, color="#475569")
-        fig.text(0.055, 0.095,
-                 f"Source: HI-Small_Patterns.txt, transaction lines "
-                 f"{payments[0]['source_line']}–{payments[-1]['source_line']}. "
-                 "Account IDs use normalized bank_account keys.",
-                 fontsize=9, color="#64748b")
-        fig.text(0.055, 0.060,
-                 "The account cycle also appears in fraud_directed_cycles.csv. "
-                 "A labeled scenario is not an independent fraud finding.",
-                 fontsize=9, color="#64748b")
+        ax.text(0.5, 0.47, "A → B → C → A", ha="center", va="center",
+                fontsize=13, color="#475569")
         fig.savefig(output_path, dpi=300, facecolor="white")
     finally:
         plt.close(fig)
