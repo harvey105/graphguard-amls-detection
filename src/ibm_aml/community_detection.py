@@ -1,8 +1,5 @@
 """Task 4 - Community Detection (IBM AML HI-Small).
 
-Người phụ trách: N5 & N3/N4 .
-Part B — Task 4 IBM AML Community Detection (Mục tiêu mở rộng).
-
 Input:
     data/processed/sample/ibm_aml/
 Output:

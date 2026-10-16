@@ -1,8 +1,5 @@
 """Task 4 - Community Detection (PaySim).
 
-Người phụ trách: N5.
-Part B — Task 4 Community Detection & Insights.
-
 Input:
     data/processed/sample/paysim/
 Output:
@@ -192,15 +189,15 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
     return community_sizes, summary_df
 
 
-# ============================================================
-# 4. Kiểm tra Tính ổn định (Stability Check hỗ trợ Châu Anh N6)
-# ============================================================
+# ==============================================
+# 4. Kiểm tra Tính ổn định (Stability Check)
+# ==============================================
 
 def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int = 2):
     """
     Chạy LPA lặp lại 2-3 lần độc lập trên cùng dữ liệu để so sánh tính ổn định.
     
-    Cơ sở lý thuyết (Grimoire & Proposal Mục 3.4):
+    Cơ sở lý thuyết:
         LPA là thuật toán heuristic phân tán, có thể chịu ảnh hưởng bởi thứ tự cập nhật
         giữa các partitions hoặc tie-breaking khi nhận phiếu ngang nhau.
         Kiểm tra độ biến thiên kích thước của các cộng đồng lớn nhất qua các lần chạy.
