@@ -19,6 +19,7 @@ from src.common.graph_utils import load_graph
 from src.common.run_evidence import REPO_ROOT, write_run_evidence
 from src.common.spark_session import get_graph_session
 from src.motif.toy_cycle import find_three_node_cycles
+from src.motif.evaluation import binary_metrics, require_unlabelled
 
 
 def directed_account_cycles(matches: DataFrame) -> DataFrame:
@@ -43,6 +44,118 @@ def find_usd_cycles(graph: GraphFrame, minimum_amount: float) -> DataFrame:
         & (F.col("amount") > minimum_amount)
     )
     return find_three_node_cycles(GraphFrame(graph.vertices, edges))
+
+
+def find_topological_cycles(vertices: DataFrame, features: DataFrame) -> DataFrame:
+    """Enumerate directed account triples once, without labels or amounts.
+
+    Collapsing parallel edges *before* motif matching avoids multiplying every
+    historical transaction combination during the topology discovery stage.
+    """
+    require_unlabelled(features)
+    topology = features.where(F.col("src") != F.col("dst")).select("src", "dst").distinct()
+    matches = find_three_node_cycles(GraphFrame(vertices.select("id"), topology))
+    return matches.where(
+        (F.col("a.id") < F.col("b.id")) & (F.col("a.id") < F.col("c.id"))
+    ).selectExpr("a.id a", "b.id b", "c.id c")
+
+
+def build_temporal_cycle_features(topology: DataFrame, features: DataFrame) -> DataFrame:
+    """All three rotations, but only strictly chronological same-currency cycles.
+
+    The last edge is the decision event; the other two are already observable.
+    No currency conversion is inferred. FX edges and equal timestamps are
+    excluded explicitly. Each returned row is evidence, not an independent TP.
+    """
+    require_unlabelled(features)
+    edges = features.where(
+        (F.col("src") != F.col("dst")) & (F.col("amount") > 0)
+        & (F.col("payment_currency") == F.col("receiving_currency"))
+    ).select("event_id", "src", "dst", "step", "amount", "payment_currency")
+    result = None
+    for rotation in range(3):
+        names = ["a", "b", "c"]
+        order = names[rotation:] + names[:rotation]
+        query = topology.select(*(F.col(old).alias(new) for old, new in zip(order, names)))
+        query = query.join(edges.alias("x"), (F.col("a") == F.col("x.src")) & (F.col("b") == F.col("x.dst")))
+        query = query.join(edges.alias("y"),
+            (F.col("b") == F.col("y.src")) & (F.col("c") == F.col("y.dst"))
+            & (F.col("x.payment_currency") == F.col("y.payment_currency"))
+            & (F.col("x.step") < F.col("y.step")))
+        query = query.join(edges.alias("z"),
+            (F.col("c") == F.col("z.src")) & (F.col("a") == F.col("z.dst"))
+            & (F.col("x.payment_currency") == F.col("z.payment_currency"))
+            & (F.col("y.step") < F.col("z.step")))
+        flat = query.select(
+            "a", "b", "c", F.col("z.event_id").alias("event_id"),
+            F.col("x.event_id").alias("first_event_id"), F.col("y.event_id").alias("second_event_id"),
+            F.col("x.step").alias("first_step"), F.col("y.step").alias("second_step"),
+            F.col("z.step").alias("step"), F.col("x.payment_currency").alias("payment_currency"),
+            F.col("x.amount").alias("first_amount"), F.col("y.amount").alias("second_amount"),
+            F.col("z.amount").alias("amount"),
+            (F.col("z.step") - F.col("x.step")).alias("gap_seconds"),
+            F.least("x.amount", "y.amount", "z.amount").alias("minimum_cycle_amount"),
+            (F.least("x.amount", "y.amount", "z.amount") / F.greatest(
+                "x.amount", "y.amount", "z.amount")).alias("amount_ratio"),
+        )
+        result = flat if result is None else result.unionByName(flat)
+    return result
+
+
+def cycle_training_thresholds(features: DataFrame, train_end: int) -> DataFrame:
+    """Per-currency training quantiles, without comparing nominal currency units."""
+    require_unlabelled(features)
+    return features.where((F.col("step") <= train_end) & (F.col("amount") > 0)).groupBy(
+        "payment_currency"
+    ).agg(F.percentile_approx("amount", [0.5, 0.9], 10_000).alias("_quantiles"),
+          F.count("*").alias("training_transactions")).select(
+        "payment_currency", "training_transactions",
+        F.col("_quantiles")[0].alias("q50_amount"), F.col("_quantiles")[1].alias("q90_amount"),
+    )
+
+
+def temporal_cycle_alerts(candidates: DataFrame, rule: dict) -> DataFrame:
+    """Return evidence rows; callers deduplicate event_id before counting alerts."""
+    require_unlabelled(candidates)
+    if rule["rule_id"] == "abstain":
+        return candidates.where(F.lit(False))
+    quantile = float(rule["quantile"])
+    floor = F.lit(0.0) if quantile == 0 else F.col("q50_amount" if quantile == 0.5 else "q90_amount")
+    return candidates.where(
+        (F.col("gap_seconds") <= float(rule["window_hours"]) * 3600)
+        & (F.col("amount_ratio") >= float(rule["minimum_ratio"]))
+        & (F.col("minimum_cycle_amount") > floor)
+    )
+
+
+def score_cycle_validation(candidates: DataFrame, truth: DataFrame):
+    """Fixed 72-rule grid; score unique closing transactions on validation only."""
+    import pandas as pd
+
+    require_unlabelled(candidates)
+    validation = truth.where(F.col("split") == "validation")
+    support = validation.agg(F.count("*").alias("n"), F.sum("isFraud").alias("p")).first()
+    if not support.n:
+        raise ValueError("Empty validation split")
+    evidence = candidates.where(F.col("split") == "validation").join(
+        validation.select("event_id", "isFraud"), "event_id"
+    ).toPandas()
+    records = []
+    for hours in (1, 6, 24, 72, 168, 504):
+        for ratio in (0.0, 0.5, 0.8, 0.95):
+            for quantile in (0.0, 0.5, 0.9):
+                floor = 0.0 if quantile == 0 else evidence["q50_amount" if quantile == 0.5 else "q90_amount"]
+                mask = (evidence.gap_seconds <= hours * 3600) & (evidence.amount_ratio >= ratio) & (
+                    evidence.minimum_cycle_amount > floor
+                )
+                selected = evidence.loc[mask].drop_duplicates("event_id")
+                tp, n = int(selected.isFraud.sum()), len(selected)
+                records.append({
+                    "rule_id": f"cycle_h{hours:03d}_r{ratio:.2f}_q{quantile:.1f}",
+                    "window_hours": hours, "minimum_ratio": ratio, "quantile": quantile,
+                    **binary_metrics(support.n, support.p, tp, n - tp),
+                })
+    return pd.DataFrame(records)
 
 
 def write_csv(path: Path, fieldnames: list[str], rows: list[dict]) -> None:
@@ -138,7 +251,7 @@ def run(
             output_dir / "motif_run.json", spark, task="Task 3 IBM",
             inputs=[source], outputs=[output_dir / name for name in (
                 "motif_summary.csv", "fraud_directed_cycles.csv", "fraud_currency_counts.csv")],
-            sources=[Path(__file__), REPO_ROOT / "src/motif/toy_cycle.py",
+            sources=[Path(__file__), REPO_ROOT / "src/motif/toy_cycle.py", REPO_ROOT / "src/motif/evaluation.py",
                      REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/common/graph_utils.py",
                      REPO_ROOT / "src/common/windows_runtime.py", REPO_ROOT / "src/common/run_evidence.py"],
             parameters={"minimum_usd_amount": minimum_usd_amount, "max_csv_rows": max_csv_rows,

@@ -145,14 +145,41 @@ Thiếu Parquet/file bàn giao hoặc sai dữ liệu làm check thất bại. �
 
 | Notebook | Nội dung theo thứ tự | Input cần có |
 |---|---|---|
-| [PaySim](notebooks/03_khanh_PaySIM_motif.ipynb) | Toy motif → rule cycle/relay → kiểm tra biên → full motif và biểu đồ → phụ lục review PageRank 3.3 | Full PaySim Parquet và CSV relay bàn giao |
-| [IBM AML HI-Small](notebooks/03_khanh_IBM_motif.ipynb) | Review ETL/raw–Parquet → toy motif → full cycle → cycle nguồn và biểu đồ → review LPA full, hai lần sample và checker | Raw IBM HI-Small, full/sample IBM Parquet và CSV motif bàn giao |
+| [PaySim](notebooks/03_khanh_PaySIM_motif.ipynb) | Toy → baseline cycle/relay → audit nguyên nhân → hiệu chỉnh fan-in → đánh giá test/TP/FP/FN → review PageRank 3.3 | Full PaySim Parquet và CSV relay bàn giao |
+| [IBM AML HI-Small](notebooks/03_khanh_IBM_motif.ipynb) | Review ETL → toy/baseline → cycle không lọc nhãn → hiệu chỉnh currency/time/amount → đánh giá test → review LPA | Raw IBM HI-Small, full/sample IBM Parquet và CSV motif bàn giao |
 
 Mở notebook của dataset muốn trình bày trong VS Code/Jupyter, chọn Windows interpreter `.venv\Scripts\python.exe`, rồi **Restart Kernel → Run All**. Hai notebook độc lập: mỗi file tự kiểm tra dependency, khởi tạo Spark và dừng Spark ở cuối. Không cần chạy notebook còn lại. Phần review PageRank là kiến thức chung, được giữ ở phụ lục notebook PaySim vì đây là dataset chính; các ví dụ toán/toy được ghi rõ là dữ liệu tự tạo để minh họa.
 
 Notebook PaySim dùng heap `6g`, IBM dùng `8g`, đều `local[4]`. Các output và biểu đồ được lưu ngay trong notebook; thời gian chạy thực tế có ở cell cuối. Không xuất thêm CSV/PNG/log vào repo, checkpoint tạm nằm ngoài repo. Hàm export CSV của IBM được giữ đầy đủ để đọc nhưng không được gọi. Nếu chưa đăng ký kernel `graphguard-windows`, có thể chọn trực tiếp interpreter `.venv` trong VS Code.
 
 Các hàm production trong code cells được kiểm tra AST với source Python. Khi sửa module, cập nhật cell tương ứng và chạy lại đúng notebook trước khi bàn giao.
+
+## Hiệu chỉnh motif và đánh giá fraud trong notebook
+
+Các CSV bàn giao và CLI Task 3 giữ vai trò **baseline**: PaySim 0 cycle/30 relay không trúng nhãn; IBM audit 54 cycle trong graph đã lọc nhãn và query USD >10.000 bằng 0. `make check` kiểm tra tính đúng của baseline và các guardrail calibration, không coi số 0 là bằng chứng detector tốt. Các thí nghiệm hiệu chỉnh đầy đủ chạy trong hai notebook ở trên; kết quả/bảng/hình lưu ngay trong notebook, không xuất thêm file dữ liệu.
+
+- **PaySim:** audit mọi cặp TRANSFER→CASH_OUT trước khi đổi ngưỡng; bổ sung fan-in CASH_OUT từ hai nguồn khác nhau đến cùng nơi nhận. Witness phải ở giờ trước; thử 1/6/24/72 giờ, volume 1/2/5 và 6 ngưỡng amount training. So riêng 72 rule motif với 6 rule amount-only để kiểm tra phần cấu trúc có giúp hay không. Không gọi fan-in là vòng tiền.
+- **IBM:** tìm topology cycle trên toàn graph không có nhãn, gộp đa cạnh trước để giảm chi phí. Nối lại giao dịch thật, xét ba phép xoay, yêu cầu thời gian tăng nghiêm ngặt và cùng currency không có FX. Thử 72 cấu hình window/ratio/floor theo phân vị training của từng currency; không ép mọi đồng tiền vào ngưỡng USD.
+- **Đánh giá:** khoảng 60/20/20 theo thời gian, giữ timestamp ties; học amount scale từ training không nhãn, chọn theo validation F1, khóa rule rồi đánh giá test. Không có TP trên validation thì abstain. Báo TP/FP/FN/TN, precision/recall/F1 và prevalence với mẫu số là **mọi giao dịch**. IBM chỉ dự đoán cạnh đóng vòng; không nhân ba TP từ ba cạnh hoặc đếm tổ hợp motif thành giao dịch.
+
+Notebook ghi giả thuyết, grid, ranh giới thời gian, ngưỡng, cấu hình đã chọn, ablation, ví dụ cảnh báo đúng/báo nhầm/bỏ sót và giới hạn. Đây là internal temporal holdout trên dataset đã được khám phá, chưa phải benchmark ngoài mẫu mới hay bằng chứng triển khai thực tế. `alert=0` không xác nhận giao dịch hợp pháp. Ghép PageRank/LPA phải dùng snapshot đến thời điểm quyết định và không dùng thống kê fraud của nhãn test làm feature.
+
+Kết quả test đã lưu (cấu hình chọn trên validation, không chọn lại theo test):
+
+| Dataset / phương pháp | TP | FP | FN | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| PaySim fan-in: 72h, amount >838.316,69 | 101 | 41 | 4.149 | 71,13% | 2,38% | 4,60% |
+| PaySim amount-only, cùng ngưỡng | 798 | 80 | 3.452 | 90,89% | 18,78% | 31,12% |
+| IBM cycle: 168h, không thêm amount floor/ratio | 41 | 91 | 1.756 | 31,06% | 2,28% | 4,25% |
+| IBM mọi temporal cycle trong 504h | 57 | 151 | 1.740 | 27,40% | 3,17% | 5,69% |
+
+**Không kết luận optimizer đã cải thiện detector:** cả hai cấu hình motif được chọn đều có F1 test thấp hơn phương án đối chiếu. PaySim không có cycle ba đỉnh để tìm bằng cách đổi ngưỡng; fan-in là motif bổ sung. IBM có cycle không dùng nhãn, nhưng cycle ba đỉnh/cạnh đóng vòng bao phủ ít laundering. Các phát hiện âm này được giữ cùng TP/FP/FN để hỗ trợ quyết định tích hợp PageRank/LPA sau này.
+
+Code chung ở `src/motif/evaluation.py`; thuật toán mỗi dataset ở `src/{paysim,ibm_aml}/motif_finding.py`, được hiển thị nguyên hàm và đối chiếu AST trong notebook. Kiểm tra độc lập về rò nhãn, witness tương lai/cùng giờ, currency, phép xoay, đa cạnh và đếm TP duy nhất:
+
+```powershell
+& .\.venv\Scripts\python.exe -m unittest tests.test_motif_calibration -v
+```
 
 ## Cấu trúc repository và phân công code
 

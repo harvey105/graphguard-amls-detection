@@ -51,7 +51,8 @@ print('[PASS] Windows Python ' + sys.version.split()[0] + '; ' + result.stderr.s
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.verify_motif_outputs')
     Invoke-CheckPython -Arguments @('-m', 'src.paysim.verify_motif_outputs')
     Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_task3_motifs', 'tests.test_ibm_motif_outputs',
-        'tests.test_paysim_motif_outputs', 'tests.test_run_evidence', 'tests.test_ibm_cycle_visual', '-v')
+        'tests.test_paysim_motif_outputs', 'tests.test_run_evidence', 'tests.test_ibm_cycle_visual',
+        'tests.test_motif_calibration', '-v')
     Invoke-CheckPython -Arguments @('tests\test_ibm_aml_etl.py')
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.motif_finding', '--output-dir', $scratch)
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.verify_motif_outputs', '--output-dir', $scratch, '--compare-dir', 'results\ibm_aml', '--require-evidence')
