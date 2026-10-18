@@ -29,7 +29,7 @@ flowchart LR
 
 ## Trạng thái và phạm vi
 
-Mốc hiện tại là **N4 toy motif ngày 21/09/2026**. Demo `A → B → C → A`, PowerShell runtime và notebook đã có thể chạy độc lập. Các module PaySim/IBM cho Task 2–4 đã được đặt đúng vị trí để phối hợp nhóm, nhưng những file có `TODO` vẫn là scaffold theo lịch phân công; README này không coi các deadline sau 21/09 là đã hoàn thành.
+Phần của Khánh đến **Final Task 4 IBM (07/10)** được trình bày trong [`notebooks/03_khanh_complete_presentation.ipynb`](notebooks/03_khanh_complete_presentation.ipynb): toy motif, review PageRank 3.3, review IBM ETL, full Task 3 PaySim/IBM và review LPA IBM. Notebook có code thuật toán đầy đủ, giải thích tiếng Việt, kiểm tra độc lập và biểu đồ nhúng. PASS kỹ thuật không thay phê duyệt của người review và không xác nhận toàn bộ công việc của cả nhóm.
 
 Hai dataset được dùng:
 
@@ -110,6 +110,44 @@ IBM AML HI-Small dùng cả transactions và accounts CSV; chạy ETL và kiểm
 ```
 
 ETL ghi full Parquet vào `data/processed/ibm_aml/` và sample vào `data/processed/sample/ibm_aml/`. Với bản HI-Small hiện tại, full graph có 518.581 tài khoản, 5.078.345 giao dịch, 0 `External/Unknown`; sample có 89 giao dịch gắn nhãn gian lận. Trên IBM, `step` là Unix epoch seconds và `amount` giữ nguyên tiền tệ gốc: lọc ngưỡng tiền phải kèm `payment_currency`. Truy vấn 3-cycle trên các cạnh `isFraud=1` cho 7.473 motif rows thô nhưng chỉ 45 bộ ba đỉnh duy nhất sau khi khử phép xoay và đa cạnh; đây là tín hiệu theo nhãn, không tự chứng minh 45 vòng rửa tiền thật. Xem `docs/person2_handoff.md` để biết cách đếm đúng.
+
+## Kiểm tra motif và review Task 4 IBM
+
+Chạy tại thư mục gốc repo, với full IBM và PaySim Parquet đã được ETL tạo:
+
+```powershell
+# Entry point trực tiếp, không cần cài GNU Make
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_task3.ps1
+
+# Cùng quy trình, nếu đã có GNU Make cho Windows trong PATH
+make check
+
+# Review LPA IBM sample: kiểm tra CSV và so sánh 2 lần chạy
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_task4.ps1
+
+# Kiểm tra full IBM, 1 lần chạy; không kết luận stability từ 1 lần
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_task4.ps1 -Full -Runs 1
+
+# Các target tương ứng khi có GNU Make cho Windows
+make check-task4
+make check-task4-full
+```
+
+`check` xác nhận Windows Python 3.12/JDK 17, phiên bản Spark/GraphFrames, `pip check`, test motif/CSV/fingerprint, cùng schema/integrity của full IBM graph. Nó chạy lại motif trên **cả full IBM và full PaySim**, đối chiếu từng dòng với CSV bàn giao và kiểm tra manifest có hash input/output, mã nguồn và runtime. IBM phải có **54 directed cycles**, **2.491 tổ hợp giao dịch**, **45 bộ ba không xét chiều**; query không dùng nhãn với ba cạnh USD >10.000 phải có **0** kết quả. PaySim phải có **0 cycle** và **30 relay**, gồm 2 cặp cùng giờ chưa biết thứ tự thật. Evidence cục bộ giữ tại `results/motif/check_runs/`, log ở `results/ibm_aml/check_task3.log`.
+
+`check-task4` chạy code LPA của Hoàng và checker riêng của Khánh: kiểm tra ID tài khoản đầy đủ/không trùng, label nguyên/không null, summary của **tất cả cộng đồng**, thống kê giao dịch/fraud/internal edges và tiền theo từng `payment_currency`. CSV top 50 vẫn dành cho trình bày; `community_summary_all.csv` dùng nghiệm thu, `community_amounts_by_currency.csv` giữ riêng đơn vị tiền. Evidence và CSV review nằm tại `results/ibm_aml/task4_check/{sample,full}/run_N/`; log ở `results/ibm_aml/check_task4.log`. Hai lần LPA được so sánh theo thành viên cụm, bỏ qua việc đổi số label; khác biệt được báo cáo, không bị tự động coi là lỗi thuật toán.
+
+LPA giữ backend GraphX và `maxIter=5`, đưa topology `id/src/dst` vào thuật toán rồi join lại vertex metadata. Gate giới hạn 4 worker; sample dùng heap `4g`, full dùng `8g` vì thử full ở `4g` đã gặp `OutOfMemoryError` trên máy kiểm tra. Có thể đổi bằng `-DriverMemory` và `-Parallelism`; bản module có các tùy chọn `--driver-memory`/`--parallelism`. `task4_run.json` ghi runtime/heap thực của process LPA, `task4_check.json` ghi đối chiếu độc lập; cả hai có hash input/output/source. Không suy ra cấu hình full này phù hợp với mọi máy từ một lần kiểm tra.
+
+Thiếu Parquet/file bàn giao hoặc sai dữ liệu làm check thất bại. Đây là các gate cho **Task 3 và Task 4 IBM**, chưa kiểm chứng mọi task trong repository. Manifest chỉ ghi thực chứng tự động, không thay thế review của Hoàng hay duyệt final của Tuệ Minh. Tiêu chí review và giới hạn diễn giải có trong notebook trình bày của Khánh bên dưới.
+
+## Notebook trình bày toàn bộ phần Khánh
+
+Mở [`notebooks/03_khanh_complete_presentation.ipynb`](notebooks/03_khanh_complete_presentation.ipynb) trong VS Code/Jupyter và chọn Windows interpreter `.venv\Scripts\python.exe`, rồi **Restart Kernel → Run All**. Notebook lưu sẵn output thực chạy và biểu đồ; thầy có thể đọc code, giải thích và kết quả trong cùng một file.
+
+Notebook cần raw IBM HI-Small, full PaySim/IBM Parquet và IBM sample đã được ETL tạo theo hướng dẫn trên. Chạy full motif, dựng lại IBM ETL trong bộ nhớ, đối chiếu raw/Parquet, chạy LPA full và hai lần sample. Spark dùng heap `8g`, `local[4]`; thời gian thực chạy được ghi trong output cuối. Không xuất thêm CSV/PNG/log vào repo; checkpoint tạm nằm ngoài repo. Hàm export CSV production có đầy đủ trong notebook để đọc nhưng không được gọi. Kernel tùy chỉnh có tên `graphguard-windows`; trong VS Code có thể chọn trực tiếp interpreter `.venv` nếu chưa đăng ký kernel đó.
+
+Các hàm production hiển thị trong code cells được kiểm tra AST với source Python để phát hiện notebook bị lệch code. Khi sửa module, cập nhật cell tương ứng và chạy lại notebook trước khi bàn giao.
 
 ## Cấu trúc repository và phân công code
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 from pathlib import Path
 
 from graphframes import GraphFrame
@@ -15,6 +16,7 @@ from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
 from src.common.graph_utils import load_graph
+from src.common.run_evidence import REPO_ROOT, write_run_evidence
 from src.common.spark_session import get_graph_session
 from src.motif.toy_cycle import find_three_node_cycles
 
@@ -26,6 +28,8 @@ def find_relays(
     strict_time: bool = False,
 ) -> DataFrame:
     """Find three-account relays; same-hour order is unknown in PaySim."""
+    if not math.isfinite(minimum_amount) or minimum_amount < 0 or max_gap_hours <= 0:
+        raise ValueError("finite minimum_amount >= 0 and max_gap_hours > 0 required")
     eligible_edges = graph.edges.where(
         F.col("type").isin("TRANSFER", "CASH_OUT")
         & (F.col("amount") > minimum_amount)
@@ -75,14 +79,18 @@ def run(
     max_gap_hours: int = 24,
     max_csv_rows: int = 1_000,
     strict_time: bool = False,
+    input_dir: Path | None = None,
 ) -> dict:
-    if minimum_amount < 0 or max_gap_hours <= 0 or max_csv_rows <= 0:
-        raise ValueError("minimum_amount >= 0, max_gap_hours > 0, max_csv_rows > 0 required")
-    source = Path("data/processed/sample/paysim" if sample else "data/processed/paysim")
-    output_dir = output_dir or Path("results/paysim/sample" if sample else "results/paysim")
+    if not math.isfinite(minimum_amount) or minimum_amount < 0 or max_gap_hours <= 0 or max_csv_rows <= 0:
+        raise ValueError("finite minimum_amount >= 0, max_gap_hours > 0, max_csv_rows > 0 required")
+    source = (input_dir or Path("data/processed/sample/paysim" if sample else "data/processed/paysim")).resolve()
+    default_output = "results/paysim/custom" if input_dir else ("results/paysim/sample" if sample else "results/paysim")
+    output_dir = (output_dir or Path(default_output)).resolve()
     spark = get_graph_session("GraphGuard-PaySim-Task3")
     try:
-        graph = load_graph(spark, str(source))
+        loaded = load_graph(spark, str(source))
+        graph = GraphFrame(loaded.vertices.select("id"), loaded.edges.select(
+            "src", "dst", "type", "amount", "step", "isFraud"))
         graph.vertices.cache()
         graph.edges.cache()
         vertex_count = graph.vertices.count()
@@ -106,7 +114,7 @@ def run(
 
         summary = {
             "dataset": "PaySim",
-            "scope": "sample" if sample else "full",
+            "scope": "custom" if input_dir else ("sample" if sample else "full"),
             "vertices": vertex_count,
             "edges": edge_count,
             "cycle_raw_rows": cycle_raw_rows,
@@ -124,6 +132,15 @@ def run(
         }
         write_csv(output_dir / "motif_summary.csv", list(summary), [summary])
         write_csv(output_dir / "relay_candidates.csv", columns, examples)
+        write_run_evidence(
+            output_dir / "motif_run.json", spark, task="Task 3 PaySim",
+            inputs=[source], outputs=[output_dir / name for name in ("motif_summary.csv", "relay_candidates.csv")],
+            sources=[Path(__file__), REPO_ROOT / "src/motif/toy_cycle.py",
+                     REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/common/graph_utils.py",
+                     REPO_ROOT / "src/common/windows_runtime.py", REPO_ROOT / "src/common/run_evidence.py"],
+            parameters={"minimum_amount": minimum_amount, "max_gap_hours": max_gap_hours,
+                        "strict_time": strict_time, "max_csv_rows": max_csv_rows}, metrics=summary,
+        )
         print(f"[PASS] PaySim {summary['scope']}: {summary}")
         return summary
     finally:
@@ -133,6 +150,7 @@ def run(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sample", action="store_true", help="Use the sample graph")
+    parser.add_argument("--input-dir", type=Path, help="Custom graph Parquet directory")
     parser.add_argument("--output-dir", type=Path,
                         help="CSV directory; defaults to results/paysim[/sample]")
     parser.add_argument("--minimum-amount", type=float, default=10_000.0)
@@ -141,8 +159,10 @@ def main() -> None:
     parser.add_argument("--strict-time", action="store_true",
                         help="Exclude same-hour pairs whose internal order is unknown")
     args = parser.parse_args()
+    if args.sample and args.input_dir:
+        parser.error("Choose --sample or --input-dir")
     run(args.sample, args.output_dir, args.minimum_amount, args.max_gap_hours,
-        args.max_csv_rows, args.strict_time)
+        args.max_csv_rows, args.strict_time, args.input_dir)
 
 
 if __name__ == "__main__":

@@ -46,6 +46,12 @@ data/processed/**/*.parquet
 data/processed/ibm_aml/
 
 # Generated results
+results/.task3-check-*/
+results/ibm_aml/check_task3.log
+results/ibm_aml/task4_check/
+results/ibm_aml/check_task4.log
+results/motif/check_runs/
+results/motif/task3_shared_notebook_check.*
 results/**/*.parquet
 data/processed/paysim/
 data/processed/ibm_aml/

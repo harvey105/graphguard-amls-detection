@@ -1,5 +1,8 @@
 """Task 4 - Community Detection (IBM AML HI-Small).
 
+Người phụ trách: N5 & N3/N4 .
+Part B — Task 4 IBM AML Community Detection (Mục tiêu mở rộng).
+
 Input:
     data/processed/sample/ibm_aml/
 Output:
@@ -15,6 +18,7 @@ Mục tiêu kỹ thuật:
 """
 
 import argparse
+import csv
 import os
 import sys
 from pathlib import Path
@@ -28,6 +32,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.common.spark_session import get_graph_session
+from src.common.run_evidence import REPO_ROOT, write_run_evidence
 
 
 # ============================================================
@@ -40,6 +45,8 @@ DEFAULT_CHECKPOINT_DIR = Path("checkpoints/ibm_aml_lpa")
 
 COMMUNITIES_FILENAME = "communities.csv"
 COMMUNITY_SUMMARY_FILENAME = "community_summary.csv"
+COMMUNITY_SUMMARY_ALL_FILENAME = "community_summary_all.csv"
+COMMUNITY_AMOUNTS_FILENAME = "community_amounts_by_currency.csv"
 
 
 # ============================================================
@@ -76,14 +83,21 @@ def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = 
     """
     Thực thi Label Propagation Algorithm (LPA) trên IBM AML graph.
     """
+    if max_iter <= 0:
+        raise ValueError("max_iter must be > 0")
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     spark.sparkContext.setCheckpointDir(str(checkpoint_dir.resolve()))
 
     print(f"\n[*] Đang thực thi LPA trên IBM AML (maxIter={max_iter}) với checkpoint tại: {checkpoint_dir} ...")
-    lpa_result = graph.labelPropagation(maxIter=max_iter)
+    # LPA voting uses topology. Keep all parallel/self-loop edges, but avoid
+    # carrying transaction attributes and vertex metadata through GraphX.
+    topology = GraphFrame(graph.vertices.select("id"), graph.edges.select("src", "dst"))
+    labels = topology.labelPropagation(maxIter=max_iter)
+    lpa_result = graph.vertices.join(labels.select("id", "label"), on="id", how="inner")
 
     lpa_result.cache()
     total_labeled = lpa_result.count()
+    labels.unpersist()
     print(f"[+] LPA IBM AML hoàn tất. Tổng số đỉnh đã gán nhãn: {total_labeled:,}")
 
     return lpa_result
@@ -119,6 +133,8 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
     )
 
     total_communities = community_sizes.count()
+    if total_communities == 0:
+        raise ValueError("Cannot analyze an empty IBM graph")
     singleton_count = community_sizes.filter(F.col("member_count") == 1).count()
     multi_member_count = total_communities - singleton_count
 
@@ -138,6 +154,8 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
     edges_with_labels.cache()
 
     total_edges = edges_with_labels.count()
+    if total_edges == 0:
+        raise ValueError("Cannot analyze an IBM graph without transactions")
     internal_edges = edges_with_labels.filter(F.col("src_label") == F.col("dst_label"))
     internal_count = internal_edges.count()
     cross_count = total_edges - internal_count
@@ -154,7 +172,6 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
         .groupBy("src_label")
         .agg(
             F.count("*").alias("total_tx_count"),
-            F.sum("amount").alias("total_tx_amount"),
             F.sum(fraud_col).alias("laundering_tx_count"),
             F.sum(F.when(F.col("src_label") == F.col("dst_label"), 1).otherwise(0)).alias("internal_tx_count"),
             F.sum(F.when((F.col("src_label") == F.col("dst_label")) & (F.col(fraud_col) == 1), 1).otherwise(0)).alias("internal_laundering_count"),
@@ -165,7 +182,7 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
     summary_df = (
         community_sizes
         .join(fraud_stats, on="label", how="left")
-        .na.fill(0, subset=["total_tx_count", "laundering_tx_count", "internal_tx_count", "internal_laundering_count", "total_tx_amount"])
+        .na.fill(0, subset=["total_tx_count", "laundering_tx_count", "internal_tx_count", "internal_laundering_count"])
         .withColumn(
             "laundering_rate",
             F.round(F.col("laundering_tx_count") / F.when(F.col("total_tx_count") == 0, 1).otherwise(F.col("total_tx_count")), 4)
@@ -191,7 +208,7 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
 # 4. Xuất Kết quả Báo cáo (Export Deliverables)
 # ============================================================
 
-def export_results(lpa_vertices, summary_df, output_dir: Path):
+def export_results(lpa_vertices, summary_df, output_dir: Path, graph: GraphFrame | None = None):
     """Xuất các file CSV độc lập theo chuẩn UTF-8 BOM."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -221,6 +238,25 @@ def export_results(lpa_vertices, summary_df, output_dir: Path):
     pdf_summary.to_csv(summary_path, index=False, encoding="utf-8-sig")
     print(f"  [OK] Đã ghi bảng tổng hợp cộng đồng IBM AML: {summary_path} (Top {len(pdf_summary)} communities)")
 
+    # Keep the top-50 report above, and export a complete table for reconciliation.
+    def write_spark_csv(frame, path):
+        with path.open("w", newline="", encoding="utf-8-sig") as stream:
+            writer = csv.writer(stream, lineterminator="\n")
+            writer.writerow(frame.columns)
+            for row in frame.toLocalIterator():
+                writer.writerow(list(row))
+
+    write_spark_csv(summary_df, output_dir / COMMUNITY_SUMMARY_ALL_FILENAME)
+    if graph is not None:
+        labels = lpa_vertices.select(F.col("id").alias("src"), "label")
+        amounts = (graph.edges.join(labels, on="src", how="inner")
+                   .groupBy("label", "payment_currency")
+                   .agg(F.count("*").alias("total_tx_count"),
+                        F.sum("amount").alias("total_tx_amount"))
+                   .orderBy("label", "payment_currency"))
+        write_spark_csv(amounts, output_dir / COMMUNITY_AMOUNTS_FILENAME)
+    print("  [OK] Đã ghi toàn bộ community summary và amount theo từng payment_currency")
+
 
 # ============================================================
 # Hàm thực thi chính (Main Pipeline)
@@ -231,16 +267,26 @@ def main():
     parser.add_argument("--input-dir", type=str, default=str(DEFAULT_INPUT_DIR), help="Thư mục Parquet đầu vào IBM AML")
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_OUTPUT_DIR), help="Thư mục xuất CSV kết quả")
     parser.add_argument("--max-iter", type=int, default=5, help="Số vòng lặp LPA")
+    parser.add_argument("--checkpoint-dir", type=Path, default=DEFAULT_CHECKPOINT_DIR)
+    parser.add_argument("--driver-memory", default="6g")
+    parser.add_argument("--parallelism", type=int, default=4)
     args = parser.parse_args()
+    if args.max_iter <= 0:
+        parser.error("--max-iter must be > 0")
+    if args.parallelism <= 0:
+        parser.error("--parallelism must be > 0")
 
-    input_dir = Path(args.input_dir)
-    output_dir = Path(args.output_dir)
+    input_dir = Path(args.input_dir).resolve()
+    output_dir = Path(args.output_dir).resolve()
+    checkpoint_dir = args.checkpoint_dir.resolve()
 
     spark = get_graph_session(
         app_name="IBM-AML-Task4-CommunityDetection-LPA",
-        driver_memory="4g",
+        driver_memory=args.driver_memory,
         shuffle_partitions=8,
-        checkpoint_dir=str(DEFAULT_CHECKPOINT_DIR),
+        checkpoint_dir=str(checkpoint_dir),
+        extra_configs={"spark.master": f"local[{args.parallelism}]",
+                       "spark.default.parallelism": str(args.parallelism)},
     )
 
     try:
@@ -248,13 +294,24 @@ def main():
         graph = load_graph(spark, input_dir)
 
         # 2. Chạy thuật toán LPA
-        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=DEFAULT_CHECKPOINT_DIR)
+        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=checkpoint_dir)
 
         # 3. Phân tích thống kê đặc trưng cộng đồng
         community_sizes, summary_df = analyze_communities(lpa_vertices, graph)
 
         # 4. Xuất kết quả CSV
-        export_results(lpa_vertices, summary_df, output_dir)
+        export_results(lpa_vertices, summary_df, output_dir, graph)
+        write_run_evidence(
+            output_dir / "task4_run.json", spark, task="Task 4 IBM LPA execution",
+            inputs=[input_dir], outputs=[output_dir / name for name in (
+                COMMUNITIES_FILENAME, COMMUNITY_SUMMARY_FILENAME,
+                COMMUNITY_SUMMARY_ALL_FILENAME, COMMUNITY_AMOUNTS_FILENAME)],
+            sources=[Path(__file__), REPO_ROOT / "src/common/run_evidence.py",
+                     REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/common/windows_runtime.py"],
+            parameters={"max_iter": args.max_iter, "backend": "graphx",
+                        "parallelism": args.parallelism, "checkpoint_dir": str(checkpoint_dir)},
+            metrics={"assigned_vertices": lpa_vertices.count()},
+        )
 
         print("\n" + "=" * 70)
         print("LƯU Ý SO SÁNH DATASET (CROSS-DATASET INSIGHT):")
