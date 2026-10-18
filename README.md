@@ -29,7 +29,7 @@ flowchart LR
 
 ## Trạng thái và phạm vi
 
-Phần của Khánh đến **Final Task 4 IBM (07/10)** được trình bày trong [`notebooks/03_khanh_complete_presentation.ipynb`](notebooks/03_khanh_complete_presentation.ipynb): toy motif, review PageRank 3.3, review IBM ETL, full Task 3 PaySim/IBM và review LPA IBM. Notebook có code thuật toán đầy đủ, giải thích tiếng Việt, kiểm tra độc lập và biểu đồ nhúng. PASS kỹ thuật không thay phê duyệt của người review và không xác nhận toàn bộ công việc của cả nhóm.
+Phần của Khánh đến **Final Task 4 IBM (07/10)** được trình bày trong hai notebook độc lập: [`03_khanh_PaySIM_motif.ipynb`](notebooks/03_khanh_PaySIM_motif.ipynb) cho PaySim và [`03_khanh_IBM_motif.ipynb`](notebooks/03_khanh_IBM_motif.ipynb) cho IBM AML HI-Small. Mỗi notebook có giải thích tiếng Việt, code thuật toán đầy đủ, kiểm tra độc lập và biểu đồ nhúng; chỉ đọc input của dataset tương ứng. PASS kỹ thuật không thay phê duyệt của người review và không xác nhận toàn bộ công việc của cả nhóm.
 
 Hai dataset được dùng:
 
@@ -139,15 +139,20 @@ make check-task4-full
 
 LPA giữ backend GraphX và `maxIter=5`, đưa topology `id/src/dst` vào thuật toán rồi join lại vertex metadata. Gate giới hạn 4 worker; sample dùng heap `4g`, full dùng `8g` vì thử full ở `4g` đã gặp `OutOfMemoryError` trên máy kiểm tra. Có thể đổi bằng `-DriverMemory` và `-Parallelism`; bản module có các tùy chọn `--driver-memory`/`--parallelism`. `task4_run.json` ghi runtime/heap thực của process LPA, `task4_check.json` ghi đối chiếu độc lập; cả hai có hash input/output/source. Không suy ra cấu hình full này phù hợp với mọi máy từ một lần kiểm tra.
 
-Thiếu Parquet/file bàn giao hoặc sai dữ liệu làm check thất bại. Đây là các gate cho **Task 3 và Task 4 IBM**, chưa kiểm chứng mọi task trong repository. Manifest chỉ ghi thực chứng tự động, không thay thế review của Hoàng hay duyệt final của Tuệ Minh. Tiêu chí review và giới hạn diễn giải có trong notebook trình bày của Khánh bên dưới.
+Thiếu Parquet/file bàn giao hoặc sai dữ liệu làm check thất bại. Đây là các gate cho **Task 3 và Task 4 IBM**, chưa kiểm chứng mọi task trong repository. Manifest chỉ ghi thực chứng tự động, không thay thế review của Hoàng hay duyệt final của Tuệ Minh. Tiêu chí review và giới hạn diễn giải được ghi trong notebook tương ứng của từng dataset bên dưới.
 
-## Notebook trình bày toàn bộ phần Khánh
+## Notebook trình bày theo từng dataset
 
-Mở [`notebooks/03_khanh_complete_presentation.ipynb`](notebooks/03_khanh_complete_presentation.ipynb) trong VS Code/Jupyter và chọn Windows interpreter `.venv\Scripts\python.exe`, rồi **Restart Kernel → Run All**. Notebook lưu sẵn output thực chạy và biểu đồ; thầy có thể đọc code, giải thích và kết quả trong cùng một file.
+| Notebook | Nội dung theo thứ tự | Input cần có |
+|---|---|---|
+| [PaySim](notebooks/03_khanh_PaySIM_motif.ipynb) | Toy motif → rule cycle/relay → kiểm tra biên → full motif và biểu đồ → phụ lục review PageRank 3.3 | Full PaySim Parquet và CSV relay bàn giao |
+| [IBM AML HI-Small](notebooks/03_khanh_IBM_motif.ipynb) | Review ETL/raw–Parquet → toy motif → full cycle → cycle nguồn và biểu đồ → review LPA full, hai lần sample và checker | Raw IBM HI-Small, full/sample IBM Parquet và CSV motif bàn giao |
 
-Notebook cần raw IBM HI-Small, full PaySim/IBM Parquet và IBM sample đã được ETL tạo theo hướng dẫn trên. Chạy full motif, dựng lại IBM ETL trong bộ nhớ, đối chiếu raw/Parquet, chạy LPA full và hai lần sample. Spark dùng heap `8g`, `local[4]`; thời gian thực chạy được ghi trong output cuối. Không xuất thêm CSV/PNG/log vào repo; checkpoint tạm nằm ngoài repo. Hàm export CSV production có đầy đủ trong notebook để đọc nhưng không được gọi. Kernel tùy chỉnh có tên `graphguard-windows`; trong VS Code có thể chọn trực tiếp interpreter `.venv` nếu chưa đăng ký kernel đó.
+Mở notebook của dataset muốn trình bày trong VS Code/Jupyter, chọn Windows interpreter `.venv\Scripts\python.exe`, rồi **Restart Kernel → Run All**. Hai notebook độc lập: mỗi file tự kiểm tra dependency, khởi tạo Spark và dừng Spark ở cuối. Không cần chạy notebook còn lại. Phần review PageRank là kiến thức chung, được giữ ở phụ lục notebook PaySim vì đây là dataset chính; các ví dụ toán/toy được ghi rõ là dữ liệu tự tạo để minh họa.
 
-Các hàm production hiển thị trong code cells được kiểm tra AST với source Python để phát hiện notebook bị lệch code. Khi sửa module, cập nhật cell tương ứng và chạy lại notebook trước khi bàn giao.
+Notebook PaySim dùng heap `6g`, IBM dùng `8g`, đều `local[4]`. Các output và biểu đồ được lưu ngay trong notebook; thời gian chạy thực tế có ở cell cuối. Không xuất thêm CSV/PNG/log vào repo, checkpoint tạm nằm ngoài repo. Hàm export CSV của IBM được giữ đầy đủ để đọc nhưng không được gọi. Nếu chưa đăng ký kernel `graphguard-windows`, có thể chọn trực tiếp interpreter `.venv` trong VS Code.
+
+Các hàm production trong code cells được kiểm tra AST với source Python. Khi sửa module, cập nhật cell tương ứng và chạy lại đúng notebook trước khi bàn giao.
 
 ## Cấu trúc repository và phân công code
 
@@ -162,7 +167,9 @@ graphguard-amls-detection/
 ├── docs/                                  # Part A/B, handoff và báo cáo N4
 ├── notebooks/
 │   ├── 00_dataset_exploration.ipynb       # Khám phá dữ liệu
-│   └── 02_n4_toy_motif.ipynb              # N4 toy 3-cycle, mốc 21/09
+│   ├── 02_n4_toy_motif.ipynb              # N4 toy 3-cycle, mốc 21/09
+│   ├── 03_khanh_PaySIM_motif.ipynb         # PaySim: cycle, relay, review PageRank
+│   └── 03_khanh_IBM_motif.ipynb            # IBM: review ETL, cycle, review LPA
 ├── results/
 │   ├── motif/toy_cycle_summary.json       # Bằng chứng máy đọc được của N4
 │   └── paysim/                            # Log/kết quả pipeline PaySim

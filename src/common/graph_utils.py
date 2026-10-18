@@ -40,24 +40,19 @@ def check_integrity(graph: GraphFrame, verbose: bool = True) -> dict:
     - Kiểm tra Null
     - Kiểm tra Cạnh treo (Dangling Edges) bằng left_anti join (nhanh hơn .subtract()
       -- left_anti chỉ cần 1 shuffled join, .subtract() thường tốn 2 lần full shuffle)
-    - Thống kê Self-loops (src == dst) -- quan trọng với IBM AML (591,212 cạnh loại
-      này, 11.64% tổng số cạnh, đã xác nhận trong DE_Paysim_IBM_Comparison.md)
+    - Thống kê Self-loops (src == dst); caller kiểm tra số kỳ vọng của dataset.
 
     Lưu ý về `dangling_src + dangling_dst`:
       Đây là tổng số "lượt vi phạm", KHÔNG phải số cạnh treo thực tế nếu một cạnh
-      thiếu CẢ src và dst cùng lúc (sẽ bị đếm 2 lần). Hiện tại điều này không xảy ra
-      trên cả 2 dataset: PaySim đã được xác nhận vét cạn 0 dangling edges (Task
-      2.3/2.4), và IBM AML có defensive vertex generation trong etl.py đảm bảo mọi
-      id đều có vertex tương ứng. Cố tình không sửa bằng một phép union().distinct()
-      tốn thêm 1 shuffle nữa để loại trùng, vì trường hợp cần loại trùng đó về lý
-      thuyết không thể xảy ra với ETL hiện tại -- nếu sau này tổng dangling > 0 một
-      cách bất thường, kiểm tra riêng dangling_src/dangling_dst thay vì tin vào tổng.
+      thiếu CẢ src và dst cùng lúc (sẽ bị đếm 2 lần). Khi tổng khác 0, kiểm tra
+      riêng dangling_src/dangling_dst trước khi diễn giải số cạnh bị lỗi. Tổng
+      bằng 0 vẫn bảo đảm không có dangling endpoint ở cả hai phía.
 
     Lưu ý về hiệu năng (áp dụng cho caller, không phải bug trong hàm này):
       Hàm này gọi khoảng 6-7 lệnh .count() liên tiếp trên graph.vertices/graph.edges.
       Nếu 2 DataFrame này CHƯA được .cache() ở phía gọi hàm, Spark sẽ tính lại toàn
       bộ pipeline phía trên (đọc lại CSV/Parquet, chạy lại ETL) MỖI LẦN .count() -- 
-      tốn kém với 5M+ dòng của IBM AML. Khuyến nghị: cache ngay tại nơi tạo ra
+      tốn kém với hàng triệu dòng. Khuyến nghị: cache ngay tại nơi tạo ra
       vertices_df/edges_df (giống export_parquet.py và etl.py đã làm), rồi mới gọi
       check_integrity() trên GraphFrame đã cache.
     """
@@ -75,7 +70,7 @@ def check_integrity(graph: GraphFrame, verbose: bool = True) -> dict:
     ).count()
     total_dangling = dangling_src + dangling_dst  # see docstring caveat above
 
-    # Self-loop check -- expected 0 for PaySim, expected ~591,212 for IBM AML
+    # Đếm self-loop thực tế; không gán số kỳ vọng của một dataset vào helper chung.
     self_loops = graph.edges.filter(col("src") == col("dst")).count()
 
     result = {
@@ -99,7 +94,7 @@ def check_integrity(graph: GraphFrame, verbose: bool = True) -> dict:
         print(f"  Null Edges (src/dst): {null_edges}  {'[PASS]' if null_edges == 0 else '[FAIL]'}")
         print(f"  Dangling Edges:       {total_dangling}  (src-side: {dangling_src}, dst-side: {dangling_dst})"
               f"  {'[PASS]' if total_dangling == 0 else '[FAIL]'}")
-        print(f"  Self-loops (src==dst):{self_loops:,}  (PaySim: expect 0, IBM AML: expect > 0, ~591,212)")
+        print(f"  Self-loops (src==dst):{self_loops:,}")
         print("=" * 65)
 
     return result
