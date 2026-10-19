@@ -6,11 +6,16 @@ PowerShell: & .\.venv\Scripts\python.exe scripts\run_n4_notebook.py
 from __future__ import annotations
 
 import json
+import argparse
+from datetime import datetime, timezone
 import os
+from queue import Empty
 import secrets
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+import time
 
 from jupyter_client import KernelManager
 
@@ -18,6 +23,22 @@ from jupyter_client import KernelManager
 REPO_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = REPO_ROOT / "notebooks" / "02_n4_toy_motif.ipynb"
 KERNEL_NAME = "graphguard-windows"
+
+
+def save_notebook(notebook):
+    # Replace on the same filesystem only after a complete, flushed UTF-8/LF
+    # write. An interrupted write must not truncate the previous saved notebook.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=NOTEBOOK.parent, prefix=".graphguard-", suffix=".tmp", delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write((json.dumps(notebook, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, NOTEBOOK)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def main() -> None:
@@ -38,14 +59,11 @@ def main() -> None:
         "language": "python",
         "name": KERNEL_NAME,
     }
+    notebook["metadata"]["graphguard_execution"] = {"status": "running", "completed_code_cells": 0}
     for cell in notebook["cells"]:
         if cell["cell_type"] == "code":
             cell["execution_count"] = None
             cell["outputs"] = []
-    NOTEBOOK.write_text(
-        json.dumps(notebook, ensure_ascii=False, indent=1) + "\n",
-        encoding="utf-8",
-    )
 
     manager = KernelManager(kernel_name=KERNEL_NAME)
     manager.session.key = secrets.token_hex(32).encode("ascii")
@@ -62,8 +80,16 @@ def main() -> None:
             cell["execution_count"] = execution_count
             cell["outputs"] = []
             message_id = client.execute("".join(cell["source"]), allow_stdin=False)
+            deadline = time.monotonic() + 2700
             while True:
-                message = client.get_iopub_msg(timeout=600)
+                if time.monotonic() > deadline:
+                    raise TimeoutError(f"Notebook cell {execution_count} exceeded 45 minutes; no automatic retry")
+                try:
+                    message = client.get_iopub_msg(timeout=5)
+                except Empty:
+                    if not manager.is_alive():
+                        raise RuntimeError("Notebook kernel stopped; inspect resource guard/system state before retry")
+                    continue
                 if message["parent_header"].get("msg_id") != message_id:
                     continue
                 kind = message["msg_type"]
@@ -75,6 +101,9 @@ def main() -> None:
                         "text": content["text"],
                     }
                     cell["outputs"].append(output)
+                    for line in content["text"].splitlines():
+                        if line.startswith(("Features:", "Validation ", "Refit frozen", "[RESOURCE")):
+                            print(line, flush=True)
                 elif kind in ("display_data", "execute_result"):
                     output = {
                         "output_type": kind,
@@ -97,16 +126,26 @@ def main() -> None:
                     )
                 elif kind == "status" and content["execution_state"] == "idle":
                     break
-            print(f"Cell {execution_count}: PASS")
+            notebook["metadata"]["graphguard_execution"]["completed_code_cells"] = execution_count
+            save_notebook(notebook)
+            print(f"Cell {execution_count}: PASS", flush=True)
+        notebook["metadata"]["graphguard_execution"]["status"] = "completed"
+    except BaseException as error:
+        notebook["metadata"]["graphguard_execution"].update(status="failed", error=str(error))
+        raise
     finally:
-        client.stop_channels()
-        manager.shutdown_kernel(now=True)
-        NOTEBOOK.write_text(
-            json.dumps(notebook, ensure_ascii=False, indent=1) + "\n",
-            encoding="utf-8",
-        )
+        notebook["metadata"]["graphguard_execution"]["saved_utc"] = datetime.now(timezone.utc).isoformat()
+        try:
+            client.stop_channels()
+            manager.shutdown_kernel(now=True)
+        finally:
+            save_notebook(notebook)
     print(f"Notebook saved: {NOTEBOOK}")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--notebook", type=Path, default=NOTEBOOK)
+    arguments = parser.parse_args()
+    NOTEBOOK = arguments.notebook.resolve()
     main()

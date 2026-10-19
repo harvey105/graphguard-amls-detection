@@ -1,0 +1,254 @@
+"""Conservative native Windows admission, isolation and pressure monitoring.
+
+This bounds our process tree; it cannot diagnose cooling, power or hardware
+faults. There is deliberately no switch to disable protection for a big run.
+The mutex lasts until Python/kernel exit: Spark.stop() can leave its JVM alive.
+"""
+
+from __future__ import annotations
+
+import atexit
+import ctypes as C
+from ctypes import wintypes as W
+from dataclasses import dataclass
+import os
+from pathlib import Path
+import re
+import shutil
+import sys
+import tempfile
+import threading
+import time
+
+import psutil
+
+GIB = 1024 ** 3
+MUTEX_NAME = r"Local\GraphGuard-Spark-single-workload-v1"
+
+
+@dataclass(frozen=True)
+class ResourcePolicy:
+    job_bytes: int
+    reserve_bytes: int
+    max_heap_gib: int
+    workers: int = 2
+    cpu_percent: int = 10
+
+    @classmethod
+    def for_memory(cls, total: int):
+        budget = int(min(10 * GIB, total * 0.32))
+        reserve = int(max(4 * GIB, total * 0.25))
+        heap = min(6, budget // GIB - 3)
+        if heap < 2:
+            raise RuntimeError("Insufficient RAM for the protected Spark profile (about 16 GiB required)")
+        return cls(budget, reserve, heap)
+
+    def spark_limits(self, requested_heap: str, requested_master: str):
+        match = re.fullmatch(r"(\d+)([gGmM])", requested_heap)
+        if not match:
+            raise ValueError("Spark heap must use integer g or m units")
+        mib = int(match[1]) * (1024 if match[2].lower() == "g" else 1)
+        if mib < 512:
+            raise ValueError("Spark heap must be at least 512 MiB")
+        heap = f"{min(mib, self.max_heap_gib * 1024)}m"
+        master = re.fullmatch(r"local\[(\*|\d+)\]", requested_master)
+        if not master:
+            raise ValueError("Protected workstation supports only local[n] Spark; no unbounded/cluster launch")
+        workers = self.workers if master[1] == "*" else min(self.workers, int(master[1]))
+        if workers < 1:
+            raise ValueError("At least one worker required")
+        return heap, workers
+
+
+def pressure_reason(policy: ResourcePolicy, available: int, commit_free: int,
+                    disk_free: int, cpu_percent: float) -> str | None:
+    if available < policy.reserve_bytes:
+        return "Physical RAM reserve exhausted"
+    if commit_free < policy.reserve_bytes:
+        return "Windows commit reserve exhausted"
+    if disk_free < 5 * GIB:
+        return "Temporary/workspace disk reserve below 5 GiB"
+    if cpu_percent >= 85:
+        return "Host CPU remains >=85%; stop our workload to release capacity"
+    return None
+
+
+class MemoryStatus(C.Structure):
+    _fields_ = [("length", W.DWORD), ("load", W.DWORD)] + [
+        (name, C.c_ulonglong) for name in (
+            "total_phys", "avail_phys", "total_page", "avail_page",
+            "total_virtual", "avail_virtual", "avail_extended")]
+
+
+class BasicLimits(C.Structure):
+    _fields_ = [("process_time", C.c_longlong), ("job_time", C.c_longlong),
+        ("flags", W.DWORD), ("minimum_working_set", C.c_size_t),
+        ("maximum_working_set", C.c_size_t), ("active_process_limit", W.DWORD),
+        ("affinity", C.c_size_t), ("priority", W.DWORD), ("scheduling", W.DWORD)]
+
+
+class IOLimits(C.Structure):
+    _fields_ = [(name, C.c_ulonglong) for name in (
+        "read_ops", "write_ops", "other_ops", "read_bytes", "write_bytes", "other_bytes")]
+
+
+class ExtendedLimits(C.Structure):
+    _fields_ = [("basic", BasicLimits), ("io", IOLimits),
+        ("process_memory", C.c_size_t), ("job_memory", C.c_size_t),
+        ("peak_process_memory", C.c_size_t), ("peak_job_memory", C.c_size_t)]
+
+
+class CPULimits(C.Structure):
+    _fields_ = [("flags", W.DWORD), ("rate", W.DWORD)]
+
+
+class WindowsGuard:
+    def __init__(self):
+        if os.name != "nt":
+            raise RuntimeError("Hardware protection requires native Windows")
+        self.api = C.WinDLL("kernel32", use_last_error=True)
+        signatures = {
+            "CreateMutexW": ([W.LPVOID, W.BOOL, W.LPCWSTR], W.HANDLE),
+            "WaitForSingleObject": ([W.HANDLE, W.DWORD], W.DWORD),
+            "ReleaseMutex": ([W.HANDLE], W.BOOL),
+            "CreateJobObjectW": ([W.LPVOID, W.LPCWSTR], W.HANDLE),
+            "SetInformationJobObject": ([W.HANDLE, C.c_int, W.LPVOID, W.DWORD], W.BOOL),
+            "QueryInformationJobObject": ([W.HANDLE, C.c_int, W.LPVOID, W.DWORD, W.LPVOID], W.BOOL),
+            "GetCurrentProcess": ([], W.HANDLE),
+            "AssignProcessToJobObject": ([W.HANDLE, W.HANDLE], W.BOOL),
+            "IsProcessInJob": ([W.HANDLE, W.HANDLE, C.POINTER(W.BOOL)], W.BOOL),
+            "TerminateJobObject": ([W.HANDLE, W.UINT], W.BOOL),
+            "GlobalMemoryStatusEx": ([C.POINTER(MemoryStatus)], W.BOOL),
+            "CloseHandle": ([W.HANDLE], W.BOOL),
+        }
+        for name, (args, result) in signatures.items():
+            function = getattr(self.api, name)
+            function.argtypes, function.restype = args, result
+        self.mutex = self.api.CreateMutexW(None, False, MUTEX_NAME)
+        if not self.mutex:
+            raise C.WinError(C.get_last_error())
+        wait = self.api.WaitForSingleObject(self.mutex, 0)
+        if wait not in (0, 0x80):  # acquired or abandoned by an exited process
+            self.api.CloseHandle(self.mutex)
+            raise RuntimeError("Another GraphGuard workload holds the lock. Finish/close its kernel first.")
+        self.job = None
+        self.assigned = False
+        self.finished = threading.Event()
+        try:
+            # Catch Spark started outside our mutex/another repository clone.
+            for process in psutil.process_iter(["pid", "name", "cmdline"]):
+                if (process.info["name"] or "").lower() == "java.exe" and any(
+                    "org.apache.spark.deploy.SparkSubmit" in part for part in process.info["cmdline"] or []):
+                    raise RuntimeError(f"Existing Spark JVM PID {process.pid}; close it before starting another workload")
+            initial = self.memory()
+            self.policy = ResourcePolicy.for_memory(initial.total_phys)
+            self.disks = list(dict.fromkeys([Path(tempfile.gettempdir()).anchor, Path(__file__).resolve().anchor]))
+            if initial.avail_phys < self.policy.reserve_bytes + self.policy.job_bytes:
+                raise RuntimeError("Not enough free RAM for the job budget AND OS reserve; close applications, do not raise limits")
+            if initial.avail_page < self.policy.reserve_bytes + self.policy.job_bytes:
+                raise RuntimeError("Not enough Windows commit headroom for a protected Spark run")
+            if self.disk_free() < 12 * GIB:
+                raise RuntimeError("At least 12 GiB free on temp/workspace drives required for spilling")
+            if psutil.cpu_percent(interval=1) >= 70:
+                raise RuntimeError("Host CPU already >=70%; defer Spark until the machine is idle")
+            self.job = self.api.CreateJobObjectW(None, None)
+            if not self.job:
+                raise C.WinError(C.get_last_error())
+            self.limits = ExtendedLimits()
+            # Commit budget + inherited CPU affinity + below-normal priority.
+            # Do not set BREAKAWAY_OK. Children (JVM/workers) inherit the job.
+            self.limits.basic.flags = 0x200 | 0x10 | 0x20 | 0x2000
+            allowed = psutil.Process().cpu_affinity()[:self.policy.workers]
+            self.limits.basic.affinity = sum(1 << core for core in allowed)
+            self.limits.basic.priority = 0x4000  # BELOW_NORMAL_PRIORITY_CLASS
+            self.limits.job_memory = self.policy.job_bytes
+            self.set_information(9, self.limits)
+            self.set_information(15, CPULimits(0x1 | 0x4, self.policy.cpu_percent * 100))
+            if not self.api.AssignProcessToJobObject(self.job, self.api.GetCurrentProcess()):
+                raise C.WinError(C.get_last_error())  # no unprotected fallback
+            self.assigned = True
+            self.started = time.monotonic()
+            self.minimum_available = initial.avail_phys
+            self.maximum_host_cpu = 0.0
+            self.thread = threading.Thread(target=self._watch, name="GraphGuard-resource-watchdog", daemon=True)
+            self.thread.start()
+            atexit.register(self.close)
+            print(f"[RESOURCE] One workload; CPU hard cap {self.policy.cpu_percent}%; "
+                  f"<=2 logical CPUs; job commit cap {self.policy.job_bytes/GIB:.1f} GiB; "
+                  f"RAM reserve {self.policy.reserve_bytes/GIB:.1f} GiB", flush=True)
+        except BaseException:
+            self.close()
+            raise
+
+    def set_information(self, kind, value):
+        if not self.api.SetInformationJobObject(self.job, kind, C.byref(value), C.sizeof(value)):
+            raise C.WinError(C.get_last_error())
+
+    def memory(self):
+        status = MemoryStatus()
+        status.length = C.sizeof(status)
+        if not self.api.GlobalMemoryStatusEx(C.byref(status)):
+            raise C.WinError(C.get_last_error())
+        return status
+
+    def disk_free(self):
+        return min(shutil.disk_usage(drive).free for drive in self.disks)
+
+    def snapshot(self):
+        measured = ExtendedLimits()
+        if not self.api.QueryInformationJobObject(self.job, 9, C.byref(measured), C.sizeof(measured), None):
+            raise C.WinError(C.get_last_error())
+        return {"cpu_hard_cap_percent": self.policy.cpu_percent, "max_logical_cpus": self.policy.workers,
+            "job_commit_cap_gib": round(self.policy.job_bytes/GIB, 2),
+            "peak_job_commit_gib": round(measured.peak_job_memory/GIB, 2),
+            "minimum_available_ram_gib": round(self.minimum_available/GIB, 2),
+            "maximum_host_cpu_percent": self.maximum_host_cpu,
+            "thermal_sensor": "CPU temperature unavailable; not a thermal/power hardware guarantee"}
+
+    def _watch(self):
+        strikes = 0
+        psutil.cpu_percent()  # prime the host counter
+        while not self.finished.wait(2):
+            try:
+                status = self.memory()
+                cpu = psutil.cpu_percent()
+                self.minimum_available = min(self.minimum_available, status.avail_phys)
+                self.maximum_host_cpu = max(self.maximum_host_cpu, cpu)
+                reason = pressure_reason(self.policy, status.avail_phys, status.avail_page, self.disk_free(), cpu)
+                strikes = strikes + 1 if reason else 0
+                if (reason and strikes >= (5 if cpu >= 85 else 2)) or status.avail_phys < 2 * GIB:
+                    print("[RESOURCE STOP] " + (reason or "Critical RAM pressure"), file=sys.stderr, flush=True)
+                    self.api.TerminateJobObject(self.job, 73)
+                    return
+            except Exception as error:
+                # Losing visibility is not permission to continue unmonitored.
+                print(f"[RESOURCE STOP] Monitoring failed: {error}", file=sys.stderr, flush=True)
+                self.api.TerminateJobObject(self.job, 73)
+                return
+
+    def close(self):
+        self.finished.set()
+        # Once assigned, let Windows close the handle at process termination.
+        # KILL_ON_JOB_CLOSE then reaps JVM descendants even if Python crashes.
+        # Closing it earlier would also terminate this Python process mid-save.
+        if self.job and not self.assigned:
+            self.api.CloseHandle(self.job)
+            self.job = None
+        if self.mutex:
+            self.api.ReleaseMutex(self.mutex)
+            self.api.CloseHandle(self.mutex)
+            self.mutex = None
+
+
+_GUARD = None
+
+
+def protect_spark() -> WindowsGuard:
+    global _GUARD
+    if _GUARD is None:
+        _GUARD = WindowsGuard()
+    return _GUARD
+
+
+def protection_snapshot() -> dict:
+    return _GUARD.snapshot() if _GUARD else {"hardware_guard": "not started"}

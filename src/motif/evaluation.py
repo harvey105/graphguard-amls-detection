@@ -15,8 +15,24 @@ from pyspark.sql import DataFrame, functions as F
 
 def require_unlabelled(frame: DataFrame) -> None:
     """Fail closed if a feature/query path accidentally receives ground truth."""
+    from pyspark.sql.types import ArrayType, MapType, StructType
+
     forbidden = {"isfraud", "islaundering", "isflaggedfraud", "label", "target"}
-    leaked = forbidden.intersection(name.lower() for name in frame.columns)
+    leaked = []
+
+    def inspect_type(dtype, prefix=""):
+        if isinstance(dtype, StructType):
+            for field in dtype.fields:
+                path = f"{prefix}.{field.name}" if prefix else field.name
+                if field.name.lower().replace("_", "") in forbidden:
+                    leaked.append(path)
+                inspect_type(field.dataType, path)
+        elif isinstance(dtype, ArrayType):
+            inspect_type(dtype.elementType, prefix + "[]")
+        elif isinstance(dtype, MapType):
+            inspect_type(dtype.valueType, prefix + "{}")
+
+    inspect_type(frame.schema)
     if leaked:
         raise ValueError(f"Ground truth in feature builder: {sorted(leaked)}")
 

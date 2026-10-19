@@ -15,18 +15,11 @@ from pyspark.sql.types import (
 # Make src/ importable when running this file directly from tests/
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.paysim.etl_mapping import build_vertices_df, build_edges_df
+from src.common.spark_session import get_graph_session
 
 
 def main():
-    spark = (
-        SparkSession.builder
-        .appName("GraphGuard-Task2.3-EdgesValidation")
-        .master("local[*]")
-        .config("spark.driver.memory", "6g")
-        .config("spark.driver.maxResultSize", "2g")
-        .config("spark.sql.shuffle.partitions", "8")
-        .getOrCreate()
-    )
+    spark = get_graph_session("GraphGuard-Task2.3-EdgesValidation")
     spark.sparkContext.setLogLevel("WARN")
 
     raw_path = "data/raw/paysim/PS_20174392719_1491204439457_log.csv"

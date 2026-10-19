@@ -36,7 +36,7 @@ from pyspark.sql.types import (
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.paysim.etl_mapping import build_vertices_df, build_edges_df
-from src.common.windows_runtime import prepare_windows_spark
+from src.common.spark_session import get_graph_session
 
 try:
     from graphframes import GraphFrame
@@ -75,21 +75,7 @@ def resolve_graphframes_coordinate() -> str:
 
 
 def create_graph_spark_session(app_name: str = "GraphGuard-GraphConstruction") -> SparkSession:
-    prepare_windows_spark()
-    coord = resolve_graphframes_coordinate()
-    print(f"[*] Detected PySpark {pyspark.__version__} -> resolving GraphFrames package: {coord}")
-    print("    (Maven Central hosts this directly -- no spark-packages.org repository needed.")
-    print("     First run downloads the jar and may take 30-60s; cached under ~/.ivy2 after that.)")
-    return (
-        SparkSession.builder
-        .appName(app_name)
-        .master("local[*]")
-        .config("spark.driver.memory", "6g")
-        .config("spark.driver.maxResultSize", "2g")
-        .config("spark.sql.shuffle.partitions", "8")
-        .config("spark.jars.packages", coord)
-        .getOrCreate()
-    )
+    return get_graph_session(app_name)
 
 
 def load_from_parquet(spark: SparkSession, sample: bool = False):

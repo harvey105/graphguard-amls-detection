@@ -3,7 +3,7 @@ param(
     [ValidateRange(1, 3)][int]$Runs = 2,
     [switch]$SkipTests,
     [string]$DriverMemory,
-    [ValidateRange(1, 64)][int]$Parallelism = 4
+    [ValidateRange(1, 2)][int]$Parallelism = 2
 )
 
 # Run Hoang's existing IBM LPA, then independently verify the exported CSVs.
@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $python = Join-Path $repo '.venv\Scripts\python.exe'
 $scope = if ($Full) { 'full' } else { 'sample' }
-if (-not $DriverMemory) { $DriverMemory = if ($Full) { '8g' } else { '4g' } }
+if (-not $DriverMemory) { $DriverMemory = if ($Full) { '6g' } else { '4g' } }
 $inputDir = if ($Full) { 'data\processed\ibm_aml' } else { 'data\processed\sample\ibm_aml' }
 $checkDir = Join-Path $repo ('results\ibm_aml\task4_check\' + $scope)
 $log = Join-Path $repo 'results\ibm_aml\check_task4.log'

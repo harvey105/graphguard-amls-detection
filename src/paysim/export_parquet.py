@@ -18,7 +18,7 @@ from pyspark.sql.types import (
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.paysim.etl_mapping import build_vertices_df, build_edges_df
-from src.common.windows_runtime import prepare_windows_spark
+from src.common.spark_session import get_graph_session
 
 # Known-good reference values, confirmed exhaustively in Task 2.1 / verified
 # again in the 2.2 and 2.3 validation runs. Used for the quality-report
@@ -29,17 +29,7 @@ EXPECTED_EDGE_COUNT = 6_362_620
 
 
 def create_spark_session() -> SparkSession:
-    prepare_windows_spark()
-    return (
-        SparkSession.builder
-        .appName("GraphGuard-Task2.4-ParquetExport")
-        .master("local[*]")
-        .config("spark.driver.memory", "6g")
-        .config("spark.driver.maxResultSize", "2g")
-        .config("spark.sql.shuffle.partitions", "8")
-        .config("spark.sql.parquet.compression.codec", "snappy")
-        .getOrCreate()
-    )
+    return get_graph_session("GraphGuard-Task2.4-ParquetExport")
 
 
 def dir_size_mb(path: str) -> float:

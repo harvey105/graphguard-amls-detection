@@ -77,12 +77,30 @@ def get_graph_session(
     # 1. Tu dong cau hinh moi truong runtime Windows (giu nguyen cua Leader)
     prepare_windows_spark()
 
+    configs = dict(extra_configs or {})
+    master = configs.get("spark.master", "local[2]")
+    if os.name == "nt":
+        from src.common.hardware_guard import protect_spark
+
+        guard = protect_spark()  # admission/OS caps are mandatory before JVM
+        driver_memory, workers = guard.policy.spark_limits(driver_memory, master)
+        master = f"local[{workers}]"
+        configs.update({"spark.master": master, "spark.default.parallelism": str(workers),
+            "spark.driver.memory": driver_memory, "spark.executor.memory": driver_memory,
+            "spark.driver.maxResultSize": "512m"})
+        java_limits = "-XX:ActiveProcessorCount=2 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1 -XX:CICompilerCount=2"
+        configs["spark.driver.extraJavaOptions"] = configs.get("spark.driver.extraJavaOptions", "") + " " + java_limits
+        # Smaller shuffle partitions reduce simultaneous sort/hash memory.
+        shuffle_partitions = max(32, shuffle_partitions)
+        configs["spark.sql.shuffle.partitions"] = str(shuffle_partitions)
+        print(f"[RESOURCE] Effective Spark {master}, heap {driver_memory}; spill before increasing RAM", flush=True)
+
     coord = _resolve_graphframes_coordinate()
 
     builder = (
         SparkSession.builder
         .appName(app_name)
-        .master("local[*]")
+        .master(master)
         .config("spark.driver.memory", driver_memory)
         .config("spark.driver.maxResultSize", "2g")
         .config("spark.sql.shuffle.partitions", str(shuffle_partitions))
@@ -96,8 +114,16 @@ def get_graph_session(
         .config("spark.sql.adaptive.skewJoin.enabled", "true")
     )
 
-    if extra_configs:
-        for key, value in extra_configs.items():
+    # Keep native Windows local self-connections independent of VPN/LAN
+    # hostname selection. Explicit caller settings below still override this;
+    # cluster masters retain their advertised network addresses.
+    requested_master = master
+    if os.name == "nt" and str(requested_master).startswith("local"):
+        builder = builder.config("spark.driver.host", "127.0.0.1").config(
+            "spark.driver.bindAddress", "127.0.0.1")
+
+    if configs:
+        for key, value in configs.items():
             builder = builder.config(key, str(value))
 
     spark = builder.getOrCreate()

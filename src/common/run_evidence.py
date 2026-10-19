@@ -40,6 +40,11 @@ def write_run_evidence(
     path: Path, spark, *, task: str, inputs: list[Path], outputs: list[Path],
     sources: list[Path], parameters: dict, metrics: dict,
 ) -> dict:
+    from src.common.hardware_guard import protection_snapshot
+
+    guard_source = REPO_ROOT / "src/common/hardware_guard.py"
+    if guard_source not in sources:
+        sources = [*sources, guard_source]
     try:
         result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
                                 capture_output=True, text=True, check=True)
@@ -61,6 +66,8 @@ def write_run_evidence(
             "spark_master": spark.sparkContext.master,
             "driver_memory": spark.sparkContext.getConf().get("spark.driver.memory", "unknown"),
             "java_max_heap_bytes": spark.sparkContext._jvm.java.lang.Runtime.getRuntime().maxMemory(),
+            "java_visible_processors": spark.sparkContext._jvm.java.lang.Runtime.getRuntime().availableProcessors(),
+            "hardware_guard": protection_snapshot(),
         },
         "parameters": parameters, "metrics": metrics,
         "inputs": [input_fingerprint(source) for source in inputs],

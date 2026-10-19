@@ -269,7 +269,7 @@ def main():
     parser.add_argument("--max-iter", type=int, default=5, help="Số vòng lặp LPA")
     parser.add_argument("--checkpoint-dir", type=Path, default=DEFAULT_CHECKPOINT_DIR)
     parser.add_argument("--driver-memory", default="6g")
-    parser.add_argument("--parallelism", type=int, default=4)
+    parser.add_argument("--parallelism", type=int, default=2)
     args = parser.parse_args()
     if args.max_iter <= 0:
         parser.error("--max-iter must be > 0")

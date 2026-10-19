@@ -63,3 +63,7 @@ data/processed/ibm_aml/
 !data/processed/sample/ibm_aml/
 !data/processed/sample/ibm_aml/**
 !data/processed/sample/ibm_aml/.gitkeep
+
+# Explicit exports from motif v2 (metrics, model, features and manifests)
+results/motif/v2/
+notebooks/.graphguard-*.tmp

@@ -48,11 +48,17 @@ print('[PASS] Windows Python ' + sys.version.split()[0] + '; ' + result.stderr.s
 '@
     Invoke-CheckPython -Arguments @('-c', $runtime)
     Invoke-CheckPython -Arguments @('-m', 'pip', 'check')
+    # Tiny native OS-limit/cleanup tests, before any Spark JVM is admitted.
+    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_hardware_guard', 'tests.test_notebook_checkpoint', '-v')
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.verify_motif_outputs')
     Invoke-CheckPython -Arguments @('-m', 'src.paysim.verify_motif_outputs')
-    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_task3_motifs', 'tests.test_ibm_motif_outputs',
-        'tests.test_paysim_motif_outputs', 'tests.test_run_evidence', 'tests.test_ibm_cycle_visual',
-        'tests.test_motif_calibration', '-v')
+    # Keep each Spark suite in its own Windows process/JVM. Restarting several
+    # SparkContexts in one gateway can retain a stopped BlockManager heartbeat.
+    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_ibm_motif_outputs',
+        'tests.test_paysim_motif_outputs', 'tests.test_run_evidence', 'tests.test_ibm_cycle_visual', '-v')
+    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_task3_motifs', '-v')
+    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_motif_calibration', '-v')
+    Invoke-CheckPython -Arguments @('-m', 'unittest', 'tests.test_motif_v2', '-v')
     Invoke-CheckPython -Arguments @('tests\test_ibm_aml_etl.py')
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.motif_finding', '--output-dir', $scratch)
     Invoke-CheckPython -Arguments @('-m', 'src.ibm_aml.verify_motif_outputs', '--output-dir', $scratch, '--compare-dir', 'results\ibm_aml', '--require-evidence')

@@ -14,9 +14,6 @@ from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 
@@ -151,6 +148,9 @@ def run(patterns_path: Path, cycle_csv: Path, output_dir: Path) -> Path:
 
 
 def main() -> None:
+    # CLI exports files; importing evidence readers from a notebook must keep
+    # its inline backend so subsequent figures are embedded in the notebook.
+    plt.switch_backend("Agg")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--patterns", type=Path,
                         default=ROOT / "data/raw/ibm_aml/HI-Small_Patterns.txt")

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import csv
 import math
+import sys
 from pathlib import Path
 
 from graphframes import GraphFrame
@@ -265,7 +266,16 @@ def run(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+    if "--analysis" in sys.argv[1:]:
+        from src.motif.pipeline import main as analysis_main
+
+        arguments = [argument for argument in sys.argv[1:] if argument != "--analysis"]
+        if "--dataset" in arguments:
+            raise SystemExit("Dataset is fixed by this module; use src.motif.pipeline to choose it")
+        analysis_main(["--dataset", "ibm_aml", *arguments])
+        return
+    parser = argparse.ArgumentParser(description=__doc__,
+        epilog="Use --analysis --output-dir <new-directory> for the v2 causal motif pipeline")
     parser.add_argument("--sample", action="store_true", help="Use the sample graph")
     parser.add_argument("--input-dir", type=Path, help="Custom graph Parquet directory")
     parser.add_argument("--output-dir", type=Path,
