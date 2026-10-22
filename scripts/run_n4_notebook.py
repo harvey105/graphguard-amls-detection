@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import hashlib
 from datetime import datetime, timezone
 import os
 from queue import Empty
@@ -23,6 +24,23 @@ from jupyter_client import KernelManager
 REPO_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = REPO_ROOT / "notebooks" / "02_n4_toy_motif.ipynb"
 KERNEL_NAME = "graphguard-windows"
+
+
+def notebook_source_hashes(notebook):
+    """Read source bytes before execution without importing Spark in the runner."""
+    names = set(notebook["metadata"].get("graphguard_source_sha256", {}))
+    names.add("scripts/run_n4_notebook.py")
+    return {name: hashlib.sha256((REPO_ROOT / name).read_bytes()).hexdigest()
+            for name in sorted(names)}
+
+
+def complete_execution(notebook, started_hashes):
+    """Publish new provenance only after all cells ran against unchanged source."""
+    if notebook_source_hashes(notebook) != started_hashes:
+        raise RuntimeError("Source changed during notebook execution; rerun after edits are complete")
+    notebook["metadata"]["graphguard_source_sha256"] = started_hashes
+    notebook["metadata"].pop("graphguard_post_execution_whitespace", None)
+    notebook["metadata"]["graphguard_execution"]["status"] = "completed"
 
 
 def save_notebook(notebook):
@@ -54,6 +72,7 @@ def main() -> None:
         check=True,
     )
     notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+    started_hashes = notebook_source_hashes(notebook)
     notebook["metadata"]["kernelspec"] = {
         "display_name": "GraphGuard (.venv Windows)",
         "language": "python",
@@ -129,7 +148,7 @@ def main() -> None:
             notebook["metadata"]["graphguard_execution"]["completed_code_cells"] = execution_count
             save_notebook(notebook)
             print(f"Cell {execution_count}: PASS", flush=True)
-        notebook["metadata"]["graphguard_execution"]["status"] = "completed"
+        complete_execution(notebook, started_hashes)
     except BaseException as error:
         notebook["metadata"]["graphguard_execution"].update(status="failed", error=str(error))
         raise
@@ -139,7 +158,9 @@ def main() -> None:
             client.stop_channels()
             manager.shutdown_kernel(now=True)
         finally:
-            save_notebook(notebook)
+            # Admission failure in cell 1 must retain the prior saved evidence.
+            if notebook["metadata"]["graphguard_execution"]["completed_code_cells"]:
+                save_notebook(notebook)
     print(f"Notebook saved: {NOTEBOOK}")
 
 

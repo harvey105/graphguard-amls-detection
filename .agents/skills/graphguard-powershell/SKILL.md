@@ -21,6 +21,9 @@ speed or a desired score. Never repeat that execution pattern.
 
 - Run **one heavy workload at a time**: one notebook, Spark CLI, ETL, LPA or test
   gate. Do not background a second job while waiting, including across turns.
+- If the user pauses Spark, stop the owned orchestration process tree so it
+  cannot launch the next job. Continue edits and tests that start no JVM; keep
+  runtime checks pending until the user explicitly resumes Spark work.
 - Use `src/common/spark_session.py`; its mandatory Windows guard acquires a
   machine-session mutex before Java starts. Close the previous Python/kernel
   before starting another task: `Spark.stop()` alone can leave a JVM resident.
@@ -31,6 +34,20 @@ speed or a desired score. Never repeat that execution pattern.
 - On the user's 32 GiB workstation, use at most 2 logical CPUs, 10% CPU hard cap,
   6 GiB JVM heap, 10 GiB total job commit; retain roughly 8 GiB host RAM/commit
   reserve. Defaults scale down or refuse admission on smaller/busy machines.
+  A 4 GiB sample/test heap uses a lower **7 GiB hard job cap**, retaining the
+  same reserve, CPU caps and mutex. Smaller profiles cannot be upgraded in an
+  existing Python/kernel. A full-data run may explicitly request a **5 GiB heap /
+  8 GiB hard job cap** when the unchanged admission reserve permits it.
+  `GRAPHGUARD_MAX_HEAP` is an optional ceiling in the session factory: it can
+  only reduce a caller request, never increase it. `check_project.ps1` and
+  `check_task3.ps1` default to `-MaxHeap 5g`; notebook sessions request 5 GiB.
+  Release intermediate caches with blocking unpersist at phase boundaries and
+  retain disk-backed checkpoints rather than truncating data or evaluation.
+  The 5/8 GiB profile completed both full motif notebooks and the full project
+  gate on 22 October 2026; see `docs/Project_Code_Audit_2026-10-22.md` for measured
+  peaks and scope. This evidence does not waive fresh admission on later runs.
+  This reduces the actual OS allocation limit, not the
+  safety reserve; full 6 GiB workloads retain their original 10 GiB profile.
 - Validate the guard with small native tests **before** Spark. Then execute
   guard/tests → one full notebook → inspect measurements/exit → next notebook,
   sequentially. Use disk spill, column projection and cache release to reduce

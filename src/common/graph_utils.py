@@ -33,6 +33,31 @@ def save_graph(graph: GraphFrame, output_dir: str) -> None:
     graph.edges.write.mode("overwrite").parquet(str(output_path / "edges.parquet"))
 
 
+def write_spark_csv(frame, path: Path) -> None:
+    """Stream one partition at a time; replace only a completely written CSV."""
+    import csv
+    import os
+    import tempfile
+
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=".graphguard-", suffix=".tmp",
+                                         encoding="utf-8-sig", newline="", delete=False) as stream:
+            temporary = Path(stream.name)
+            writer = csv.writer(stream, lineterminator="\n")
+            writer.writerow(frame.columns)
+            for row in frame.toLocalIterator(prefetchPartitions=False):
+                writer.writerow(list(row))
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def check_integrity(graph: GraphFrame, verbose: bool = True) -> dict:
     """
     Kiểm tra tính toàn vẹn của GraphFrame:

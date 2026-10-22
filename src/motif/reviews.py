@@ -70,7 +70,7 @@ def review_ibm_etl(spark, repo: Path) -> ETLReview:
     finally:
         for frame in (edges, vertices):
             if frame is not None:
-                frame.unpersist()
+                frame.unpersist(blocking=True)
 
 
 @dataclass
@@ -122,7 +122,7 @@ def review_ibm_lpa(spark, repo: Path, checkpoint: Path) -> LPAReview:
         return LPAReview(pd.DataFrame([metrics]), top, size_distribution, usd_amounts, pd.DataFrame([stability]), log.getvalue())
     finally:
         for frame in owned:
-            frame.unpersist()
+            frame.unpersist(blocking=True)
 
 
 def pagerank_probability(adjacency,damping=0.85,iterations=30,repair_dangling=True):

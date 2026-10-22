@@ -65,9 +65,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_windows.
 
 `src/common/hardware_guard.py` được gọi bắt buộc trước khi `get_graph_session` khởi động Java. Windows Job Object giới hạn cả nhóm Python/JVM con; named mutex từ chối tác vụ thứ hai. Trên máy 32 GiB: tối đa **2 logical CPUs**, CPU hard cap **10%**, JVM heap **6 GiB**, tổng committed memory của job **10 GiB**; giữ khoảng **8 GiB** RAM và Windows commit dự phòng. Trần giảm hoặc từ chối trên máy nhỏ/bận. GC/compiler JVM cũng chỉ thấy 2 processor; ưu tiên tiến trình dưới bình thường. Đây là giới hạn cho job, không đổi power plan/BIOS của máy.
 
+Sample/test yêu cầu heap `4g` dùng profile nhỏ hơn: **7 GiB hard job commit**, vẫn giữ cùng reserve khoảng 8 GiB, CPU cap và mutex. Profile được chọn trước Java, không nâng heap/job cap trong cùng Python/kernel; full heap `6g` giữ profile 10 GiB. Đây là giảm trần cấp phát thực ở Windows, không giảm phần dự phòng để vượt admission.
+
 Admission cần đủ RAM/commit cho budget cộng reserve và ≥12 GiB trống ở ổ temp/workspace. Watchdog kiểm tra mỗi 2 giây; thiếu reserve trong 2 mẫu liên tiếp, CPU host ≥85% kéo dài, disk còn <5 GiB hoặc mất khả năng giám sát làm **dừng nhóm tiến trình của chính job**. Windows thu hồi JVM con nếu Python/kernel chết. Giới hạn commit có thể khiến ứng dụng báo OOM thay vì tiếp tục cấp phát. Resource stop là FAIL; không tự retry/tăng RAM/tăng worker. Dùng column projection, disk spill và giải phóng cache; không stress-test máy.
 
 Cơ chế này dùng [Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects) và [CPU hard cap](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information). CPU temperature chưa được đọc đáng tin cậy trên máy này; giới hạn phần mềm **không bảo đảm chống lỗi tản nhiệt, nguồn hoặc phần cứng**. Nếu có tiếng lạ/tắt máy bất thường, dừng tính toán và kiểm tra máy.
+
+Profile ít bộ nhớ cho full notebook dùng **5 GiB heap / 8 GiB hard job cap**, giữ nguyên reserve khoảng 8 GiB và CPU cap. Không giảm dữ liệu, số fold hoặc thay ngưỡng model. [Spark 3.5.1 local checkpoint](https://github.com/apache/spark/blob/v3.5.1/core/src/main/scala/org/apache/spark/rdd/LocalRDDCheckpointData.scala) dùng `MEMORY_AND_DISK`; phần cache vượt bộ nhớ có thể spill xuống ổ đĩa. Phải đủ ít nhất 12 GiB đĩa trống lúc admission và chỉ chạy một workload. Cấu hình thấp hơn vẫn phải được chạy kiểm chứng thực tế trước khi ghi PASS.
 
 GPU RTX A4500 hiện chưa được pipeline sử dụng. GraphFrames/GraphX và Spark ML trong stack Windows native đã pin chạy trên CPU; thêm GPU không tự offload các thao tác đó. [NVIDIA RAPIDS](https://docs.nvidia.com/datascience/platform-support/index.html) có yêu cầu nền tảng riêng; chưa có backend GPU của project được kiểm chứng nên không cài plugin/driver hay chuyển WSL để chạy tiếp.
 
@@ -147,6 +151,53 @@ IBM AML HI-Small dùng cả transactions và accounts CSV; chạy ETL và kiểm
 
 ETL ghi full Parquet vào `data/processed/ibm_aml/` và sample vào `data/processed/sample/ibm_aml/`. Với bản HI-Small hiện tại, full graph có 518.581 tài khoản, 5.078.345 giao dịch, 0 `External/Unknown`; sample có 89 giao dịch gắn nhãn gian lận. Trên IBM, `step` là Unix epoch seconds và `amount` giữ nguyên tiền tệ gốc: lọc ngưỡng tiền phải kèm `payment_currency`. Truy vấn 3-cycle trên các cạnh `isFraud=1` cho 7.473 motif rows thô nhưng chỉ 45 bộ ba đỉnh duy nhất sau khi khử phép xoay và đa cạnh; đây là tín hiệu theo nhãn, không tự chứng minh 45 vòng rửa tiền thật. Xem `docs/person2_handoff.md` để biết cách đếm đúng.
 
+## Kiểm chứng kết quả của toàn project
+
+`make check` gọi `scripts/check_project.ps1`: dependency, **44 test nhẹ**, artifact preflight độc lập cho Task 1/2/4, motif CSV, degree comparison, manifest và output/source hashes của hai notebook motif. Có FAIL/BLOCKED thì dừng trước Spark. Khi preflight PASS, lệnh chạy native guard tests, 9 test thuật toán Spark trên fixture nhỏ, rồi giữ gate Task 3 full ban đầu. Không coi fixture PASS là kết quả phát hiện fraud tốt trên dữ liệu thật. Checker artifact dùng 1 logical CPU, Arrow batch 4.096 dòng, giới hạn sample và RSS 512 MiB; full Parquet chỉ được đọc footer.
+
+```powershell
+# Không cần GNU Make: cùng entry point với target make check
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.ps1
+
+# Chỉ chạy preflight nhẹ, không khởi động Spark
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.ps1 -ArtifactsOnly
+
+# Nếu máy có GNU Make cho Windows: preflight rồi Task 3 runtime khi PASS
+make check
+# Chỉ preflight
+make check-artifacts
+
+```
+
+[Checklist theo PCCV](docs/Project_Code_Audit_2026-10-22.md) ghi **DONE FIXED** kèm bằng chứng chạy thực tế, phạm vi sample/full và hạn chế hiệu quả fraud. Notebook kiểm chứng chung `04` đã được bỏ theo yêu cầu; hai notebook trình bày của Khánh đã được chạy lại tuần tự bằng native Windows, lưu output mới và source hashes thực từ execution. JSON gate nằm ở `results/project_check/latest.json` (Git-ignored), exit code 1 nếu còn FAIL/BLOCKED.
+
+### Task 2, LPA và đánh giá fraud độc lập
+
+Task 2 dùng chung implementation degree/PageRank cho hai dataset, giữ reset probability 0.15 và 10 iterations. CLI nhận `--input-dir`, `--output-dir`, `--full`, `--as-of-step` và `--export-features`. Mặc định chạy sample; full xuất vào `results/<dataset>/full/`. Degree sum phải bằng `2 × edges`. CSV top 10 thêm số giao dịch fraud vào/ra **sau khi chọn hub**, chỉ để audit. PageRank cao không đồng nghĩa với fraud; các số 0 hợp lệ không bị sửa thành nhãn dương.
+
+Hai LPA exporter stream assignment ra đĩa, giữ top 50 để trình bày và `community_summary_all.csv` để đối chiếu toàn graph. IBM có thêm `community_amounts_by_currency.csv`; không cộng nominal amount khác currency. PaySim dùng đúng `Customer`/`Merchant`; stability so thành viên cụm sau canonicalization, không dựa vào size hoặc số label.
+
+`src.common.project_audit --signals` cung cấp đánh giá riêng từng nhánh **centrality** (degree/PageRank) hoặc **community** (LPA). Snapshot chỉ dùng cạnh quá khứ và không nhận nhãn. Hai validation folds 40→60%, 60→80% chọn family/quantile theo mean F1; refit snapshot tại 80%, giữ quyết định cố định cho test về sau. Timestamp ties không bị chia đôi. Có novelty baseline để nhận biết tín hiệu chỉ đến từ tài khoản chưa thấy. Nhãn chỉ dùng khi chọn trên validation và đánh giá, không đưa vào thuật toán hoặc ngưỡng cấu trúc lịch sử. Không có true positive ở validation thì ABSTAIN.
+
+Mỗi experiment sample xuất `validation.csv`, `test_metrics.csv`, `test_predictions.csv`, `account_snapshot.csv`, `report.json`, biểu đồ và manifest hashes vào thư mục mới. Báo cáo có TP/FP/FN/TN, precision/recall/F1, average precision, khoảng tin cậy và ví dụ TP/FP/FN. Hòa điểm trên validation thì ưu tiên novelty baseline; chỉ ghi nhận lợi ích cấu trúc khi nó thực sự cải thiện kết quả. Quantile tính trên tài khoản lịch sử, không phải tỷ lệ giao dịch cảnh báo; tài khoản chưa thấy được đánh dấu riêng. Phải đọc cả alert rate và precision, không coi recall cao khi cảnh báo gần mọi giao dịch là detector tốt. Đây là internal sample holdout, chưa phải benchmark ngoài hoặc kết quả full; **chưa kết hợp với motif**. Gate kiểm tra đủ cả 4 experiment và tính lại confusion counts/rule selection từ export.
+
+**Trạng thái 22/10:** cả hai notebook full đã chạy lại trên Windows với heap 5 GiB / hard job cap 8 GiB. IBM 15/15 cells, PaySim 12/12 cells, mỗi notebook 6 hình và 22 source hashes khớp. Metrics tái lập; peak job commit IBM/PaySim **5,97/5,87 GiB**, RAM trống thấp nhất **13,49/14,58 GiB**, không OOM/resource stop. Các lần từ chối trước đó thuộc profile cũ 6/10 GiB; profile mới giảm allocation thực và giữ nguyên reserve/CPU/mutex. **Full gate đã PASS, exit code 0:** 44 test nhẹ, 26/26 artifact checks, native guard/algorithm suites, motif/calibration/v2, IBM ETL full và rerun motif full hai dataset. Hai LPA manifests đã refresh và qua gate. Không còn Spark/kernel chạy nền sau kiểm tra. Các lệnh dưới đây luôn chạy từng lệnh một:
+
+```powershell
+# Chạy lại producer sample, 4 experiment và gate; dùng SignalRoot mới/rỗng
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.ps1 -Refresh
+
+# Hoặc đánh giá một nhánh riêng (thay dataset/branch cho các nhánh khác)
+& .\.venv\Scripts\python.exe -m src.common.project_audit --signals centrality --dataset paysim --output-dir .\results\project_check\signals\paysim\centrality
+
+# CLI Task 2 mẫu; không đồng thời với notebook/LPA
+& .\.venv\Scripts\python.exe -m src.ibm_aml.metrics --input-dir .\data\processed\sample\ibm_aml --output-dir .\results\ibm_aml
+```
+
+`-Refresh` không chạy lại ETL, không tạo notebook và không thay hai notebook trình bày. ETL/raw reconciliation và notebook execution vẫn cần các entry point riêng. Artifact gate sẽ tiếp tục từ chối notebook có source hashes cũ cho đến khi có output thực từ lần chạy mới.
+
+Kết quả pilot hiện hành không ủng hộ dùng ngưỡng PageRank/LPA đơn lẻ để xác nhận fraud: precision của các rule được chọn chỉ khoảng **0,07–0,36%**, riêng PaySim LPA cảnh báo toàn bộ test. Gate PASS nghĩa là bằng chứng và phép tính nhất quán; không có nghĩa detector tốt. Xem confusion matrices, baseline, alert rate và giới hạn sample trong [checklist audit](docs/Project_Code_Audit_2026-10-22.md). Các feature lịch sử có thể dùng cho nghiên cứu kết hợp tiếp theo trên cùng input/cutoff; fusion chưa được triển khai.
+
 ## Kiểm tra motif và review Task 4 IBM
 
 Chạy tại thư mục gốc repo, với full IBM và PaySim Parquet đã được ETL tạo:
@@ -155,8 +206,8 @@ Chạy tại thư mục gốc repo, với full IBM và PaySim Parquet đã đư�
 # Entry point trực tiếp, không cần cài GNU Make
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_task3.ps1
 
-# Cùng quy trình, nếu đã có GNU Make cho Windows trong PATH
-make check
+# Cùng gate Task 3, nếu đã có GNU Make cho Windows trong PATH
+make check-task3
 
 # Review LPA IBM sample: kiểm tra CSV và so sánh 2 lần chạy
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_task4.ps1
@@ -169,7 +220,7 @@ make check-task4
 make check-task4-full
 ```
 
-`check` xác nhận Windows Python 3.12/JDK 17, phiên bản Spark/GraphFrames, `pip check`, test motif/CSV/fingerprint, cùng schema/integrity của full IBM graph. Nó chạy lại motif trên **cả full IBM và full PaySim**, đối chiếu từng dòng với CSV bàn giao và kiểm tra manifest có hash input/output, mã nguồn và runtime. IBM phải có **54 directed cycles**, **2.491 tổ hợp giao dịch**, **45 bộ ba không xét chiều**; query không dùng nhãn với ba cạnh USD >10.000 phải có **0** kết quả. PaySim phải có **0 cycle** và **30 relay**, gồm 2 cặp cùng giờ chưa biết thứ tự thật. Evidence cục bộ giữ tại `results/motif/check_runs/`, log ở `results/ibm_aml/check_task3.log`.
+`check-task3` xác nhận Windows Python 3.12/JDK 17, phiên bản Spark/GraphFrames, `pip check`, test motif/CSV/fingerprint, cùng schema/integrity của full IBM graph. Nó chạy lại motif trên **cả full IBM và full PaySim**, đối chiếu từng dòng với CSV bàn giao và kiểm tra manifest có hash input/output, mã nguồn và runtime. IBM phải có **54 directed cycles**, **2.491 tổ hợp giao dịch**, **45 bộ ba không xét chiều**; query không dùng nhãn với ba cạnh USD >10.000 phải có **0** kết quả. PaySim phải có **0 cycle** và **30 relay**, gồm 2 cặp cùng giờ chưa biết thứ tự thật. Evidence cục bộ giữ tại `results/motif/check_runs/`, log ở `results/ibm_aml/check_task3.log`.
 
 `check-task4` chạy code LPA của Hoàng và checker riêng của Khánh: kiểm tra ID tài khoản đầy đủ/không trùng, label nguyên/không null, summary của **tất cả cộng đồng**, thống kê giao dịch/fraud/internal edges và tiền theo từng `payment_currency`. CSV top 50 vẫn dành cho trình bày; `community_summary_all.csv` dùng nghiệm thu, `community_amounts_by_currency.csv` giữ riêng đơn vị tiền. Evidence và CSV review nằm tại `results/ibm_aml/task4_check/{sample,full}/run_N/`; log ở `results/ibm_aml/check_task4.log`. Hai lần LPA được so sánh theo thành viên cụm, bỏ qua việc đổi số label; khác biệt được báo cáo, không bị tự động coi là lỗi thuật toán.
 
@@ -186,7 +237,7 @@ Thiếu Parquet/file bàn giao hoặc sai dữ liệu làm check thất bại. �
 
 Mở notebook của dataset muốn trình bày trong VS Code/Jupyter, chọn Windows interpreter `.venv\Scripts\python.exe`, rồi **Restart Kernel → Run All**. Hai notebook độc lập: mỗi file tự kiểm tra dependency, khởi tạo Spark và dừng Spark ở cuối. Không cần chạy notebook còn lại. Phần review PageRank là kiến thức chung, được giữ ở phụ lục notebook PaySim vì đây là dataset chính; các ví dụ toán/toy được ghi rõ là dữ liệu tự tạo để minh họa.
 
-Cả hai notebook dùng heap tối đa `6g` và `local[2]` cho pipeline motif v2. Các output và biểu đồ được lưu ngay trong notebook; thời gian chạy thực tế có ở cell cuối. Không xuất thêm CSV/PNG/log vào repo, checkpoint tạm nằm ngoài repo. Các hàm export model/CSV được giữ trong Python và không được notebook gọi. Nếu chưa đăng ký kernel `graphguard-windows`, có thể chọn trực tiếp interpreter `.venv` trong VS Code.
+Cả hai notebook yêu cầu heap `5g`, hard job cap tối đa **8 GiB** và `local[2]` cho pipeline motif v2, giữ nguyên dữ liệu và RAM/commit dự phòng. `GRAPHGUARD_MAX_HEAP` chỉ có thể hạ heap mà caller yêu cầu; các gate mặc định `-MaxHeap 5g`. Cache trung gian được giải phóng đồng bộ giữa các bước. Các output và biểu đồ được lưu ngay trong notebook; thời gian chạy thực tế có ở cell cuối. Không xuất thêm CSV/PNG/log vào repo, checkpoint tạm nằm ngoài repo. Các hàm export model/CSV được giữ trong Python và không được notebook gọi. Nếu chưa đăng ký kernel `graphguard-windows`, có thể chọn trực tiếp interpreter `.venv` trong VS Code.
 
 Notebook import trực tiếp thuật toán production; không duy trì bản sao hàm trong cell. Các import nằm ngay tại bước sử dụng để Ctrl+click đến source. Cell cuối ghi SHA256 source của lần chạy; khi sửa module, chạy lại notebook trước khi bàn giao.
 

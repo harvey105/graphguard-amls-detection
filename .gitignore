@@ -66,4 +66,5 @@ data/processed/ibm_aml/
 
 # Explicit exports from motif v2 (metrics, model, features and manifests)
 results/motif/v2/
+results/project_check/
 notebooks/.graphguard-*.tmp

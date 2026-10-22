@@ -173,7 +173,9 @@ def choose_walk_forward_rule(fold_scores: pd.DataFrame) -> tuple[dict, pd.DataFr
     expected_folds = fold_scores.fold.nunique()
     if (leaderboard.folds != expected_folds).any():
         raise ValueError("Incomplete walk-forward candidate")
-    leaderboard["_complexity"] = (leaderboard.family != "transaction_only").astype(int)
+    # A structural rule must improve over its simpler baseline, including
+    # temporal component pilots where novelty is the no-graph baseline.
+    leaderboard["_complexity"] = (~leaderboard.family.isin(["transaction_only", "novelty"])).astype(int)
     leaderboard = leaderboard.sort_values(
         ["mean_F1", "worst_F1", "FP", "_complexity", "threshold"], ascending=[False, False, True, True, False]
     ).drop(columns="_complexity").reset_index(drop=True)

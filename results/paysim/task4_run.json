@@ -1,0 +1,146 @@
+{
+  "status": "PASS",
+  "task": "Task 4 PaySim LPA execution",
+  "run_id": "a73486f5-14eb-40db-9aa3-9443dac4ef10",
+  "created_at_utc": "2026-10-22T16:14:03.048403+00:00",
+  "verification": "automated run; does not record human reviewer approval",
+  "git_revision": "3cfb109ac6918326a2437c84d3dccb8eb637dfb5",
+  "sources": [
+    {
+      "path": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\src\\paysim\\community_detection.py",
+      "bytes": 16704,
+      "sha256": "dc18c179bd2895d66e20bc7186202199439a120256221f0acd690b104f30016e"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\graph_utils.py",
+      "bytes": 5622,
+      "sha256": "0f3927e16594eda2a2fff6b0b43c6fc7c54629a25e85fb6908b19b050844d483"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\spark_session.py",
+      "bytes": 8306,
+      "sha256": "a97053f7cd3eea84dec074c0a67e46d944100a29e7376b1ca43eac22ab8d613d"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\verify_communities.py",
+      "bytes": 15133,
+      "sha256": "77545e6df157839c732cbf6960b5205782a5d1ef5c2eea25831a1505f602f802"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\hardware_guard.py",
+      "bytes": 12593,
+      "sha256": "ee2a504ad5a78b368755426d6c4e0dd1cdad514dcdc3112ea5d3a75af77fe093"
+    }
+  ],
+  "runtime": {
+    "system": "Windows",
+    "python": "3.12.10",
+    "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+    "spark": "3.5.1",
+    "graphframes": "0.12.2",
+    "java": "17.0.20.1",
+    "spark_master": "local[2]",
+    "driver_memory": "4096m",
+    "java_max_heap_bytes": 4294967296,
+    "java_visible_processors": 2,
+    "hardware_guard": {
+      "cpu_hard_cap_percent": 10,
+      "max_logical_cpus": 2,
+      "job_commit_cap_gib": 7.0,
+      "peak_job_commit_gib": 3.61,
+      "minimum_available_ram_gib": 18.19,
+      "maximum_host_cpu_percent": 33.1,
+      "thermal_sensor": "CPU temperature unavailable; not a thermal/power hardware guarantee"
+    }
+  },
+  "parameters": {
+    "max_iter": 5,
+    "backend": "graphx",
+    "scope": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\sample\\paysim",
+    "stability": [
+      {
+        "run": 2,
+        "same_partition": true,
+        "accounts_with_changed_canonical_community": 0,
+        "accounts": 194195,
+        "interpretation": "observed comparison; differences do not invalidate LPA"
+      }
+    ]
+  },
+  "metrics": {
+    "assigned_vertices": 194195,
+    "communities": 186932,
+    "fraud_audit_posthoc": [
+      {
+        "label": 867,
+        "member_count": 1,
+        "total_tx_count": 1,
+        "fraud_tx_count": 1,
+        "fraud_rate": 1.0
+      },
+      {
+        "label": 2611,
+        "member_count": 2,
+        "total_tx_count": 2,
+        "fraud_tx_count": 1,
+        "fraud_rate": 0.5
+      },
+      {
+        "label": 3324,
+        "member_count": 1,
+        "total_tx_count": 1,
+        "fraud_tx_count": 1,
+        "fraud_rate": 1.0
+      },
+      {
+        "label": 4498,
+        "member_count": 1,
+        "total_tx_count": 1,
+        "fraud_tx_count": 1,
+        "fraud_rate": 1.0
+      },
+      {
+        "label": 4768,
+        "member_count": 1,
+        "total_tx_count": 1,
+        "fraud_tx_count": 1,
+        "fraud_rate": 1.0
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\sample\\paysim",
+      "files": [
+        {
+          "path": "edges.parquet/part-00000-011827eb-c383-4e59-8de7-09e677db4d9f-c000.snappy.parquet",
+          "bytes": 2705972,
+          "sha256": "94b1a6c91baa0f8c37772db7feb97e173c564371eb86a7ca4ce64a9f2683d290"
+        },
+        {
+          "path": "vertices.parquet/part-00000-02021864-2787-462e-9655-8ba37edbeea2-c000.snappy.parquet",
+          "bytes": 2858718,
+          "sha256": "dfa76505fc341f0e908c3997bf24d54af964ba067fd54a7d5f8f6ac1a97ee88e"
+        }
+      ],
+      "sha256": "b810afae8457a642f190965d0bbb517411f0028e2c81698d4e0ae27fbe3776b9"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\paysim\\communities.csv",
+      "bytes": 7768486,
+      "sha256": "d8f7223ab2d1f81c470a7d5105ca29df92cf833870b43a12d2a2a04d7dc003a8"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\paysim\\community_summary.csv",
+      "bytes": 3274,
+      "sha256": "3b2fb3e29a5f55f4e96a2796e585a923af341e4d2b790f5e8ea65e48138ce52d"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\paysim\\community_summary_all.csv",
+      "bytes": 9626257,
+      "sha256": "b5c6395184913228a4f10c33572614775c28f6a7e8da2cfee6dea37ec11bd1bb"
+    }
+  ]
+}

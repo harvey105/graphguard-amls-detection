@@ -59,6 +59,22 @@ class ResourcePolicy:
             raise ValueError("At least one worker required")
         return heap, workers
 
+    @classmethod
+    def for_workload(cls, total: int, requested_heap: str):
+        """A smaller heap gets a smaller hard job cap, with the same OS reserve.
+
+        The default/full profile is unchanged. A process admitted with a smaller
+        profile cannot later upgrade its heap or job limit in the same kernel.
+        """
+        base = cls.for_memory(total)
+        heap, _ = base.spark_limits(requested_heap, "local[2]")
+        mib = int(heap[:-1])
+        if mib >= base.max_heap_gib * 1024:
+            return base
+        rounded_gib = (mib + 1023) // 1024
+        budget = min(base.job_bytes, (rounded_gib + 3) * GIB)
+        return cls(budget, base.reserve_bytes, min(base.max_heap_gib, rounded_gib))
+
 
 def pressure_reason(policy: ResourcePolicy, available: int, commit_free: int,
                     disk_free: int, cpu_percent: float) -> str | None:
@@ -103,7 +119,7 @@ class CPULimits(C.Structure):
 
 
 class WindowsGuard:
-    def __init__(self):
+    def __init__(self, requested_heap="6g"):
         if os.name != "nt":
             raise RuntimeError("Hardware protection requires native Windows")
         self.api = C.WinDLL("kernel32", use_last_error=True)
@@ -141,7 +157,7 @@ class WindowsGuard:
                     "org.apache.spark.deploy.SparkSubmit" in part for part in process.info["cmdline"] or []):
                     raise RuntimeError(f"Existing Spark JVM PID {process.pid}; close it before starting another workload")
             initial = self.memory()
-            self.policy = ResourcePolicy.for_memory(initial.total_phys)
+            self.policy = ResourcePolicy.for_workload(initial.total_phys, requested_heap)
             self.disks = list(dict.fromkeys([Path(tempfile.gettempdir()).anchor, Path(__file__).resolve().anchor]))
             if initial.avail_phys < self.policy.reserve_bytes + self.policy.job_bytes:
                 raise RuntimeError("Not enough free RAM for the job budget AND OS reserve; close applications, do not raise limits")
@@ -243,10 +259,10 @@ class WindowsGuard:
 _GUARD = None
 
 
-def protect_spark() -> WindowsGuard:
+def protect_spark(requested_heap="6g") -> WindowsGuard:
     global _GUARD
     if _GUARD is None:
-        _GUARD = WindowsGuard()
+        _GUARD = WindowsGuard(requested_heap)
     return _GUARD
 
 

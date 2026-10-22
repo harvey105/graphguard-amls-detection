@@ -74,8 +74,8 @@ def resolve_graphframes_coordinate() -> str:
     return f"io.graphframes:graphframes-spark{major}_{scala_suffix}:{GRAPHFRAMES_VERSION}"
 
 
-def create_graph_spark_session(app_name: str = "GraphGuard-GraphConstruction") -> SparkSession:
-    return get_graph_session(app_name)
+def create_graph_spark_session(app_name: str = "GraphGuard-GraphConstruction", driver_memory="6g") -> SparkSession:
+    return get_graph_session(app_name, driver_memory=driver_memory)
 
 
 def load_from_parquet(spark: SparkSession, sample: bool = False):
@@ -146,143 +146,89 @@ def induce_sample(vertices_df, edges_df, target_edges: int = 100_000, seed: int 
     return sample_vertices, sample_edges
 
 
-def main():
-    parser = argparse.ArgumentParser(description="GraphGuard Task 1: Graph Construction")
-    parser.add_argument("--sample", action="store_true", help="Use/build the ~100k-edge sample graph")
-    parser.add_argument("--from-raw", action="store_true", help="Build graph directly from raw CSV")
-    args = parser.parse_args()
+def verify_graph(graph, *, sample=False, raw_df=None):
+    """Return verified counts or raise; a printed FAIL can never be success."""
+    from functools import reduce
+    from src.common.graph_utils import check_integrity
 
-    spark = create_graph_spark_session()
-    spark.sparkContext.setLogLevel("WARN")
-
-    print("=" * 65)
-    print("TASK 1: GRAPHFRAME CONSTRUCTION & VALIDATION PIPELINE")
-    print("=" * 65)
-
-    # raw_df is only populated in --from-raw mode. It's the thing that lets
-    # us do a genuine spot-check against the original transactions rather
-    # than just re-inspecting the DataFrames we built ourselves.
-    raw_df = None
-
-    if args.from_raw:
-        raw_csv_path = "data/raw/paysim/PS_20174392719_1491204439457_log.csv"
-        if not os.path.exists(raw_csv_path):
-            raw_csv_path = "data/raw/PS_20174392719_1491204439457_log.csv"
-            print(f"[WARN] Preferred raw path not found; using {raw_csv_path}.")
-        raw_df, vertices_df, edges_df = load_from_raw_csv(spark, raw_csv_path)
-        if args.sample:
-            print("[*] --sample requested with --from-raw: inducing a ~100k-edge "
-                  "subgraph in-memory (raw_df stays full-size for spot-checks below)...")
-            vertices_df, edges_df = induce_sample(vertices_df, edges_df)
-    else:
-        vertices_df, edges_df = load_from_parquet(spark, sample=args.sample)
-
-    vertices_df.cache()
-    edges_df.cache()
-
-    # GraphFrame Instantiation (Rubric requirement)
-    print("[*] Instantiating GraphFrame(vertices, edges)...")
-    graph = GraphFrame(vertices_df, edges_df)
-
-    v_count = graph.vertices.count()
-    e_count = graph.edges.count()
-
-    print("\n" + "-" * 65)
-    print("GRAPHFRAME TOPOLOGY SUMMARY")
-    print("-" * 65)
-    print(f"Total Graph Vertices (|V|): {v_count:,}")
-    print(f"Total Graph Edges    (|E|): {e_count:,}")
-
-    print("\nVertices Schema:")
-    graph.vertices.printSchema()
-    print("Edges Schema:")
-    graph.edges.printSchema()
-
-    # Explicit pass/fail checks -- the rubric says "verify vertex count, edge
-    # count, sample vertices/edges match the original data", not just print
-    # them for visual inspection.
-    print("\n" + "-" * 65)
-    print("VERIFICATION CHECKS")
-    print("-" * 65)
-
-    expected_v_cols = {"id", "account_type", "balance"}
-    expected_e_cols = {"src", "dst", "amount", "step", "type", "isFraud"}
-    v_cols_ok = expected_v_cols.issubset(set(graph.vertices.columns))
-    e_cols_ok = expected_e_cols.issubset(set(graph.edges.columns))
-    print(f"  [{'PASS' if v_cols_ok else 'FAIL'}] Vertices contain {sorted(expected_v_cols)}")
-    print(f"  [{'PASS' if e_cols_ok else 'FAIL'}] Edges contain {sorted(expected_e_cols)}")
-
-    if not args.sample:
-        # Full graph (parquet or --from-raw without --sample): exact counts
-        # are a known, fixed identity from Task 2.1 -- compare directly.
-        v_count_ok = v_count == EXPECTED_VERTEX_COUNT
-        e_count_ok = e_count == EXPECTED_EDGE_COUNT
-        print(f"  [{'PASS' if v_count_ok else 'FAIL'}] Vertex count == {EXPECTED_VERTEX_COUNT:,} (got {v_count:,})")
-        print(f"  [{'PASS' if e_count_ok else 'FAIL'}] Edge count == {EXPECTED_EDGE_COUNT:,} (got {e_count:,})")
-    else:
-        # Sample graph: exact count isn't a fixed identity (it's a random
-        # sample), so verify structural self-consistency instead -- the
-        # induced subgraph should have zero dangling edges by construction.
-        dangling_src = graph.edges.join(graph.vertices, graph.edges["src"] == graph.vertices["id"], "left_anti").count()
-        dangling_dst = graph.edges.join(graph.vertices, graph.edges["dst"] == graph.vertices["id"], "left_anti").count()
-        ref_ok = dangling_src == 0 and dangling_dst == 0
-        print(f"  [{'PASS' if ref_ok else 'FAIL'}] Sample referential integrity "
-              f"({dangling_src} dangling src, {dangling_dst} dangling dst)")
-
-    # Spot-check constructed edges against the actual raw transactions --
-    # only possible (and only cheap) when raw_df was already loaded, i.e.
-    # --from-raw. In fast/parquet mode we say so explicitly rather than
-    # silently skipping the objective's "validate against raw transactions"
-    # requirement.
-    print("\n" + "-" * 65)
-    print("RAW-TRANSACTION SPOT-CHECK")
-    print("-" * 65)
+    required_v = {"id", "account_type", "balance"}
+    required_e = {"src", "dst", "amount", "step", "type", "isFraud"}
+    if not required_v <= set(graph.vertices.columns) or not required_e <= set(graph.edges.columns):
+        raise ValueError("Missing required graph schema")
+    counts = check_integrity(graph)
+    if counts["num_vertices"] <= 0 or counts["num_edges"] <= 0:
+        raise ValueError("Empty graph")
+    if counts["null_vertices"] or counts["null_edges"] or counts["dangling_edges"]:
+        raise ValueError("Null keys or dangling edges")
+    if graph.vertices.select("id").distinct().count() != counts["num_vertices"]:
+        raise ValueError("Duplicate vertex ID")
+    if not sample and (counts["num_vertices"], counts["num_edges"]) != (EXPECTED_VERTEX_COUNT, EXPECTED_EDGE_COUNT):
+        raise ValueError("Full graph cardinality differs from the PaySim contract")
+    nulls = [F.col(name).isNull() for name in required_e]
+    bad_edges = reduce(lambda a, b: a | b, nulls)
+    bad_edges = bad_edges | F.isnan("amount") | (F.abs("amount") == float("inf")) | (F.col("amount") < 0)
+    bad_edges = bad_edges | (F.trim("src") == "") | (F.trim("dst") == "")
+    bad_edges = bad_edges | ~F.col("isFraud").isin(0, 1) | ~F.col("type").isin("CASH_IN", "CASH_OUT", "PAYMENT", "DEBIT", "TRANSFER")
+    bad_edges = bad_edges | ~F.col("step").between(1, 744) | (F.col("step") != F.col("step").cast("long"))
+    bad_vertices = ((F.trim("id") == "") | F.col("account_type").isNull() | F.col("balance").isNull() | F.isnan("balance") | (F.abs("balance") == float("inf"))
+                    | ~F.col("account_type").isin("Customer", "Merchant"))
+    if graph.edges.where(bad_edges).limit(1).count() or graph.vertices.where(bad_vertices).limit(1).count():
+        raise ValueError("Invalid transaction value or account metadata")
+    raw_checked = 0
     if raw_df is not None:
         for row in graph.edges.limit(5).collect():
-            match_count = raw_df.filter(
-                (F.col("nameOrig") == row["src"]) &
-                (F.col("nameDest") == row["dst"]) &
-                (F.col("step") == row["step"]) &
-                (F.col("amount") == row["amount"])
-            ).count()
-            status = "PASS" if match_count >= 1 else "FAIL"
-            print(f"  [{status}] {row['src']} -> {row['dst']} @ step {row['step']}, "
-                  f"amount={row['amount']}: {match_count} matching raw row(s)")
-    else:
-        print("  Skipped -- no raw_df loaded in fast/parquet mode.")
-        print("  Run with --from-raw for a full validation pass against the source CSV.")
+            matches = raw_df.where((F.col("nameOrig") == row.src) & (F.col("nameDest") == row.dst)
+                & (F.col("step") == row.step) & (F.col("amount") == row.amount)
+                & (F.col("type") == row.type) & (F.col("isFraud") == row.isFraud)).limit(1).count()
+            if not matches:
+                raise ValueError("Constructed edge absent from raw spot-check")
+            raw_checked += 1
+    return {**counts, "raw_spot_checked_rows": raw_checked, "scope": "sample" if sample else "full"}
 
-    print("\n" + "-" * 65)
-    print("SAMPLE VERTICES (Top 5 Customer & Merchant):")
-    print("-" * 65)
-    graph.vertices.filter(F.col("account_type") == "Customer").show(5, truncate=False)
-    graph.vertices.filter(F.col("account_type") == "Merchant").show(5, truncate=False)
 
-    print("-" * 65)
-    print("SAMPLE EDGES (Top 5 Fraudulent Transactions):")
-    print("-" * 65)
-    graph.edges.filter(F.col("isFraud") == 1).show(5, truncate=False)
+def main():
+    from pathlib import Path
+    from src.common.graph_utils import load_graph
+    from src.common.run_evidence import REPO_ROOT, write_run_evidence
 
-    # Native GraphFrames metric probes -- proves the JVM package actually
-    # resolved and the graph is operational, and unblocks Person 3 (Task 2).
-    print("-" * 65)
-    print("GRAPHFRAMES FUNCTIONAL INTEGRITY PROBE")
-    print("-" * 65)
-    print("[*] Probing In-Degrees (Top 5 Receiver Hubs):")
-    graph.inDegrees.orderBy(F.col("inDegree").desc()).show(5)
-
-    print("[*] Probing Out-Degrees (Top 5 Sender Hubs):")
-    graph.outDegrees.orderBy(F.col("outDegree").desc()).show(5)
-
-    # Forward-looking note: this script only uses inDegrees/outDegrees, which
-    # need no checkpointing. connectedComponents (Task 4) and Pregel-based
-    # algorithms do -- Person 3/5/6 will need
-    # spark.sparkContext.setCheckpointDir(...) set before calling those.
-    print("=" * 65)
-    print("[+] Task 1 Completed Successfully. GraphFrame is fully operational.")
-    print("=" * 65)
-
-    spark.stop()
+    parser = argparse.ArgumentParser(description="Task 1: construct and strictly verify PaySim graph")
+    parser.add_argument("--sample", action="store_true")
+    parser.add_argument("--from-raw", action="store_true")
+    parser.add_argument("--input-dir", type=Path)
+    parser.add_argument("--report", type=Path)
+    parser.add_argument("--driver-memory")
+    args = parser.parse_args()
+    if args.from_raw and args.input_dir:
+        parser.error("Choose --from-raw or --input-dir")
+    input_dir = (args.input_dir or REPO_ROOT / ("data/processed/sample/paysim" if args.sample else "data/processed/paysim")).resolve()
+    report_path = (args.report or REPO_ROOT / "results/paysim/task1_run.json").resolve()
+    raw_path = REPO_ROOT / "data/raw/paysim/PS_20174392719_1491204439457_log.csv"
+    spark = create_graph_spark_session(driver_memory=args.driver_memory or ("4g" if args.sample else "6g"))
+    owned = []
+    try:
+        spark.sparkContext.setLogLevel("ERROR")
+        raw = None
+        if args.from_raw:
+            raw, vertices, edges = load_from_raw_csv(spark, str(raw_path))
+            owned.append(raw)
+            if args.sample:
+                vertices, edges = induce_sample(vertices, edges)
+        else:
+            graph = load_graph(spark, str(input_dir))
+            vertices, edges = graph.vertices, graph.edges
+        vertices, edges = vertices.cache(), edges.cache()
+        owned.extend([vertices, edges])
+        graph = GraphFrame(vertices, edges)
+        metrics = verify_graph(graph, sample=args.sample, raw_df=raw)
+        write_run_evidence(report_path, spark, task="Task 1 PaySim graph verification",
+            inputs=[raw_path if args.from_raw else input_dir], outputs=[],
+            sources=[Path(__file__), REPO_ROOT / "src/paysim/etl_mapping.py", REPO_ROOT / "src/common/graph_utils.py"],
+            parameters={"sample": args.sample, "from_raw": args.from_raw}, metrics=metrics)
+        print("[PASS] Task 1 verified:", metrics)
+    finally:
+        for frame in owned:
+            frame.unpersist()
+        spark.stop()
 
 
 if __name__ == "__main__":

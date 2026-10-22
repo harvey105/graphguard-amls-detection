@@ -25,17 +25,17 @@ REPORT_ACCOUNTS = ("C1933517957", "C1939958280", "C232785081")
 
 def plot_degree_distribution(degrees_df, output_path):
     """Ve histogram phan phoi bac (linear + log-log)."""
-    pdf = degrees_df.toPandas()
+    pdf = degrees_df.groupBy("degree").count().orderBy("degree").toPandas()
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-    ax1.hist(pdf["degree"], bins=50, color="steelblue", edgecolor="black")
+    ax1.bar(pdf["degree"], pdf["count"], color="steelblue")
     ax1.set_xlabel("Degree")
     ax1.set_ylabel("Number of vertices")
     ax1.set_title("Degree Distribution (linear)")
     ax1.grid(alpha=0.3)
 
-    counts = pdf["degree"].value_counts().sort_index()
+    counts = pdf.set_index("degree")["count"]
     ax2.loglog(counts.index, counts.values, "o", markersize=5, color="coral")
     ax2.set_xlabel("Degree (log)")
     ax2.set_ylabel("Count (log)")
@@ -50,7 +50,9 @@ def plot_degree_distribution(degrees_df, output_path):
 
 def plot_top_pagerank(pagerank_df, output_path, top_n=10):
     """Ve bar chart top N PageRank."""
-    pdf = pagerank_df.toPandas().head(top_n)
+    if not 1 <= top_n <= 100:
+        raise ValueError("top_n must be between 1 and 100")
+    pdf = pagerank_df.orderBy("pagerank", ascending=False).limit(top_n).toPandas()
 
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.barh(range(len(pdf)), pdf["pagerank"], color="seagreen", edgecolor="black")

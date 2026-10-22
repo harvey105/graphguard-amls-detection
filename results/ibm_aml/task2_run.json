@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "task": "Task 2 ibm_aml",
+  "run_id": "69ecbdf7-aac4-4e2e-bf15-89939c6c3521",
+  "created_at_utc": "2026-10-22T10:35:19.338558+00:00",
+  "verification": "automated run; does not record human reviewer approval",
+  "git_revision": "3cfb109ac6918326a2437c84d3dccb8eb637dfb5",
+  "sources": [
+    {
+      "path": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\src\\paysim\\metrics.py",
+      "bytes": 15352,
+      "sha256": "7d6afbffb8da43ca971311b7a4ead81684671ebf8c58c0592970c86125118f0e"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\metrics.py",
+      "bytes": 904,
+      "sha256": "28ffd9db52081d3c669f63bd14f23a7ba65249b061ef351ad1d7a1038a758fda"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\graph_utils.py",
+      "bytes": 5622,
+      "sha256": "0f3927e16594eda2a2fff6b0b43c6fc7c54629a25e85fb6908b19b050844d483"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\hardware_guard.py",
+      "bytes": 12593,
+      "sha256": "ee2a504ad5a78b368755426d6c4e0dd1cdad514dcdc3112ea5d3a75af77fe093"
+    }
+  ],
+  "runtime": {
+    "system": "Windows",
+    "python": "3.12.10",
+    "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+    "spark": "3.5.1",
+    "graphframes": "0.12.2",
+    "java": "17.0.20.1",
+    "spark_master": "local[2]",
+    "driver_memory": "4096m",
+    "java_max_heap_bytes": 4294967296,
+    "java_visible_processors": 2,
+    "hardware_guard": {
+      "cpu_hard_cap_percent": 10,
+      "max_logical_cpus": 2,
+      "job_commit_cap_gib": 7.0,
+      "peak_job_commit_gib": 2.66,
+      "minimum_available_ram_gib": 16.02,
+      "maximum_host_cpu_percent": 27.9,
+      "thermal_sensor": "CPU temperature unavailable; not a thermal/power hardware guarantee"
+    }
+  },
+  "parameters": {
+    "scope": "sample",
+    "max_iter": 10,
+    "reset_probability": 0.15,
+    "as_of_step": null,
+    "export_features": false
+  },
+  "metrics": {
+    "vertices": 119043,
+    "edges": 99869,
+    "degree_sum": 199738,
+    "interpretation": "Structural centrality; fraud evaluation is a separate temporal protocol"
+  },
+  "inputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\sample\\ibm_aml",
+      "files": [
+        {
+          "path": "edges.parquet/part-00000-c917bbbf-664c-4ea3-906b-ae4982fe3efc-c000.snappy.parquet",
+          "bytes": 4059021,
+          "sha256": "84cb34cb439b895b58d7e08becba42dd40702dc688f495bc92f68e81607e1787"
+        },
+        {
+          "path": "vertices.parquet/part-00000-d9db8556-8a89-433d-915d-3cd555b31496-c000.snappy.parquet",
+          "bytes": 1375947,
+          "sha256": "63e23cce587f8520914496163c1a96ecb8f785ed70365abae480177e472b3c65"
+        }
+      ],
+      "sha256": "60621d663a7bae36786b32582dc9d75ff9a70fcb81d05722d871d4ff3704bb7a"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\top10_pagerank.csv",
+      "bytes": 1005,
+      "sha256": "568ebe03543348f9ff27621eeb3c046218ac63bbfb41b4e19de27f605751a83c"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\degree_distribution.csv",
+      "bytes": 185,
+      "sha256": "b1af89feea832c05b766706dd9deece83396244fcc32250fb21c1b14f1d3c81a"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\degree_distribution.png",
+      "bytes": 134348,
+      "sha256": "749dcf8d83a17537f0896e5e3224f8b4059389b722ffea3f3d8557d7998d9782"
+    }
+  ]
+}

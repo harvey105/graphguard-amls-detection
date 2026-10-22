@@ -58,9 +58,9 @@ class Experiment:
     def close(self):
         """Release this experiment's caches; the caller still owns SparkSession."""
         for frame in [self.features, self.truth, *self.scores.values()]:
-            frame.unpersist()
+            frame.unpersist(blocking=True)
         for model in self.models.values():
-            model.scales.unpersist()
+            model.scales.unpersist(blocking=True)
 
     def report(self) -> dict:
         if self.state != "evaluated":
@@ -133,13 +133,13 @@ def prepare_experiment(spark, dataset: str, input_dir: Path | str | None = None,
             raise ValueError("Insufficient positive support in a validation period; choose another protocol before evaluating test")
         features = build_motif_features(raw_features, vertices, spec, config.windows_hours)
         if features.count() != integrity["num_edges"]:
-            features.unpersist()
+            features.unpersist(blocking=True)
             raise AssertionError("Feature extraction lost or duplicated transactions")
     except BaseException:
-        truth.unpersist()
+        truth.unpersist(blocking=True)
         raise
     finally:
-        indexed.unpersist()
+        indexed.unpersist(blocking=True)
     result = Experiment(spec, config, source, features, truth, cuts, support, integrity)
     result.timings["prepare_features"] = round(time.perf_counter() - started, 3)
     return result
@@ -164,7 +164,7 @@ def run_walk_forward(experiment: Experiment) -> pd.DataFrame:
                     records.append({"fold": fold, "family": family, "threshold": threshold,
                                     **metrics_at_threshold(histogram, threshold)})
             finally:
-                model.scales.unpersist()
+                model.scales.unpersist(blocking=True)
     experiment.folds = pd.DataFrame(records)
     selected, experiment.leaderboard = choose_walk_forward_rule(experiment.folds)
     experiment.selection = _records(pd.DataFrame([selected]))[0]

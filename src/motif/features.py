@@ -238,7 +238,7 @@ def build_motif_features(features: DataFrame, vertices: DataFrame, spec: Dataset
         return combined.join(cycles, "event_id", "left").fillna(0, subset=numeric).localCheckpoint(eager=True)
     finally:
         for frame in owned:
-            frame.unpersist()
+            frame.unpersist(blocking=True)
 
 
 def motif_numeric_columns(windows_hours: tuple[int, ...]) -> list[str]:

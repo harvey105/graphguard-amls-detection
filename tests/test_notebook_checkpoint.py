@@ -10,6 +10,27 @@ from scripts import run_n4_notebook as runner
 
 
 class CheckpointTests(unittest.TestCase):
+    def test_completion_records_executed_hashes_and_rejects_midrun_edits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "scripts").mkdir()
+            (root / "scripts/run_n4_notebook.py").write_text("# runner fixture\n", encoding="utf-8")
+            source = root / "source.py"
+            source.write_text("value = 1\n", encoding="utf-8")
+            notebook = {"metadata": {"graphguard_source_sha256": {"source.py": "old"},
+                                     "graphguard_execution": {"status": "running"}}}
+            with patch.object(runner, "REPO_ROOT", root):
+                before = runner.notebook_source_hashes(notebook)
+                source.write_text("value = 2\n", encoding="utf-8")
+                with self.assertRaisesRegex(RuntimeError, "Source changed"):
+                    runner.complete_execution(notebook, before)
+                self.assertEqual(notebook["metadata"]["graphguard_source_sha256"]["source.py"], "old")
+                self.assertEqual(notebook["metadata"]["graphguard_execution"]["status"], "running")
+                current = runner.notebook_source_hashes(notebook)
+                runner.complete_execution(notebook, current)
+                self.assertEqual(notebook["metadata"]["graphguard_source_sha256"], current)
+                self.assertEqual(notebook["metadata"]["graphguard_execution"]["status"], "completed")
+
     def test_replacement_saves_utf8_without_temp_artifacts(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "trình bày.ipynb"

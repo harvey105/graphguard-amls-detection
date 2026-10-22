@@ -1,0 +1,372 @@
+{
+  "status": "PASS",
+  "review_kind": "Khanh self-review and automated verification",
+  "hoang_task3_review_evidence": "not found in checked commits/docs/public PRs or commit comments; private review not supplied",
+  "lead_final_approval": "not recorded",
+  "upstream_revision": "794b853",
+  "task3": {
+    "ibm": {
+      "status": "PASS",
+      "run_id": "3d9d9960-a825-4aa3-992b-86136d11da75",
+      "created_at_utc": "2026-10-07T03:46:28.792450+00:00",
+      "metrics": {
+        "dataset": "IBM AML HI-Small",
+        "scope": "full",
+        "vertices": 518581,
+        "edges": 5078345,
+        "fraud_edges": 5177,
+        "fraud_cycle_raw_rows": 7473,
+        "fraud_ordered_account_triples": 162,
+        "fraud_directed_account_cycles": 54,
+        "fraud_unordered_account_sets": 45,
+        "fraud_transaction_combinations": 2491,
+        "fraud_cycle_csv_rows": 54,
+        "usd_amount_gt": 10000.0,
+        "usd_cycle_raw_rows": 0
+      },
+      "parameters": {
+        "minimum_usd_amount": 10000.0,
+        "max_csv_rows": 5000,
+        "label_audit": "isFraud=1; not a label-blind detector evaluation"
+      },
+      "runtime": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+        "spark": "3.5.1",
+        "graphframes": "0.12.2",
+        "java": "17.0.20.1",
+        "spark_master": "local[*]",
+        "driver_memory": "6g",
+        "java_max_heap_bytes": 6442450944
+      },
+      "input_sha256": [
+        "4530ef42597c55dc019575fb10bf9e7185146113c36859208e496a2619a90e6f"
+      ],
+      "outputs": {
+        "motif_summary.csv": "da8a56f82ee4a855e0b04fb6fa86d006123cb26cd68ff0b6fd0077623089cf28",
+        "fraud_directed_cycles.csv": "3b780509e9bea5f0f06735432a1feb53280176df0afb935a20c5ba5b990307fc",
+        "fraud_currency_counts.csv": "88d5fd44f8926f74b3838dd1500d283cfca343da53f0053dc5261aae3de50b25"
+      },
+      "sources": {
+        "motif_finding.py": "a84b05a55a5c7e6c43d916f0baf9b9437e34fb3a912ec6f9c9024e9bdbd09410",
+        "toy_cycle.py": "44caa76842030eb834f9e854fd7f8b18cd5aabf2498f47c927added6c0eb6fa4",
+        "spark_session.py": "635ce86b8491683df6d46a6d80eeb6f0694946e648a97b2c8d965642b2b24430",
+        "graph_utils.py": "cd47cd4aa66ba4ff3977b9d9650671d1b52d3b9391ede51b97bf33f829f9ebcc",
+        "windows_runtime.py": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c",
+        "run_evidence.py": "2ca61baab8e5653797af32d0767416d1b66e6d03b5fd4fe095231d3839424b60"
+      },
+      "local_manifest": "results/motif/check_runs/ibm/motif_run.json"
+    },
+    "paysim": {
+      "status": "PASS",
+      "run_id": "c62cd318-b285-4440-b416-750f1ea2f5ca",
+      "created_at_utc": "2026-10-07T03:47:52.367704+00:00",
+      "metrics": {
+        "dataset": "PaySim",
+        "scope": "full",
+        "vertices": 9073900,
+        "edges": 6362620,
+        "cycle_raw_rows": 0,
+        "cycle_directed_account_cycles": 0,
+        "relay_raw_rows": 30,
+        "relay_same_hour_rows": 2,
+        "relay_strict_later_rows": 28,
+        "relay_csv_rows": 30,
+        "relay_amount_gt": 10000.0,
+        "relay_max_gap_hours": 24,
+        "relay_time_rule": "transfer_step <= cashout_step; same-hour order unknown"
+      },
+      "parameters": {
+        "minimum_amount": 10000.0,
+        "max_gap_hours": 24,
+        "strict_time": false,
+        "max_csv_rows": 1000
+      },
+      "runtime": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+        "spark": "3.5.1",
+        "graphframes": "0.12.2",
+        "java": "17.0.20.1",
+        "spark_master": "local[*]",
+        "driver_memory": "6g",
+        "java_max_heap_bytes": 6442450944
+      },
+      "input_sha256": [
+        "cc393c423753b4d8553817d4838f877c68388b963184b03bec97beee08346587"
+      ],
+      "outputs": {
+        "motif_summary.csv": "581816dd2ce5d15179758190d06b1fbc5096134e68bb58c9e223dba8d634000c",
+        "relay_candidates.csv": "f7611e894933230188375108a95903598a231c40fde6dba2a45d4c884815829a"
+      },
+      "sources": {
+        "motif_finding.py": "d6680cc1445accaba89d78af96ab82eb695148bbb52fb4ee3e3a64c8c99516fa",
+        "toy_cycle.py": "44caa76842030eb834f9e854fd7f8b18cd5aabf2498f47c927added6c0eb6fa4",
+        "spark_session.py": "635ce86b8491683df6d46a6d80eeb6f0694946e648a97b2c8d965642b2b24430",
+        "graph_utils.py": "cd47cd4aa66ba4ff3977b9d9650671d1b52d3b9391ede51b97bf33f829f9ebcc",
+        "windows_runtime.py": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c",
+        "run_evidence.py": "2ca61baab8e5653797af32d0767416d1b66e6d03b5fd4fe095231d3839424b60"
+      },
+      "local_manifest": "results/motif/check_runs/paysim/motif_run.json"
+    }
+  },
+  "task4": {
+    "sample_run_1": {
+      "status": "PASS",
+      "run_id": "cebf5eff-76c9-4e81-96a2-c89523b273a1",
+      "created_at_utc": "2026-10-07T03:41:09.621490+00:00",
+      "metrics": {
+        "vertices": 119043,
+        "assigned_vertices": 119043,
+        "edges": 99869,
+        "communities": 86219,
+        "summary_rows": 86219,
+        "internal_edges": 16002,
+        "cross_edges": 83867,
+        "fraud_edges": 89,
+        "amount_currency_rows": 56961,
+        "lpa_execution_runtime": {
+          "system": "Windows",
+          "python": "3.12.10",
+          "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+          "spark": "3.5.1",
+          "graphframes": "0.12.2",
+          "java": "17.0.20.1",
+          "spark_master": "local[4]",
+          "driver_memory": "4g",
+          "java_max_heap_bytes": 4294967296
+        }
+      },
+      "parameters": {
+        "input_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\sample\\ibm_aml",
+        "output_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\task4_check\\sample\\run_1",
+        "scope": "sample",
+        "lpa_max_iter_reported_by_runner": 5,
+        "lpa_driver_memory_reported_by_runner": "4g",
+        "lpa_parallelism_reported_by_runner": 4
+      },
+      "runtime": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+        "spark": "3.5.1",
+        "graphframes": "0.12.2",
+        "java": "17.0.20.1",
+        "spark_master": "local[*]",
+        "driver_memory": "4g",
+        "java_max_heap_bytes": 4294967296
+      },
+      "input_sha256": [
+        "60621d663a7bae36786b32582dc9d75ff9a70fcb81d05722d871d4ff3704bb7a"
+      ],
+      "outputs": {
+        "communities.csv": "4d1c722f19139efc59ffef6e32e742ff297ed2169bc0e408c1ebba2dc50d2684",
+        "community_summary.csv": "fcea85805cae4df6e17505e574737df9f98a15d26a3c4eaa0325a49490b0c38d",
+        "community_summary_all.csv": "480a485bbb16e9dfc6a73dc69a7ee2883258f83c1085ca99bf3178543fa2a245",
+        "community_amounts_by_currency.csv": "502d617be55d6d27a13657e2b8bd347fd8d89063eb4da822aec43a771e14b137",
+        "task4_run.json": "4d2ce66875fd000d5b321c91377d33575f9217144e4f2dcc147b0a607a65ae21"
+      },
+      "sources": {
+        "verify_communities.py": "de92e67bfbc4f9183d1dd9a3157dc01ec9fea6e06bd992207acac96f0773d3ce",
+        "community_detection.py": "ddfd4c3cb584ed94b1b3e56232074e2dd9aff4e0e659d44f66500048d9283f59",
+        "run_evidence.py": "2ca61baab8e5653797af32d0767416d1b66e6d03b5fd4fe095231d3839424b60",
+        "spark_session.py": "635ce86b8491683df6d46a6d80eeb6f0694946e648a97b2c8d965642b2b24430",
+        "windows_runtime.py": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c",
+        "graph_utils.py": "cd47cd4aa66ba4ff3977b9d9650671d1b52d3b9391ede51b97bf33f829f9ebcc",
+        "check_task4.ps1": "e85d05f36b6d98946d16d3457a46a89d8fd1c313c770ba91933eb8d974ce7d5b"
+      },
+      "local_manifest": "results/ibm_aml/task4_check/sample/run_1/task4_check.json"
+    },
+    "sample_run_2": {
+      "status": "PASS",
+      "run_id": "056c4201-d87f-415f-b4fe-a624f01e3238",
+      "created_at_utc": "2026-10-07T03:44:42.337448+00:00",
+      "metrics": {
+        "vertices": 119043,
+        "assigned_vertices": 119043,
+        "edges": 99869,
+        "communities": 86219,
+        "summary_rows": 86219,
+        "internal_edges": 16002,
+        "cross_edges": 83867,
+        "fraud_edges": 89,
+        "amount_currency_rows": 56961,
+        "lpa_execution_runtime": {
+          "system": "Windows",
+          "python": "3.12.10",
+          "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+          "spark": "3.5.1",
+          "graphframes": "0.12.2",
+          "java": "17.0.20.1",
+          "spark_master": "local[4]",
+          "driver_memory": "4g",
+          "java_max_heap_bytes": 4294967296
+        },
+        "repeat_comparison": {
+          "same_partition": true,
+          "accounts_with_changed_canonical_community": 0,
+          "accounts": 119043,
+          "interpretation": "observed comparison; differences do not invalidate LPA"
+        }
+      },
+      "parameters": {
+        "input_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\sample\\ibm_aml",
+        "output_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\task4_check\\sample\\run_2",
+        "scope": "sample",
+        "lpa_max_iter_reported_by_runner": 5,
+        "lpa_driver_memory_reported_by_runner": "4g",
+        "lpa_parallelism_reported_by_runner": 4
+      },
+      "runtime": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+        "spark": "3.5.1",
+        "graphframes": "0.12.2",
+        "java": "17.0.20.1",
+        "spark_master": "local[*]",
+        "driver_memory": "4g",
+        "java_max_heap_bytes": 4294967296
+      },
+      "input_sha256": [
+        "60621d663a7bae36786b32582dc9d75ff9a70fcb81d05722d871d4ff3704bb7a"
+      ],
+      "outputs": {
+        "communities.csv": "4d1c722f19139efc59ffef6e32e742ff297ed2169bc0e408c1ebba2dc50d2684",
+        "community_summary.csv": "fcea85805cae4df6e17505e574737df9f98a15d26a3c4eaa0325a49490b0c38d",
+        "community_summary_all.csv": "480a485bbb16e9dfc6a73dc69a7ee2883258f83c1085ca99bf3178543fa2a245",
+        "community_amounts_by_currency.csv": "f99ddd68fd7dac700b3356f52dd44bad6fe7778b80ec883c1ad263b772d4e9e8",
+        "task4_run.json": "2612555d94bdd711ca8513f0836b230469dfd24d419fe85bd5d9cb852a365f6c"
+      },
+      "sources": {
+        "verify_communities.py": "de92e67bfbc4f9183d1dd9a3157dc01ec9fea6e06bd992207acac96f0773d3ce",
+        "community_detection.py": "ddfd4c3cb584ed94b1b3e56232074e2dd9aff4e0e659d44f66500048d9283f59",
+        "run_evidence.py": "2ca61baab8e5653797af32d0767416d1b66e6d03b5fd4fe095231d3839424b60",
+        "spark_session.py": "635ce86b8491683df6d46a6d80eeb6f0694946e648a97b2c8d965642b2b24430",
+        "windows_runtime.py": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c",
+        "graph_utils.py": "cd47cd4aa66ba4ff3977b9d9650671d1b52d3b9391ede51b97bf33f829f9ebcc",
+        "check_task4.ps1": "e85d05f36b6d98946d16d3457a46a89d8fd1c313c770ba91933eb8d974ce7d5b"
+      },
+      "local_manifest": "results/ibm_aml/task4_check/sample/run_2/task4_check.json"
+    },
+    "full_run_1": {
+      "status": "PASS",
+      "run_id": "b94277d1-f720-46b3-85cb-31dba5a0c842",
+      "created_at_utc": "2026-10-07T03:32:52.191395+00:00",
+      "metrics": {
+        "vertices": 518581,
+        "assigned_vertices": 518581,
+        "edges": 5078345,
+        "communities": 314531,
+        "summary_rows": 314531,
+        "internal_edges": 852853,
+        "cross_edges": 4225492,
+        "fraud_edges": 5177,
+        "amount_currency_rows": 314305,
+        "lpa_execution_runtime": {
+          "system": "Windows",
+          "python": "3.12.10",
+          "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+          "spark": "3.5.1",
+          "graphframes": "0.12.2",
+          "java": "17.0.20.1",
+          "spark_master": "local[4]",
+          "driver_memory": "8g",
+          "java_max_heap_bytes": 8589934592
+        }
+      },
+      "parameters": {
+        "input_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\ibm_aml",
+        "output_dir": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\ibm_aml\\task4_check\\full\\run_1",
+        "scope": "full",
+        "lpa_max_iter_reported_by_runner": 5,
+        "lpa_driver_memory_reported_by_runner": "8g",
+        "lpa_parallelism_reported_by_runner": 4
+      },
+      "runtime": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "python_executable": "D:\\desktop_informations\\sgk năm 4\\sgk kì 1 năm 4\\bigdata - phong\\project_graphx\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+        "spark": "3.5.1",
+        "graphframes": "0.12.2",
+        "java": "17.0.20.1",
+        "spark_master": "local[*]",
+        "driver_memory": "4g",
+        "java_max_heap_bytes": 4294967296
+      },
+      "input_sha256": [
+        "4530ef42597c55dc019575fb10bf9e7185146113c36859208e496a2619a90e6f"
+      ],
+      "outputs": {
+        "communities.csv": "389c46580c349af9fe65a9a0743fd6b704bebe7e3a116c939c393b92d26346be",
+        "community_summary.csv": "f346962082d6da919264b11281e57d6d510599bd25a0c3efb841a7891bb54505",
+        "community_summary_all.csv": "b00739469c08ac16c88f5b267bef24ee0353a88908f2bf9c172991d8d69f64b8",
+        "community_amounts_by_currency.csv": "9b4c9784ffdf1ece4e7cdaad130e9c18d7f2ed8aa1fbe275c8c847e1efcb5166",
+        "task4_run.json": "2889469a7e975f7fa9d4acb1915dd733b1f32366b49385c601b16364e4112d97"
+      },
+      "sources": {
+        "verify_communities.py": "de92e67bfbc4f9183d1dd9a3157dc01ec9fea6e06bd992207acac96f0773d3ce",
+        "community_detection.py": "ddfd4c3cb584ed94b1b3e56232074e2dd9aff4e0e659d44f66500048d9283f59",
+        "run_evidence.py": "2ca61baab8e5653797af32d0767416d1b66e6d03b5fd4fe095231d3839424b60",
+        "spark_session.py": "635ce86b8491683df6d46a6d80eeb6f0694946e648a97b2c8d965642b2b24430",
+        "windows_runtime.py": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c",
+        "graph_utils.py": "cd47cd4aa66ba4ff3977b9d9650671d1b52d3b9391ede51b97bf33f829f9ebcc",
+        "check_task4.ps1": "e85d05f36b6d98946d16d3457a46a89d8fd1c313c770ba91933eb8d974ce7d5b"
+      },
+      "local_manifest": "results/ibm_aml/task4_check/full/run_1/task4_check.json"
+    }
+  },
+  "task3_tests": {
+    "passed": 23,
+    "local_log": "results/motif/check_runs/final_task3_tests.log"
+  },
+  "task4_tests": {
+    "passed": 13,
+    "local_log": "results/ibm_aml/task4_check/sample_gate.log"
+  },
+  "toy_notebook": {
+    "executed_cells": 4,
+    "runtime": "Windows .venv kernel",
+    "local_output": "results/motif/check_runs/toy_notebook.ipynb"
+  },
+  "upstream_cycle_visual": {
+    "status": "PASS",
+    "scope": "one documented labeled SAR cycle, not the USD-only query",
+    "runtime": {
+      "system": "Windows",
+      "python": "3.12.10"
+    },
+    "payments_matched_in_raw": 3,
+    "raw_csv_lines": {
+      "1": 2670330,
+      "2": 2670331,
+      "3": 2670332
+    },
+    "source": {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\visualize.py",
+      "bytes": 9821,
+      "sha256": "2b7cfb9774666f4cadcd577e514bc7c6352fe767d1fea440b2efd2b856039583"
+    },
+    "patterns": {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\raw\\ibm_aml\\HI-Small_Patterns.txt",
+      "bytes": 323844,
+      "sha256": "2c546b5ce6009e73851f0139af053cf845f08bf92f3bc82fe1eb937dec2ef39b"
+    },
+    "csv": {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\motif\\check_runs\\ibm_visual\\cycle_example_edges.csv",
+      "bytes": 517,
+      "sha256": "a68bcbbd17d3ff36966011e5ef1ebc6c0c3e0e822cdc9f492ddc1a233cb1cb4a"
+    },
+    "figure": {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\motif\\check_runs\\ibm_visual\\cycle_examples.png",
+      "bytes": 406858,
+      "sha256": "c4a51e7252b219097b763b8ca2f4a842043d75f0b4199973b45b33ec70572b43"
+    }
+  },
+  "cycle_visual_tests": {
+    "passed": 4,
+    "local_log": "results/motif/check_runs/ibm_visual_final.log"
+  }
+}

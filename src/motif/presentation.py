@@ -45,7 +45,7 @@ class NotebookSession:
         return Path(self.temporary.name) / "lpa"
 
     @classmethod
-    def start(cls, dataset: str):
+    def start(cls, dataset: str, driver_memory: str = "5g"):
         if dataset not in DATASETS:
             raise ValueError("Unknown dataset")
         if os.name != "nt" or sys.version_info[:2] != (3, 12):
@@ -59,7 +59,7 @@ class NotebookSession:
             raise RuntimeError("Use pinned requirements.txt")
         temporary = tempfile.TemporaryDirectory(prefix="graphguard-motif-v2-", ignore_cleanup_errors=True)
         started = time.perf_counter()
-        spark = get_graph_session("GraphGuard-Motif-v2-" + dataset, driver_memory="6g", shuffle_partitions=32,
+        spark = get_graph_session("GraphGuard-Motif-v2-" + dataset, driver_memory=driver_memory, shuffle_partitions=32,
             extra_configs={"spark.master": "local[2]", "spark.default.parallelism": "2",
                 "spark.ui.enabled": "false", "spark.ui.showConsoleProgress": "false",
                 "spark.sql.session.timeZone": "UTC",
@@ -154,7 +154,7 @@ def baseline_audit(spark, dataset: str, input_dir: Path | None = None) -> Baseli
         return BaselineAudit(pd.DataFrame([summary]), examples, currencies)
     finally:
         for frame in owned:
-            frame.unpersist()
+            frame.unpersist(blocking=True)
 
 
 def plot_walk_forward(experiment):

@@ -46,13 +46,13 @@ DEGREE_FIGURE = OUTPUT_DIR / "degree_distribution.png"
 # Load Graph
 # ============================================================
 
-def load_graph(spark) -> GraphFrame:
+def load_graph(spark, input_dir=INPUT_DIR) -> GraphFrame:
     """Load PaySim vertices/edges from Parquet and create GraphFrame."""
 
     # Read existing Task 1 data, preserving its schema without regenerating Parquet.
     # GraphFrame uses id for accounts and src/dst for directed edge endpoints.
-    vertices = spark.read.parquet(str(VERTICES_PATH))
-    edges = spark.read.parquet(str(EDGES_PATH))
+    vertices = spark.read.parquet(str(Path(input_dir) / "vertices.parquet"))
+    edges = spark.read.parquet(str(Path(input_dir) / "edges.parquet"))
 
     print("\n=== PaySim Graph ===")
     print(f"Vertices: {vertices.count():,}")
@@ -125,10 +125,11 @@ def calculate_degree_distribution(degrees):
     )
 
 
-def plot_degree_distribution(degree_distribution):
+def plot_degree_distribution(degree_distribution, output_path=None, dataset="paysim", scope="sample"):
     """Plot discrete degrees with readable counts and a logarithmic Y axis."""
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = Path(output_path or DEGREE_FIGURE)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Collect only the aggregated distribution into Python memory for plotting.
     pdf = degree_distribution.toPandas()
@@ -156,6 +157,8 @@ def plot_degree_distribution(degree_distribution):
 
     # Log scale is for visualization only: each decade on Y represents a tenfold increase.
     # Degrees, counts, PageRank and CSV values are unchanged; labels show actual counts.
+    if dataset == "ibm_aml":
+        ax.set_xscale("log")
     ax.set_yscale("log")
     ax.yaxis.set_major_formatter(StrMethodFormatter("{x:,.0f}"))
     ax.minorticks_off()
@@ -166,20 +169,20 @@ def plot_degree_distribution(degree_distribution):
     ax.spines[["top", "right"]].set_visible(False)
     ax.spines[["left", "bottom"]].set_color("#cbd5e1")
     ax.tick_params(axis="both", labelsize=11)
-    ax.set_xlabel("Total degree (in-degree + out-degree; linear scale)", fontsize=12, labelpad=10)
+    ax.set_xlabel("Total degree (log scale)" if dataset == "ibm_aml" else "Total degree (linear scale)", fontsize=12, labelpad=10)
     ax.set_ylabel("Number of accounts (log scale)", fontsize=12, labelpad=10)
     ax.set_title(
-        "PaySim Degree Distribution\n"
-        f"Sample: {pdf['account_count'].sum():,} accounts | "
+        f"{dataset} Degree Distribution\n"
+        f"{scope}: {pdf['account_count'].sum():,} accounts | "
         "Log scale used for visualization only",
         fontsize=14, pad=18,
     )
 
-    fig.savefig(DEGREE_FIGURE, dpi=300)
+    fig.savefig(output_path, dpi=300)
     plt.close(fig)
 
     print("\nSaved degree distribution figure:")
-    print(f"  {DEGREE_FIGURE}")
+    print(f"  {output_path}")
 
 
 # ============================================================
@@ -237,81 +240,129 @@ def get_top10_pagerank(
 # Export
 # ============================================================
 
-def export_top10_csv(top10):
+def export_top10_csv(top10, output_path=None):
     """Export Top 10 PageRank results as a single CSV file."""
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = Path(output_path or TOP10_OUTPUT)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Collect at most 10 rows; pandas writes one CSV file instead of a Spark part-* directory.
-    pdf = top10.toPandas()
+    pdf = top10.limit(10).toPandas()
+    if len(pdf) != 10:
+        raise ValueError("Expected ten PageRank accounts")
 
     # rank is only the display order, not a new feature or risk score.
     pdf.insert(0, "rank", range(1, len(pdf) + 1))
 
     # Omit the pandas index; the UTF-8 BOM helps Windows Excel read Vietnamese correctly.
     pdf.to_csv(
-        TOP10_OUTPUT,
+        output_path,
         index=False,
         encoding="utf-8-sig",
     )
 
     print("\nSaved Top 10 PageRank CSV:")
-    print(f"  {TOP10_OUTPUT}")
+    print(f"  {output_path}")
 
 
 # ============================================================
 # Main
 # ============================================================
 
-def main():
-    # Reuse the shared session for the repository's Windows, Java and GraphFrames setup.
-    spark = get_graph_session(
-        app_name="PaySim-Task2-Degree-PageRank",
-        driver_memory="4g",
-        shuffle_partitions=8,
-    )
-
+def snapshot_features(edges, as_of_step):
+    """Label-blind account features from transactions observed by the cutoff."""
+    from src.motif.evaluation import require_unlabelled
+    require_unlabelled(edges)
+    past = edges.where(F.col("step") <= as_of_step).select("src", "dst")
+    ids = past.select(F.col("src").alias("id")).union(past.select(F.col("dst").alias("id"))).distinct()
+    graph = GraphFrame(ids, past)
+    pagerank = calculate_pagerank(graph)
     try:
-        # 1. Build GraphFrame from processed PaySim sample.
-        graph = load_graph(spark)
-
-        # 2. Structural degree metrics.
-        in_degrees, out_degrees, degrees = calculate_degree_metrics(graph)
-
-        # 3. Degree distribution.
-        degree_distribution = calculate_degree_distribution(degrees)
-
-        print("\n=== Degree Distribution Sample ===")
-        degree_distribution.show(20, truncate=False)
-
-        plot_degree_distribution(degree_distribution)
-
-        # 4. PageRank.
-        pagerank_vertices = calculate_pagerank(graph)
-
-        # 5. Top 10 influential structural hubs.
-        top10 = get_top10_pagerank(
-            pagerank_vertices,
-            in_degrees,
-            out_degrees,
-            degrees,
-        )
-
-        print("\n=== Top 10 PageRank Hubs ===")
-        top10.show(10, truncate=False)
-
-        # 6. Export deliverable.
-        export_top10_csv(top10)
-
-        print(
-            "\nInterpretation caveat:\n"
-            "High PageRank indicates structural importance in the "
-            "transaction network. High PageRank does not imply fraud."
-        )
-
+        return (ids.join(graph.inDegrees, "id", "left").join(graph.outDegrees, "id", "left")
+            .fillna(0, subset=["inDegree", "outDegree"])
+            .withColumn("degree", F.col("inDegree") + F.col("outDegree"))
+            .join(pagerank.select("id", "pagerank"), "id")
+            .withColumn("as_of_step", F.lit(int(as_of_step))).localCheckpoint(eager=True))
     finally:
-        # Always release Spark resources, including when computation or export fails.
+        pagerank.unpersist()
+
+
+def main_for(dataset="paysim"):
+    """Shared runner; dataset adapters only choose paths and presentation names."""
+    import argparse
+    from src.common.graph_utils import load_graph as read_graph, write_spark_csv
+    from src.common.run_evidence import REPO_ROOT, write_run_evidence
+
+    parser = argparse.ArgumentParser(description="Task 2: degree and PageRank")
+    parser.add_argument("--input-dir", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--full", action="store_true")
+    parser.add_argument("--driver-memory", default="4g")
+    parser.add_argument("--as-of-step", type=int)
+    parser.add_argument("--export-features", action="store_true")
+    args = parser.parse_args()
+    if args.input_dir and args.full:
+        parser.error("Choose --full or --input-dir")
+    default_input = REPO_ROOT / "data/processed" / (dataset if args.full else "sample/" + dataset)
+    source = (args.input_dir or default_input).resolve()
+    scope = "sample" if "sample" in source.parts else ("full" if source == REPO_ROOT / "data/processed" / dataset else "custom")
+    output = (args.output_dir or REPO_ROOT / "results" / dataset / ("full" if scope == "full" else "")).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    spark = get_graph_session("Task2-" + dataset, driver_memory=args.driver_memory)
+    owned = []
+    try:
+        graph = read_graph(spark, str(source))
+        if args.as_of_step is not None:
+            past = graph.edges.where(F.col("step") <= args.as_of_step)
+            ids = past.select(F.col("src").alias("id")).union(past.select(F.col("dst").alias("id"))).distinct()
+            graph = GraphFrame(graph.vertices.join(ids, "id"), past)
+        graph.vertices.cache()
+        graph.edges.cache()
+        owned.extend([graph.vertices, graph.edges])
+        vertices, edge_count = graph.vertices.count(), graph.edges.count()
+        if vertices < 10 or edge_count == 0:
+            raise ValueError("Task 2 needs at least ten accounts and one transaction")
+        incoming, outgoing, _ = calculate_degree_metrics(graph)
+        degrees = graph.vertices.select("id").join(graph.degrees, "id", "left").fillna(0, subset=["degree"])
+        totals = degrees.agg(F.sum("degree").alias("total")).first()
+        if totals.total != 2 * edge_count:
+            raise ValueError("Degree sum must equal twice the transaction count")
+        distribution = calculate_degree_distribution(degrees)
+        plot_degree_distribution(distribution.where("degree>0"), output / "degree_distribution.png", dataset, scope)
+        ranks = calculate_pagerank(graph).localCheckpoint(eager=True)
+        owned.append(ranks)
+        top10 = get_top10_pagerank(ranks, incoming, outgoing, degrees)
+        # Audit labels only after the structural top ten has already been chosen.
+        fraud_out = graph.edges.groupBy("src").agg(F.sum("isFraud").alias("outgoing_fraud_tx")).withColumnRenamed("src", "id")
+        fraud_in = graph.edges.groupBy("dst").agg(F.sum("isFraud").alias("incoming_fraud_tx")).withColumnRenamed("dst", "id")
+        top10 = top10.join(fraud_out, "id", "left").join(fraud_in, "id", "left").fillna(
+            0, subset=["outgoing_fraud_tx", "incoming_fraud_tx"]).orderBy(F.desc("pagerank"), "id")
+        export_top10_csv(top10, output / "top10_pagerank.csv")
+        write_spark_csv(distribution, output / "degree_distribution.csv")
+        outputs = [output / name for name in ("top10_pagerank.csv", "degree_distribution.csv", "degree_distribution.png")]
+        if args.export_features:
+            features = ranks.select("id", "pagerank").join(incoming, "id", "left").join(outgoing, "id", "left")
+            features = features.fillna(0, subset=["inDegree", "outDegree"]).withColumn("degree", F.col("inDegree") + F.col("outDegree"))
+            as_of = args.as_of_step if args.as_of_step is not None else graph.edges.agg(F.max("step")).first()[0]
+            features = features.withColumn("as_of_step", F.lit(as_of))
+            write_spark_csv(features.repartition(64), output / "account_metrics.csv")
+            outputs.append(output / "account_metrics.csv")
+        write_run_evidence(output / "task2_run.json", spark, task="Task 2 " + dataset,
+            inputs=[source], outputs=outputs,
+            sources=[Path(__file__), REPO_ROOT / "src/ibm_aml/metrics.py", REPO_ROOT / "src/common/graph_utils.py"],
+            parameters={"scope": scope, "max_iter": 10, "reset_probability": 0.15,
+                        "as_of_step": args.as_of_step, "export_features": args.export_features},
+            metrics={"vertices": vertices, "edges": edge_count, "degree_sum": totals.total,
+                     "interpretation": "Structural centrality; fraud evaluation is a separate temporal protocol"})
+        print("[PASS] Task 2:", dataset, scope, vertices, edge_count)
+    finally:
+        for frame in owned:
+            frame.unpersist()
         spark.stop()
+
+
+def main():
+    main_for("paysim")
 
 
 if __name__ == "__main__":

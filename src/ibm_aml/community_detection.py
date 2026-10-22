@@ -18,7 +18,6 @@ Mục tiêu kỹ thuật:
 """
 
 import argparse
-import csv
 import os
 import sys
 from pathlib import Path
@@ -151,7 +150,6 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
         .join(v_labels.withColumnRenamed("id", "src").withColumnRenamed("label", "src_label"), on="src", how="inner")
         .join(v_labels.withColumnRenamed("id", "dst").withColumnRenamed("label", "dst_label"), on="dst", how="inner")
     )
-    edges_with_labels.cache()
 
     total_edges = edges_with_labels.count()
     if total_edges == 0:
@@ -224,27 +222,11 @@ def export_results(lpa_vertices, summary_df, output_dir: Path, graph: GraphFrame
     if "account_type" in lpa_vertices.columns:
         export_cols.append("account_type")
 
-    pdf_communities = (
-        lpa_vertices
-        .select(*export_cols)
-        .orderBy(F.asc("label"), F.asc("id"))
-        .toPandas()
-    )
-    pdf_communities.to_csv(communities_path, index=False, encoding="utf-8-sig")
-    print(f"  [OK] Đã ghi danh sách cộng đồng IBM AML: {communities_path} ({len(pdf_communities):,} accounts)")
+    from src.common.graph_utils import write_spark_csv
 
-    # 2. Xuất file community_summary.csv
-    pdf_summary = summary_df.limit(50).toPandas()
-    pdf_summary.to_csv(summary_path, index=False, encoding="utf-8-sig")
-    print(f"  [OK] Đã ghi bảng tổng hợp cộng đồng IBM AML: {summary_path} (Top {len(pdf_summary)} communities)")
-
-    # Keep the top-50 report above, and export a complete table for reconciliation.
-    def write_spark_csv(frame, path):
-        with path.open("w", newline="", encoding="utf-8-sig") as stream:
-            writer = csv.writer(stream, lineterminator="\n")
-            writer.writerow(frame.columns)
-            for row in frame.toLocalIterator():
-                writer.writerow(list(row))
+    assignments = lpa_vertices.select(*export_cols).repartition(64).sortWithinPartitions("id")
+    write_spark_csv(assignments, communities_path)
+    write_spark_csv(summary_df.orderBy(F.desc("member_count"), "label").limit(50), summary_path)
 
     write_spark_csv(summary_df, output_dir / COMMUNITY_SUMMARY_ALL_FILENAME)
     if graph is not None:
@@ -268,8 +250,8 @@ def main():
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_OUTPUT_DIR), help="Thư mục xuất CSV kết quả")
     parser.add_argument("--max-iter", type=int, default=5, help="Số vòng lặp LPA")
     parser.add_argument("--checkpoint-dir", type=Path, default=DEFAULT_CHECKPOINT_DIR)
-    parser.add_argument("--driver-memory", default="6g")
-    parser.add_argument("--parallelism", type=int, default=2)
+    parser.add_argument("--driver-memory")
+    parser.add_argument("--parallelism", type=int, choices=(1, 2), default=2)
     args = parser.parse_args()
     if args.max_iter <= 0:
         parser.error("--max-iter must be > 0")
@@ -282,22 +264,26 @@ def main():
 
     spark = get_graph_session(
         app_name="IBM-AML-Task4-CommunityDetection-LPA",
-        driver_memory=args.driver_memory,
+        driver_memory=args.driver_memory or ("4g" if "sample" in input_dir.parts else "6g"),
         shuffle_partitions=8,
         checkpoint_dir=str(checkpoint_dir),
         extra_configs={"spark.master": f"local[{args.parallelism}]",
                        "spark.default.parallelism": str(args.parallelism)},
     )
 
+    owned = []
     try:
         # 1. Nạp đồ thị IBM AML
         graph = load_graph(spark, input_dir)
 
         # 2. Chạy thuật toán LPA
         lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=checkpoint_dir)
+        owned.append(lpa_vertices)
 
         # 3. Phân tích thống kê đặc trưng cộng đồng
         community_sizes, summary_df = analyze_communities(lpa_vertices, graph)
+        summary_df = summary_df.cache()
+        owned.append(summary_df)
 
         # 4. Xuất kết quả CSV
         export_results(lpa_vertices, summary_df, output_dir, graph)
@@ -306,11 +292,13 @@ def main():
             inputs=[input_dir], outputs=[output_dir / name for name in (
                 COMMUNITIES_FILENAME, COMMUNITY_SUMMARY_FILENAME,
                 COMMUNITY_SUMMARY_ALL_FILENAME, COMMUNITY_AMOUNTS_FILENAME)],
-            sources=[Path(__file__), REPO_ROOT / "src/common/run_evidence.py",
+            sources=[Path(__file__), REPO_ROOT / "src/common/run_evidence.py", REPO_ROOT / "src/common/graph_utils.py",
                      REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/common/windows_runtime.py"],
             parameters={"max_iter": args.max_iter, "backend": "graphx",
                         "parallelism": args.parallelism, "checkpoint_dir": str(checkpoint_dir)},
-            metrics={"assigned_vertices": lpa_vertices.count()},
+            metrics={"assigned_vertices": lpa_vertices.count(), "fraud_audit_posthoc": [row.asDict() for row in
+                summary_df.where("laundering_tx_count>0").orderBy(F.desc("laundering_tx_count"), "label")
+                .select("label", "member_count", "total_tx_count", "laundering_tx_count", "laundering_rate").limit(5).collect()]},
         )
 
         print("\n" + "=" * 70)
@@ -322,6 +310,8 @@ def main():
         print("=" * 70 + "\n")
 
     finally:
+        for frame in owned:
+            frame.unpersist()
         spark.stop()
 
 

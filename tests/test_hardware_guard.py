@@ -17,6 +17,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PolicyTests(unittest.TestCase):
+    def test_smaller_heap_reduces_real_job_cap_without_reducing_reserve(self):
+        full = ResourcePolicy.for_workload(32 * GIB, "6g")
+        small = ResourcePolicy.for_workload(32 * GIB, "4g")
+        self.assertEqual((full.job_bytes, small.job_bytes), (10 * GIB, 7 * GIB))
+        self.assertEqual(full.reserve_bytes, small.reserve_bytes)
+        self.assertEqual(small.spark_limits("6g", "local[*]"), ("4096m", 2))
+        self.assertEqual(small.cpu_percent, 10)
+        medium = ResourcePolicy.for_workload(32 * GIB, "5g")
+        self.assertEqual(medium.job_bytes, 8 * GIB)
+        self.assertEqual(medium.reserve_bytes, full.reserve_bytes)
+        self.assertEqual(medium.spark_limits("6g", "local[*]"), ("5120m", 2))
+    def test_optional_heap_ceiling_only_reduces_allocation(self):
+        from src.common.spark_session import _bounded_heap
+        self.assertEqual(_bounded_heap("6g", "5g"), "5120m")
+        self.assertEqual(_bounded_heap("4g", "5g"), "4096m")
+        self.assertEqual(_bounded_heap("6g", "12g"), "6144m")
+        self.assertEqual(_bounded_heap("6g", None), "6g")
+        for ceiling in ("", "oops", "0g", "511m"):
+            with self.assertRaises(ValueError):
+                _bounded_heap("6g", ceiling)
+
     def test_caps_and_unbounded_master_clamped(self):
         policy = ResourcePolicy.for_memory(32 * GIB)
         self.assertEqual(policy.spark_limits("12g", "local[*]"), ("6144m", 2))
@@ -55,6 +76,34 @@ class PolicyTests(unittest.TestCase):
 
 @unittest.skipUnless(os.name == "nt", "Native Windows Job Object verification")
 class NativeGuardTests(unittest.TestCase):
+    def test_small_profile_installs_lower_os_cap(self):
+        result = self.child("""
+import ctypes as C
+from src.common.hardware_guard import protect_spark, ExtendedLimits, GIB
+g=protect_spark('4g')
+limits=ExtendedLimits()
+assert g.api.QueryInformationJobObject(g.job,9,C.byref(limits),C.sizeof(limits),None)
+assert limits.job_memory == min(g.policy.job_bytes,7*GIB)
+assert g.policy.reserve_bytes >= 4*GIB
+assert g.policy.max_heap_gib <= 4
+print('Lower OS cap installed; reserve retained')
+""")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_full_low_memory_profile_installs_eight_gib_os_cap(self):
+        result = self.child("""
+import ctypes as C
+from src.common.hardware_guard import protect_spark, ExtendedLimits, ResourcePolicy, GIB
+g=protect_spark('5g')
+limits=ExtendedLimits()
+assert g.api.QueryInformationJobObject(g.job,9,C.byref(limits),C.sizeof(limits),None)
+assert limits.job_memory == min(g.policy.job_bytes,8*GIB)
+assert g.policy.reserve_bytes == ResourcePolicy.for_memory(g.memory().total_phys).reserve_bytes
+assert g.policy.max_heap_gib <= 5 and g.policy.cpu_percent == 10
+print('5 GiB heap / 8 GiB OS cap; original reserve and CPU cap retained')
+""")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def child(self, code):
         result = subprocess.run([sys.executable, "-u", "-c", code], cwd=ROOT,
             text=True, capture_output=True, timeout=30)
@@ -64,7 +113,7 @@ class NativeGuardTests(unittest.TestCase):
         code = """
 import ctypes as C, json, psutil
 from src.common.hardware_guard import protect_spark, ExtendedLimits, CPULimits
-g=protect_spark()
+g=protect_spark('4g')
 memory=ExtendedLimits(); cpu=CPULimits()
 assert g.api.QueryInformationJobObject(g.job,9,C.byref(memory),C.sizeof(memory),None)
 assert g.api.QueryInformationJobObject(g.job,15,C.byref(cpu),C.sizeof(cpu),None)
@@ -82,8 +131,8 @@ print(json.dumps(g.snapshot()))
         result = self.child("""
 import subprocess, sys
 from src.common.hardware_guard import protect_spark
-protect_spark()
-probe=subprocess.run([sys.executable,'-c','from src.common.hardware_guard import protect_spark; protect_spark()'],
+protect_spark('4g')
+probe=subprocess.run([sys.executable,'-c',"from src.common.hardware_guard import protect_spark; protect_spark('4g')"],
     capture_output=True,text=True,timeout=10)
 assert probe.returncode != 0 and 'Another GraphGuard workload' in probe.stderr, probe.stderr
 print('Second workload rejected')
@@ -102,7 +151,7 @@ print('Second workload rejected')
         result = self.child("""
 import os, subprocess, sys
 from src.common.hardware_guard import protect_spark
-protect_spark()
+protect_spark('4g')
 child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)'])
 print('CHILD='+str(child.pid),flush=True)
 os._exit(0)
@@ -114,7 +163,7 @@ os._exit(0)
         result = self.child("""
 import subprocess, sys
 from src.common.hardware_guard import protect_spark
-g=protect_spark()
+g=protect_spark('4g')
 child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)'])
 print('CHILD='+str(child.pid),flush=True)
 g.api.TerminateJobObject(g.job,73)

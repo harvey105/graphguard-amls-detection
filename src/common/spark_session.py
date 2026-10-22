@@ -9,6 +9,7 @@ Components).
 """
 
 import os
+import re
 import sys
 from typing import Optional
 
@@ -26,6 +27,21 @@ from src.common.windows_runtime import prepare_windows_spark
 # Bump khi graphframes-py ra ban moi hon -- theo doi tai
 # https://pypi.org/project/graphframes-py/
 GRAPHFRAMES_VERSION = "0.12.2"
+
+
+def _bounded_heap(requested: str, ceiling: Optional[str]) -> str:
+    """An optional workload ceiling may only reduce the requested JVM heap."""
+    def mib(value):
+        match = re.fullmatch(r"(\d+)([gGmM])", value)
+        if not match:
+            raise ValueError("Spark heap must use integer g or m units")
+        amount = int(match[1]) * (1024 if match[2].lower() == "g" else 1)
+        if amount < 512:
+            raise ValueError("Spark heap must be at least 512 MiB")
+        return amount
+
+    requested_mib = mib(requested)
+    return f"{min(requested_mib, mib(ceiling))}m" if ceiling is not None else requested
 
 
 def _resolve_graphframes_coordinate() -> str:
@@ -75,6 +91,7 @@ def get_graph_session(
     cu truoc khi goi lai.
     """
     # 1. Tu dong cau hinh moi truong runtime Windows (giu nguyen cua Leader)
+    driver_memory = _bounded_heap(driver_memory, os.environ.get("GRAPHGUARD_MAX_HEAP"))
     prepare_windows_spark()
 
     configs = dict(extra_configs or {})
@@ -82,7 +99,7 @@ def get_graph_session(
     if os.name == "nt":
         from src.common.hardware_guard import protect_spark
 
-        guard = protect_spark()  # admission/OS caps are mandatory before JVM
+        guard = protect_spark(driver_memory)  # admission/OS caps are mandatory before JVM
         driver_memory, workers = guard.policy.spark_limits(driver_memory, master)
         master = f"local[{workers}]"
         configs.update({"spark.master": master, "spark.default.parallelism": str(workers),

@@ -16,8 +16,6 @@ Mục tiêu kỹ thuật:
 """
 
 import argparse
-import os
-import shutil
 import sys
 from pathlib import Path
 
@@ -30,6 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.common.spark_session import get_graph_session
+from src.common.run_evidence import REPO_ROOT, write_run_evidence
 
 
 # ============================================================
@@ -82,15 +81,20 @@ def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = 
         PySpark GraphFrames thực hiện LPA lặp qua RDD/DataFrame. Nếu không setCheckpointDir,
         lineage graph sẽ phình to theo từng iteration và gây StackOverflowError trên JVM.
     """
+    if max_iter <= 0:
+        raise ValueError("max_iter must be positive")
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     spark.sparkContext.setCheckpointDir(str(checkpoint_dir.resolve()))
 
     print(f"\n[*] Đang thực thi LPA (maxIter={max_iter}) với checkpoint tại: {checkpoint_dir} ...")
-    lpa_result = graph.labelPropagation(maxIter=max_iter)
+    topology = GraphFrame(graph.vertices.select("id"), graph.edges.select("src", "dst"))
+    labels = topology.labelPropagation(maxIter=max_iter)
+    lpa_result = graph.vertices.join(labels.select("id", "label"), "id")
 
     # Cache kết quả để phục vụ nhiều phép tính downstream mà không phải chạy lại LPA
     lpa_result.cache()
     total_labeled = lpa_result.count()
+    labels.unpersist()
     print(f"[+] LPA hoàn tất. Tổng số đỉnh đã gán nhãn community: {total_labeled:,}")
 
     return lpa_result
@@ -116,8 +120,8 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
         .groupBy("label")
         .agg(
             F.count("*").alias("member_count"),
-            F.sum(F.when(F.col("account_type") == "C", 1).otherwise(0)).alias("customer_count"),
-            F.sum(F.when(F.col("account_type") == "M", 1).otherwise(0)).alias("merchant_count"),
+            F.sum(F.when(F.col("account_type") == "Customer", 1).otherwise(0)).alias("customer_count"),
+            F.sum(F.when(F.col("account_type") == "Merchant", 1).otherwise(0)).alias("merchant_count"),
             F.round(F.avg("balance"), 2).alias("avg_balance"),
             F.round(F.max("balance"), 2).alias("max_balance"),
         )
@@ -125,6 +129,10 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
     )
 
     total_communities = community_sizes.count()
+    if total_communities == 0:
+        raise ValueError("Cannot analyze an empty graph")
+    if community_sizes.where(F.col("customer_count") + F.col("merchant_count") != F.col("member_count")).limit(1).count():
+        raise ValueError("PaySim account_type must be Customer or Merchant")
     singleton_count = community_sizes.filter(F.col("member_count") == 1).count()
     multi_member_count = total_communities - singleton_count
 
@@ -141,9 +149,10 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
         .join(v_labels.withColumnRenamed("id", "src").withColumnRenamed("label", "src_label"), on="src", how="inner")
         .join(v_labels.withColumnRenamed("id", "dst").withColumnRenamed("label", "dst_label"), on="dst", how="inner")
     )
-    edges_with_labels.cache()
 
     total_edges = edges_with_labels.count()
+    if total_edges == 0:
+        raise ValueError("Cannot analyze a graph without transactions")
     internal_edges = edges_with_labels.filter(F.col("src_label") == F.col("dst_label"))
     internal_count = internal_edges.count()
     cross_count = total_edges - internal_count
@@ -193,51 +202,30 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
 # 4. Kiểm tra Tính ổn định (Stability Check)
 # ==============================================
 
-def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int = 2):
-    """
-    Chạy LPA lặp lại 2-3 lần độc lập trên cùng dữ liệu để so sánh tính ổn định.
-    
-    Cơ sở lý thuyết:
-        LPA là thuật toán heuristic phân tán, có thể chịu ảnh hưởng bởi thứ tự cập nhật
-        giữa các partitions hoặc tie-breaking khi nhận phiếu ngang nhau.
-        Kiểm tra độ biến thiên kích thước của các cộng đồng lớn nhất qua các lần chạy.
-    """
-    print(f"\n=== [Stability Check] Bắt đầu chạy kiểm tra tính ổn định ({runs} lần) ===")
-    results = []
+def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int = 2,
+                        checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR / "stability"):
+    """Compare actual account membership, allowing arbitrary numeric label IDs."""
+    from src.ibm_aml.verify_communities import compare_partition_frames
 
-    for i in range(1, runs + 1):
-        temp_checkpoint = Path(f"checkpoints/stability_run_{i}")
-        temp_checkpoint.mkdir(parents=True, exist_ok=True)
-        spark.sparkContext.setCheckpointDir(str(temp_checkpoint.resolve()))
-
-        print(f"  [*] Thực thi Run #{i} (maxIter={max_iter}) ...")
-        res = graph.labelPropagation(maxIter=max_iter)
-        
-        # Đếm kích thước các cộng đồng
-        sizes = (
-            res.groupBy("label")
-            .agg(F.count("*").alias("size"))
-            .orderBy(F.desc("size"))
-        )
-        total_comms = sizes.count()
-        top5_sizes = [row["size"] for row in sizes.limit(5).collect()]
-        
-        results.append({
-            "run": i,
-            "total_communities": total_comms,
-            "top5_sizes": top5_sizes,
-        })
-
-        # Dọn dẹp checkpoint tạm
-        shutil.rmtree(temp_checkpoint, ignore_errors=True)
-
-    print("\n--- Báo cáo Tính ổn định LPA (Dành cho Reviewer N6) ---")
-    for r in results:
-        print(f"  Run #{r['run']}: Tổng cộng đồng = {r['total_communities']:,} | Top 5 sizes = {r['top5_sizes']}")
-    
-    diff_comms = abs(results[0]["total_communities"] - results[1]["total_communities"])
-    print(f"  -> Độ chênh lệch số lượng cộng đồng giữa 2 lần chạy: {diff_comms:,}")
-    print("  -> Kết luận stability: Kích thước và phân bổ tương quan ổn định; nhãn định danh cụm có thể hoán đổi do tính chất ngẫu nhiên của tie-breaking.")
+    if not 2 <= runs <= 3:
+        raise ValueError("Stability requires two or three sequential runs")
+    first = None
+    comparisons = []
+    try:
+        for index in range(runs):
+            current = run_lpa(graph, spark, max_iter, checkpoint_dir / str(index + 1))
+            if first is None:
+                first = current
+                continue
+            try:
+                comparisons.append({"run": index + 1, **compare_partition_frames(current, first)})
+            finally:
+                current.unpersist()
+        print("Observed membership comparisons:", comparisons)
+        return comparisons
+    finally:
+        if first is not None:
+            first.unpersist()
 
 
 # ============================================================
@@ -245,35 +233,45 @@ def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int =
 # ============================================================
 
 def export_results(lpa_vertices, summary_df, output_dir: Path):
-    """Xuất các file CSV độc lập theo chuẩn UTF-8 BOM."""
+    """Keep the display view and every community; never collect all accounts."""
+    from src.common.graph_utils import write_spark_csv
+
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    communities_path = output_dir / COMMUNITIES_FILENAME
-    summary_path = output_dir / COMMUNITY_SUMMARY_FILENAME
-
-    print(f"\n=== [Task 4] Xuất kết quả bàn giao ===")
-
-    # 1. Xuất file communities.csv (danh sách account kèm nhãn)
-    # Lấy các trường cốt lõi phục vụ báo cáo và kiểm tra
-    pdf_communities = (
-        lpa_vertices
-        .select("id", "account_type", "balance", "label")
-        .orderBy(F.asc("label"), F.asc("id"))
-        .toPandas()
-    )
-    pdf_communities.to_csv(communities_path, index=False, encoding="utf-8-sig")
-    print(f"  [OK] Đã ghi danh sách cộng đồng: {communities_path} ({len(pdf_communities):,} accounts)")
-
-    # 2. Xuất file community_summary.csv (tổng hợp đặc trưng các cộng đồng lớn)
-    # Lấy top 50 cộng đồng tiêu biểu
-    pdf_summary = summary_df.limit(50).toPandas()
-    pdf_summary.to_csv(summary_path, index=False, encoding="utf-8-sig")
-    print(f"  [OK] Đã ghi bảng tổng hợp cộng đồng: {summary_path} (Top {len(pdf_summary)} communities)")
+    assignments = lpa_vertices.select("id", "account_type", "balance", "label").repartition(64).sortWithinPartitions("id")
+    write_spark_csv(assignments, output_dir / COMMUNITIES_FILENAME)
+    write_spark_csv(summary_df.orderBy(F.desc("member_count"), "label").limit(50),
+                    output_dir / COMMUNITY_SUMMARY_FILENAME)
+    write_spark_csv(summary_df.repartition(32), output_dir / "community_summary_all.csv")
 
 
 # ============================================================
 # Hàm thực thi chính (Main Pipeline)
 # ============================================================
+
+def snapshot_features(edges, as_of_step, spark, checkpoint_dir):
+    """Structural LPA features from history only; no fraud rates enter inference."""
+    from src.motif.evaluation import require_unlabelled
+    require_unlabelled(edges)
+    past = edges.where(F.col("step") <= as_of_step).select("src", "dst")
+    ids = past.select(F.col("src").alias("id")).union(past.select(F.col("dst").alias("id"))).distinct()
+    labels = run_lpa(GraphFrame(ids, past), spark, max_iter=5, checkpoint_dir=checkpoint_dir)
+    try:
+        sizes = labels.groupBy("label").agg(F.count("*").alias("community_size"),
+                                             F.min("id").alias("community_anchor"))
+        source = labels.select(F.col("id").alias("src"), F.col("label").alias("source_community"))
+        dest = labels.select(F.col("id").alias("dst"), F.col("label").alias("dest_community"))
+        interactions = past.join(source, "src").join(dest, "dst")
+        stats = interactions.groupBy("source_community").agg(
+            F.count("*").alias("community_out_transactions"),
+            F.avg((F.col("source_community") != F.col("dest_community")).cast("double")).alias("community_cross_fraction")
+        ).withColumnRenamed("source_community", "label")
+        result = labels.join(sizes, "label").join(stats, "label", "left").fillna(
+            0, subset=["community_out_transactions", "community_cross_fraction"])
+        return result.select("id", "community_anchor", "community_size", "community_out_transactions",
+                             "community_cross_fraction").withColumn("as_of_step", F.lit(int(as_of_step))).localCheckpoint(eager=True)
+    finally:
+        labels.unpersist()
+
 
 def main():
     parser = argparse.ArgumentParser(description="Task 4 - PaySim Community Detection (LPA)")
@@ -283,8 +281,10 @@ def main():
     parser.add_argument("--check-stability", action="store_true", help="Bật chạy kiểm tra tính ổn định LPA (2 lần)")
     args = parser.parse_args()
 
-    input_dir = Path(args.input_dir)
-    output_dir = Path(args.output_dir)
+    input_dir = Path(args.input_dir).resolve()
+    output_dir = Path(args.output_dir).resolve()
+    if args.max_iter <= 0:
+        parser.error("--max-iter must be positive")
 
     spark = get_graph_session(
         app_name="PaySim-Task4-CommunityDetection-LPA",
@@ -293,22 +293,37 @@ def main():
         checkpoint_dir=str(DEFAULT_CHECKPOINT_DIR),
     )
 
+    owned = []
     try:
         # Bước 1: Nạp đồ thị
         graph = load_graph(spark, input_dir)
 
+        stability = []
         # Bước 2: Chạy kiểm tra stability nếu có yêu cầu từ cờ lệnh
         if args.check_stability:
-            check_lpa_stability(graph, spark, max_iter=args.max_iter, runs=2)
+            stability = check_lpa_stability(graph, spark, max_iter=args.max_iter, runs=2)
 
         # Bước 3: Chạy thuật toán LPA chính
         lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=DEFAULT_CHECKPOINT_DIR)
+        owned.append(lpa_vertices)
 
         # Bước 4: Phân tích cộng đồng và đối chiếu fraud
         community_sizes, summary_df = analyze_communities(lpa_vertices, graph)
+        summary_df = summary_df.cache()
+        owned.append(summary_df)
 
         # Bước 5: Xuất kết quả
         export_results(lpa_vertices, summary_df, output_dir)
+        write_run_evidence(output_dir / "task4_run.json", spark, task="Task 4 PaySim LPA execution",
+            inputs=[input_dir], outputs=[output_dir / name for name in
+                (COMMUNITIES_FILENAME, COMMUNITY_SUMMARY_FILENAME, "community_summary_all.csv")],
+            sources=[Path(__file__), REPO_ROOT / "src/common/graph_utils.py",
+                REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/ibm_aml/verify_communities.py"],
+            parameters={"max_iter": args.max_iter, "backend": "graphx", "scope": str(input_dir),
+                        "stability": stability}, metrics={"assigned_vertices": lpa_vertices.count(),
+                        "communities": summary_df.count(), "fraud_audit_posthoc": [row.asDict() for row in
+                            summary_df.where("fraud_tx_count>0").orderBy(F.desc("fraud_tx_count"), "label")
+                            .select("label", "member_count", "total_tx_count", "fraud_tx_count", "fraud_rate").limit(5).collect()]})
 
         print("\n" + "=" * 70)
         print("LƯU Ý DIỄN GIẢI KẾT QUẢ (INTERPRETATION BOUNDARY):")
@@ -320,6 +335,8 @@ def main():
         print("=" * 70 + "\n")
 
     finally:
+        for frame in owned:
+            frame.unpersist()
         spark.stop()
 
 

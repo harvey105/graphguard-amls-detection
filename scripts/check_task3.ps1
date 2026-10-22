@@ -1,3 +1,5 @@
+param([ValidateSet('4g', '5g', '6g')][string]$MaxHeap = '5g')
+
 # Full PaySim and IBM Task 3 delivery gate, using native Windows Python and Java.
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -6,8 +8,12 @@ $scratch = Join-Path $repo ('results\.task3-check-' + [guid]::NewGuid().ToString
 $log = Join-Path $repo 'results\ibm_aml\check_task3.log'
 $transcribing = $false
 $exitCode = 0
+$previousHeapCeiling = $env:GRAPHGUARD_MAX_HEAP
+$env:GRAPHGUARD_MAX_HEAP = $MaxHeap
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
+$env:OPENBLAS_NUM_THREADS = '1'
+$env:OMP_NUM_THREADS = '1'
 
 function Invoke-CheckPython {
     param([string[]]$Arguments)
@@ -76,6 +82,7 @@ print('[PASS] Windows Python ' + sys.version.split()[0] + '; ' + result.stderr.s
 } finally {
     if (Test-Path -LiteralPath $scratch) { Remove-Item -LiteralPath $scratch -Recurse -Force }
     if ($transcribing) { Stop-Transcript | Out-Null }
+    $env:GRAPHGUARD_MAX_HEAP = $previousHeapCeiling
     Pop-Location
 }
 Write-Host "Check log: $log"
