@@ -102,6 +102,97 @@ Sample có **153 PaySim / 89 IBM fraud edges**. Top PageRank được chọn tr�
 
 **Kết luận bàn giao:** checklist lỗi code và các gate đã DONE FIXED. Có API features lịch sử, baseline và evidence để làm bước kết hợp tiếp theo; chưa có bằng chứng PageRank/LPA riêng đạt 9/10 về hiệu quả fraud. Chưa triển khai fusion theo yêu cầu của người dùng. Khi kết hợp phải thống nhất input scope/cutoff/transaction index; không join `event_id` cục bộ từ các run độc lập.
 
+## Review ngày 23/10 — Điểm chất lượng và phương án tích hợp
+
+<a id="review-ngay-2310--diem-chat-luong-va-phuong-an-tich-hop"></a>
+
+### 1. Cách chấm và phạm vi
+
+Đây là điểm review kỹ thuật tham khảo, không phải điểm chính thức của giảng viên. Chấm theo workstream được PCCV giao; không chấm cá nhân từ số dòng code, số commit hoặc Status của CSV. Công việc review/final và report không bắt buộc tạo module riêng.
+
+Code xét correctness khoảng 40%, testing/reproducibility 25%, cấu trúc/maintainability 20%, tài nguyên/scope 15%. Output xét đúng yêu cầu, phạm vi kiểm chứng, truy xuất nguồn và diễn giải. **Output analytics đúng không đồng nghĩa hiệu quả detector cao.** Các số điểm là đánh giá reviewer, không phải metric của dataset hoặc một phép quy đổi F1→điểm.
+
+| Workstream / thành viên theo PCCV | Code /10 | Output đúng nhiệm vụ /10 | Bằng chứng và điểm còn thiếu |
+|---|---:|---:|---|
+| Hạ tầng/common — Thảo, phối hợp lead | 8,9 | 8,5 | Native Windows/JDK17, shared session, guard/cleanup được test; evidence vẫn cần dựng lại trên clone/máy khác |
+| Task 1 / ETL — Thảo, Tuệ Minh; Khánh QA IBM | 8,5 | 8,5 | Schema/count/key/label tests, full IBM raw reconciliation; PaySim full raw multiset chưa chạy lại; balance cùng max(step) có tie chưa xác định intrahour |
+| Task 2 — Châu Anh; Phương review/final | 8,6 | 8,0 | Degree/PageRank đúng tham số, reference/manifest PASS; root outputs còn sample; pilot standalone precision yếu |
+| Task 3 — Khánh; Phương/Hoàng review/final | 8,8 | 8,5 | Full motif query và multiplicity/time/currency checks; temporal experiments/witness/ablation; test cũ đã xem, graph context chưa tách hết khỏi motif count |
+| Task 4 — Hoàng; Châu Anh/Khánh support/final | 8,7 | 8,0 | Types/currency/all-summary và membership stability đúng; full IBM review; full PaySim nghiệm thu tương ứng chưa có; LPA không phải classifier |
+| Comparison — Phương, cùng các nhánh/report | 8,0 | 7,5 | Degree PMF được kiểm tra trên sample; tổng hợp Task 1–4; chưa có benchmark fusion cùng population |
+| **Trung bình tham khảo các workstream trên** | **8,6** | **8,2** | Trung bình reviewer, không cộng deadline/review lặp thành điểm mới |
+| Detector kết hợp ba nhánh | **Chưa chấm** | **Chưa có output** | Chưa triển khai, không dùng PASS của component gate để chấm điểm hệ thống chưa tồn tại |
+
+Các điểm trên thuộc code/kết quả analytics. Hiệu quả fraud/AML đọc từ confusion matrices thật: motif-assisted PaySim precision/recall/F1 **44,44/28,02/34,37%**, IBM **10,46/26,38/14,98%**. Pilot centrality/community chỉ **0,07–0,36% precision**, PaySim community alert toàn bộ test. Chưa có căn cứ cho điểm 9/10 về hiệu quả phát hiện laundering hoặc tuyên bố fusion tốt hơn.
+
+### 2. Kết luận ba nhánh đã chuẩn ở mức nào?
+
+- **Degree/PageRank:** dùng được như thuật toán cấu trúc và API historical snapshot. Top-10 root là bảng mô tả sample, không phải account feature table full hoặc danh sách fraud. Top-10 selection không dùng nhãn; annotation chỉ hậu kiểm.
+- **3-cycle/relay:** query baseline và causal motif features đã có tests độc lập và full outputs. 54 IBM cycles là audit có dùng nhãn, không được đưa vào detector dưới dạng kết quả phát hiện mù. Detector phải dùng feature không nhận nhãn trong `src/motif/features.py`.
+- **LPA/community:** partition, exporter, member types và currency summaries đã được kiểm tra; `snapshot_features` cung cấp đặc trưng không nhãn. Community label không phải class fraud; `fraud_rate` và amount/fraud summaries trên toàn dataset không được đưa ngược vào training/test.
+- **Phần chưa chuẩn để ghép ngay:** root Task 2/4 là sample, motif notebook là full; pilot component dùng hai validation folds, motif dùng ba folds; snapshot pilot cố định cả khoảng test. Các run có `event_id` cục bộ. Vì vậy chưa có một common evaluation population hoặc final fusion score.
+
+### 3. Objective và đơn vị đánh giá cuối
+
+Giữ **PaySim core** đúng phạm vi môn học; dùng **IBM HI-Small cho đánh giá laundering trực tiếp**. Mỗi dataset có model/threshold/metrics riêng. Đơn vị chính là transaction/edge với nhãn gốc. PaySim fraud và IBM laundering không được gom làm một nhãn để báo một F1 chung. Account/community risk chỉ là đầu ra xếp hạng điều tra nếu chưa định nghĩa ground truth account/ring phù hợp.
+
+Mục tiêu có thể nghiệm thu: “Dùng ngữ cảnh centrality, temporal motifs và community để xếp hạng/cảnh báo giao dịch; đo xem các nhóm feature có cải thiện phát hiện nhãn laundering so với transaction-only hay không, tại khối lượng cảnh báo đã khai báo.” Không hứa cả ba nhóm sẽ luôn cải thiện hoặc mọi cycle đều illicit.
+
+### 4. Thiết kế tích hợp đề xuất, chưa code/chạy fusion
+
+**A. Common table và identity.** Tạo normalized transaction table và index đúng một lần trên input fingerprint cố định. Giữ đủ duplicate rows; reuse cùng `event_id` trong toàn run. Không dùng fingerprint nội dung làm unique key nếu duplicate có thể trùng. Feature joins phải unique theo event ID, không đổi số dòng hoặc bỏ cold-start/unflagged/FX/self-loop khỏi mẫu số test.
+
+**B. Point-in-time features trên cả train, validation, test.** Motif dùng strict-past history/witness đúng như hiện tại. Degree/PageRank/LPA lấy snapshot trước block đang chấm. Cần snapshot cho **training rows**, không lấy snapshot tại cuối training rồi gán cho những transaction xảy ra trước snapshot đó. Đó là nhìn tương lai trong training dù không dùng nhãn.
+
+Một lịch khởi đầu tiết kiệm để thẩm định là các boundary theo thời gian 20%, 40%, 50%, 65%, 80%, giữ timestamp ties; tạo snapshot trước block kế tiếp. Block đầu không có lịch sử thì features mặc định/cờ unseen, không gán fraud. Đây là **đề xuất lịch**, chưa là thông số được nghiệm thu. Benchmark fixture/sample và memory trước; có thể chọn lịch theo ngày nghiệp vụ nếu phù hợp. Không chạy PageRank/LPA cho mỗi transaction hoặc mỗi timestamp thô trên laptop. Giữ lag/as-of của centrality/community và strict-past semantics của motif rõ trong export; mọi ablation dùng cùng feature availability.
+
+Snapshot có thể cập nhật bằng giao dịch đã quan sát của block trước, kể cả khi đó là khoảng validation/test, nhưng tuyệt đối không dùng nhãn của các khoảng đó để tính feature. Refit/tuning model chỉ dùng đúng prefix training của fold. FX không đổi amount sang cùng đơn vị nếu chưa có tỷ giá; normalize scales trên training theo currency/type.
+
+**C. Reuse module hiện có.** Điều phối chung trong `src/motif/pipeline.py`; gọi `src/motif/features.py`, `src/paysim/metrics.py::snapshot_features` và `src/paysim/community_detection.py::snapshot_features`. Hai API topology/history dùng được qua dataset adapter. Bổ sung feature allowlist/model input trong `src/motif/modeling.py`/`config.py`, không tạo ba bản pipeline sao chép hoặc thêm module chỉ để nối CSV. Các snapshot được cache/spill theo từng cutoff rồi giải phóng; chỉ một workload nặng.
+
+**D. Mô hình và ablation.** Bắt đầu bằng cùng family cây nhỏ đang có; training/weights/scales từ prefix, cùng seed và tuning budget. So sánh: transaction-only; +centrality; +motif; +community; full fusion; full trừ lần lượt centrality/motif/community. Thêm so sánh role-history với motif-counts nếu cần khẳng định riêng giá trị motif. Không sử dụng các con số risk_score từ những model/run khác nhau để cộng 1/3 thủ công. Không mặc định đổi sang GNN/GPU hoặc mở hyperparameter grid lớn.
+
+Cần thêm cờ src/dst seen, số đối tác/degree/PR nguồn–đích, motif counts theo cửa sổ, size/cross-fraction cộng đồng và cùng/khác nhóm khi cả hai đã thấy. Không đưa label ID số học, account ID, fraud_rate hậu kiểm, balance cuối kỳ, `Patterns.txt` hoặc isFraud lồng trong struct vào model. Unseen là điều kiện thiếu lịch sử, không phải ground truth fraud.
+
+**E. Chọn và khóa operating point.** Dùng cùng walk-forward boundaries cho mọi family; fit model chỉ trên prefix, tune family/threshold trên validation. Báo cả mean/worst fold và số positives. Chọn một metric chính trước test: AP để đánh giá ranking, kèm precision/recall/F1 của operating point đã chọn và ngân sách review cố định. Nếu đề yêu cầu F1 thì giữ F1 làm selection criterion, đồng thời vẫn báo AP và alert load. Không chọn lại criterion vì test của một model đẹp hơn.
+
+Ngân sách review có thể là K hoặc tỷ lệ alert định trước; cần nêu tie policy. Top-K và threshold alert là hai operating policies khác nhau khi nhiều giao dịch cùng score. Xuất cả số alert thực tế. Precision@K/Recall@K, false positives/1.000 transactions, AP/PR curve, TP/FP/FN/TN và novelty baseline giúp tránh việc “recall cao vì alert gần tất cả”. Score weighted tree chưa phải calibrated probability. Cần calibration riêng trên validation nếu muốn gọi score là xác suất.
+
+**F. Holdout và kiểm toán.** Các full test hiện có đã được xem: dùng được làm reused internal holdout khi báo đúng giới hạn, không được gọi “untouched” chỉ vì đổi seed hoặc chia lại. Nếu cần kết luận tổng quát hóa mới, phải có batch/dataset tương thích chưa dùng; không tải thêm biến thể lớn hoặc chạy nhiều seed tự động trong lượt review này. CI binomial hiện có chưa xử lý phụ thuộc tài khoản/thời gian; có thể bổ sung uncertainty theo block ngày khi có đủ blocks, ghi hạn chế khi không đủ.
+
+Prediction table tối thiểu: dataset/input/run ID, event ID, event time, feature/snapshot as-of, risk score, alert, threshold/policy, unknown flags và witness/reason references. Truth join ở bước đánh giá; report có paired metrics/ablation, alert-budget chart, PR curve và các ví dụ TP/FP/FN. Không suy từ một vài TP có cycle rằng toàn bộ độ tăng F1 do cycle.
+
+### 5. Checklist nghiệm thu fusion trước khi gọi kết quả cuối
+
+- [ ] **COMMON INPUT:** cùng input fingerprint, transaction index, split boundaries, labels và test denominators ở mọi ablation.
+- [ ] **POINT-IN-TIME:** thêm/sửa cạnh tương lai không đổi feature của transaction quá khứ; snapshot as-of < quyết định, bao gồm training rows; same-time không giả thứ tự.
+- [ ] **NO LABEL LEAKAGE:** thay nhãn validation/test không đổi features, fit/scales hay lựa chọn threshold; nhãn thật vẫn giữ nguyên ở evaluator.
+- [ ] **JOINS/COUNTS:** không duplicate/lost rows qua join; giữ cold-start và các transaction không có motif; confusion sums đúng N và P.
+- [ ] **REFERENCE:** tiny oracle cho degree/PR, motif witnesses, community membership; export model reload tái tạo prediction; checksum không bị sửa.
+- [ ] **BASELINES/ABLATIONS:** đủ transaction-only, từng nhánh, full/drop-group; cùng population/model budget; báo cold-start subgroup, novelty và false alerts.
+- [ ] **RESULTS:** thresholds chọn validation, manifest lưu config và input/source/output hashes; test reuse được khai báo; không đòi metric phải tăng để test PASS.
+- [ ] **OPERATING QUALITY:** có tiêu chí alert load/precision/recall do nhóm xác định trước; không đạt thì báo chất lượng chưa đạt, tách khỏi software PASS.
+- [ ] **HARDWARE:** profile được guard admit, chạy tuần tự, không bypass reserve/CPU/job cap, dừng điều tra nếu OOM/pressure stop.
+
+Đây là checklist **chưa hoàn tất**, không bị đánh dấu DONE FIXED cùng những lỗi component đã sửa. Các test hiện tại là nền cho integration, chưa tự chứng minh tất cả tiêu chí fusion trên đã đạt.
+
+### 6. Sửa tài liệu trong lượt review này
+
+README chuyển sang objective toàn nhóm, core/bonus/nhãn đúng, kiến trúc Task 1–4 và fusion phân biệt trạng thái; có đủ bảy thành viên/ownership theo CSV, scope sample/full, kết quả thật và runbook. Hardware giữ một mục ngắn cuối tài liệu, chi tiết ở skill/audit.
+
+Part B đã điền Task 2, bổ sung Task 4 sample của cả nhóm, mở Comparison khỏi chỉ motif. Đã bỏ suy luận “5 raw spot-checks chứng minh toàn ETL 100%”, “power-law/vertex-cut bắt buộc” khi chưa có fit/benchmark. File Part A hiện chỉ chứa derivation 3.3; CC/LPA ở note riêng. Chưa xác nhận bản hoàn chỉnh 3.1/3.2 trong repo; không chấm thiếu thuật toán vì nhiệm vụ lý thuyết này, nhưng phải đưa bản report tương ứng vào bàn giao nếu barem yêu cầu. Đã ghi rõ `max_by(balance, step)` chưa xác định thứ tự intrahour khi nhiều event cùng max(step); vertex balance cuối kỳ không dùng trong detector. Không thay status CSV hoặc tự nhận đã duyệt thay reviewer.
+
+Nguồn định hướng: [IBM AMLworld](https://arxiv.org/html/2306.16424v3#A4) về temporal graph features; [Saito & Rehmsmeier](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432) về precision–recall trong dữ liệu lệch lớp; [GraphFrames motif API](https://graphframes.io/04-user-guide/04-motif-finding.html) và [LPA](https://graphframes.io/04-user-guide/06-graph-clustering.html). Thiết kế/rubric ở trên là đề xuất review của repo, không phải score benchmark lấy từ các bài báo.
+
+### 7. Make check mới ngày 23/10
+
+- **PASS, exit 0:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.ps1 -MaxHeap 5g`.
+- `pip check` PASS; **44/44 tests nhẹ (2,599 giây)**; artifact **26/26 PASS**, không FAIL/BLOCKED.
+- Native guard **6/6 (7,043 giây)**; native algorithm **9/9 (140,367 giây)**; Task 3 guard/checkpoint **15/15 (7,234 giây)**; artifact/evidence suites **18/18 (0,203 giây)**; motif cơ bản **5/5 (18,529 giây)**, calibration **7/7 (35,138 giây)**, v2 **8/8 (81,016 giây)**. Một số suite lặp test, không cộng thành số test độc lập.
+- IBM ETL full invariants PASS; IBM full motif và PaySim full motif rerun khớp toàn bộ CSV bàn giao, manifests/evidence PASS.
+- Chỉ một workload nặng, cùng guard; không có OOM/resource stop. Hai notebook full không chạy lại trong lượt tài liệu này vì Python source không đổi; gate xác nhận saved execution/source hashes/metrics vẫn khớp. Execution đầy đủ của notebooks là ngày 22/10 đã ghi ở trên.
+- Kết quả này nghiệm thu component correctness và evidence hiện có. **Chưa nghiệm thu detector fusion** hoặc các ô checklist fusion chưa được thực hiện.
+
 ## Audit ban đầu — lưu đối chiếu, không phải trạng thái hiện tại
 
 ## Đối chiếu các nhiệm vụ code của thành viên

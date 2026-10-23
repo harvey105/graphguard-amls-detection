@@ -1,6 +1,16 @@
-# Part B — Comparison: kết quả motif
+# Part B — Cross-dataset Comparison: Task 1–4
 
-Phần này tổng hợp Task 3; phần Degree/PageRank và LPA chờ nhóm tích hợp riêng.
+Phương phụ trách tổng hợp so sánh; các nhánh dùng kết quả của Thảo/Tuệ Minh, Châu Anh, Khánh và Hoàng theo PCCV. So sánh dưới đây giữ rõ scope: core PaySim và mở rộng IBM có nhãn khác nhau; không gộp F1 thành một điểm AML chung.
+
+| Nhánh | PaySim | IBM HI-Small | Diễn giải |
+|---|---|---|---|
+| Task 1 full graph | 9.073.900 accounts / 6.362.620 giao dịch | 518.581 / 5.078.345 | Full IBM raw–Parquet đã đối chiếu; PaySim full raw reconciliation chưa chạy lại trong audit mới |
+| Task 2 sample | 194.195 accounts / 100.729 giao dịch | 119.043 / 99.869 | Degree/PageRank/reference và manifests PASS; đây là sample analytics |
+| Task 4 sample | 186.932 communities | 86.223 communities | Top-50 và all-summary đều có; số cụm phụ thuộc population/topology, không đo trực tiếp fraud |
+| LPA full review | Chưa có nghiệm thu full PaySim tương ứng | 314.829 communities / 518.581 accounts | Không so hai số sample/full như cùng phạm vi |
+| Ý nghĩa nhãn | Mobile-money fraud | Synthetic laundering | Dùng nhãn đúng mục tiêu riêng; laundering đánh giá trực tiếp trên IBM |
+
+Degree PMF comparison đã có ở `results/comparison/`, được gate đối chiếu trên sample. Hai dataset khác kích thước, tỷ lệ nhãn và topology; không suy ra graph này dễ phát hiện fraud hơn chỉ từ max degree hoặc số community. Community label là kết quả phân hoạch, không phải nhãn rửa tiền. Các hiện vật và ownership được dẫn đầy đủ trong [README](../README.md).
 
 | Nội dung | PaySim | IBM AML HI-Small |
 |---|---|---|

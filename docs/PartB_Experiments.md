@@ -7,7 +7,9 @@
 - Khởi tạo GraphFrame
 - Verify integrity
 
-### 1.2. Kết quả chạy
+### 1.2. Kết quả log lịch sử
+
+Bảng/log dưới đây được giữ từ bàn giao trước. Trạng thái mới, phạm vi raw reconciliation và manifest hiện hành xem [audit](Project_Code_Audit_2026-10-22.md); không dùng các dòng log lịch sử để mở rộng phạm vi kiểm chứng mới.
 
 | | Full graph | Sample |
 |---|---|---|
@@ -45,22 +47,19 @@ Ngoài verification schema + count (so với hardcode), nhóm chạy thêm
 | 4 | C201677908 → C451111351 | 1 | 480222.51 | ✅ 1 raw match |
 | 5 | C1574873161 → M1591916281 | 1 | 1239.06 | ✅ 1 raw match |
 
-**→ ETL pipeline verified 100%**: mọi edge trong Parquet đều có 
-row tương ứng trong raw CSV — không drop, không duplicate, không 
-méo dữ liệu.
+**Phạm vi bằng chứng:** 5 raw spot-checks ở trên PASS; đây không phải đối chiếu toàn bộ Parquet với raw CSV. Chưa thể suy ra mọi dòng đều được bảo toàn chỉ từ 5 ví dụ. Counts/integrity và raw multiset reconciliation phải được ghi riêng theo dataset/run.
 
 Log: `results/paysim/task1_verification_from_raw_sample.log`
 **Lưu ý số liệu:** Số ở 1.2 và 1.4 khác nhau do 2 lần chạy độc lập:  
 - **1.2** đọc Parquet sample có sẵn (`data/processed/sample/paysim/`)  
 - **1.4** induce subgraph ngẫu nhiên ~100k edges **mới** từ raw CSV  
-> Cả hai đều PASS — mục đích 1.4 là chứng minh ETL đúng logic.
+> Hai lượt PASS là bằng chứng cho các kiểm tra đã chạy; spot-check không thay thế đối chiếu đầy đủ.
 
 ### 1.5. Insights
-- **Power-law degree distribution cực mạnh:**
+- **Quan sát degree trên scope được log ghi nhận:**
   - Max In-Degree = 113 (tài khoản `C1286084959` — hub nhận tiền)
   - Max Out-Degree = 3 (hầu hết users chỉ gửi 1-3 lần)
-- Ủng hộ Mục 3.2: **Vertex Cut bắt buộc** cho PaySim (Edge Cut sẽ cắt 
-  quá nhiều cạnh tại các hub)
+- Phân bố lệch gợi ý cần quan tâm partition skew; chưa fit power-law hoặc benchmark vertex-cut so với edge-cut. Không kết luận một chiến lược partition là bắt buộc chỉ từ các giá trị degree trên.
 
 ### 1.6. Quyết định Mapping (khác biệt so với bảng 4.1 gốc)
 
@@ -77,8 +76,7 @@ thay vì `oldbalance*`, vì:
 
 **Quy tắc chính thức:** Cho mỗi account (bao gồm 1,769 tài khoản đóng cả 
 2 vai trò sender + receiver), lấy `newbalance` tại `max(step)`. Cài đặt 
-bằng `F.max_by("balance", "step")` — một aggregation, không dùng window 
-function, giảm shuffle overhead.
+bằng `F.max_by("balance", "step")` — một aggregation, không dùng window function. Nếu nhiều event cùng `max(step)`, `max_by` không xác định duy nhất balance nào là cuối trong giờ đó. Do raw step không cung cấp thứ tự trong giờ, đây là balance tại một event cuối kỳ, không phải bằng chứng chính xác trạng thái intrahour. Không dùng vertex balance cuối kỳ làm feature detector theo thời gian.
 
 #### Bổ sung cột vào Edges
 
@@ -91,11 +89,22 @@ Hai cột không có trong bảng 4.1 gốc nhưng được bổ sung cho downst
 
 #### Step giữ nguyên Integer
 
-Trường `step` (1..744) giữ nguyên dạng **integer** làm proxy thời gian mô 
+Trường `step` giữ nguyên dạng **integer** từ raw làm proxy thời gian mô
 phỏng, KHÔNG convert sang datetime. Tránh gây hiểu nhầm về thời gian thực.
 
-## Task 2 — Degree & PageRank (25đ)
-(Chờ N6)
+## Task 2 — Degree & PageRank (nhãn nhiệm vụ trong PCCV)
+
+Châu Anh triển khai Degree/PageRank; Phương review/final hai dataset theo PCCV. Hiện đã có code và output, không còn trạng thái “chờ”. Root output Task 2 là **sample**, không phải full:
+
+| Dataset | Accounts / transactions | Artifacts |
+|---|---:|---|
+| PaySim | 194.195 / 100.729 | `results/paysim/{degree_distribution.csv,degree_distribution.png,top10_pagerank.csv,task2_run.json}` |
+| IBM HI-Small | 119.043 / 99.869 | Bộ file cùng tên trong `results/ibm_aml/` |
+
+Source: `src/paysim/metrics.py` và adapter `src/ibm_aml/metrics.py`; `resetProbability=0.15`, `maxIter=10`. Đa cạnh được giữ, self-loop đóng góp vào cả in/out degree. Gate kiểm tra degree sum `2E`, đối chiếu PageRank bằng reference độc lập, top-10 và manifest hashes. Degree comparison ở `src/comparison/degree_distribution.py` và `results/comparison/`.
+
+Top-10 được chọn bằng cấu trúc trước khi đối chiếu fraud counts. Top PaySim có incident fraud 0; IBM có hai account nhận lần lượt 2 và 1 fraud transactions trong sample. Đây là hub audit, không phải TP/FP của classifier. Temporal centrality pilot đã có đánh giá riêng, precision còn yếu; xem [audit](Project_Code_Audit_2026-10-22.md). Full Task 2 chưa được nghiệm thu trong lượt này. Không dùng top-10 CSV làm thay thế toàn bộ feature table cho fusion.
+
 
 ## Task 3 — Motif Finding (25đ)
 
@@ -139,7 +148,21 @@ CLI PowerShell và API dùng cùng pipeline; model/amount scales/report/examples
 Chỉ một tác vụ nặng chạy tại một thời điểm; hardware guard bắt buộc giới hạn CPU 10%, tối đa 2 logical CPUs, JVM heap ≤6 GiB và job commit ≤10 GiB trên máy 32 GiB. Có admission và watchdog giữ RAM/commit dự phòng, cùng thu hồi tiến trình con khi kernel chết. Không tăng tài nguyên sau resource stop. GPU chưa được stack Windows native này sử dụng; nhiệt độ CPU không có sensor tin cậy. Xem [quy trình bảo vệ](../README.md#bảo-vệ-tài-nguyên-trên-máy-windows) và [skill](../.agents/skills/graphguard-powershell/SKILL.md).
 
 
-## Task 4 — Community Detection (25đ)
+## Task 4 — Community Detection (nhãn nhiệm vụ trong PCCV)
+
+### PaySim và IBM sample — producer chính
+
+Hoàng phụ trách LPA hai dataset; Châu Anh kiểm tra stability/final PaySim, Khánh review/final IBM. Sample producer đã xuất assignment, top-50, **all-community summary** và run manifest:
+
+| Dataset | Accounts | Communities | Phạm vi |
+|---|---:|---:|---|
+| PaySim | 194.195 | 186.932 | Sample; 153 communities chứa ít nhất một fraud edge theo profile hậu kiểm |
+| IBM HI-Small | 119.043 | 86.223 | Sample; amount/count giữ riêng từng currency |
+
+Gate đối chiếu toàn bộ summary với cạnh gốc, không chỉ top-50. PaySim dùng đúng `Customer`/`Merchant`; hai lượt sample cho cùng canonical membership trên 194.195 accounts, 0 thay đổi. LPA label số có thể đổi; khác label ID không tự động là khác partition. Tỷ lệ fraud hậu kiểm không được dùng làm feature test. Rule community pilot chưa đạt detector độc lập, đặc biệt PaySim alert 100% test.
+
+### IBM full — review độc lập
+
 
 Thuật toán LPA do Hoàng phụ trách; phần của Khánh là review/final theo PCCV đến 07/10. Notebook IBM chạy GraphX LPA `maxIter=5` trên full graph và dùng checker độc lập:
 
