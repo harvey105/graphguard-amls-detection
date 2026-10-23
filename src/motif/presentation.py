@@ -63,6 +63,7 @@ class NotebookSession:
             extra_configs={"spark.master": "local[2]", "spark.default.parallelism": "2",
                 "spark.ui.enabled": "false", "spark.ui.showConsoleProgress": "false",
                 "spark.sql.session.timeZone": "UTC",
+                "spark.ui.retainedJobs": "20", "spark.ui.retainedStages": "40", "spark.sql.ui.retainedExecutions": "20",
                 "spark.sql.warehouse.dir": (Path(temporary.name) / "warehouse").as_uri()})
         spark.sparkContext.setLogLevel("ERROR")
         java = spark.sparkContext._jvm.java.lang.System.getProperty("java.version")
@@ -303,7 +304,24 @@ def source_provenance() -> pd.DataFrame:
                           "sha256": file_fingerprint(path)["sha256"]} for path in paths])
 
 
-def draw_graph(nodes, edges, title, positions=None, colors=None):
+def _display_figure(figure, output_path=None):
+    """Embed a PNG explicitly even when a CLI module selected the Agg backend."""
+    from io import BytesIO
+    from IPython import get_ipython
+    from IPython.display import Image, display
+
+    stream = BytesIO()
+    figure.savefig(stream, format="png", dpi=130, bbox_inches="tight")
+    png = stream.getvalue()
+    if output_path is not None:
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(output_path).write_bytes(png)
+    if get_ipython() is not None:
+        display(Image(data=png))
+    plt.close(figure)
+
+
+def draw_graph(nodes, edges, title, positions=None, colors=None, output_path=None):
     if positions is None:
         angles = np.linspace(np.pi / 2, np.pi / 2 - 2 * np.pi, len(nodes), endpoint=False)
         positions = {node: (np.cos(angle), np.sin(angle)) for node, angle in zip(nodes, angles)}
@@ -332,4 +350,149 @@ def draw_graph(nodes, edges, title, positions=None, colors=None):
         )
     ax.set(xlim=(-1.6, 1.6), ylim=(-1.4, 1.5), title=title)
     ax.axis('off')
-    plt.show()
+    _display_figure(fig, output_path)
+
+
+def start_system_session(dataset):
+    """Native guarded full-system session; no concurrent notebooks/CLIs."""
+    session = NotebookSession.start(dataset, driver_memory="5g")
+    session.spark.conf.set("spark.sql.shuffle.partitions", "64")
+    return session
+
+
+def system_protocol_table(run):
+    tx = run.table("transactions")
+    phase = F.lit(len(run.record["snapshot_cutoffs"]))
+    for index, cutoff in reversed(list(enumerate(run.record["snapshot_cutoffs"]))):
+        phase = F.when(F.col("step") <= cutoff, index).otherwise(phase)
+    table = tx.withColumn("time_block", phase).groupBy("time_block").agg(F.count("*").alias("transactions"),
+        F.sum("isFraud").alias("positives"), F.min("step").alias("first_step"), F.max("step").alias("last_step")).orderBy("time_block").toPandas()
+    table["positive_rate"] = table.positives/table.transactions
+    if run.dataset == "ibm_aml":
+        for side in ("first", "last"):
+            table[side+"_time_UTC"] = pd.to_datetime(table[side+"_step"], unit="s", utc=True).astype(str)
+    return table
+
+
+def _save_system_figure(run, name, figure):
+    directory = run.output_dir / "figures"
+    directory.mkdir(exist_ok=True)
+    _display_figure(figure, directory / (name+".png"))
+
+
+def plot_system_centrality(run):
+    """Aggregate/full counts; only the top ten accounts enter pandas."""
+    distribution = pd.read_csv(run.output_dir / "degree_distribution.csv")
+    positive = distribution[distribution.degree > 0]
+    fig, ax = plt.subplots(figsize=(9, 4))
+    ax.scatter(positive.degree, positive.account_count, s=14)
+    ax.set(xscale="log", yscale="log", xlabel="Transaction degree", ylabel="Accounts", title=f"{run.dataset}: full degree distribution (positive degrees on log axes)")
+    _save_system_figure(run, "full_degree", fig)
+    top = pd.read_csv(run.output_dir / "top10_pagerank.csv").sort_values("pagerank")
+    fig, ax = plt.subplots(figsize=(9, 4))
+    ax.barh(top.id.astype(str), top.pagerank, color="#2563eb")
+    ax.set(xlabel="PageRank (sum over all accounts = N)", title="Full-data top 10 structural hubs; not fraud predictions")
+    _save_system_figure(run, "full_pagerank", fig)
+    return top.sort_values("pagerank", ascending=False)
+
+
+def plot_system_communities(run):
+    distribution = pd.read_csv(run.output_dir / "community_size_distribution.csv")
+    fig, ax = plt.subplots(figsize=(9, 4))
+    ax.scatter(distribution.member_count, distribution["count"], s=16, color="#0f766e")
+    ax.set(xscale="log", yscale="log", xlabel="Members per community", ylabel="Communities", title=f"{run.dataset}: all full-data LPA communities")
+    _save_system_figure(run, "full_communities", fig)
+    return pd.read_csv(run.output_dir / "community_top50.csv").head(10)
+
+
+def plot_system_validation(run):
+    folds = pd.read_csv(run.output_dir / "walk_forward.csv")
+    import json
+    rules = json.loads((run.output_dir / "frozen_rules.json").read_text())
+    fig, ax = plt.subplots(figsize=(10, 4))
+    for name, rule in rules["family_rules"].items():
+        rows = folds[(folds.family == name) & np.isclose(folds.threshold, rule["threshold"])]
+        ax.plot(rows.fold, rows.F1, marker="o", label=name)
+    ax.set(xlabel="Expanding validation fold", ylabel="F1 at frozen family threshold", title="Common full-data walk-forward benchmark", xticks=[1, 2, 3])
+    ax.legend(fontsize=7, ncols=2)
+    _save_system_figure(run, "validation", fig)
+    return pd.DataFrame(rules["family_rules"]).T[["threshold", "mean_F1", "worst_F1", "FP"]]
+
+
+def plot_system_results(run):
+    table = pd.read_csv(run.output_dir / "test_metrics.csv")
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    table.set_index("model")[["precision", "recall", "F1", "average_precision"]].plot.bar(ax=axes[0], rot=75)
+    axes[0].set(title="Factorial ablations + novelty control: same test", ylabel="Score", ylim=(0, 1))
+    for family in table.model:
+        curve = pd.read_csv(run.output_dir / ("pr_curve_"+family+".csv"))
+        axes[1].step(curve.recall, curve.precision, where="pre", label=family)
+    axes[1].axhline(table.prevalence.iloc[0], color="#64748b", linestyle="--", label="prevalence")
+    axes[1].set(xlabel="Recall", ylabel="Precision", title="Exact PR curves, score ties grouped", xlim=(0, 1), ylim=(0, 1))
+    axes[1].legend(fontsize=7)
+    _save_system_figure(run, "ablation_and_pr", fig)
+    budgets = pd.read_csv(run.output_dir / "review_budgets.csv")
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    for family in table.model:
+        rows = budgets[budgets.model==family].sort_values("K")
+        axes[0].plot(rows.K, rows.precision_at_K, marker="o", label=family)
+        axes[1].plot(rows.K, rows.recall_at_K, marker="o", label=family)
+    axes[0].set(xlabel="Exactly K reviewed transactions", ylabel="Precision@K", title="Review efficiency")
+    axes[1].set(xlabel="Exactly K reviewed transactions", ylabel="Recall@K", title="Coverage at the same review budget")
+    axes[1].legend(fontsize=7)
+    _save_system_figure(run, "review_budgets", fig)
+    selected = table[table.selected_on_validation]
+    if not selected.empty:
+        row = selected.iloc[0]
+        matrix = np.array([[row.TN, row.FP], [row.FN, row.TP]], dtype=int)
+        fig, ax = plt.subplots(figsize=(5, 4))
+        ax.imshow(matrix, cmap="Blues")
+        for (i, j), value in np.ndenumerate(matrix):
+            ax.text(j, i, f"{value:,}", ha="center", va="center")
+        ax.set(xticks=[0, 1], yticks=[0, 1], xticklabels=["no alert", "alert"], yticklabels=["negative", "positive"],
+               xlabel="Frozen model prediction", ylabel="Ground truth", title=f"Validation selected: {row.model}")
+        _save_system_figure(run, "confusion", fig)
+    return table
+
+
+def system_case_evidence(run):
+    """Audit one real alert with a genuine motif witness, never invent a path."""
+    import json
+    from src.motif.features import resolve_star_witness
+    from src.motif.config import DATASETS
+    rules = json.loads((run.output_dir / "frozen_rules.json").read_text())
+    family = rules["selection"]["family"]
+    if family == "abstain":
+        return pd.DataFrame([{"result": "ABSTAIN: no selected alert to illustrate"}])
+    prediction = run.spark.read.parquet(str(run.output_dir / "predictions" / (family+".parquet")))
+    features = run.table("features")
+    window = max(run.config.analysis.windows_hours)
+    candidates = prediction.where("alert AND isFraud=1").join(features, "event_id")
+    row = candidates.orderBy(F.desc("cycle3_count"), F.desc(f"relay_{window}h"), F.desc("risk_score"), "event_key").first()
+    if row is None:
+        return pd.DataFrame([{"result": "Selected model has no test true positive; inspect exported FP/FN examples"}])
+    event_ids = [row.event_id]
+    kind = "transaction only; no eligible motif witness"
+    if row.cycle3_count > 0 and row.cycle3_witness is not None:
+        event_ids += [row.cycle3_witness.first_event_id, row.cycle3_witness.second_event_id]
+        kind = "chronological 3-cycle witness"
+    else:
+        for candidate in ("relay", "fanin", "fanout"):
+            if row[f"{candidate}_{window}h"] > 0:
+                witnesses = resolve_star_witness(run.table("motif_features"), row.event_id, DATASETS[run.dataset], candidate, window)
+                example = witnesses.orderBy(F.desc("step"), "event_id").first()
+                if example is not None:
+                    event_ids.append(example.event_id)
+                    kind = candidate+" strict-past witness"
+                    break
+    evidence = run.table("transactions").where(F.col("event_id").isin(event_ids)).select(
+        "event_id", "src", "dst", "step", "type", "amount", "payment_currency", "isFraud").orderBy("step").toPandas()
+    evidence["example_model"] = family
+    evidence["evidence_kind"] = kind
+    evidence.to_csv(run.output_dir / "selected_case_evidence.csv", index=False, encoding="utf-8-sig")
+    if len(evidence)>1:
+        nodes = set(evidence.src) | set(evidence.dst)
+        draw_graph({str(v): str(v) for v in nodes}, [(str(r.src), str(r.dst), f"{r.amount:g} {r.payment_currency}\nt={r.step}; truth={int(r.isFraud)}") for r in evidence.itertuples()],
+                   title=f"Real {kind}; labels shown only for audit",
+                   output_path=run.output_dir / "figures" / "selected_case.png")
+    return evidence

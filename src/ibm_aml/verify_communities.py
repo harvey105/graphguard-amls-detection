@@ -33,6 +33,8 @@ def read_table(spark, path: Path, required: list[str]):
 
 
 def numeric(frame, names: list[str], integral: bool = True):
+    if not names:
+        return frame
     invalid_fields = []
     for name in names:
         parsed = F.col(name).cast("long" if integral else "double")

@@ -352,5 +352,163 @@ class NativeAlgorithmTests(unittest.TestCase):
         self.assertEqual((row["TP"], row["FP"], row["FN"], row["TN"]), (1, 1, 1, 0))
 
 
+class FullSystemPolicyTests(unittest.TestCase):
+    def test_family_matrix_has_all_eight_distinct_combinations(self):
+        from src.motif.config import SYSTEM_FAMILY_GROUPS, FullSystemConfig
+        self.assertEqual(len({frozenset(x) for name,x in SYSTEM_FAMILY_GROUPS.items() if name != "transaction_novelty"}), 8)
+        self.assertEqual(FullSystemConfig().analysis.driver_memory, "5g")
+        with self.assertRaises(ValueError):
+            FullSystemConfig(snapshot_fractions=(.4, .8))
+
+
+class NativeFullSystemTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import os
+        if os.name != "nt":
+            raise unittest.SkipTest("Native Windows verification required")
+        from src.common.spark_session import get_graph_session
+        cls.spark = get_graph_session("Full-system-native-tests", driver_memory="4g", shuffle_partitions=32,
+            extra_configs={"spark.master": "local[2]", "spark.ui.enabled": "false", "spark.ui.showConsoleProgress": "false"})
+        cls.spark.sparkContext.setLogLevel("ERROR")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.spark.stop()
+
+    def test_a_dataframe_pagerank_matches_independent_and_graphx(self):
+        import tempfile
+        from pathlib import Path
+        from graphframes import GraphFrame
+        from src.paysim.metrics import dataframe_pagerank, calculate_pagerank
+        vertices = self.spark.sql("SELECT * FROM VALUES ('A'),('B'),('C'),('D') AS v(id)")
+        edges = self.spark.sql("SELECT * FROM VALUES ('A','B'),('A','B'),('B','B'),('C','A') AS e(src,dst)")
+        source = [r.asDict() for r in edges.collect()]
+        expected = reference_pagerank({r.id:{} for r in vertices.collect()}, source, Counter(r['src'] for r in source))
+        with tempfile.TemporaryDirectory() as temporary:
+            actual = {r.id:r.pagerank for r in dataframe_pagerank(vertices, edges, Path(temporary)/'pr').collect()}
+            gx = calculate_pagerank(GraphFrame(vertices, edges))
+            try:
+                graphx = {r.id:r.pagerank for r in gx.collect()}
+            finally:
+                gx.unpersist(blocking=True)
+        for key in expected:
+            self.assertAlmostEqual(expected[key], actual[key], places=10)
+            self.assertAlmostEqual(graphx[key], actual[key], places=10)
+
+    def test_b_dataframe_lpa_matches_modal_oracle_and_keeps_isolate(self):
+        import tempfile
+        from pathlib import Path
+        from src.paysim.community_detection import dataframe_lpa
+        vertices = self.spark.sql("SELECT * FROM VALUES ('A'),('B'),('C'),('D') AS v(id)").coalesce(1).sortWithinPartitions('id')
+        edges = self.spark.sql("SELECT * FROM VALUES ('A','B'),('A','B'),('B','B'),('C','A') AS e(src,dst)")
+        from pyspark.sql import functions as F
+        labels = {r.id:r.label for r in vertices.withColumn('label',F.xxhash64('id')).collect()}
+        initial_d = labels['D']
+        pairs = [(r.src,r.dst) for r in edges.collect()]
+        for _ in range(5):
+            votes = {key:Counter() for key in labels}
+            for a,b in pairs:
+                votes[a][labels[b]] += 1
+                votes[b][labels[a]] += 1
+            labels = {key:min(votes[key], key=lambda value:(-votes[key][value],value)) if votes[key] else labels[key] for key in labels}
+        with tempfile.TemporaryDirectory() as temporary:
+            result = {r.id:r.label for r in dataframe_lpa(vertices, edges, Path(temporary)/'lpa').collect()}
+        self.assertEqual(result, labels)
+        self.assertEqual(result['D'], initial_d)
+
+    def test_c_common_join_rejects_future_and_preserves_unseen(self):
+        from pyspark.sql import functions as F
+        from src.motif.pipeline import join_system_snapshot
+        tx = self.spark.sql("SELECT * FROM VALUES (1L,'A','NEW',11L) AS t(event_id,src,dst,step)")
+        snapshot = self.spark.sql("SELECT 'A' AS id, 7L AS community_key, 10L AS as_of_step, 1L AS inDegree, 2L AS outDegree, 3L AS degree, 1.2 AS pagerank, 2L AS community_size, 0.5 AS community_cross_fraction, 4L AS community_out_transactions")
+        row = join_system_snapshot(tx, snapshot).first()
+        self.assertEqual((row.src_seen,row.dst_seen,row.same_community,row.snapshot_as_of),(1,0,0,10))
+        with self.assertRaises(ValueError):
+            join_system_snapshot(tx.withColumn('step',F.lit(10)), snapshot)
+        with self.assertRaises(ValueError):
+            join_system_snapshot(tx.withColumn('isFraud',F.lit(1)), snapshot)
+
+    def test_d_full_system_fixture_exports_all_ablations_and_replays(self):
+        import tempfile
+        import json
+        from pathlib import Path
+        from pyspark.sql import functions as F
+        from src.motif.config import AnalysisConfig, FullSystemConfig
+        from src.motif.pipeline import (start_full_system,full_system_centrality,full_system_communities,
+            full_system_motif_features,full_system_feature_table,full_system_validation,full_system_test,finalize_full_system)
+        from src.common.project_audit import verify_full_system_artifacts
+        from src.common.run_evidence import REPO_ROOT
+        # A repository path exercises spaces/Vietnamese with actual native Hadoop/ML IO.
+        parent = REPO_ROOT / 'results' / 'full_system' / 'fixtures'
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=parent, prefix='native-', ignore_cleanup_errors=True) as temporary:
+            root = Path(temporary)
+            rows=[]
+            for i in range(240):
+                a,b=i%12,(i+1)%12
+                rows.append((f'C{a}',f'C{b}',float(10+i%13),i//4+1,'TRANSFER' if i%2 else 'CASH_OUT',int(i%7==0)))
+            values=','.join(f"('{a}','{b}',{amount}D,{step}L,'{kind}',{label})" for a,b,amount,step,kind,label in rows)
+            edges=self.spark.sql('SELECT * FROM VALUES '+values+' AS e(src,dst,amount,step,type,isFraud)')
+            vertex_values=','.join(f"('C{i}','Customer',0.0D)" for i in range(12))
+            vertices=self.spark.sql('SELECT * FROM VALUES '+vertex_values+' AS v(id,account_type,balance)')
+            edges.write.parquet(str(root/'input/edges.parquet'))
+            vertices.write.parquet(str(root/'input/vertices.parquet'))
+            config=FullSystemConfig(analysis=AnalysisConfig(driver_memory='4g',tree_depth=3,minimum_leaf_rows=2))
+            run=start_full_system(self.spark,'paysim',root/'output',config,input_dir=root/'input',fixture=True)
+            full_system_centrality(run)
+            full_system_communities(run)
+            full_system_motif_features(run)
+            full_system_feature_table(run)
+            features=run.table('features')
+            self.assertEqual(features.count(),240)
+            self.assertEqual(features.where(F.col('snapshot_as_of')>=F.col('step')).count(),0)
+            full_system_validation(run)
+            metrics=full_system_test(run)
+            self.assertEqual(len(metrics),9)
+            self.assertEqual(metrics.transactions.nunique(),1)
+            finalized=finalize_full_system(run)
+            self.assertIn('PASS',set(finalized.result.astype(str)))
+            with self.assertRaises(ValueError):
+                verify_full_system_artifacts(root/'output',require_full=True)
+            report=root/'output/report.json'
+            data=json.loads(report.read_text(encoding='utf-8'))
+            data['test_metrics'][0]['TP']+=1
+            report.write_text(json.dumps(data),encoding='utf-8')
+            with self.assertRaises(ValueError):
+                verify_full_system_artifacts(root/'output',require_full=False)
+
+
+class FullDegreeComparisonTests(unittest.TestCase):
+    def test_full_distribution_keeps_isolates_and_parallel_transaction_degree(self):
+        import pandas as pd
+        from src.comparison.degree_distribution import validate_full_distribution
+        table=pd.DataFrame({'degree':[0,1,3],'account_count':[1,1,1]})
+        valid=validate_full_distribution(table,3,2)
+        self.assertAlmostEqual(valid.proportion.sum(),1.0)
+        with self.assertRaises(ValueError):
+            validate_full_distribution(table[table.degree>0],3,2)
+        with self.assertRaises(ValueError):
+            validate_full_distribution(table.assign(degree=[0,1,2]),3,2)
+
+    def test_fractional_or_duplicate_degree_bins_are_rejected(self):
+        import pandas as pd
+        from src.comparison.degree_distribution import validate_full_distribution
+        for table,vertices,edges in ((pd.DataFrame({'degree':[.5,3.5],'account_count':[1,1]}),2,2),
+                                     (pd.DataFrame({'degree':[1,1],'account_count':[2,2]}),4,2)):
+            with self.assertRaises(ValueError):
+                validate_full_distribution(table,vertices,edges)
+
+    def test_foreign_latest_directory_cannot_be_used_as_full_comparison(self):
+        import tempfile,json
+        from pathlib import Path
+        from src.comparison.degree_distribution import load_full_distributions
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);base=root/'results/full_system/paysim';base.mkdir(parents=True)
+            (base/'latest.json').write_text(json.dumps({'status':'completed','directory':str(root/'sample')}),encoding='utf-8')
+            with self.assertRaises(ValueError):
+                load_full_distributions(root)
+
+
 if __name__ == "__main__":
     unittest.main()

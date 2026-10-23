@@ -55,3 +55,46 @@ class AnalysisConfig:
 
     def as_dict(self) -> dict:
         return asdict(self)
+
+
+@dataclass(frozen=True)
+class FullSystemConfig:
+    """One declared protocol for all full-data branches and every ablation."""
+
+    analysis: AnalysisConfig = AnalysisConfig(driver_memory="5g")
+    snapshot_fractions: tuple[float, ...] = (0.2, 0.4, 0.5, 0.65, 0.8)
+    review_fractions: tuple[float, ...] = (0.001, 0.005, 0.01)
+    pagerank_iterations: int = 10
+    lpa_iterations: int = 5
+    partitions: int = 64
+
+    def __post_init__(self):
+        if self.pagerank_iterations != 10 or self.lpa_iterations != 5:
+            raise ValueError("Coursework protocol fixes PR=10 and LPA=5 iterations")
+        if self.snapshot_fractions != (0.2, *self.analysis.fold_fractions):
+            raise ValueError("Snapshots must include warm-up and every training boundary")
+        if not 16 <= self.partitions <= 128:
+            raise ValueError("Use bounded spill partitions, between 16 and 128")
+        if any(not 0 < q < 1 for q in self.review_fractions):
+            raise ValueError("Review budgets must lie strictly inside (0,1)")
+
+    def as_dict(self):
+        return asdict(self)
+
+
+CENTRALITY_COLUMNS = [f"{side}_{name}" for side in ("src", "dst")
+                      for name in ("inDegree", "outDegree", "degree", "pagerank", "seen")]
+COMMUNITY_COLUMNS = [f"{side}_{name}" for side in ("src", "dst")
+                    for name in ("community_size", "community_cross_fraction", "community_out_transactions")]
+COMMUNITY_COLUMNS += ["same_community", "community_endpoints_seen"]
+SYSTEM_FAMILY_GROUPS = {
+    "transaction_only": (),
+    "transaction_novelty": ("novelty",),
+    "transaction_centrality": ("centrality",),
+    "motif_assisted": ("motif",),
+    "transaction_community": ("community",),
+    "full_fusion": ("centrality", "motif", "community"),
+    "without_centrality": ("motif", "community"),
+    "without_motifs": ("centrality", "community"),
+    "without_community": ("centrality", "motif"),
+}

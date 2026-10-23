@@ -296,14 +296,15 @@ def main_for(dataset="paysim"):
     parser = argparse.ArgumentParser(description="Task 2: degree and PageRank")
     parser.add_argument("--input-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--full", action="store_true")
-    parser.add_argument("--driver-memory", default="4g")
+    parser.add_argument("--full", action="store_true", help="Full is the default; retained for compatibility")
+    parser.add_argument("--sample", action="store_true", help="Explicit development sample only")
+    parser.add_argument("--driver-memory", default="5g")
     parser.add_argument("--as-of-step", type=int)
     parser.add_argument("--export-features", action="store_true")
     args = parser.parse_args()
-    if args.input_dir and args.full:
-        parser.error("Choose --full or --input-dir")
-    default_input = REPO_ROOT / "data/processed" / (dataset if args.full else "sample/" + dataset)
+    if args.full and (args.input_dir or args.sample):
+        parser.error("Choose full, sample or custom input")
+    default_input = REPO_ROOT / "data/processed" / ("sample/" + dataset if args.sample else dataset)
     source = (args.input_dir or default_input).resolve()
     scope = "sample" if "sample" in source.parts else ("full" if source == REPO_ROOT / "data/processed" / dataset else "custom")
     output = (args.output_dir or REPO_ROOT / "results" / dataset / ("full" if scope == "full" else "")).resolve()
@@ -329,7 +330,12 @@ def main_for(dataset="paysim"):
             raise ValueError("Degree sum must equal twice the transaction count")
         distribution = calculate_degree_distribution(degrees)
         plot_degree_distribution(distribution.where("degree>0"), output / "degree_distribution.png", dataset, scope)
-        ranks = calculate_pagerank(graph).localCheckpoint(eager=True)
+        if scope == "sample":
+            ranks = calculate_pagerank(graph).localCheckpoint(eager=True)
+        else:
+            import uuid
+            ranks = dataframe_pagerank(graph.vertices.select("id"), graph.edges.select("src", "dst"),
+                output / ".work" / ("pagerank_"+uuid.uuid4().hex))
         owned.append(ranks)
         top10 = get_top10_pagerank(ranks, incoming, outgoing, degrees)
         # Audit labels only after the structural top ten has already been chosen.
@@ -364,6 +370,46 @@ def main_for(dataset="paysim"):
 def main():
     main_for("paysim")
 
+
+
+
+def dataframe_pagerank(vertices, edges, checkpoint_dir, iterations=10, reset_probability=0.15):
+    """Fixed-iteration GraphX-equivalent PageRank using disk-backed SQL joins.
+
+    Preserve parallel edges and self-loops; start at one, use alpha per vertex,
+    and apply the GraphX final normalization to sum=N. No dangling redistribution
+    is inserted between iterations. Checkpoints bound lineage and JVM heap.
+    """
+    from src.motif.evaluation import require_unlabelled
+    require_unlabelled(edges)
+    if iterations <= 0 or not 0 < reset_probability < 1:
+        raise ValueError("Invalid PageRank iteration/reset parameters")
+    root = Path(checkpoint_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    spark = vertices.sparkSession
+    ids = vertices.select("id")
+    links = edges.groupBy("src", "dst").agg(F.count("*").cast("double").alias("multiplicity"))
+    outgoing = links.groupBy("src").agg(F.sum("multiplicity").alias("outgoing"))
+    weights = links.join(outgoing, "src").select("src", "dst", (F.col("multiplicity") / F.col("outgoing")).alias("weight"))
+    weights.write.parquet(str(root / "weights"))
+    weights = spark.read.parquet(str(root / "weights"))
+    ranks = ids.withColumn("pagerank", F.lit(1.0))
+    for index in range(iterations):
+        incoming = (weights.join(ranks.select(F.col("id").alias("src"), "pagerank"), "src")
+            .groupBy("dst").agg(F.sum(F.col("pagerank") * F.col("weight")).alias("incoming")))
+        updated = (ids.join(incoming.withColumnRenamed("dst", "id"), "id", "left")
+            .select("id", (F.lit(reset_probability) + (1-reset_probability) * F.coalesce(F.col("incoming"), F.lit(0.0))).alias("pagerank")))
+        path = root / f"iteration_{index+1:02d}"
+        updated.write.parquet(str(path))
+        ranks = spark.read.parquet(str(path))
+        print(f"[SYSTEM] PageRank iteration {index+1}/{iterations} persisted", flush=True)
+        if index:
+            import shutil
+            shutil.rmtree(root / f"iteration_{index:02d}", ignore_errors=True)
+    totals = ranks.agg(F.count("*").alias("n"), F.sum("pagerank").alias("rank_sum")).first()
+    if not totals.n or not totals.rank_sum:
+        raise ValueError("PageRank requires nonempty vertex support")
+    return ranks.withColumn("pagerank", F.col("pagerank") * F.lit(totals.n / totals.rank_sum))
 
 if __name__ == "__main__":
     main()

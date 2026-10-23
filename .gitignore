@@ -68,3 +68,6 @@ data/processed/ibm_aml/
 results/motif/v2/
 results/project_check/
 notebooks/.graphguard-*.tmp
+
+# Full transaction-system artifacts (local, verified by notebook + manifest)
+results/full_system/

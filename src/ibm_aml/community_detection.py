@@ -38,8 +38,8 @@ from src.common.run_evidence import REPO_ROOT, write_run_evidence
 # Cấu hình đường dẫn mặc định
 # ============================================================
 
-DEFAULT_INPUT_DIR = Path("data/processed/sample/ibm_aml")
-DEFAULT_OUTPUT_DIR = Path("results/ibm_aml")
+DEFAULT_INPUT_DIR = Path("data/processed/ibm_aml")
+DEFAULT_OUTPUT_DIR = Path("results/ibm_aml/full")
 DEFAULT_CHECKPOINT_DIR = Path("checkpoints/ibm_aml_lpa")
 
 COMMUNITIES_FILENAME = "communities.csv"
@@ -78,10 +78,16 @@ def load_graph(spark, input_dir: Path) -> GraphFrame:
 # 2. Thuật toán LPA & Quản lý Checkpoint
 # ============================================================
 
-def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR):
+def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR, *, backend="graphx"):
     """
     Thực thi Label Propagation Algorithm (LPA) trên IBM AML graph.
     """
+    if backend == "dataframe":
+        import uuid
+        from src.paysim.community_detection import dataframe_lpa
+        return dataframe_lpa(graph.vertices, graph.edges.select("src", "dst"), checkpoint_dir / ("sql_"+uuid.uuid4().hex), max_iter)
+    if backend != "graphx":
+        raise ValueError("Unknown LPA backend")
     if max_iter <= 0:
         raise ValueError("max_iter must be > 0")
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -264,7 +270,7 @@ def main():
 
     spark = get_graph_session(
         app_name="IBM-AML-Task4-CommunityDetection-LPA",
-        driver_memory=args.driver_memory or ("4g" if "sample" in input_dir.parts else "6g"),
+        driver_memory=args.driver_memory or ("4g" if "sample" in input_dir.parts else "5g"),
         shuffle_partitions=8,
         checkpoint_dir=str(checkpoint_dir),
         extra_configs={"spark.master": f"local[{args.parallelism}]",
@@ -277,7 +283,7 @@ def main():
         graph = load_graph(spark, input_dir)
 
         # 2. Chạy thuật toán LPA
-        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=checkpoint_dir)
+        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=checkpoint_dir, backend="graphx" if "sample" in input_dir.parts else "dataframe")
         owned.append(lpa_vertices)
 
         # 3. Phân tích thống kê đặc trưng cộng đồng
@@ -294,7 +300,7 @@ def main():
                 COMMUNITY_SUMMARY_ALL_FILENAME, COMMUNITY_AMOUNTS_FILENAME)],
             sources=[Path(__file__), REPO_ROOT / "src/common/run_evidence.py", REPO_ROOT / "src/common/graph_utils.py",
                      REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/common/windows_runtime.py"],
-            parameters={"max_iter": args.max_iter, "backend": "graphx",
+            parameters={"max_iter": args.max_iter, "backend": "graphx" if "sample" in input_dir.parts else "dataframe_min_hash_label",
                         "parallelism": args.parallelism, "checkpoint_dir": str(checkpoint_dir)},
             metrics={"assigned_vertices": lpa_vertices.count(), "fraud_audit_posthoc": [row.asDict() for row in
                 summary_df.where("laundering_tx_count>0").orderBy(F.desc("laundering_tx_count"), "label")

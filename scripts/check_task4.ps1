@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $python = Join-Path $repo '.venv\Scripts\python.exe'
 $scope = if ($Full) { 'full' } else { 'sample' }
-if (-not $DriverMemory) { $DriverMemory = if ($Full) { '6g' } else { '4g' } }
+if (-not $DriverMemory) { $DriverMemory = if ($Full) { '5g' } else { '4g' } }
 $inputDir = if ($Full) { 'data\processed\ibm_aml' } else { 'data\processed\sample\ibm_aml' }
 $checkDir = Join-Path $repo ('results\ibm_aml\task4_check\' + $scope)
 $log = Join-Path $repo 'results\ibm_aml\check_task4.log'
@@ -19,6 +19,8 @@ $exitCode = 0
 $transcribing = $false
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
+$env:OPENBLAS_NUM_THREADS = '1'
+$env:OMP_NUM_THREADS = '1'
 
 function Invoke-CheckPython {
     param([string[]]$Arguments)

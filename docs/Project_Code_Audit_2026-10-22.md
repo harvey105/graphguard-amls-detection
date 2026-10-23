@@ -1,3 +1,26 @@
+# Checkpoint full-system — 24/10/2026
+
+**STOPPED BY USER / PUSH CHECKPOINT — chưa DONE FIXED toàn bộ full-system mới.** Lịch sử DONE FIXED22/10 bên dưới giữ đúng phạm vi khi đó. Bàn giao đầy đủ và quyền CPU mới: [agent_job.md](../agent_job.md).
+
+| Deliverable | Trạng thái thực tế |
+|---|---|
+| Full Degree/PageRank và LPA cả hai datasets | PASS; toàn bộ accounts/transactions, raw reconciliation và independent summary checks |
+| IBM full-system | PASS15/15cells,8PNG,26sourcehashes; artifacts/notebook/model replay/independent Top-K PASS |
+| PaySim full-system |8/15cells; dừng cell9/snapshot5 ởPageRank2/10; snapshots1–4 và blocks0–4 đã lưu |
+| Comparative models | IBM đủ9families/27CVfits/9frozen tests; PaySim chưa chạy validation/test |
+| Full degree-comparison producer | Code đã chuyển sang full;3light tests PASS; generation/verification thật chờ PaySim completed report |
+| Full project gate mới | PENDING; không chạy Spark nữa sau user stop |
+
+Tỷ lệ theo cells23/30≈76,7%, không phải phần trăm thời gian. No OOM/resource stop trong các lượt hoàn tất; PaySim bị đóng có chủ đích. Xác nhận0SparkJVM và21,83GiB RAM trống sau stop.
+
+IBM selected full_fusion threshold0,50: test1.017.196/1.799positives, TP532/FP5.190/FN1.267/TN1.010.207, P9,30%/R29,57%/F1 = 14,15%/AP5,67%. F1 thấp hơn baseline14,29%; giữ negative finding. Case3-cycle thật không chứng minh cycle feature gây alert: cycle/relay importance=0 trong cây đã chọn. Không sửa source hashes hoặc metrics để đổi kết luận.
+
+Ngày mai user đã cấp quyền CPU≈90%+; hiện guard vẫn là10% lịch sử. Đổi policy/parallelism và kiểm chứng native trước heavy runs, đồng thời giữ RAM5/8GiB, reserve/mutex/watchdog. Không nâng cap RAM hoặc chạy song song để ép PASS. Source thay đổi phải được xử lý provenance trung thực, có thể cần run mới. Không coi các file local Git-ignore là đã được push.
+
+---
+
+## Audit lịch sử — 22/10/2026
+
 # Kiểm tra code theo PCCV — 22/10/2026
 
 **DONE FIXED — toàn bộ lỗi code trong checklist đã sửa; hai notebook full và gate đầy đủ của `make check` đã chạy PASS trên native Windows.** Kết quả kiểm chứng code không đồng nghĩa detector fraud đã tốt hoặc đã hoàn thành fusion. Các hạn chế hiệu quả được giữ rõ bên dưới.

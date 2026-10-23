@@ -1,10 +1,16 @@
-r"""Compare sample degree distributions and export the report chart and CSV.
+r"""Compare accepted full degree distributions without starting another Spark job.
 
 Usage:
     & .\.venv\Scripts\python.exe -m src.comparison.degree_distribution
 """
 import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+import math
+import os
 from pathlib import Path
+import platform
 
 import matplotlib
 
@@ -16,6 +22,106 @@ from pyspark.sql import functions as F
 
 from src.common.graph_utils import load_graph
 from src.common.spark_session import get_graph_session
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def validate_full_distribution(table, vertices, edges):
+    """Require every account, including isolates, and transaction degree sum=2E."""
+    table = table[["degree", "account_count"]].copy()
+    for column in table:
+        values = pd.to_numeric(table[column], errors="raise")
+        if not all(math.isfinite(float(x)) and float(x).is_integer() for x in values):
+            raise ValueError("Degree bins/counts must be finite integers")
+        table[column] = values.astype("int64")
+    if table.empty or table.degree.duplicated().any() or (table.degree < 0).any() or (table.account_count <= 0).any():
+        raise ValueError("Invalid or duplicate degree bins")
+    if int(table.account_count.sum()) != vertices or int((table.degree*table.account_count).sum()) != 2*edges:
+        raise ValueError("Full degree distribution lost accounts or transaction multiplicity")
+    table["proportion"] = table.account_count / vertices
+    return table.sort_values("degree").reset_index(drop=True)
+
+
+def _sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def load_full_distributions(root=ROOT):
+    """Bind small aggregate CSVs to accepted full reports and their artifact index."""
+    from src.common.project_audit import FULL_COUNTS
+    tables, inputs = {}, {}
+    for dataset in ("paysim", "ibm_aml"):
+        base = (root/"results/full_system"/dataset).resolve()
+        pointer = json.loads((base/"latest.json").read_text(encoding="utf-8"))
+        directory = Path(pointer["directory"]).resolve()
+        if pointer["status"] != "completed" or not directory.is_relative_to(base):
+            raise ValueError("Comparison requires an accepted full run: "+dataset)
+        report_path, index_path = directory/"report.json", directory/"artifact_index.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        if (_sha(report_path) != pointer["report_sha256"] or report["status"] != "completed"
+                or report["scope"] != "full" or report["dataset"] != dataset):
+            raise ValueError("Changed/non-full comparison input: "+dataset)
+        evidence = json.loads((directory/"run.json").read_text(encoding="utf-8"))
+        recorded = {Path(item["path"]).name:item["sha256"] for item in evidence["outputs"]}
+        if evidence["status"] != "PASS" or any(recorded.get(path.name) != _sha(path) for path in (report_path,index_path)):
+            raise ValueError("Unverified report/index for comparison")
+        csv_path = directory/"degree_distribution.csv"
+        member = next(item for item in json.loads(index_path.read_text(encoding="utf-8")) if item["path"]==csv_path.name)
+        if csv_path.stat().st_size != member["bytes"] or _sha(csv_path) != member["sha256"]:
+            raise ValueError("Full degree CSV changed after acceptance")
+        vertices, edges = FULL_COUNTS[dataset]
+        if (report["integrity"]["num_vertices"],report["support"]["n"]) != (vertices,edges):
+            raise ValueError("Comparison input is not the declared full population")
+        tables[dataset] = validate_full_distribution(pd.read_csv(csv_path),vertices,edges)
+        inputs[dataset] = {"run_id":directory.name,"report_sha256":_sha(report_path),
+                           "degree_csv_sha256":_sha(csv_path),"vertices":vertices,"edges":edges}
+    return tables, inputs
+
+
+def _comparison_table(tables):
+    return pd.concat([table.assign(dataset=dataset)[["dataset","degree","account_count","proportion"]]
+                      for dataset,table in tables.items()],ignore_index=True)
+
+
+def full_comparison(output_dir=None, *, verify_only=False, root=ROOT):
+    """Render/verify full PMFs from frozen aggregates; never rescan graph data."""
+    from src.common.project_audit import configure_runtime, check_memory
+    configure_runtime()
+    directory = Path(output_dir or root/"results/comparison/full").resolve()
+    tables, inputs = load_full_distributions(root)
+    csv_path = directory/"degree_distribution_paysim_vs_ibm.csv"
+    png_path = directory/"degree_distribution_paysim_vs_ibm.png"
+    manifest_path = directory/"comparison_run.json"
+    if verify_only:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest["status"] != "PASS" or manifest["scope"] != "full" or manifest["inputs"] != inputs or manifest["source_sha256"] != _sha(__file__):
+            raise ValueError("Full comparison is stale or has different source/inputs")
+        for path in (csv_path,png_path):
+            if _sha(path) != manifest["outputs"][path.name]:
+                raise ValueError("Changed full comparison output: "+path.name)
+        expected = _comparison_table(tables).sort_values(["dataset","degree"]).reset_index(drop=True)
+        actual = pd.read_csv(csv_path).sort_values(["dataset","degree"]).reset_index(drop=True)
+        pd.testing.assert_frame_equal(actual,expected,check_dtype=False,rtol=1e-12,atol=1e-15)
+        if not png_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("Invalid comparison PNG")
+        check_memory()
+        return {"status":"PASS","scope":"full","datasets":inputs,"Spark_started":False}
+    directory.mkdir(parents=True,exist_ok=True)
+    _comparison_table(tables).to_csv(csv_path,index=False,encoding="utf-8-sig")
+    plot_degree_comparison(tables["paysim"],tables["ibm_aml"],png_path,
+                           inputs["paysim"]["vertices"],inputs["ibm_aml"]["vertices"],scope="FULL accepted graphs")
+    check_memory()
+    manifest = {"schema_version":"graphguard.full_degree_comparison.v1","status":"PASS","scope":"full",
+        "created_utc":datetime.now(timezone.utc).isoformat(),"system":platform.system(),"python":platform.python_version(),
+        "pandas":pd.__version__,"matplotlib":matplotlib.__version__,
+        "inputs":inputs,"source_sha256":_sha(__file__),"outputs":{p.name:_sha(p) for p in (csv_path,png_path)},"Spark_started":False}
+    temporary = manifest_path.with_suffix(".tmp")
+    with temporary.open("w",encoding="utf-8",newline="\n") as stream:
+        stream.write(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temporary,manifest_path)
+    return full_comparison(directory,verify_only=True,root=root)
 
 
 def calculate_degree_distribution(graph):
@@ -106,18 +212,29 @@ def plot_degree_comparison(
 
 def main():
     parser = argparse.ArgumentParser(description="Compare PaySim and IBM AML degree distributions.")
-    parser.add_argument("--input", default="data/processed/sample/paysim",
+    parser.add_argument("--sample", action="store_true", help="Explicit legacy sample Spark comparison")
+    parser.add_argument("--verify-only", action="store_true", help="Verify accepted full comparison; no Spark")
+    parser.add_argument("--input", default=None,
                         help="PaySim Parquet directory")
-    parser.add_argument("--ibm-input", default="data/processed/sample/ibm_aml")
-    parser.add_argument("--output-dir", default="results/comparison")
+    parser.add_argument("--ibm-input", default=None)
+    parser.add_argument("--output-dir", default=None)
     args = parser.parse_args()
 
+    custom = args.input is not None or args.ibm_input is not None
+    if custom and (args.sample or not args.input or not args.ibm_input):
+        parser.error("Custom mode requires both input paths and cannot use --sample")
+    if args.verify_only and (args.sample or custom):
+        parser.error("--verify-only accepts only full-system comparison")
+    if not args.sample and not custom:
+        print(json.dumps(full_comparison(args.output_dir,verify_only=args.verify_only),indent=2))
+        return
+
     # Resolve before the shared Windows runtime changes the working directory.
-    paysim_input = Path(args.input).resolve()
-    ibm_input = Path(args.ibm_input).resolve()
-    output_dir = Path(args.output_dir).resolve()
+    paysim_input = Path(args.input or "data/processed/sample/paysim").resolve()
+    ibm_input = Path(args.ibm_input or "data/processed/sample/ibm_aml").resolve()
+    output_dir = Path(args.output_dir or "results/comparison").resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
-    spark = get_graph_session("Viz-Degree-Comparison")
+    spark = get_graph_session("Viz-Degree-Comparison",driver_memory="4g" if args.sample else "5g")
     try:
         graph = load_graph(spark, str(paysim_input))
         ibm_graph = load_graph(spark, str(ibm_input))

@@ -35,8 +35,8 @@ from src.common.run_evidence import REPO_ROOT, write_run_evidence
 # Cấu hình đường dẫn mặc định
 # ============================================================
 
-DEFAULT_INPUT_DIR = Path("data/processed/sample/paysim")
-DEFAULT_OUTPUT_DIR = Path("results/paysim")
+DEFAULT_INPUT_DIR = Path("data/processed/paysim")
+DEFAULT_OUTPUT_DIR = Path("results/paysim/full")
 DEFAULT_CHECKPOINT_DIR = Path("checkpoints/paysim_lpa")
 
 COMMUNITIES_FILENAME = "communities.csv"
@@ -73,7 +73,7 @@ def load_graph(spark, input_dir: Path) -> GraphFrame:
 # 2. Thuật toán LPA & Quản lý Checkpoint
 # ============================================================
 
-def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR):
+def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR, *, backend="graphx"):
     """
     Thực thi Label Propagation Algorithm (LPA).
     
@@ -81,6 +81,11 @@ def run_lpa(graph: GraphFrame, spark, max_iter: int = 5, checkpoint_dir: Path = 
         PySpark GraphFrames thực hiện LPA lặp qua RDD/DataFrame. Nếu không setCheckpointDir,
         lineage graph sẽ phình to theo từng iteration và gây StackOverflowError trên JVM.
     """
+    if backend == "dataframe":
+        import uuid
+        return dataframe_lpa(graph.vertices, graph.edges.select("src", "dst"), checkpoint_dir / ("sql_"+uuid.uuid4().hex), max_iter)
+    if backend != "graphx":
+        raise ValueError("Unknown LPA backend")
     if max_iter <= 0:
         raise ValueError("max_iter must be positive")
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -203,7 +208,7 @@ def analyze_communities(lpa_vertices, graph: GraphFrame, top_n: int = 15):
 # ==============================================
 
 def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int = 2,
-                        checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR / "stability"):
+                        checkpoint_dir: Path = DEFAULT_CHECKPOINT_DIR / "stability", backend="graphx"):
     """Compare actual account membership, allowing arbitrary numeric label IDs."""
     from src.ibm_aml.verify_communities import compare_partition_frames
 
@@ -213,7 +218,7 @@ def check_lpa_stability(graph: GraphFrame, spark, max_iter: int = 5, runs: int =
     comparisons = []
     try:
         for index in range(runs):
-            current = run_lpa(graph, spark, max_iter, checkpoint_dir / str(index + 1))
+            current = run_lpa(graph, spark, max_iter, checkpoint_dir / str(index + 1), backend=backend)
             if first is None:
                 first = current
                 continue
@@ -288,7 +293,7 @@ def main():
 
     spark = get_graph_session(
         app_name="PaySim-Task4-CommunityDetection-LPA",
-        driver_memory="4g",
+        driver_memory="4g" if "sample" in input_dir.parts else "5g",
         shuffle_partitions=8,
         checkpoint_dir=str(DEFAULT_CHECKPOINT_DIR),
     )
@@ -301,10 +306,10 @@ def main():
         stability = []
         # Bước 2: Chạy kiểm tra stability nếu có yêu cầu từ cờ lệnh
         if args.check_stability:
-            stability = check_lpa_stability(graph, spark, max_iter=args.max_iter, runs=2)
+            stability = check_lpa_stability(graph, spark, max_iter=args.max_iter, runs=2, backend="graphx" if "sample" in input_dir.parts else "dataframe")
 
         # Bước 3: Chạy thuật toán LPA chính
-        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=DEFAULT_CHECKPOINT_DIR)
+        lpa_vertices = run_lpa(graph, spark, max_iter=args.max_iter, checkpoint_dir=DEFAULT_CHECKPOINT_DIR, backend="graphx" if "sample" in input_dir.parts else "dataframe")
         owned.append(lpa_vertices)
 
         # Bước 4: Phân tích cộng đồng và đối chiếu fraud
@@ -319,7 +324,7 @@ def main():
                 (COMMUNITIES_FILENAME, COMMUNITY_SUMMARY_FILENAME, "community_summary_all.csv")],
             sources=[Path(__file__), REPO_ROOT / "src/common/graph_utils.py",
                 REPO_ROOT / "src/common/spark_session.py", REPO_ROOT / "src/ibm_aml/verify_communities.py"],
-            parameters={"max_iter": args.max_iter, "backend": "graphx", "scope": str(input_dir),
+            parameters={"max_iter": args.max_iter, "backend": "graphx" if "sample" in input_dir.parts else "dataframe_min_hash_label", "scope": str(input_dir),
                         "stability": stability}, metrics={"assigned_vertices": lpa_vertices.count(),
                         "communities": summary_df.count(), "fraud_audit_posthoc": [row.asDict() for row in
                             summary_df.where("fraud_tx_count>0").orderBy(F.desc("fraud_tx_count"), "label")
@@ -339,6 +344,49 @@ def main():
             frame.unpersist()
         spark.stop()
 
+
+
+
+def dataframe_lpa(vertices, edges, checkpoint_dir, max_iter=5):
+    """SQL modal-neighbor LPA; deterministic minimum-label tie handling.
+
+    Messages travel both directions per physical transaction, including two
+    messages for a self-loop. Isolates retain their label. Unlike GraphX's
+    unspecified tie winner, this backend explicitly chooses the smallest label.
+    Numeric labels are run-local partition IDs and never model features.
+    """
+    from src.motif.evaluation import require_unlabelled
+    require_unlabelled(edges)
+    if max_iter <= 0:
+        raise ValueError("LPA needs positive iterations")
+    root = Path(checkpoint_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    spark = vertices.sparkSession
+    links = (edges.select(F.col("src").alias("id"), F.col("dst").alias("neighbor"))
+        .unionByName(edges.select(F.col("dst").alias("id"), F.col("src").alias("neighbor")))
+        .groupBy("id", "neighbor").agg(F.count("*").alias("multiplicity")))
+    links.write.parquet(str(root / "links"))
+    links = spark.read.parquet(str(root / "links"))
+    initial = vertices.select("id").withColumn("label", F.xxhash64("id"))
+    # Stable seed labels make min-label tie decisions independent of partition order.
+    # Check actual collision freedom rather than assuming a hash is a unique ID.
+    if initial.groupBy("label").count().where("count>1").limit(1).count():
+        raise ValueError("Initial LPA hash labels collide; refuse ambiguous partition")
+    initial.write.parquet(str(root / "iteration_00"))
+    labels = spark.read.parquet(str(root / "iteration_00"))
+    for index in range(max_iter):
+        votes = (links.join(labels.select(F.col("id").alias("neighbor"), F.col("label").alias("neighbor_label")), "neighbor")
+            .groupBy("id", "neighbor_label").agg(F.sum("multiplicity").alias("votes")))
+        winner = (votes.groupBy("id").agg(F.min(F.struct((-F.col("votes")).alias("negative_votes"), F.col("neighbor_label").alias("label"))).alias("winner"))
+            .select("id", F.col("winner.label").alias("new_label")))
+        updated = labels.join(winner, "id", "left").select("id", F.coalesce("new_label", "label").alias("label"))
+        path = root / f"iteration_{index+1:02d}"
+        updated.write.parquet(str(path))
+        labels = spark.read.parquet(str(path))
+        print(f"[SYSTEM] LPA iteration {index+1}/{max_iter} persisted", flush=True)
+        import shutil
+        shutil.rmtree(root / f"iteration_{index:02d}", ignore_errors=True)
+    return vertices.join(labels, "id")
 
 if __name__ == "__main__":
     main()

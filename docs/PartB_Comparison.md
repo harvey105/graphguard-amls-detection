@@ -1,5 +1,7 @@
 # Part B — Cross-dataset Comparison: Task 1–4
 
+> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [checkpoint](../agent_job.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
+
 Phương phụ trách tổng hợp so sánh; các nhánh dùng kết quả của Thảo/Tuệ Minh, Châu Anh, Khánh và Hoàng theo PCCV. So sánh dưới đây giữ rõ scope: core PaySim và mở rộng IBM có nhãn khác nhau; không gộp F1 thành một điểm AML chung.
 
 | Nhánh | PaySim | IBM HI-Small | Diễn giải |

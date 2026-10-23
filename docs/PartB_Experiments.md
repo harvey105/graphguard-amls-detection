@@ -1,5 +1,7 @@
 # Part B — Experiments
 
+> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [checkpoint](../agent_job.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
+
 ## Task 1 — Graph Construction (15đ)
 
 ### 1.1. Mục tiêu

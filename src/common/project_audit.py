@@ -712,12 +712,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--signals-root", type=Path)
     parser.add_argument("--signals", choices=["centrality", "community"])
+    parser.add_argument("--full-system", action="store_true", help="Full-data acceptance (default)")
+    parser.add_argument("--legacy-samples", action="store_true", help="Explicit historical/development sample audit")
     parser.add_argument("--dataset", choices=["paysim", "ibm_aml"])
     parser.add_argument("--input-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--report", type=Path, default=ROOT / "results/project_check/latest.json")
     args = parser.parse_args()
     if args.signals:
+        if not args.legacy_samples:
+            parser.error("--signals is a legacy pilot; pass --legacy-samples explicitly, or use the full-system pipeline")
         if not args.dataset:
             parser.error("--signals requires --dataset")
         from src.common.spark_session import get_graph_session
@@ -731,7 +735,7 @@ def main():
         finally:
             spark.stop()
         return
-    report = audit_project(signal_root=args.signals_root)
+    report = audit_project(signal_root=args.signals_root) if args.legacy_samples else audit_full_system()
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str) + "\n", encoding="utf-8")
     for result in report["checks"]:
@@ -739,6 +743,197 @@ def main():
     print(f"Overall: {report['status']}. Report: {args.report}")
     raise SystemExit(0 if report["status"] == "PASS" else 1)
 
+
+
+
+def verify_full_system_communities(run):
+    """Independent full SQL reconciliation; no Python collect of account lists."""
+    from pyspark.sql import functions as F
+    from src.common.graph_utils import load_graph
+    from src.ibm_aml.verify_communities import compare_values, same_keys, unique_keys
+    graph = load_graph(run.spark, str(run.input_dir))
+    assigned = run.table("communities")
+    summary = run.table("community_summary_all")
+    amounts = run.table("community_amounts_by_currency")
+    unique_keys(assigned, ["id"], "full assignments")
+    same_keys(assigned, graph.vertices, ["id"], "full assignment coverage")
+    require(not assigned.where(F.col("label").isNull()).limit(1).count(), "Null full community label")
+    members = assigned.groupBy("label").count().withColumnRenamed("count", "member_count")
+    compare_values(summary.select("label", "member_count"), members, ["label"], ["member_count"], [], "all member counts")
+    # Compute source/destination communities independently from the saved IDs.
+    raw = graph.edges.join(assigned.select(F.col("id").alias("src"), F.col("label").alias("s")), "src").join(
+        assigned.select(F.col("id").alias("dst"), F.col("label").alias("d")), "dst")
+    expected = raw.groupBy("s").agg(F.count("*").alias("total_tx_count"),
+        F.sum("isFraud").cast("long").alias("positive_tx_count"),
+        F.sum(F.when(F.col("s")==F.col("d"), 1).otherwise(0)).alias("internal_tx_count")).withColumnRenamed("s", "label")
+    expected = members.select("label").join(expected, "label", "left").fillna(0)
+    compare_values(summary, expected, ["label"], ["total_tx_count", "positive_tx_count", "internal_tx_count"], [], "all transaction counts")
+    require(not summary.where(F.col("cross_tx_count")+F.col("internal_tx_count")!=F.col("total_tx_count")).limit(1).count(), "Cross/internal totals mismatch")
+    currency = F.col("payment_currency") if run.dataset == "ibm_aml" else F.lit("PaySim unit")
+    expected_amounts = raw.withColumn("payment_currency", currency).groupBy("s", "payment_currency").agg(
+        F.count("*").alias("total_tx_count"), F.sum("amount").alias("total_tx_amount")).withColumnRenamed("s", "label")
+    compare_values(amounts, expected_amounts, ["label", "payment_currency"], ["total_tx_count"], ["total_tx_amount"], "full currency totals")
+    if run.dataset == "paysim":
+        for kind in ("Customer", "Merchant"):
+            name = kind.lower()+"_count"
+            counts = assigned.where(F.col("account_type")==kind).groupBy("label").count().withColumnRenamed("count", name)
+            counts = members.select("label").join(counts, "label", "left").fillna(0)
+            compare_values(summary, counts, ["label"], [name], [], "full account types")
+    totals = summary.agg(F.count("*").alias("communities"), F.sum("member_count").alias("accounts"),
+        F.sum("total_tx_count").alias("transactions"), F.sum("positive_tx_count").alias("positives"),
+        F.sum("internal_tx_count").alias("internal_edges"), F.sum("cross_tx_count").alias("cross_edges")).first().asDict()
+    require(totals["accounts"] == run.record["integrity"]["num_vertices"] and totals["transactions"] == run.record["support"]["n"], "Full denominator mismatch")
+    require(totals["positives"] == run.record["support"]["positives"], "Full positive coverage mismatch")
+    return totals
+
+
+def verify_full_system_artifacts(directory, require_full=True):
+    """Stream exported predictions independently and verify every artifact hash."""
+    import csv
+    import hashlib
+    import pyarrow.parquet as pq
+    from src.motif.evaluation import binary_metrics
+    from src.motif.modeling import precision_recall_curve
+    from src.motif.config import SYSTEM_FAMILY_GROUPS
+    from src.common.run_evidence import file_fingerprint
+    import pandas as pd
+    directory = Path(directory).resolve()
+    report = json.loads((directory / "report.json").read_text(encoding="utf-8"))
+    require(report["status"] == "completed" and report["schema_version"] == "graphguard.full_system.v1", "Incomplete system report")
+    require(not require_full or report["scope"] == "full", "Fixture/sample cannot pass full benchmark acceptance")
+    from src.common.run_evidence import verify_run_evidence
+    verify_run_evidence(directory / "run.json", task="Full system "+report["dataset"])
+    run = json.loads((directory / "run.json").read_text(encoding="utf-8"))
+    require(run["status"] == "PASS", "Missing execution evidence")
+    for member in run["outputs"]:
+        require(file_fingerprint(directory / Path(member["path"]).name)["sha256"] == member["sha256"], "Report/index fingerprint changed")
+    for member in json.loads((directory / "artifact_index.json").read_text(encoding="utf-8")):
+        path = (directory / member["path"]).resolve()
+        require(path.is_relative_to(directory), "Foreign artifact path")
+        require(path.stat().st_size == member["bytes"] and file_fingerprint(path)["sha256"] == member["sha256"], "Changed artifact: "+member["path"])
+    frozen = json.loads((directory / "frozen_rules.json").read_text(encoding="utf-8"))
+    digest = frozen.pop("sha256")
+    require(hashlib.sha256(json.dumps(frozen, sort_keys=True, allow_nan=False).encode()).hexdigest() == digest == report["frozen_rule_sha256"], "Frozen rule changed")
+    metrics = {row["model"]: row for row in report["test_metrics"]}
+    require(set(metrics) == set(SYSTEM_FAMILY_GROUPS), "Missing ablations")
+    expected_n = report["phases"]["frozen_test"]["test_transactions"]
+    expected_p = report["phases"]["frozen_test"]["test_positives"]
+    for family, row in metrics.items():
+        n = p = tp = fp = 0
+        bins = Counter()
+        threshold = frozen["family_rules"][family]["threshold"]
+        files = sorted((directory / "predictions" / (family+".parquet")).glob("*.parquet"))
+        require(bool(files), "Missing prediction parts")
+        for file in files:
+            for batch in pq.ParquetFile(file).iter_batches(batch_size=4096, columns=["risk_score", "alert", "isFraud"]):
+                data = batch.to_pydict()
+                for score, alert, label in zip(data["risk_score"], data["alert"], data["isFraud"]):
+                    require(label in (0, 1) and score is not None and math.isfinite(score) and 0 <= score <= 1, "Invalid score/label")
+                    require(bool(alert) == (score >= threshold), "Alert does not follow frozen validation threshold")
+                    n += 1; p += int(label); tp += int(bool(alert) and label==1); fp += int(bool(alert) and label==0)
+                    bins[(score, int(label))] += 1
+        require(n == expected_n and p == expected_p, "Different ablation population")
+        actual = binary_metrics(n, p, tp, fp)
+        for key in ("TP", "FP", "FN", "TN", "transactions", "fraud", "alerts"):
+            require(actual[key] == row[key], "Prediction confusion differs from report: "+family+"/"+key)
+        hist = pd.DataFrame([{"risk_score": score, "isFraud": label, "count": count} for (score, label), count in bins.items()])
+        _, ap = precision_recall_curve(hist)
+        require(ap is not None and math.isclose(ap, row["average_precision"], abs_tol=1e-12), "Average precision differs")
+    for name, count in (("transactions", report["support"]["n"]), ("features", report["support"]["n"]),
+                        ("communities", report["integrity"]["num_vertices"]), ("account_metrics", report["integrity"]["num_vertices"]), ("final_predictions", expected_n)):
+        actual = sum(pq.ParquetFile(p).metadata.num_rows for p in (directory / (name+".parquet")).glob("*.parquet"))
+        require(actual == count, "Full output footer coverage differs: "+name)
+    if require_full:
+        for member in report["phases"]["raw_reconciliation"]["raw_files"]:
+            require(file_fingerprint(Path(member["path"]))["sha256"]==member["sha256"], "Raw file changed after reconciliation")
+        require(report["phases"].get("raw_reconciliation",{}).get("status")=="PASS", "No full raw reconciliation")
+        require((report["integrity"]["num_vertices"],report["support"]["n"])==FULL_COUNTS[report["dataset"]], "Not the declared full dataset")
+    final_counts = Counter()
+    selected = frozen["selection"]["family"]
+    for file in (directory / "final_predictions.parquet").glob("*.parquet"):
+        for batch in pq.ParquetFile(file).iter_batches(batch_size=4096,columns=["risk_score","alert","isFraud","step","snapshot_as_of","dataset"]):
+            values = batch.to_pydict()
+            for i, score in enumerate(values["risk_score"]):
+                alert,label = values["alert"][i], values["isFraud"][i]
+                require(values["dataset"][i] == report["dataset"], "Wrong dataset in final prediction")
+                require(values["step"][i]>report["snapshot_cutoffs"][-1] and values["snapshot_as_of"][i]<values["step"][i], "Noncausal final prediction context")
+                require(not alert and score==0 if selected=="abstain" else bool(alert)==(score>=frozen["selection"]["threshold"]), "Final alert rule changed")
+                final_counts["n"]+=1; final_counts["p"]+=int(label)
+                final_counts["tp"]+=int(alert and label==1); final_counts["fp"]+=int(alert and label==0)
+    require(final_counts["n"]==expected_n and final_counts["p"]==expected_p, "Final selected output coverage mismatch")
+    final_metrics=binary_metrics(expected_n,expected_p,final_counts["tp"],final_counts["fp"])
+    require(all(final_metrics[k]==report["selected_test_metrics"][k] for k in ("TP","FP","FN","TN","alerts")), "Selected final confusion mismatch")
+    return {"status": "PASS", "scope": report["scope"], "full_transactions": report["support"]["n"],
+            "full_accounts": report["integrity"]["num_vertices"], "models": len(metrics), "test_transactions": expected_n,
+            "test_positives": expected_p, "predictions_confusion_and_AP": "independently recomputed", "artifact_hashes": "PASS"}
+
+
+
+def verify_full_system_notebook(path, directory, root=ROOT):
+    """Bind executed cells/figures/source hashes to the exact accepted run."""
+    notebook = json.loads(Path(path).read_text(encoding="utf-8"))
+    code = [c for c in notebook["cells"] if c["cell_type"] == "code"]
+    execution = notebook["metadata"].get("graphguard_execution", {})
+    require(execution.get("status") == "completed" and execution.get("completed_code_cells") == len(code), "Incomplete full-system notebook")
+    require([c["execution_count"] for c in code] == list(range(1,len(code)+1)), "Incomplete cell execution order")
+    digest = hashlib.sha256(json.dumps(["".join(c["source"]) for c in code], ensure_ascii=False).encode("utf-8")).hexdigest()
+    require(digest == notebook["metadata"].get("graphguard_executed_code_sha256"), "Notebook code changed after execution")
+    report = json.loads((Path(directory) / "report.json").read_text(encoding="utf-8"))
+    require(notebook["metadata"].get("graphguard_dataset") == report["dataset"], "Notebook/dataset mismatch")
+    hashes = notebook["metadata"].get("graphguard_source_sha256", {})
+    require(set(report["source_sha256"]) <= set(hashes), "Notebook missing executed source dependencies")
+    for name, expected in hashes.items():
+        content = (root/name).read_bytes()
+        actual = hashlib.sha256(content).hexdigest()
+        require(actual == expected or hashlib.sha256(content.replace(b"\r\n",b"\n")).hexdigest() == expected, "Notebook source changed: "+name)
+    images, directories = 0, []
+    for cell in code:
+        ast.parse("".join(cell["source"]))
+        for output in cell.get("outputs",[]):
+            require(output["output_type"] != "error", "Saved notebook error")
+            if "image/png" in output.get("data",{}):
+                require(base64.b64decode("".join(output["data"]["image/png"])).startswith(b"\x89PNG"), "Invalid figure")
+                images += 1
+            stream = output.get("text", "")
+            stream = "".join(stream) if isinstance(stream,list) else stream
+            for line in stream.splitlines():
+                if line.startswith("Full run directory: "):
+                    directories.append(Path(line.split(": ",1)[1]).resolve())
+    require(images >= 6, "Missing full-system benchmark graphs")
+    require(directories == [Path(directory).resolve()], "Notebook does not present the accepted latest run")
+    expected = {r["model"]:r for r in report["test_metrics"]}
+    tables = [rows for rows in notebook_tables(notebook) if rows and {"model","TP","FP","FN","TN","F1"} <= rows[0].keys()]
+    require(bool(tables), "Notebook missing ablation confusion metrics")
+    for rows in tables:
+        require({row["model"] for row in rows} == set(expected), "Notebook missing an ablation")
+        for row in rows:
+            for name in ("TP","FP","FN","TN"):
+                require(int(row[name]) == expected[row["model"]][name], "Notebook metric differs from accepted run")
+    return {"cells":len(code),"figures":images,"models":len(expected),"executed_source_hashes":len(hashes),"scope":"full"}
+
+
+def audit_full_system(root=ROOT):
+    """Full artifact acceptance; starts no Spark and never accepts a sample run."""
+    configure_runtime()
+    checks=[]
+    for dataset, notebook in (("ibm_aml","IBM_full_system.ipynb"),("paysim","PaySIM_full_system.ipynb")):
+        try:
+            pointer = json.loads((root/"results/full_system"/dataset/"latest.json").read_text(encoding="utf-8"))
+            require(pointer["status"] == "completed", "Latest run is not completed")
+            directory = Path(pointer["directory"]).resolve()
+            require(directory.is_relative_to((root/"results/full_system"/dataset).resolve()), "Foreign latest directory")
+            require(json.loads((directory/"report.json").read_text(encoding="utf-8"))["dataset"]==dataset, "Latest pointer dataset mismatch")
+            require(hashlib.sha256((directory/"report.json").read_bytes()).hexdigest() == pointer["report_sha256"], "Latest report changed")
+            checks.append({"check":dataset+".full_system","status":"PASS","evidence":verify_full_system_artifacts(directory)})
+            checks.append({"check":dataset+".full_notebook","status":"PASS","evidence":verify_full_system_notebook(root/"notebooks"/notebook,directory,root)})
+            check_memory()
+        except (FileNotFoundError, AuditBlocked) as error:
+            checks.append({"check":dataset+".full_acceptance","status":"BLOCKED","evidence":str(error)})
+        except Exception as error:
+            checks.append({"check":dataset+".full_acceptance","status":"FAIL","evidence":f"{type(error).__name__}: {error}"})
+    return {"schema_version":"graphguard.full_acceptance.v1","created_utc":datetime.now(timezone.utc).isoformat(),
+            "status":"PASS" if len(checks)==4 and all(c["status"]=="PASS" for c in checks) else "FAIL",
+            "scope":"Two actual full datasets, eight factorial ablations plus novelty control each, exported predictions and executed matching notebooks", "checks":checks}
 
 if __name__ == "__main__":
     main()

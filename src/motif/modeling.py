@@ -17,7 +17,7 @@ from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.functions import vector_to_array
 from pyspark.sql import DataFrame, functions as F
 
-from src.motif.config import AnalysisConfig
+from src.motif.config import AnalysisConfig, CENTRALITY_COLUMNS, COMMUNITY_COLUMNS, SYSTEM_FAMILY_GROUPS
 from src.motif.evaluation import binary_metrics, require_unlabelled
 from src.motif.features import motif_numeric_columns
 
@@ -50,25 +50,26 @@ def _prepare_amounts(features: DataFrame, scales: DataFrame) -> DataFrame:
     ).withColumn("fx_payment", (F.col("payment_currency") != F.col("receiving_currency")).cast("double"))
 
 
-def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family: str, config: AnalysisConfig) -> RiskModel:
+def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family: str, config: AnalysisConfig, *, spill_training: bool = False) -> RiskModel:
     """Fit only on the prefix, including preprocessing and class weights.
 
     sqrt(negative/positive) reduces imbalance without duplicating rows. The
     weighted leaf score is a ranking score, not a calibrated fraud probability.
     """
     require_unlabelled(features)
-    if family not in FAMILIES:
+    if family not in SYSTEM_FAMILY_GROUPS:
         raise ValueError(f"Unknown model family: {family}")
     train = features.where(F.col("step") <= train_end)
     scales = train.where(F.col("amount") > 0).groupBy("payment_currency", "type").agg(
         F.percentile_approx("amount", 0.9, 10_000).alias("training_q90")
     ).localCheckpoint(eager=True)
     names = ["type_index", "currency_index", "scaled_amount", "unseen_amount_group", "fx_payment"]
-    if family == "motif_assisted":
-        names += motif_numeric_columns(config.windows_hours)
-    available = ["event_id", "step", "type", "payment_currency", "receiving_currency", "amount"]
-    if family == "motif_assisted":
-        available += motif_numeric_columns(config.windows_hours)
+    numeric = []
+    for group in SYSTEM_FAMILY_GROUPS[family]:
+        numeric += {"motif": motif_numeric_columns(config.windows_hours),
+                    "centrality": CENTRALITY_COLUMNS, "community": COMMUNITY_COLUMNS, "novelty": ["src_seen", "dst_seen"]}[group]
+    names += numeric
+    available = ["event_id", "step", "type", "payment_currency", "receiving_currency", "amount", *numeric]
     labelled = _prepare_amounts(train.select(available), scales).join(
         truth.select("event_id", "isFraud"), "event_id"
     )
@@ -79,7 +80,9 @@ def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family
                 "positive_class_weight": weight, "status": "fitted" if 0 < p < n else "abstain: one training class"}
     if not 0 < p < n:
         return RiskModel(family, None, scales, names, metadata)
-    labelled = labelled.withColumn("_weight", F.when(F.col("isFraud") == 1, weight).otherwise(1.0)).cache()
+    from pyspark import StorageLevel
+    labelled = labelled.withColumn("_weight", F.when(F.col("isFraud") == 1, weight).otherwise(1.0)).persist(
+        StorageLevel.DISK_ONLY if spill_training else StorageLevel.MEMORY_AND_DISK)
     indexer = StringIndexer(inputCols=["type", "payment_currency"], outputCols=["type_index", "currency_index"],
                             stringOrderType="alphabetAsc", handleInvalid="keep")
     assembler = VectorAssembler(inputCols=names, outputCol="features", handleInvalid="error")
@@ -88,7 +91,7 @@ def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family
     try:
         fitted = Pipeline(stages=[indexer, assembler, tree]).fit(labelled)
     finally:
-        labelled.unpersist()
+        labelled.unpersist(blocking=True)
     return RiskModel(family, fitted, scales, names, metadata)
 
 
@@ -175,7 +178,7 @@ def choose_walk_forward_rule(fold_scores: pd.DataFrame) -> tuple[dict, pd.DataFr
         raise ValueError("Incomplete walk-forward candidate")
     # A structural rule must improve over its simpler baseline, including
     # temporal component pilots where novelty is the no-graph baseline.
-    leaderboard["_complexity"] = (~leaderboard.family.isin(["transaction_only", "novelty"])).astype(int)
+    leaderboard["_complexity"] = leaderboard.family.map(lambda name: 0 if name in ("novelty", "transaction_only") else (1 if name == "transaction_novelty" else 1+len(SYSTEM_FAMILY_GROUPS.get(name, ("signal",)))))
     leaderboard = leaderboard.sort_values(
         ["mean_F1", "worst_F1", "FP", "_complexity", "threshold"], ascending=[False, False, True, True, False]
     ).drop(columns="_complexity").reset_index(drop=True)
