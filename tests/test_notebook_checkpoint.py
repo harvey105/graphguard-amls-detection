@@ -10,6 +10,22 @@ from scripts import run_n4_notebook as runner
 
 
 class CheckpointTests(unittest.TestCase):
+    def test_visible_kernel_matches_python_and_rejects_changed_notebook_logic(self):
+        from src.common.project_audit import verify_notebook_source_copies
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "kernel.py").write_text("def update(x):\n    return x + 1\n", encoding="utf-8")
+            notebook = {"metadata": {"graphguard_source_copies": [
+                {"cell_id": "algorithm", "path": "kernel.py", "name": "update"}]},
+                "cells": [{"id": "algorithm", "cell_type": "code", "source": ["def update(x):\n    return x + 1\n"]}]}
+            path = root / "presentation.ipynb"
+            path.write_text(json.dumps(notebook), encoding="utf-8")
+            self.assertEqual(verify_notebook_source_copies(path, root)["matched_definitions"], 1)
+            notebook["cells"][0]["source"] = ["def update(x):\n    return x + 2\n"]
+            path.write_text(json.dumps(notebook), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "logic differs"):
+                verify_notebook_source_copies(path, root)
+
     def test_completion_records_executed_hashes_and_rejects_midrun_edits(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

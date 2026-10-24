@@ -436,7 +436,8 @@ class NativeFullSystemTests(unittest.TestCase):
         from pyspark.sql import functions as F
         from src.motif.config import AnalysisConfig, FullSystemConfig
         from src.motif.pipeline import (start_full_system,full_system_centrality,full_system_communities,
-            full_system_motif_features,full_system_feature_table,full_system_validation,full_system_test,finalize_full_system)
+            full_system_motif_features,full_system_feature_table,full_system_validation,full_system_test,finalize_full_system,
+            full_system_motif_benchmark,full_system_reliability)
         from src.common.project_audit import verify_full_system_artifacts
         from src.common.run_evidence import REPO_ROOT
         # A repository path exercises spaces/Vietnamese with actual native Hadoop/ML IO.
@@ -455,7 +456,26 @@ class NativeFullSystemTests(unittest.TestCase):
             edges.write.parquet(str(root/'input/edges.parquet'))
             vertices.write.parquet(str(root/'input/vertices.parquet'))
             config=FullSystemConfig(analysis=AnalysisConfig(driver_memory='4g',tree_depth=3,minimum_leaf_rows=2))
-            run=start_full_system(self.spark,'paysim',root/'output',config,input_dir=root/'input',fixture=True)
+            # Execute the exact visible notebook definitions, not a second demo implementation.
+            import ast
+            import __future__
+            from functools import partial
+            notebook=json.loads((REPO_ROOT/'notebooks/PaySIM_full_system.ipynb').read_text(encoding='utf-8'))
+            namespace,visible={},{}
+            copied={item['name'] for item in notebook['metadata']['graphguard_source_copies']}
+            for cell in notebook['cells']:
+                if cell['cell_type']!='code' or not any(item['cell_id']==cell['id'] for item in notebook['metadata']['graphguard_source_copies']):
+                    continue
+                nodes=[node for node in ast.parse(''.join(cell['source'])).body if isinstance(node,(ast.Import,ast.ImportFrom,ast.FunctionDef,ast.ClassDef))]
+                exec(compile(ast.Module(body=nodes,type_ignores=[]),'<visible-notebook-kernel>','exec',
+                             flags=__future__.annotations.compiler_flag),namespace)
+                visible.update({node.name:namespace[node.name] for node in nodes if isinstance(node,(ast.FunctionDef,ast.ClassDef))})
+            namespace.update(visible)
+            namespace['pd']=__import__('pandas')
+            kernels={name:fn for name,fn in visible.items() if name in copied}
+            kernels['build_motif_features']=partial(visible['build_motif_features'],
+                cycle_builder=visible['build_temporal_cycle_features'],topology_builder=visible['find_topological_cycles'])
+            run=start_full_system(self.spark,'paysim',root/'output',config,input_dir=root/'input',fixture=True,kernels=kernels)
             full_system_centrality(run)
             full_system_communities(run)
             full_system_motif_features(run)
@@ -467,6 +487,14 @@ class NativeFullSystemTests(unittest.TestCase):
             metrics=full_system_test(run)
             self.assertEqual(len(metrics),9)
             self.assertEqual(metrics.transactions.nunique(),1)
+            coverage=full_system_motif_benchmark(run)
+            self.assertEqual(set(coverage.scope),{'full','test'})
+            stability=full_system_reliability(run)
+            self.assertEqual(len(stability),9)
+            # Same-source resume verifies file hashes before reusing full phases.
+            resumed=start_full_system(self.spark,'paysim',config=config,input_dir=root/'input',
+                fixture=True,resume_from=root/'output')
+            self.assertEqual(full_system_feature_table(resumed)['rows'],240)
             finalized=finalize_full_system(run)
             self.assertIn('PASS',set(finalized.result.astype(str)))
             with self.assertRaises(ValueError):

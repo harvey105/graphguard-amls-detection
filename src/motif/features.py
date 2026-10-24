@@ -198,47 +198,58 @@ def resolve_star_witness(features: DataFrame, event_id: int, spec: DatasetSpec,
     return eligible.where((F.col("dst") == current.src) & (F.col("src") != current.dst))
 
 
-def build_motif_features(features: DataFrame, vertices: DataFrame, spec: DatasetSpec, windows_hours: tuple[int, ...]) -> DataFrame:
-    """Unified label-blind API: stars + reciprocal + causal three-account cycles."""
+def materialize_motif_stage(frame, directory, name):
+    """Truncate SQL lineage on disk, never cache deserialized UnsafeRows."""
+    from pathlib import Path
+    path = Path(directory) / name
+    frame.write.parquet(str(path))
+    return frame.sparkSession.read.parquet(str(path))
+
+
+def temporary_motif_directory():
+    """Legacy callers get a private disk directory cleaned up at process exit."""
+    import atexit
+    import shutil
+    import tempfile
+    directory = tempfile.mkdtemp(prefix="graphguard-motif-disk-")
+    atexit.register(shutil.rmtree, directory, ignore_errors=True)
+    return directory
+
+
+def build_motif_features(features: DataFrame, vertices: DataFrame, spec: DatasetSpec,
+                         windows_hours: tuple[int, ...], *, cycle_builder=None,
+                         topology_builder=None, checkpoint_dir=None) -> DataFrame:
+    """Label-blind motifs with disk-backed stages and bounded heap residency."""
     require_unlabelled(features)
     from src.ibm_aml.motif_finding import build_temporal_cycle_features, find_topological_cycles
-
-    owned = []
-    try:
-        print("Features: star histories via expiry-prefix sums", flush=True)
-        stars = build_star_features(features, spec, windows_hours).localCheckpoint(eager=True)
-        owned.append(stars)
-        print("Features: reciprocal and same-partner histories", flush=True)
-        reciprocal = build_reciprocal_features(features, spec, windows_hours).localCheckpoint(eager=True)
-        owned.append(reciprocal)
-        combined = features.join(stars, "event_id", "left").join(reciprocal, "event_id", "left")
-        for hours in windows_hours:
-            # Subtract same-partner paths so reciprocal A->B->A is not counted
-            # as a three-account relay. Every count remains a physical-row count.
-            for family, subtract in (("fanin", "same_partner_count"), ("fanout", "same_partner_count"),
-                                     ("relay", "reverse_relay_count")):
-                combined = combined.withColumn(f"{family}_{hours}h", F.greatest(
-                    F.coalesce(F.col(f"{family}_{hours}h"), F.lit(0))
-                    - F.coalesce(F.col(f"{subtract}_{hours}h"), F.lit(0)), F.lit(0)))
-        print("Features: directed topology and chronological cycle evidence", flush=True)
-        topology = find_topological_cycles(vertices, features).localCheckpoint(eager=True)
-        owned.append(topology)
-        evidence = build_temporal_cycle_features(topology, features).withColumn(
-            "gap_seconds", F.col("gap_seconds") * spec.seconds_per_step
-        ).where(F.col("gap_seconds") <= max(windows_hours) * 3600)
-        cycles = evidence.groupBy("event_id").agg(
-            F.count("*").cast("double").alias("cycle3_count"),
-            F.max("amount_ratio").alias("cycle3_best_ratio"),
-            F.min("gap_seconds").alias("cycle3_min_gap_seconds"),
-            F.min(F.struct("first_event_id", "second_event_id")).alias("cycle3_witness"),
-        )
-        # Ratio/gap are separate aggregates; witness is one real path, not a
-        # certificate that both extrema came from the same transaction triple.
-        numeric = motif_numeric_columns(windows_hours)
-        return combined.join(cycles, "event_id", "left").fillna(0, subset=numeric).localCheckpoint(eager=True)
-    finally:
-        for frame in owned:
-            frame.unpersist(blocking=True)
+    root = checkpoint_dir or temporary_motif_directory()
+    print("Features: star histories via expiry-prefix sums (disk checkpoint)", flush=True)
+    stars = materialize_motif_stage(build_star_features(features, spec, windows_hours), root, "stars")
+    print("Features: reciprocal and same-partner histories (disk checkpoint)", flush=True)
+    reciprocal = materialize_motif_stage(build_reciprocal_features(features, spec, windows_hours), root, "reciprocal")
+    combined = features.join(stars, "event_id", "left").join(reciprocal, "event_id", "left")
+    for hours in windows_hours:
+        # A->B->A is reciprocal, not a relay involving three distinct accounts.
+        for family, subtract in (("fanin", "same_partner_count"), ("fanout", "same_partner_count"),
+                                 ("relay", "reverse_relay_count")):
+            combined = combined.withColumn(f"{family}_{hours}h", F.greatest(
+                F.coalesce(F.col(f"{family}_{hours}h"), F.lit(0))
+                - F.coalesce(F.col(f"{subtract}_{hours}h"), F.lit(0)), F.lit(0)))
+    print("Features: directed topology and chronological cycle evidence (disk checkpoint)", flush=True)
+    topology = materialize_motif_stage(
+        (topology_builder or find_topological_cycles)(vertices, features), root, "topology")
+    evidence = (cycle_builder or build_temporal_cycle_features)(topology, features).withColumn(
+        "gap_seconds", F.col("gap_seconds") * spec.seconds_per_step
+    ).where(F.col("gap_seconds") <= max(windows_hours) * 3600)
+    cycles = evidence.groupBy("event_id").agg(
+        F.count("*").cast("double").alias("cycle3_count"),
+        F.max("amount_ratio").alias("cycle3_best_ratio"),
+        F.min("gap_seconds").alias("cycle3_min_gap_seconds"),
+        F.min(F.struct("first_event_id", "second_event_id")).alias("cycle3_witness"))
+    # Ratio/gap extrema may come from different paths; witness is one real path.
+    numeric = motif_numeric_columns(windows_hours)
+    result = combined.join(cycles, "event_id", "left").fillna(0, subset=numeric)
+    return materialize_motif_stage(result, root, "features")
 
 
 def motif_numeric_columns(windows_hours: tuple[int, ...]) -> list[str]:

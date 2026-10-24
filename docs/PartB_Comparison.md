@@ -1,6 +1,61 @@
+# So sánh hai full datasets — kết quả mới đã nghiệm thu
+
+| Dataset | Family | Precision | Recall | F1 | AP | Alerts |
+| --- | --- | --- | --- | --- | --- | --- |
+| IBM AML | transaction_only | 9.07% | 48.30% | 15.27% | 5.62% | 9,584 |
+| IBM AML | full_fusion [selected] | 10.09% | 27.79% | 14.80% | 5.87% | 4,956 |
+| PaySim | transaction_only | 81.01% | 19.67% | 31.65% | 17.00% | 1,032 |
+| PaySim | full_fusion | 58.31% | 26.00% | 35.96% | 28.98% | 1,895 |
+| PaySim | validation-selected: without_centrality | 58.12% | 26.09% | 36.02% | 26.58% | 1,908 |
+
+IBM target là laundering; PaySim target là fraud. Chỉ so sánh các family trên cùng test của từng dataset; không gộp F1 hai datasets hoặc xem khác biệt F1 là một thuật toán tốt hơn trên cùng bài toán.
+
+Chi tiết9 families, coverage, temporal metrics, review budgets và runtime nằm ở[PartB_Experiments.md](PartB_Experiments.md). Hai full notebooks có code/kernel thực thi và embedded graphs.
+
+## IBM AML — đóng góp có điều kiện của graph features
+
+| Contrast | Enhanced | Reference | ΔF1 | ΔAP |
+| --- | --- | --- | --- | --- |
+| motif_alone | motif_assisted | transaction_only | -0.00166 | +0.00045 |
+| centrality_alone | transaction_centrality | transaction_only | +0.00155 | +0.00212 |
+| community_alone | transaction_community | transaction_only | +0.00000 | +0.00000 |
+| all_graph | full_fusion | transaction_only | -0.00465 | +0.00247 |
+| motif_in_fusion | full_fusion | without_motifs | -0.00227 | -0.00088 |
+| centrality_in_fusion | full_fusion | without_centrality | -0.00298 | +0.00202 |
+| community_in_fusion | full_fusion | without_community | -0.00713 | +0.00040 |
+
+Mỗi family có threshold được chọn trên cùng validation budget. Các chênh lệch này là matched ablation của toàn pipeline, không phải causal attribution hoặc bằng chứng statistical significance.
+
+## PaySim — đóng góp có điều kiện của graph features
+
+| Contrast | Enhanced | Reference | ΔF1 | ΔAP |
+| --- | --- | --- | --- | --- |
+| motif_alone | motif_assisted | transaction_only | +0.04364 | +0.09581 |
+| centrality_alone | transaction_centrality | transaction_only | +0.05118 | +0.05713 |
+| community_alone | transaction_community | transaction_only | +0.05392 | +0.03289 |
+| all_graph | full_fusion | transaction_only | +0.04310 | +0.11978 |
+| motif_in_fusion | full_fusion | without_motifs | -0.00808 | +0.06266 |
+| centrality_in_fusion | full_fusion | without_centrality | -0.00054 | +0.02397 |
+| community_in_fusion | full_fusion | without_community | +0.00000 | +0.00000 |
+
+Mỗi family có threshold được chọn trên cùng validation budget. Các chênh lệch này là matched ablation của toàn pipeline, không phải causal attribution hoặc bằng chứng statistical significance.
+
+## Những khác biệt cần giải thích
+
+- PaySim dùng simulation hours và một đơn vị amount; IBM có timestamp/currency. Không cộng nominal currencies.
+- Zero cycle/relay fraud coverage của PaySim là negative finding; không sửa labels hoặc cấu trúc để ép thành vòng laundering.
+- LPA label partition không phải fraud class. Internal edges0 không đồng nghĩa toàn bộ fraud labels0.
+- Full fusion không mặc định thắng baseline; giữ lựa chọn validation và báo cả trade-off P/R/F1/AP cùng temporal variation.
+- Giới hạn: synthetic data, reused internal holdout, nominal row-level Wilson CI chưa điều chỉnh dependence; GPU chưa được backend dùng.
+
+
+---
+
+## Tài liệu / kết quả lịch sử theo scope khi ghi
+
 # Part B — Cross-dataset Comparison: Task 1–4
 
-> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [checkpoint](../agent_job.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
+> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [hướng dẫn code và notebook](Code_Explainer.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
 
 Phương phụ trách tổng hợp so sánh; các nhánh dùng kết quả của Thảo/Tuệ Minh, Châu Anh, Khánh và Hoàng theo PCCV. So sánh dưới đây giữ rõ scope: core PaySim và mở rộng IBM có nhãn khác nhau; không gộp F1 thành một điểm AML chung.
 

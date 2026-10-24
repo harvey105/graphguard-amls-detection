@@ -1,118 +1,95 @@
-# Code Explainer — GraphGuard
+# Code Explainer — GraphGuard full system
 
-Giải thích code từng Part bằng ngôn ngữ đơn giản, phục vụ Q&A cuối kỳ.
+Hướng dẫn đọc code từ input đến kết quả cuối. Hai notebook cùng kiến trúc, chạy riêng từng dataset và giữ một transaction index chung cho mọi nhánh trong dataset đó.
 
-**Người viết:** N1 (Lead)
-**Cập nhật:** 25/09/2026
+## 1. Bắt đầu từ notebook
 
----
+| Nội dung | [IBM notebook](../notebooks/IBM_full_system.ipynb) — cell | [PaySim notebook](../notebooks/PaySIM_full_system.ipynb) — cell |
+|---|---|---|
+| Runtime, protocol, edge contract và full index | 1–4 | 1–4 |
+| Full raw reconciliation | 5 | 5 |
+| Degree/PageRank kernels và full analytics | 6–8 | 6–8 |
+| LPA kernel và community profiles | 9–10 | 9–10 |
+| Motif queries và baseline | 11–12 | 11–13 |
+| Causal motif kernels, disk stages và coverage | 13–20 | 14–21 |
+| Historical snapshots và common feature table | 21–23 | 22–24 |
+| Preprocessing, weighted tree, scoring và metrics | 24–28 | 25–29 |
+| Walk-forward validation, khóa family/ngưỡng | 29 | 30 |
+| Frozen test, models và predictions | 30 | 31 |
+| Benchmark, PR curve và review budgets | 31 | 32 |
+| Temporal reliability, intervals và importance | 32 | 33 |
+| TP/FP/FN examples và witness | 33 | 34 |
+| Independent acceptance và runtime benchmark | 34 | 35 |
+| Đóng session | 35 | 36 |
 
-## Part 1 — Data Foundation
+Đây là số **code cells**; Markdown giải thích nằm xen giữa. Notebook chứa định nghĩa kernel quan trọng và truyền chúng vào pipeline để thực thi. Verifier đối chiếu AST với `.py`, rồi kiểm tra execution order, saved outputs và source hashes.
 
-### File `src/paysim/etl_mapping.py`
-- **Ai viết:** Person 2 — phụ trách ETL PaySim.
-- **Làm gì:** Đổi bảng giao dịch PaySim thành hai bảng đỉnh và cạnh cho GraphFrames.
-- **Input:** Bảng giao dịch thô `raw_df`.
-- **Output:** `vertices_df` gồm `id`, `account_type`, `balance`; `edges_df` gồm `src`, `dst`, `amount`, `step`, `type`, `isFraud`.
+## 2. Raw → graph → một transaction index
 
-**Logic chính:**
-1. Gom `nameOrig` và `nameDest` thành danh sách tài khoản duy nhất.
-2. Với 1.769 tài khoản vừa gửi vừa nhận, dùng `F.max_by("balance", "step")` để lấy số dư ở lần xuất hiện có `step` lớn nhất; dùng `newbalance*` vì đó là số dư sau giao dịch và phản ánh trạng thái cuối.
-3. Suy ra loại tài khoản từ ký tự đầu của mã: `C` là Customer, `M` là Merchant.
-4. Đổi tên cột giao dịch thành `src`/`dst`; giữ `step` là số nguyên, không đổi thành ngày giờ.
-5. Giữ thêm `type` để tìm relay `TRANSFER → CASH_OUT`, vì PaySim không có chu trình 3 đỉnh; giữ `isFraud` để đối chiếu với nhãn gian lận thật.
+- [PaySim mapping](../src/paysim/etl_mapping.py): `build_vertices_df`, `build_edges_df`; đổi origin/destination thành `src`/`dst`, giữ type, amount, simulation hour và nhãn.
+- [IBM ETL](../src/ibm_aml/etl.py): `build_ibm_vertices`, `build_ibm_edges`; tạo bank/account IDs, timestamp, currency, payment format và target laundering.
+- [Graph utilities](../src/common/graph_utils.py): `load_graph`, `save_graph`, `check_integrity`.
+- [Pipeline](../src/motif/pipeline.py): `start_full_system` tạo index cho từng physical row; `full_system_raw_reconciliation` đối chiếu raw mapping và Parquet bằng multiset hai chiều.
 
-**Câu hỏi thầy có thể hỏi:**
-- "Tại sao dùng `max_by` thay vì lấy dòng bất kỳ?" → Vì cần số dư ở giao dịch cuối của mỗi tài khoản; `max_by` lấy giá trị đi cùng `step` lớn nhất và gọn hơn window function.
-- "Vì sao dùng `newbalance*`, không dùng `oldbalance*`?" → `newbalance*` là số dư sau giao dịch cuối, còn `oldbalance*` vẫn là trạng thái trước giao dịch đó.
-- "Tại sao `step` không đổi thành datetime?" → `step` chỉ là giờ mô phỏng từ 1 đến 744, không phải thời gian thực nên giữ nguyên số nguyên.
+`event_id` phân biệt từng physical transaction, kể cả những dòng có cùng nội dung. `event_key` phục vụ tie-breaking và không chứa nhãn. Các nhánh dùng cùng index để join và đánh giá.
 
-### File `src/paysim/export_parquet.py`
-- **Ai viết:** Person 2 — Task 2.4, xuất dữ liệu và kiểm tra chất lượng.
-- **Làm gì:** Đọc CSV PaySim, tạo graph tables, kiểm tra rồi lưu thành Parquet.
-- **Input:** CSV PaySim tại `data/raw/paysim/` hoặc đường dẫn raw dự phòng.
-- **Output:** Parquet đầy đủ trong `data/processed/paysim/` và sample khoảng 100.000 cạnh trong `data/processed/sample/paysim/`.
+## 3. Degree/PageRank và communities
 
-**Logic chính:**
-1. Đọc CSV bằng schema cố định, tránh Spark tự đoán sai kiểu dữ liệu.
-2. Gọi hai hàm ETL, cache kết quả và kiểm tra số đỉnh, số cạnh, null và cạnh treo.
-3. Xác nhận có 9.073.900 đỉnh, 6.362.620 cạnh và số cạnh bằng số dòng raw.
-4. Ghi Parquet nén Snappy; tạo sample cạnh rồi lấy đúng các đỉnh liên quan để sample không bị thiếu đỉnh.
-5. Đọc lại Parquet từ đĩa, đếm lại và in schema để xác nhận dữ liệu đã ghi đúng.
+| Thành phần | Source / hàm chính | Vai trò |
+|---|---|---|
+| Degree | [metrics.py](../src/paysim/metrics.py): `account_degree_metrics` | Đếm in/out degree, giữ mọi account; kiểm tra tổng degree = 2E |
+| PageRank | [metrics.py](../src/paysim/metrics.py): `pagerank_update`, `dataframe_pagerank` | 10 vòng, reset 0,15, giữ multiplicity và normalize tổng rank = N |
+| LPA | [community_detection.py](../src/paysim/community_detection.py): `lpa_update`, `dataframe_lpa` | 5 vòng neighbor voting, message hai chiều, tie chọn nhãn nhỏ nhất |
+| Full exports | [pipeline.py](../src/motif/pipeline.py): `full_system_centrality`, `full_system_communities` | All-account metrics, assignments và profiles theo community/currency |
+| Independent checks | [project_audit.py](../src/common/project_audit.py): `verify_full_system_communities` | Đối chiếu membership và transaction totals bằng phép tính độc lập |
 
-**Câu hỏi thầy có thể hỏi:**
-- "Làm sao biết có 0 dangling edges?" → Dùng `left_anti` join cạnh với bảng đỉnh ở cả `src` và `dst`; kết quả cả hai phía đều bằng 0 mới đạt.
-- "Vì sao phải đọc lại Parquet sau khi ghi?" → Để kiểm tra file thực sự trên đĩa, không chỉ kiểm tra DataFrame còn nằm trong bộ nhớ.
-- "Vì sao sample phải lấy cả vertices?" → Mỗi cạnh phải có đỉnh nguồn và đích tương ứng; nếu chỉ lấy cạnh thì có thể tạo graph thiếu đỉnh.
+Các full backends được dùng chung cho cả hai datasets; [IBM metrics adapter](../src/ibm_aml/metrics.py) và [IBM community adapter](../src/ibm_aml/community_detection.py) giữ entry point riêng. Community ID là mã phân hoạch; fraud counts trong phần mô tả là hậu kiểm bằng nhãn.
 
-### File `src/paysim/graph_analysis.py`
-- **Ai viết:** Person 2 và Person 1 — đồng sở hữu Task 1.
-- **Làm gì:** Tạo GraphFrame và xác nhận graph PaySim hoạt động đúng.
-- **Input:** Parquet đã xuất, hoặc CSV raw khi dùng `--from-raw`; có chế độ `--sample`.
-- **Output:** GraphFrame, báo cáo schema/số lượng, kiểm tra raw và các metric degree cơ bản.
+## 4. Motifs và features đúng thời điểm
 
-**Logic chính:**
-1. Khởi tạo Spark có GraphFrames; tự chọn gói JVM phù hợp với phiên bản Spark đang cài.
-2. Đọc Parquet hoặc chạy ETL trực tiếp từ CSV, sau đó tạo `GraphFrame(vertices_df, edges_df)`.
-3. Kiểm tra cột bắt buộc, số lượng đỉnh/cạnh hoặc tính toàn vẹn của sample.
-4. Khi chạy `--from-raw`, lấy vài cạnh trong graph và tìm dòng giao dịch tương ứng trong CSV gốc.
-5. Chạy thử `inDegrees` và `outDegrees` để chứng minh GraphFrames thật sự hoạt động.
+[features.py](../src/motif/features.py) tổ chức code theo từng phép tính:
 
-**Câu hỏi thầy có thể hỏi:**
-- "Verify với raw CSV thế nào?" → Với `--from-raw`, mỗi cạnh mẫu được đối chiếu theo `src`, `dst`, `step` và `amount` với CSV gốc.
-- "Vì sao sample không so với số đỉnh cố định?" → Sample lấy ngẫu nhiên nên số dòng thay đổi; thay vào đó kiểm tra mọi đầu mút cạnh đều có trong vertices.
-- "Tại sao cần GraphFrame thay vì chỉ DataFrame?" → GraphFrame hiểu riêng bảng đỉnh/cạnh và cung cấp phép đo như in-degree, out-degree.
+- `_sweep_counts`: activation/expiry events và prefix sums cho cửa sổ 24/168 giờ.
+- `build_star_features`: sender/receiver history, fan-in/out và typed relay.
+- `build_reciprocal_features`: lịch sử hai chiều và same-partner counts.
+- `build_motif_features`: kết hợp các nhóm, giữ một row cho mỗi giao dịch.
+- `materialize_motif_stage`: ghi/đọc Parquet để cắt lineage trên đĩa.
 
-### File `src/common/spark_session.py`
-- **Ai viết:** Person 2 — tiện ích Spark dùng chung cho PaySim và IBM AML.
-- **Làm gì:** Tạo SparkSession đã gắn GraphFrames và cấu hình phù hợp cho dự án.
-- **Input:** Tên ứng dụng và tùy chọn bộ nhớ, số partition, checkpoint, cấu hình thêm.
-- **Output:** Một `SparkSession` sẵn sàng chạy GraphFrames.
+[IBM motif module](../src/ibm_aml/motif_finding.py) có `find_topological_cycles` và `build_temporal_cycle_features`: tìm account triples rồi ghép các giao dịch theo thứ tự thời gian và currency. Kernel này cũng dùng được cho PaySim qua cùng edge contract; đơn vị thời gian lấy từ `DatasetSpec`.
 
-**Logic chính:**
-1. Chuẩn bị runtime Windows trước khi Spark chạy.
-2. Dựa vào phiên bản PySpark để chọn đúng tọa độ GraphFrames Spark 3 hoặc Spark 4.
-3. Đặt driver memory, số partition, nén Parquet và các tối ưu AQE.
-4. Giảm log xuống mức WARN để kết quả dễ đọc.
-5. Nếu có `checkpoint_dir`, tạo thư mục và đăng ký cho các thuật toán lineage sâu như LPA/Connected Components.
+[PaySim motif module](../src/paysim/motif_finding.py) có `find_relays`; [toy cycle module](../src/motif/toy_cycle.py) định nghĩa GraphFrames pattern ba đỉnh. Baseline queries được trình bày riêng với causal features của detector.
 
-**Câu hỏi thầy có thể hỏi:**
-- "Tại sao phải chọn coordinate theo phiên bản Spark?" → GraphFrames phụ thuộc phiên bản Spark và Scala; chọn đúng giúp JVM tìm đúng gói tương thích.
-- "Checkpoint dùng để làm gì?" → Lưu trạng thái trung gian, tránh lineage quá dài gây lỗi khi thuật toán lặp nhiều vòng.
-- "Gọi `get_graph_session` nhiều lần có đổi cấu hình không?" → Không chắc; `getOrCreate()` có thể trả session cũ, nên muốn đổi cấu hình phải dừng session trước.
+## 5. Snapshots → feature fusion → model
 
-### File `src/common/graph_utils.py`
-- **Ai viết:** Tiện ích dùng chung của nhóm, do Person 2 duy trì.
-- **Làm gì:** Đọc, ghi và kiểm tra tính toàn vẹn của GraphFrame cho cả hai dataset.
-- **Input:** SparkSession, thư mục Parquet hoặc một GraphFrame.
-- **Output:** GraphFrame, các file Parquet, hoặc báo cáo kiểm tra dạng dictionary.
+[Pipeline](../src/motif/pipeline.py) dùng `historical_system_snapshot`, `join_system_snapshot` và `full_system_feature_table` để tạo Degree/PageRank và LPA từ các prefix quá khứ. Mỗi decision row phải có `snapshot_as_of < step`; block warm-up có defaults và seen flags được khai báo rõ.
 
-**Logic chính:**
-1. `load_graph` kiểm tra đủ `vertices.parquet` và `edges.parquet`, rồi tạo GraphFrame.
-2. `save_graph` ghi hai bảng ra thư mục đích bằng Parquet Snappy.
-3. `check_integrity` đếm đỉnh/cạnh, tìm null và tìm cạnh có `src` hoặc `dst` không tồn tại.
-4. Hàm cũng đếm self-loop; PaySim kỳ vọng 0, còn IBM AML có thể có self-loop.
-5. Kết quả trả về dạng dictionary và có thể in báo cáo PASS/FAIL; nên cache DataFrame trước vì hàm gọi nhiều phép `count()`.
+[Config](../src/motif/config.py) định nghĩa windows, folds, threshold grid và `SYSTEM_FAMILY_GROUPS`. **T** là thông tin giao dịch; **C/M/L** lần lượt là centrality, motifs và community. Có tám tổ hợp C/M/L trên nền T, thêm một transaction+novelty control, tổng chín families.
 
-**Câu hỏi thầy có thể hỏi:**
-- "`left_anti` dùng để kiểm tra gì?" → Nó giữ lại các cạnh không tìm thấy đỉnh tương ứng, nên đếm được dangling edges.
-- "`dangling_edges` có thể đếm trùng không?" → Có về mặt lý thuyết nếu cùng một cạnh thiếu cả hai đầu; vì vậy hàm in riêng dangling ở phía nguồn và phía đích.
-- "Vì sao phải cache trước khi kiểm tra?" → Mỗi `count()` là một hành động Spark; cache giúp không phải đọc và tính lại toàn bộ pipeline nhiều lần.
+[Modeling](../src/motif/modeling.py) chứa:
 
-## Part 2 — Structural & Motif
+| Hàm | Code cần giải thích |
+|---|---|
+| `prepare_training_prefix` | Fit amount q90/category indexer chỉ trên training prefix; join truth và materialize một lần cho chín trees |
+| `family_feature_names` | Explicit feature allowlists cho từng family |
+| `fit_prepared_model` | VectorAssembler + weighted decision tree; depth 5, min-leaf 50, seed 2026 |
+| `score_transactions` | Transform features không có nhãn bằng model đã fit |
+| `frozen_prediction` | Tạo alert theo ngưỡng đã khóa; gắn truth sau scoring |
+| `metrics_at_threshold` | Tính TP/FP/FN/TN, precision, recall và F1 |
+| `precision_recall_curve` | Gộp score ties để tính PR curve và exact average precision |
 
-**Placeholder — chờ N4/N6 bổ sung.**
+## 6. Benchmark, reliability và chứng cứ
 
-Nội dung cần bổ sung: giải thích degree distribution, PageRank, motif/relay `TRANSFER → CASH_OUT`, cách đọc biểu đồ và cách đối chiếu `isFraud`.
+`full_system_validation` chạy ba expanding folds, chọn family/ngưỡng theo validation rồi lưu frozen rule. `full_system_test` refit đến cutoff 80%, đánh giá phần sau cutoff và export cả chín phương án. Selected model được reload để replay toàn test.
 
-## Part 3 — Community
+`full_system_motif_benchmark` đo structural coverage sau construction. `full_system_reliability` cung cấp validation mean/worst/std F1, năm chronological test periods, Wilson intervals, cold-start groups và matched ablation contrasts. [Presentation module](../src/motif/presentation.py) tạo charts và `system_case_evidence` truy xuất giao dịch/witness thật.
 
-**Placeholder — chờ N5 bổ sung.**
+Đọc kết quả theo ba câu hỏi: **query tìm được cấu trúc gì → cấu trúc bao phủ nhãn nào → model có thêm thông tin dự đoán như thế nào?** Dùng [báo cáo thực nghiệm](PartB_Experiments.md) và [so sánh](PartB_Comparison.md) để đối chiếu đầy đủ số liệu.
 
-Nội dung cần bổ sung: giải thích thuật toán phát hiện cộng đồng, ý nghĩa của cluster và cách đánh giá cộng đồng có dấu hiệu bất thường.
+## 7. Kiểm chứng và tái lập
 
-## Part 4 — Integration
+- [Project gate](../scripts/check_project.ps1): entry point của `make check`, chạy tuần tự trên native Windows.
+- [Notebook runner](../scripts/run_n4_notebook.py): kiểm tra source copies và lưu output sau từng cell.
+- [Independent audit](../src/common/project_audit.py): coverage, source/input/output hashes, metrics từ predictions và notebook/source consistency.
+- [Native/oracle tests](../tests/test_project_audit.py), [guard tests](../tests/test_hardware_guard.py), [motif protocol tests](../tests/test_motif_v2.py).
 
-**Placeholder — chờ N7 bổ sung.**
-
-Nội dung cần bổ sung: cách ghép kết quả ETL, structural analysis, motif và community thành kết luận AML cuối cùng.
+Quy trình setup, tải input và chạy full được ghi trong [README](../README.md#5-chạy-lại-trên-windows-powershell). Các liên kết trong tài liệu này đều trỏ tới source, notebook hoặc tài liệu có trong repo.

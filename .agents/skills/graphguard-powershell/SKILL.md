@@ -30,12 +30,12 @@ speed or a desired score. Never repeat that execution pattern.
 - `src/common/hardware_guard.py` applies inherited Windows Job Object CPU,
   commit-memory, affinity and priority limits, checks RAM/commit/disk reserves,
   and stops its own process group on sustained resource pressure. Never disable
-  it, raise caps, use `local[*]`, add workers, or run unguarded Spark to get a PASS.
-- On the user's 32 GiB workstation, use at most 2 logical CPUs, 10% CPU hard cap,
+  it, raise memory caps, or run unguarded Spark to get a PASS. The latest user CPU authorization overrides the historical CPU defaults below: permit all available CPUs, retain full allowed affinity and resolve `local[*]` to an explicit memory-bounded task count before Java starts.
+- Historical profile (superseded for CPU by the latest user request): at most 2 logical CPUs, 10% CPU hard cap,
   6 GiB JVM heap, 10 GiB total job commit; retain roughly 8 GiB host RAM/commit
   reserve. Defaults scale down or refuse admission on smaller/busy machines.
   A 4 GiB sample/test heap uses a lower **7 GiB hard job cap**, retaining the
-  same reserve, CPU caps and mutex. Smaller profiles cannot be upgraded in an
+  same reserve and mutex; CPU quota is now100% with memory-bounded task slots. Smaller profiles cannot be upgraded in an
   existing Python/kernel. A full-data run may explicitly request a **5 GiB heap /
   8 GiB hard job cap** when the unchanged admission reserve permits it.
   `GRAPHGUARD_MAX_HEAP` is an optional ceiling in the session factory: it can
@@ -52,6 +52,15 @@ speed or a desired score. Never repeat that execution pattern.
   guard/tests → one full notebook → inspect measurements/exit → next notebook,
   sequentially. Use disk spill, column projection and cache release to reduce
   memory. Never stress-test the machine or deliberately exhaust host resources.
+- Full CPU concurrency requires disk-backed motif intermediates. On24October,
+  twenty tasks materializing deserialized `localCheckpoint` UnsafeRows exhausted
+  the5GiB Java heap while host RAM still had headroom. Do not reintroduce that
+  full-data cache path. Use Parquet stage boundaries,32MiB Parquet row groups,
+  reader batch1024 and columnar cache batch1000 in the notebook session; keep
+  the5/8GiB limits. After diagnosing that failure, tiny visible-kernel tests and
+  the full IBM run passed with peak job commit6.27GiB and minimum free RAM13.39GiB.
+  A changed implementation needs its own verification; historical measurements
+  are evidence, not admission permission or a guarantee for a new workload.
 - Save notebook outputs after each completed cell and preserve partial outputs
   after failure. A resource stop is a failed run, not PASS. Do not auto-retry or
   increase resources after a pressure stop/OOM/shutdown; inspect the failure and

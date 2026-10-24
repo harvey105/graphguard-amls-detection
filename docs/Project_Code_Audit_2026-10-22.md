@@ -1,6 +1,22 @@
+# Full-system presentation và reliability — DONE FIXED
+
+- [x] **DONE FIXED — Hai notebook thuyết trình:** code thuật toán thực thi hiện trực tiếp, sections theo unified pipeline;24/25 definitions AST-matched với Python.
+- [x] **DONE FIXED — Full execution:** IBM 35/35 cells và PaySim 36/36; full cardinalities/raw reconciliation/causal features/model exports/case evidence.
+- [x] **DONE FIXED — Reliability có số thật:**3 validation folds,5 chronological test periods,95% WilsonP/R, matched ablations, motif coverage, cold-start, model reload và independent temporal metrics. Không gọi softwarePASS là model ổn định cao.
+- [x] **DONE FIXED — CPU và bộ nhớ:** full available CPU affinity/quota100%, memory caps5/8 GiB/reserve/mutex/watchdog; motif stages trên đĩa,32 MiB row groups thay object cache gâyOOM. Giữ failed-run history.
+- [x] **DONE FIXED — Shared preprocessing / verified reuse:** q90/indexer/truth1 lần mỗi prefix; output inventories/hashes được kiểm tra trước reuse. IBM đã thực tế resume completed phases sau notebook display fix.
+- [x] **DONE FIXED — Full comparison + make check:** hai accepted full runs, degree comparison và full native gate PASS/exit0.
+- [x] **DONE FIXED — Hướng dẫn code và notebook:** [Code Explainer](Code_Explainer.md) giải thích các chặng, vị trí code cells, source matching và cách đọc kết quả đã chạy.
+
+Chưa push Git. Số liệu / scope hiện tại ở[PartB_Experiments.md](PartB_Experiments.md); lịch sử phía dưới giữ nguyên, không nhận old sample/historical output làm full kết quả mới.
+
+---
+
+## Lịch sử kiểm tra trước lượt nghiệm thu mới
+
 # Checkpoint full-system — 24/10/2026
 
-**STOPPED BY USER / PUSH CHECKPOINT — chưa DONE FIXED toàn bộ full-system mới.** Lịch sử DONE FIXED22/10 bên dưới giữ đúng phạm vi khi đó. Bàn giao đầy đủ và quyền CPU mới: [agent_job.md](../agent_job.md).
+**STOPPED BY USER / PUSH CHECKPOINT — chưa DONE FIXED toàn bộ full-system mới.** Lịch sử DONE FIXED22/10 bên dưới giữ đúng phạm vi khi đó. Bàn giao đầy đủ và quyền CPU mới: [hướng dẫn code và notebook](Code_Explainer.md).
 
 | Deliverable | Trạng thái thực tế |
 |---|---|
@@ -43,7 +59,7 @@ Git fetch ở đầu audit xác nhận `HEAD == origin/main == 3cfb109ac6918326a
 
 - [x] **DONE FIXED — LPA PaySim root và stability.** Producer mới đã xuất assignments, top 50, toàn bộ **186.932** summaries và manifest. Hai lượt stability cùng partition trên **194.195** tài khoản, **0** canonical membership changes. Có **153** cộng đồng chứa fraud. Gate đối chiếu toàn bộ summary và account types với sample gốc.
 - [x] **DONE FIXED — IBM LPA sample root.** Xuất assignments, top 50, toàn bộ **86.223** summaries, amount/count theo từng currency và manifest. Gate kiểm tra membership, internal/cross edges, fraud counts, bank diversity và mixed-currency contract.
-- [x] **DONE FIXED — 4 temporal experiments thật.** PaySim/IBM × centrality/community có validation, test predictions, account snapshot, metrics, AP, intervals, ví dụ TP/FP/FN, PNG và manifest. Gate kiểm tra hash input/source/output, chọn lại rule từ validation và tính lại confusion counts từ từng prediction. Evidence: `results/project_check/signals/`; lượt trước sửa baseline tie được lưu riêng. Không chạy lại experiment khi chỉ thay session factory, vì source/thuật toán đã ghi trong manifest không đổi và toàn bộ hashes vẫn PASS.
+- [x] **DONE FIXED — 4 temporal experiments thật.** PaySim/IBM × centrality/community có validation, test predictions, account snapshot, metrics, AP, intervals, ví dụ TP/FP/FN, PNG và manifest. Gate kiểm tra hash input/source/output, chọn lại rule từ validation và tính lại confusion counts từ từng prediction. Evidence: các experiment được tạo bởi lệnh kiểm chứng; lượt trước sửa baseline tie được lưu riêng. Không chạy lại experiment khi chỉ thay session factory, vì source/thuật toán đã ghi trong manifest không đổi và toàn bộ hashes vẫn PASS.
 - [x] **DONE FIXED — hai notebook full chạy tuần tự với heap 5 GiB / hard job cap 8 GiB.** IBM **15/15** code cells, PaySim **12/12**; mỗi notebook **6 PNG, 22 source hashes** khớp. Verifier kiểm tra execution counts, output, metrics và provenance. IBM có full raw–Parquet multiset reconciliation, motif, ML holdout, full LPA/checker và sample stability. Cả hai notebook lưu output mới thật, không sửa giả metadata.
 - [x] **DONE FIXED — full gate `make check`, exit code 0.** Chạy đúng entry point PowerShell bên dưới với native `.venv` Python **3.12.10**, JDK **17.0.20.1**, Spark **3.5.1**, GraphFrames **0.12.2**. Gate nhẹ **44/44 tests PASS**, artifact **26 PASS / 0 FAIL / 0 BLOCKED**, rồi tất cả native/Spark suites, IBM ETL full và rerun motif full hai dataset đều PASS. Không thay source Python sau execution.
 - [x] **DONE FIXED — dừng và dọn workload.** Không còn Spark JVM hoặc notebook kernel sau gate. Đã dọn đúng bốn Spark scratch directories của gate bị Windows giữ JAR lúc `Spark.stop()`; sau JVM exit xóa thành công. Không OOM/resource stop trong các lượt hoàn tất. Đo cuối: **21,83 GiB RAM trống / 18,98 GiB commit headroom**.
@@ -53,7 +69,7 @@ Git fetch ở đầu audit xác nhận `HEAD == origin/main == 3cfb109ac6918326a
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.ps1 -MaxHeap 5g
 ```
 
-`results/project_check/latest.json` là báo cáo **artifact preflight**, không phải log mọi bước runtime. Full Task 3 transcript ở `results/ibm_aml/check_task3.log`; rerun manifests nằm trong `results/motif/check_runs/{ibm,paysim}/`. Các experiment/check logs là evidence cục bộ, một số bị Git-ignore.
+báo cáo JSON được tạo bởi project gate là báo cáo **artifact preflight**, không phải log mọi bước runtime. Full Task 3 transcript ở transcript được tạo khi chạy Task 3 gate; rerun manifests nằm trong manifests được tạo khi chạy lại hai Task 3 producers. Các experiment/check logs là evidence cục bộ, một số bị Git-ignore.
 
 ## Bằng chứng và phạm vi
 
@@ -248,7 +264,7 @@ Cần sửa mapping loại account và xuất lại summary; giữ invariant `cu
 
 ### P1 — Task 1 PaySim có thể báo thành công sau một kiểm tra FAIL
 
-[graph_analysis.py:210](../src/paysim/graph_analysis.py#L210) và các nhánh count/schema chỉ in kết quả boolean; không gom các điều kiện để raise/exit nonzero. Cuối hàm vẫn in `Task 1 Completed Successfully` ở [dòng 282](../src/paysim/graph_analysis.py#L282). Vì vậy entry point này chưa phải một test gate đáng tin cậy khi dữ liệu sai nhưng vẫn đủ schema để các probe chạy.
+[graph_analysis.py:210](../src/paysim/graph_analysis.py#L210) và các nhánh count/schema chỉ in kết quả boolean; không gom các điều kiện để raise/exit nonzero. Cuối hàm của phiên bản được audit khi đó vẫn in `Task 1 Completed Successfully`. Vì vậy entry point này chưa phải một test gate đáng tin cậy khi dữ liệu sai nhưng vẫn đủ schema để các probe chạy.
 
 Cần biến vi phạm schema/count/referential integrity/raw matching thành lỗi thực sự và đảm bảo Spark được đóng trong `finally`. Footer counts và sample hiện tại đúng không loại bỏ lỗi điều khiển này.
 
@@ -294,4 +310,4 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check_project.
 
 Checker CLI dùng 1 logical CPU, peak working set quan sát 384,9 MiB trong lần gate cuối; ngân sách RSS 512 MiB được kiểm tra theo batch. Notebook ghi số đo riêng trong output cuối. Đây là tác vụ kiểm chứng nhẹ; không phải một lần full Spark/LPA mới.
 
-JSON chi tiết được lưu local tại `results/project_check/latest.json`. Source kiểm chứng: `src/common/project_audit.py`; entry point: `scripts/check_project.ps1`; negative tests: `tests/test_project_audit.py`. Các sửa đổi lần này chưa được commit/push; source thuật toán và CSV của thành viên được giữ nguyên để nhóm thấy rõ lỗi cần xử lý.
+JSON chi tiết được lưu local tại báo cáo JSON được tạo bởi project gate. Source kiểm chứng: `src/common/project_audit.py`; entry point: `scripts/check_project.ps1`; negative tests: `tests/test_project_audit.py`. Các sửa đổi lần này chưa được commit/push; source thuật toán và CSV của thành viên được giữ nguyên để nhóm thấy rõ lỗi cần xử lý.

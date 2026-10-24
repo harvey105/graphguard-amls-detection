@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import argparse
 import hashlib
+import html
 from datetime import datetime, timezone
 import os
 from queue import Empty
@@ -63,6 +64,33 @@ def save_notebook(notebook):
             temporary.unlink(missing_ok=True)
 
 
+def compact_progress_outputs(cell):
+    """Keep real iteration logs in a collapsed notebook block, not pages of text."""
+    progress, kept = [], []
+    for output in cell.get("outputs", []):
+        if output.get("output_type") != "stream":
+            kept.append(output)
+            continue
+        text = output["text"]
+        text = "".join(text) if isinstance(text, list) else text
+        remaining = []
+        for line in text.splitlines(True):
+            if line.startswith(("[SYSTEM] PageRank iteration", "[SYSTEM] LPA iteration",
+                                "[SYSTEM] Historical snapshot", "[SYSTEM] Validation ",
+                                "[SYSTEM] Frozen refit/test", "Features:")):
+                progress.append(line)
+            else:
+                remaining.append(line)
+        if remaining:
+            kept.append({**output, "text": "".join(remaining)})
+    if progress:
+        log = "".join(progress)
+        kept.insert(0, {"output_type": "display_data", "metadata": {}, "data": {
+            "text/html": f"<details><summary>Execution log — {len(progress)} progress messages</summary><pre>{html.escape(log)}</pre></details>",
+            "text/plain": log}})
+    cell["outputs"] = kept
+
+
 def main() -> None:
     if os.name != "nt":
         raise RuntimeError("Run this notebook with Windows PowerShell and Windows Python.")
@@ -76,6 +104,10 @@ def main() -> None:
         check=True,
     )
     notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+    if notebook.get("metadata", {}).get("graphguard_source_copies"):
+        sys.path.insert(0, str(REPO_ROOT))
+        from src.common.project_audit import verify_notebook_source_copies
+        print(verify_notebook_source_copies(NOTEBOOK), flush=True)
     started_hashes = notebook_source_hashes(notebook)
     notebook["metadata"]["kernelspec"] = {
         "display_name": "GraphGuard (.venv Windows)",
@@ -150,6 +182,7 @@ def main() -> None:
                 elif kind == "status" and content["execution_state"] == "idle":
                     break
             notebook["metadata"]["graphguard_execution"]["completed_code_cells"] = execution_count
+            compact_progress_outputs(cell)
             save_notebook(notebook)
             print(f"Cell {execution_count}: PASS", flush=True)
         complete_execution(notebook, started_hashes)

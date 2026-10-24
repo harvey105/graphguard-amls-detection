@@ -27,7 +27,7 @@ class ProtocolTests(unittest.TestCase):
     def test_reject_invalid_protocol(self):
         for kwargs in ({"windows_hours": (0, 24)}, {"windows_hours": (24, 24)},
                        {"fold_fractions": (0.6, 0.5, 0.8)}, {"score_thresholds": (float("nan"),)},
-                       {"score_thresholds": (1.1,)}, {"tree_depth": 99}, {"parallelism": 0}, {"parallelism": 4}):
+                       {"score_thresholds": (1.1,)}, {"tree_depth": 99}, {"parallelism": 0}, {"parallelism": 65}):
             with self.assertRaises(ValueError):
                 AnalysisConfig(**kwargs)
 

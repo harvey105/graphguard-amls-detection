@@ -373,7 +373,35 @@ def main():
 
 
 
-def dataframe_pagerank(vertices, edges, checkpoint_dir, iterations=10, reset_probability=0.15):
+def pagerank_update(ids, weights, ranks, reset_probability):
+    """One directed PageRank update, preserving physical-edge multiplicity."""
+    incoming = (
+        weights.join(ranks.select(F.col("id").alias("src"), "pagerank"), "src")
+        .groupBy("dst")
+        .agg(F.sum(F.col("pagerank") * F.col("weight")).alias("incoming"))
+    )
+    # A vertex without incoming messages receives only the reset term.
+    return (
+        ids.join(incoming.withColumnRenamed("dst", "id"), "id", "left")
+        .select("id", (F.lit(reset_probability) + (1-reset_probability)
+                * F.coalesce(F.col("incoming"), F.lit(0.0))).alias("pagerank"))
+    )
+
+
+def account_degree_metrics(ids, edges, ranks):
+    """Keep every account, including isolates; count each transaction edge."""
+    incoming = edges.groupBy("dst").count().select(
+        F.col("dst").alias("id"), F.col("count").alias("inDegree"))
+    outgoing = edges.groupBy("src").count().select(
+        F.col("src").alias("id"), F.col("count").alias("outDegree"))
+    return (
+        ranks.join(incoming, "id", "left").join(outgoing, "id", "left")
+        .fillna(0, subset=["inDegree", "outDegree"])
+        .withColumn("degree", F.col("inDegree") + F.col("outDegree"))
+    )
+
+
+def dataframe_pagerank(vertices, edges, checkpoint_dir, iterations=10, reset_probability=0.15, *, update=None):
     """Fixed-iteration GraphX-equivalent PageRank using disk-backed SQL joins.
 
     Preserve parallel edges and self-loops; start at one, use alpha per vertex,
@@ -395,10 +423,7 @@ def dataframe_pagerank(vertices, edges, checkpoint_dir, iterations=10, reset_pro
     weights = spark.read.parquet(str(root / "weights"))
     ranks = ids.withColumn("pagerank", F.lit(1.0))
     for index in range(iterations):
-        incoming = (weights.join(ranks.select(F.col("id").alias("src"), "pagerank"), "src")
-            .groupBy("dst").agg(F.sum(F.col("pagerank") * F.col("weight")).alias("incoming")))
-        updated = (ids.join(incoming.withColumnRenamed("dst", "id"), "id", "left")
-            .select("id", (F.lit(reset_probability) + (1-reset_probability) * F.coalesce(F.col("incoming"), F.lit(0.0))).alias("pagerank")))
+        updated = (update or pagerank_update)(ids, weights, ranks, reset_probability)
         path = root / f"iteration_{index+1:02d}"
         updated.write.parquet(str(path))
         ranks = spark.read.parquet(str(path))

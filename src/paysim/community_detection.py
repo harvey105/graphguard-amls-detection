@@ -347,7 +347,22 @@ def main():
 
 
 
-def dataframe_lpa(vertices, edges, checkpoint_dir, max_iter=5):
+def lpa_update(links, labels):
+    """Synchronous weighted neighbor voting; deterministic minimum-label tie."""
+    messages = links.join(labels.select(
+        F.col("id").alias("neighbor"), F.col("label").alias("neighbor_label")), "neighbor")
+    votes = messages.groupBy("id", "neighbor_label").agg(F.sum("multiplicity").alias("votes"))
+    # Lexicographic min(-votes, label) = most votes, then smallest label.
+    winner = votes.groupBy("id").agg(F.min(F.struct(
+        (-F.col("votes")).alias("negative_votes"),
+        F.col("neighbor_label").alias("label"))).alias("winner"))
+    winner = winner.select("id", F.col("winner.label").alias("new_label"))
+    # Isolates receive no message and keep their current label.
+    return labels.join(winner, "id", "left").select(
+        "id", F.coalesce("new_label", "label").alias("label"))
+
+
+def dataframe_lpa(vertices, edges, checkpoint_dir, max_iter=5, *, update=None):
     """SQL modal-neighbor LPA; deterministic minimum-label tie handling.
 
     Messages travel both directions per physical transaction, including two
@@ -375,11 +390,7 @@ def dataframe_lpa(vertices, edges, checkpoint_dir, max_iter=5):
     initial.write.parquet(str(root / "iteration_00"))
     labels = spark.read.parquet(str(root / "iteration_00"))
     for index in range(max_iter):
-        votes = (links.join(labels.select(F.col("id").alias("neighbor"), F.col("label").alias("neighbor_label")), "neighbor")
-            .groupBy("id", "neighbor_label").agg(F.sum("multiplicity").alias("votes")))
-        winner = (votes.groupBy("id").agg(F.min(F.struct((-F.col("votes")).alias("negative_votes"), F.col("neighbor_label").alias("label"))).alias("winner"))
-            .select("id", F.col("winner.label").alias("new_label")))
-        updated = labels.join(winner, "id", "left").select("id", F.coalesce("new_label", "label").alias("label"))
+        updated = (update or lpa_update)(links, labels)
         path = root / f"iteration_{index+1:02d}"
         updated.write.parquet(str(path))
         labels = spark.read.parquet(str(path))

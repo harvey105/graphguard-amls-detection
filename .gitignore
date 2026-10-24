@@ -71,3 +71,8 @@ notebooks/.graphguard-*.tmp
 
 # Full transaction-system artifacts (local, verified by notebook + manifest)
 results/full_system/
+
+# Local planning and presentation notes (keep on this workstation)
+/agent_job.md
+/designs_Explain.md
+/designs.md

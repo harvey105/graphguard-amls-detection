@@ -22,12 +22,12 @@ class PolicyTests(unittest.TestCase):
         small = ResourcePolicy.for_workload(32 * GIB, "4g")
         self.assertEqual((full.job_bytes, small.job_bytes), (10 * GIB, 7 * GIB))
         self.assertEqual(full.reserve_bytes, small.reserve_bytes)
-        self.assertEqual(small.spark_limits("6g", "local[*]"), ("4096m", 2))
-        self.assertEqual(small.cpu_percent, 10)
+        self.assertEqual(small.spark_limits("6g", "local[*]"), ("4096m", small.workers))
+        self.assertEqual(small.cpu_percent, 100)
         medium = ResourcePolicy.for_workload(32 * GIB, "5g")
         self.assertEqual(medium.job_bytes, 8 * GIB)
         self.assertEqual(medium.reserve_bytes, full.reserve_bytes)
-        self.assertEqual(medium.spark_limits("6g", "local[*]"), ("5120m", 2))
+        self.assertEqual(medium.spark_limits("6g", "local[*]"), ("5120m", medium.workers))
     def test_optional_heap_ceiling_only_reduces_allocation(self):
         from src.common.spark_session import _bounded_heap
         self.assertEqual(_bounded_heap("6g", "5g"), "5120m")
@@ -40,7 +40,7 @@ class PolicyTests(unittest.TestCase):
 
     def test_caps_and_unbounded_master_clamped(self):
         policy = ResourcePolicy.for_memory(32 * GIB)
-        self.assertEqual(policy.spark_limits("12g", "local[*]"), ("6144m", 2))
+        self.assertEqual(policy.spark_limits("12g", "local[*]"), ("6144m", policy.workers))
         self.assertEqual(policy.spark_limits("2g", "local[1]"), ("2048m", 1))
         self.assertEqual(policy.job_bytes, 10 * GIB)
         self.assertEqual(policy.reserve_bytes, 8 * GIB)
@@ -55,9 +55,9 @@ class PolicyTests(unittest.TestCase):
 
     def test_pressure_decisions_without_exhausting_resources(self):
         policy = ResourcePolicy.for_memory(32 * GIB)
-        self.assertIsNone(pressure_reason(policy, 12*GIB, 12*GIB, 20*GIB, 20))
+        self.assertIsNone(pressure_reason(policy, 12*GIB, 12*GIB, 20*GIB, 100))
         for values in ((7*GIB,12*GIB,20*GIB,20), (12*GIB,7*GIB,20*GIB,20),
-                       (12*GIB,12*GIB,4*GIB,20), (12*GIB,12*GIB,20*GIB,90)):
+                       (12*GIB,12*GIB,4*GIB,20)):
             self.assertIsNotNone(pressure_reason(policy, *values))
 
     def test_watchdog_automatically_stops_on_simulated_pressure(self):
@@ -69,6 +69,7 @@ class PolicyTests(unittest.TestCase):
         guard.disk_free = Mock(return_value=20*GIB)
         guard.minimum_available, guard.maximum_host_cpu = 12*GIB, 0.0
         guard.api, guard.job = Mock(), 123
+        guard.snapshot = Mock(return_value={"job_cpu_seconds": 0})
         with patch("src.common.hardware_guard.psutil.cpu_percent", return_value=15), patch("sys.stderr"):
             guard._watch()
         guard.api.TerminateJobObject.assert_called_once_with(123, 73)
@@ -99,8 +100,8 @@ limits=ExtendedLimits()
 assert g.api.QueryInformationJobObject(g.job,9,C.byref(limits),C.sizeof(limits),None)
 assert limits.job_memory == min(g.policy.job_bytes,8*GIB)
 assert g.policy.reserve_bytes == ResourcePolicy.for_memory(g.memory().total_phys).reserve_bytes
-assert g.policy.max_heap_gib <= 5 and g.policy.cpu_percent == 10
-print('5 GiB heap / 8 GiB OS cap; original reserve and CPU cap retained')
+assert g.policy.max_heap_gib <= 5 and g.policy.cpu_percent == 100
+print('5 GiB heap / 8 GiB OS cap; original memory reserve retained; CPU fully authorized')
 """)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
@@ -118,14 +119,15 @@ memory=ExtendedLimits(); cpu=CPULimits()
 assert g.api.QueryInformationJobObject(g.job,9,C.byref(memory),C.sizeof(memory),None)
 assert g.api.QueryInformationJobObject(g.job,15,C.byref(cpu),C.sizeof(cpu),None)
 assert memory.basic.flags & 0x2000 and memory.job_memory == g.policy.job_bytes
-assert cpu.flags == 5 and cpu.rate == 1000
-assert len(psutil.Process().cpu_affinity()) <= 2
+assert cpu.flags == 5 and cpu.rate == 10000
+assert psutil.Process().cpu_affinity() == g.allowed_cpus
+assert g.policy.workers == min(len(g.allowed_cpus),g.policy.max_heap_gib*4)
 print(json.dumps(g.snapshot()))
 """
         result = self.child(code)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         snapshot = json.loads(result.stdout.splitlines()[-1])
-        self.assertEqual(snapshot["cpu_hard_cap_percent"], 10)
+        self.assertEqual(snapshot["cpu_hard_cap_percent"], 100)
 
     def test_second_workload_refused_before_spark(self):
         result = self.child("""

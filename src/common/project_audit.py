@@ -849,6 +849,8 @@ def verify_full_system_artifacts(directory, require_full=True):
         require(report["phases"].get("raw_reconciliation",{}).get("status")=="PASS", "No full raw reconciliation")
         require((report["integrity"]["num_vertices"],report["support"]["n"])==FULL_COUNTS[report["dataset"]], "Not the declared full dataset")
     final_counts = Counter()
+    temporal_bins = Counter()
+    temporal_cutoffs = report["phases"].get("reliability", {}).get("test_period_cutoffs", [])
     selected = frozen["selection"]["family"]
     for file in (directory / "final_predictions.parquet").glob("*.parquet"):
         for batch in pq.ParquetFile(file).iter_batches(batch_size=4096,columns=["risk_score","alert","isFraud","step","snapshot_as_of","dataset"]):
@@ -860,18 +862,53 @@ def verify_full_system_artifacts(directory, require_full=True):
                 require(not alert and score==0 if selected=="abstain" else bool(alert)==(score>=frozen["selection"]["threshold"]), "Final alert rule changed")
                 final_counts["n"]+=1; final_counts["p"]+=int(label)
                 final_counts["tp"]+=int(alert and label==1); final_counts["fp"]+=int(alert and label==0)
+                if temporal_cutoffs:
+                    period = sum(values["step"][i] > cutoff for cutoff in temporal_cutoffs)
+                    temporal_bins[(period, score, int(label))] += 1
     require(final_counts["n"]==expected_n and final_counts["p"]==expected_p, "Final selected output coverage mismatch")
     final_metrics=binary_metrics(expected_n,expected_p,final_counts["tp"],final_counts["fp"])
     require(all(final_metrics[k]==report["selected_test_metrics"][k] for k in ("TP","FP","FN","TN","alerts")), "Selected final confusion mismatch")
+    if temporal_cutoffs and selected != "abstain":
+        from src.motif.modeling import metrics_at_threshold
+        saved_periods = pd.read_csv(directory / "test_temporal_stability.csv")
+        for period in sorted({key[0] for key in temporal_bins}):
+            hist = pd.DataFrame([{"risk_score": score, "isFraud": label, "count": count}
+                for (block, score, label), count in temporal_bins.items() if block == period])
+            actual = metrics_at_threshold(hist, frozen["selection"]["threshold"])
+            rows = saved_periods[(saved_periods.model==selected) & (saved_periods.test_period==period)]
+            require(len(rows)==1, "Missing selected temporal reliability period")
+            saved = rows.iloc[0]
+            require(all(actual[k]==saved[k] for k in ("transactions","fraud","TP","FP","FN","TN")), "Temporal reliability confusion differs")
+            _, ap = precision_recall_curve(hist)
+            require(pd.isna(saved.average_precision) if ap is None else math.isclose(ap, saved.average_precision, abs_tol=1e-12), "Temporal reliability AP differs")
     return {"status": "PASS", "scope": report["scope"], "full_transactions": report["support"]["n"],
             "full_accounts": report["integrity"]["num_vertices"], "models": len(metrics), "test_transactions": expected_n,
             "test_positives": expected_p, "predictions_confusion_and_AP": "independently recomputed", "artifact_hashes": "PASS"}
 
 
 
+def verify_notebook_source_copies(path, root=ROOT):
+    """AST-match every executable notebook kernel against its Python module."""
+    notebook = json.loads(Path(path).read_text(encoding="utf-8"))
+    cells = {cell.get("id"): cell for cell in notebook["cells"]}
+    checked = []
+    for item in notebook.get("metadata", {}).get("graphguard_source_copies", []):
+        cell = cells[item["cell_id"]]
+        tree = ast.parse("".join(cell["source"]))
+        module = ast.parse((root / item["path"]).read_text(encoding="utf-8-sig"))
+        visible = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == item["name"]]
+        canonical = [node for node in module.body if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == item["name"]]
+        require(len(visible) == len(canonical) == 1, "Missing/ambiguous source copy: "+item["name"])
+        require(ast.dump(visible[0], include_attributes=False) == ast.dump(canonical[0], include_attributes=False),
+                "Notebook/Python logic differs: "+item["name"])
+        checked.append(item["name"])
+    return {"status": "PASS", "matched_definitions": len(checked), "definitions": checked}
+
+
 def verify_full_system_notebook(path, directory, root=ROOT):
     """Bind executed cells/figures/source hashes to the exact accepted run."""
     notebook = json.loads(Path(path).read_text(encoding="utf-8"))
+    sync = verify_notebook_source_copies(path, root)
     code = [c for c in notebook["cells"] if c["cell_type"] == "code"]
     execution = notebook["metadata"].get("graphguard_execution", {})
     require(execution.get("status") == "completed" and execution.get("completed_code_cells") == len(code), "Incomplete full-system notebook")
@@ -909,7 +946,8 @@ def verify_full_system_notebook(path, directory, root=ROOT):
         for row in rows:
             for name in ("TP","FP","FN","TN"):
                 require(int(row[name]) == expected[row["model"]][name], "Notebook metric differs from accepted run")
-    return {"cells":len(code),"figures":images,"models":len(expected),"executed_source_hashes":len(hashes),"scope":"full"}
+    return {"cells":len(code),"figures":images,"models":len(expected),"executed_source_hashes":len(hashes),
+            "source_copies":sync["matched_definitions"],"scope":"full"}
 
 
 def audit_full_system(root=ROOT):

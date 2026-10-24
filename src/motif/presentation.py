@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import importlib.metadata as metadata
+import json
 import os
 from pathlib import Path
 import platform
@@ -60,9 +61,13 @@ class NotebookSession:
         temporary = tempfile.TemporaryDirectory(prefix="graphguard-motif-v2-", ignore_cleanup_errors=True)
         started = time.perf_counter()
         spark = get_graph_session("GraphGuard-Motif-v2-" + dataset, driver_memory=driver_memory, shuffle_partitions=32,
-            extra_configs={"spark.master": "local[2]", "spark.default.parallelism": "2",
+            extra_configs={"spark.master": "local[*]",
                 "spark.ui.enabled": "false", "spark.ui.showConsoleProgress": "false",
                 "spark.sql.session.timeZone": "UTC",
+                # Twenty writers must not each reserve a 128 MiB row group.
+                "spark.hadoop.parquet.block.size": "33554432",
+                "spark.sql.parquet.columnarReaderBatchSize": "1024",
+                "spark.sql.inMemoryColumnarStorage.batchSize": "1000",
                 "spark.ui.retainedJobs": "20", "spark.ui.retainedStages": "40", "spark.sql.ui.retainedExecutions": "20",
                 "spark.sql.warehouse.dir": (Path(temporary.name) / "warehouse").as_uri()})
         spark.sparkContext.setLogLevel("ERROR")
@@ -104,11 +109,13 @@ class BaselineAudit:
     currencies: pd.DataFrame
 
 
-def baseline_audit(spark, dataset: str, input_dir: Path | None = None) -> BaselineAudit:
+def baseline_audit(spark, dataset: str, input_dir: Path | None = None, *, kernels=None) -> BaselineAudit:
     """Execute original coursework queries, without overwriting baseline CSVs."""
     from src.ibm_aml.motif_finding import directed_account_cycles, find_usd_cycles
     from src.motif.toy_cycle import find_three_node_cycles
     from src.paysim.motif_finding import find_relays, relay_rows
+    find_three_node_cycles = (kernels or {}).get("find_three_node_cycles", find_three_node_cycles)
+    find_relays = (kernels or {}).get("find_relays", find_relays)
 
     source = input_dir or REPO_ROOT / DATASETS[dataset].input_dir
     loaded = load_graph(spark, str(source))
@@ -424,7 +431,8 @@ def plot_system_results(run):
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
     table.set_index("model")[["precision", "recall", "F1", "average_precision"]].plot.bar(ax=axes[0], rot=75)
     axes[0].set(title="Factorial ablations + novelty control: same test", ylabel="Score", ylim=(0, 1))
-    for family in table.model:
+    focus = list(dict.fromkeys(["transaction_only", "motif_assisted", "full_fusion", *table.loc[table.selected_on_validation, "model"]]))
+    for family in focus:
         curve = pd.read_csv(run.output_dir / ("pr_curve_"+family+".csv"))
         axes[1].step(curve.recall, curve.precision, where="pre", label=family)
     axes[1].axhline(table.prevalence.iloc[0], color="#64748b", linestyle="--", label="prevalence")
@@ -433,7 +441,7 @@ def plot_system_results(run):
     _save_system_figure(run, "ablation_and_pr", fig)
     budgets = pd.read_csv(run.output_dir / "review_budgets.csv")
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    for family in table.model:
+    for family in focus:
         rows = budgets[budgets.model==family].sort_values("K")
         axes[0].plot(rows.K, rows.precision_at_K, marker="o", label=family)
         axes[1].plot(rows.K, rows.recall_at_K, marker="o", label=family)
@@ -496,3 +504,161 @@ def system_case_evidence(run):
                    title=f"Real {kind}; labels shown only for audit",
                    output_path=run.output_dir / "figures" / "selected_case.png")
     return evidence
+
+def system_phase_table(run, phase):
+    """Compact presentation of a measured phase, retaining detailed manifests."""
+    record = run.record["phases"][phase]
+    names = ["status", "elapsed_seconds", "average_job_cpu_percent"]
+    rows = [{"check": name, "value": record.get(name)} for name in names]
+    rows += [{"check": name, "value": value} for name, value in record.items()
+             if name in ("accounts", "rows", "unique_ids", "future_snapshot_rows", "degree_sum",
+                         "rank_sum", "communities", "internal_edges", "cross_edges", "positives",
+                         "test_transactions", "test_positives", "full_test_model_reload")]
+    rows += [{"check": name, "value": record["hardware"].get(name)} for name in
+             ("peak_job_commit_gib", "minimum_available_ram_gib")]
+    return pd.DataFrame(rows)
+
+
+def plot_system_motif_coverage(run):
+    table = pd.read_csv(run.output_dir / "motif_coverage.csv")
+    view = table[table.scope == "test"].copy()
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4), layout="constrained")
+    axes[0].barh(view.motif, view.positive_coverage.fillna(0), color="#2563eb")
+    axes[0].set(xlabel="Fraction of test positives covered", title="Structural coverage; overlapping motifs", xlim=(0, 1))
+    axes[1].barh(view.motif, view.positive_fraction_when_present.fillna(0), color="#0f766e")
+    axes[1].axvline(view.population_prevalence.iloc[0], linestyle="--", color="#dc2626", label="Test prevalence")
+    axes[1].set(xlabel="Positive fraction among covered transactions", title="Posthoc label audit; no prediction rule")
+    axes[1].legend()
+    _save_system_figure(run, "motif_coverage", fig)
+    return view[["motif", "covered_transactions", "covered_positives", "positive_coverage", "positive_fraction_when_present"]]
+
+
+def plot_system_timeline(run):
+    cuts = run.record["snapshot_cutoffs"]
+    fig, ax = plt.subplots(figsize=(11, 3), layout="constrained")
+    colors = ["#64748b", "#2563eb", "#0f766e", "#eab308", "#ef4444"]
+    start = run.record["support"]["first_step"]
+    end = run.record["support"]["last_step"]
+    for index, (left, right) in enumerate(zip([start, *cuts], [*cuts, end])):
+        ax.axvspan(left, right, color=colors[min(index,4)], alpha=.18)
+    for cutoff in cuts:
+        ax.axvline(cutoff, color="#64748b", linestyle="--", linewidth=.8)
+    for index, (left, right) in enumerate(zip(cuts[1:-1], cuts[2:]),1):
+        ax.plot([left,right],[index,index],linewidth=8,color="#2563eb")
+        ax.text((left+right)/2,index+.15,f"Validation {index}",ha="center")
+    ax.plot([cuts[-1],end],[0,0],linewidth=8,color="#dc2626")
+    ax.text((cuts[-1]+end)/2,.2,"Frozen test",ha="center")
+    ax.set(xlabel="Unix timestamp (seconds)" if run.dataset=="ibm_aml" else "Simulation hour",
+           yticks=[], ylim=(-.4,3.6), title="Expanding-prefix validation; snapshot strictly before each decision")
+    _save_system_figure(run,"temporal_protocol",fig)
+    return system_protocol_table(run)
+
+
+def plot_system_reliability(run):
+    table = pd.read_csv(run.output_dir / "test_temporal_stability.csv")
+    selected = run.record["selected_test_metrics"]["model"]
+    focus = list(dict.fromkeys(["transaction_only", "motif_assisted", selected]))
+    fig, axes = plt.subplots(1, 2, figsize=(12,4),layout="constrained")
+    for family in focus:
+        rows = table[table.model==family].sort_values("test_period")
+        axes[0].plot(rows.test_period+1,rows.F1,marker="o",label=family)
+        axes[1].plot(rows.test_period+1,rows.average_precision,marker="o",label=family)
+    for ax, name in zip(axes,("F1", "Average precision")):
+        ax.set(xlabel="Chronological test period",ylabel=name,xticks=sorted(table.test_period.unique()+1),
+               title=f"Frozen rules: temporal {name}",ylim=(0,None))
+        ax.legend(fontsize=8)
+    _save_system_figure(run,"temporal_stability",fig)
+    delta = pd.read_csv(run.output_dir/"graph_contributions.csv")
+    fig, ax = plt.subplots(figsize=(10,4),layout="constrained")
+    delta.set_index("contrast")[["delta_F1","delta_average_precision"]].plot.barh(ax=ax)
+    ax.axvline(0,color="#334155",linewidth=.8)
+    ax.set(xlabel="Absolute difference on the same test",title="Graph contributions: positive and negative findings")
+    _save_system_figure(run,"graph_contributions",fig)
+    importance = pd.read_csv(run.output_dir/"feature_importance.csv")
+    importance = importance[importance.family==selected].sort_values("importance",ascending=False)
+    if not importance.empty:
+        fig, ax = plt.subplots(figsize=(10,4),layout="constrained")
+        top = importance.head(12).sort_values("importance")
+        ax.barh(top.feature,top.importance,color="#2563eb")
+        ax.set(xlabel="Tree impurity importance (not causal attribution)",title=f"Actually used features: {selected}")
+        _save_system_figure(run,"selected_importance",fig)
+    return table[table.model==selected][["test_period","transactions","fraud","TP","FP","FN","precision","recall","F1","average_precision"]].rename(columns={"test_period":"period_zero_based"})
+
+
+def system_execution_benchmark(run):
+    """Separate algorithm cost, job CPU and host memory from predictive quality."""
+    rows = []
+    for name, values in run.record["phases"].items():
+        elapsed = values["elapsed_seconds"]
+        rows.append({"phase":name,"seconds":elapsed,"job_CPU_percent":values.get("average_job_cpu_percent"),
+            "peak_commit_GiB":values["hardware"].get("peak_job_commit_gib"),
+            "minimum_host_free_GiB":values["hardware"].get("minimum_available_ram_gib")})
+    return pd.DataFrame(rows)
+
+
+def write_designs_explanation(root=REPO_ROOT):
+    """Write the requested speaker notes only from two completed verified runs."""
+    from src.common.project_audit import verify_full_system_notebook, notebook_tables
+    notes = ["# Hướng dẫn thuyết trình hai notebook full-system", "",
+             "Tài liệu được tạo sau khi cả hai notebook có output thực thi hoàn chỉnh. Số liệu dưới đây gắn với run ID; không lấy kết quả IBM thay PaySim.", "",
+             "## Cách trình bày", "",
+             "Đi theo Raw → integrity/index → full analytics → historical features → fusion → validation → frozen test → evidence/reliability. Mỗi mục giải thích mục tiêu, code tính toán, output và giới hạn kết luận.", "",
+             "Code kernel được chép đầy đủ vào notebook, kiểm tra AST khớp module Python trước execution và truyền trực tiếp vào pipeline. Các helper I/O/checkpoint/guard tiếp tục import từ module gốc.", ""]
+    for dataset, filename in (("ibm_aml","IBM_full_system.ipynb"),("paysim","PaySIM_full_system.ipynb")):
+        path = root/"notebooks"/filename
+        notebook = json.loads(path.read_text(encoding="utf-8"))
+        latest = json.loads((root/"results/full_system"/dataset/"latest.json").read_text(encoding="utf-8"))
+        directory = Path(latest["directory"])
+        verified = verify_full_system_notebook(path,directory,root)
+        report = json.loads((directory/"report.json").read_text(encoding="utf-8"))
+        selected = report["selected_test_metrics"]
+        baseline = next(row for row in report["test_metrics"] if row["model"]=="transaction_only")
+        notes += [f"## {filename}", "",f"- Run: `{directory.name}`; {verified['cells']} code cells, {verified['figures']} figures, {verified['source_copies']} definitions khớp Python.",
+            f"- Full input: {report['support']['n']:,} giao dịch; {report['integrity']['num_vertices']:,} accounts; {int(report['support']['positives']):,} nhãn dương.",
+            f"- Selected: `{selected['model']}`, threshold={selected['threshold']}; TP={selected['TP']:,}, FP={selected['FP']:,}, FN={selected['FN']:,}, TN={selected['TN']:,}.",
+            f"- Precision={selected['precision']:.2%}; recall={selected['recall']:.2%}; F1={selected['F1']:.2%}; AP={selected['average_precision']:.2%}.",
+            f"- Transaction-only: F1={baseline['F1']:.2%}, AP={baseline['average_precision']:.2%}. Chênh lệch selected: ΔF1={selected['F1']-baseline['F1']:+.4f}; ΔAP={selected['average_precision']-baseline['average_precision']:+.4f}.", "",
+            "Các số liệu này là kết quả nội bộ theo thời gian trên dữ liệu tổng hợp. IBM target là laundering; PaySim target là fraud. Score cây có class weights không phải xác suất đã calibrated.", ""]
+        for number,cell in enumerate((c for c in notebook["cells"] if c["cell_type"]=="code"),1):
+            info = cell.get("metadata",{}).get("graphguard_presentation",{})
+            source = "".join(cell["source"])
+            imports = [line for line in source.splitlines() if line.startswith("from ")]
+            copies = [x for x in notebook["metadata"].get("graphguard_source_copies",[]) if x["cell_id"]==cell["id"]]
+            outputs = cell.get("outputs",[])
+            images = sum("image/png" in output.get("data",{}) for output in outputs)
+            tables = list(notebook_tables({"cells":[cell]}))
+            notes += [f"### Cell {number:02d} — {info.get('title',cell['id'])}", "",
+                "**Vai trò:** "+info.get("purpose","Thực hiện bước được ghi ngay trên cell trong notebook."), "",
+                "**Code cần giải thích:** "+info.get("code_reading","Đọc các phép biến đổi và assertions; helper chi tiết được dẫn bằng from-import."), ""]
+            if copies:
+                notes += ["**Khớp Python:** "+"; ".join(f"`{x['name']}` → [{x['path']}](./{x['path']})" for x in copies)+".", ""]
+            if imports:
+                notes += ["**Imports:** "+"; ".join("`"+line+"`" for line in imports)+".", ""]
+            notes += [f"**Output đã chạy:** execution_count={cell['execution_count']}; {len(tables)} bảng, {images} hình.", ""]
+            if tables:
+                rows = tables[0][:4]
+                keys = list(rows[0])[:7] if rows else []
+                if keys:
+                    notes += ["| "+" | ".join(keys)+" |", "| "+" | ".join("---" for _ in keys)+" |"]
+                    notes += ["| "+" | ".join(str(row.get(key,"")).replace("|","/") for key in keys)+" |" for row in rows]
+                    notes += [""]
+            else:
+                streams = []
+                for output in outputs:
+                    text = output.get("text","")
+                    text = "".join(text) if isinstance(text,list) else text
+                    streams += [line for line in text.splitlines() if line and not line.startswith("[SYSTEM]")]
+                if streams:
+                    notes += ["```text", "\n".join(streams)[-700:], "```", ""]
+            notes += ["**Cách đọc trước thầy:** "+info.get("readout","Đối chiếu mục tiêu của bước với bảng/hình thực tế; không suy luận vượt quá phép kiểm tra đã chạy."), ""]
+    notes += ["## Reliability: được kiểm chứng tới đâu?", "",
+        "- Coverage và chronology: đủ physical rows, không trùng event ID, snapshot luôn quá khứ.",
+        "- Predictive stability: 3 validation folds, mean/worst/std F1; 5 khoảng test liên tiếp với rule đã khóa, không chọn lại trên test.",
+        "- Uncertainty: khoảng Wilson 95% cho precision/recall mang giả định nhị thức theo dòng, chưa điều chỉnh account/time correlation.",
+        "- Reproducibility: model reload replay toàn test; artifact/source/input hashes và metric độc lập từ predictions.",
+        "- Runtime: từng phase có thời gian, CPU của job, peak commit và minimum free RAM. CPU 100% là quyền sử dụng, không khẳng định mọi bước I/O/serial đều đạt 100%.",
+        "- Ablation và feature importance được báo cả khi đóng góp bằng 0 hoặc âm. Một witness graph không chứng minh model dự đoán nhờ motif đó.",
+        "- Chưa có untouched external holdout hoặc kiểm chứng thực địa. Software PASS không phải chứng nhận phát hiện AML chính xác ngoài dữ liệu này.", ""]
+    target = root/"designs_Explain.md"
+    target.write_text("\n".join(notes)+"\n",encoding="utf-8")
+    return target

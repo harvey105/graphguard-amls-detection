@@ -95,7 +95,7 @@ def get_graph_session(
     prepare_windows_spark()
 
     configs = dict(extra_configs or {})
-    master = configs.get("spark.master", "local[2]")
+    master = configs.get("spark.master", "local[*]")
     if os.name == "nt":
         from src.common.hardware_guard import protect_spark
 
@@ -105,10 +105,12 @@ def get_graph_session(
         configs.update({"spark.master": master, "spark.default.parallelism": str(workers),
             "spark.driver.memory": driver_memory, "spark.executor.memory": driver_memory,
             "spark.driver.maxResultSize": "512m"})
-        java_limits = "-XX:ActiveProcessorCount=2 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1 -XX:CICompilerCount=2"
+        java_cpus = len(guard.allowed_cpus)
+        java_limits = (f"-XX:ActiveProcessorCount={java_cpus} -XX:ParallelGCThreads={min(8, java_cpus)} "
+                       f"-XX:ConcGCThreads={max(1, min(2, java_cpus))} -XX:CICompilerCount={max(2, min(4, java_cpus))}")
         configs["spark.driver.extraJavaOptions"] = configs.get("spark.driver.extraJavaOptions", "") + " " + java_limits
         # Smaller shuffle partitions reduce simultaneous sort/hash memory.
-        shuffle_partitions = max(32, shuffle_partitions)
+        shuffle_partitions = max(32, workers * 8, shuffle_partitions)
         configs["spark.sql.shuffle.partitions"] = str(shuffle_partitions)
         print(f"[RESOURCE] Effective Spark {master}, heap {driver_memory}; spill before increasing RAM", flush=True)
 

@@ -35,7 +35,7 @@ class AnalysisConfig:
     seed: int = 2026
     example_limit: int = 5
     driver_memory: str = "6g"
-    parallelism: int = 2
+    parallelism: int = 20
 
     def __post_init__(self):
         if (not self.windows_hours or tuple(sorted(set(self.windows_hours))) != self.windows_hours
@@ -49,7 +49,7 @@ class AnalysisConfig:
             raise ValueError("score_thresholds must increase inside (0,1]")
         if (type(self.tree_depth) is not int or not 1 <= self.tree_depth <= 8
                 or type(self.minimum_leaf_rows) is not int or self.minimum_leaf_rows < 1
-                or type(self.parallelism) is not int or not 1 <= self.parallelism <= 2
+                or type(self.parallelism) is not int or not 1 <= self.parallelism <= 64
                 or type(self.example_limit) is not int or self.example_limit < 1):
             raise ValueError("Invalid tree, resource or example limits")
 
@@ -66,7 +66,7 @@ class FullSystemConfig:
     review_fractions: tuple[float, ...] = (0.001, 0.005, 0.01)
     pagerank_iterations: int = 10
     lpa_iterations: int = 5
-    partitions: int = 64
+    partitions: int = 128
 
     def __post_init__(self):
         if self.pagerank_iterations != 10 or self.lpa_iterations != 5:

@@ -29,6 +29,8 @@ from src.motif.features import build_motif_features, normalize_edges
 from src.motif.modeling import (
     FAMILIES, choose_walk_forward_rule, fit_risk_model, metrics_at_threshold,
     precision_recall_curve, score_histogram, score_transactions, wilson_interval,
+    prepare_training_prefix, fit_prepared_model,
+    frozen_prediction,
 )
 
 
@@ -398,6 +400,11 @@ class FullSystemRun:
     output_dir: Path
     config: object
     record: dict
+    kernels: dict = field(default_factory=dict, repr=False)
+
+    def kernel(self, name, default):
+        """Notebook passes its verified visible implementation explicitly."""
+        return self.kernels.get(name, default)
 
     def table(self, name):
         return self.spark.read.parquet(str(self.output_dir / (name + ".parquet")))
@@ -420,7 +427,7 @@ def system_sources():
         "src/paysim/etl_mapping.py", "tests/test_ibm_aml_etl.py", "scripts/run_n4_notebook.py")]))
 
 
-def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir=None, fixture=False):
+def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir=None, fixture=False, kernels=None, resume_from=None):
     """Freeze actual full input, source/config and a single physical-row index."""
     from pyspark import StorageLevel
     from src.motif.config import FullSystemConfig
@@ -433,6 +440,24 @@ def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir
     expected_source = (REPO_ROOT / DATASETS[dataset].input_dir).resolve()
     if not fixture and source != expected_source:
         raise ValueError("Full runs require the canonical full input, never sample/custom input")
+    if resume_from is not None:
+        output = Path(resume_from).resolve()
+        if not fixture and not output.is_relative_to((REPO_ROOT / "results/full_system" / dataset).resolve()):
+            raise ValueError("Resume path outside this dataset's full run directory")
+        record = json.loads((output / "system_state.json").read_text(encoding="utf-8"))
+        current = {str(p.relative_to(REPO_ROOT)): file_fingerprint(p)["sha256"] for p in system_sources()}
+        if record["source_sha256"] != current or record["input"] != input_fingerprint(source):
+            raise ValueError("Resume rejected: source or input changed; preserve historical run and start a new run")
+        if record["dataset"] != dataset or record["config"] != json.loads(json.dumps(config.as_dict())) or record["status"] == "completed":
+            raise ValueError("Resume dataset/config/status mismatch")
+        run = FullSystemRun(spark, dataset, source, output, config, record, dict(kernels or {}))
+        _verify_checkpoint_files(run, record["transaction_checkpoint"])
+        record.pop("previous_phase_hardware", None)
+        record["status"] = "running"
+        record.setdefault("resumed_utc", []).append(datetime.now(timezone.utc).isoformat())
+        run.save()
+        print(f"[SYSTEM] Verified resume: {output.name}; unchanged source/input/config", flush=True)
+        return run
     output = Path(output_dir or REPO_ROOT / "results/full_system" / dataset / ("run_"+datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))).resolve()
     if not fixture and not output.is_relative_to((REPO_ROOT / "results/full_system" / dataset).resolve()):
         raise ValueError("Full output must be inside results/full_system/<dataset>/")
@@ -450,7 +475,7 @@ def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir
         expected = {"paysim": (9073900, 6362620), "ibm_aml": (518581, 5078345)}[dataset]
         if not fixture and (integrity["num_vertices"], integrity["num_edges"]) != expected:
             raise ValueError("Full dataset cardinality differs from the declared benchmark")
-        normalized = normalize_edges(graph.edges, DATASETS[dataset]).repartition(config.partitions)
+        normalized = (kernels or {}).get("normalize_edges", normalize_edges)(graph.edges, DATASETS[dataset]).repartition(config.partitions)
         normalized.withColumn("event_id", F.monotonically_increasing_id()).write.parquet(str(output / "transactions.parquet"))
     finally:
         ids.unpersist(blocking=True)
@@ -469,7 +494,8 @@ def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir
         "integrity": integrity, "support": support, "snapshot_cutoffs": cuts, "phases": {},
         "test_status": "Reused internal temporal holdout; not an untouched external benchmark",
         "backend": "SQL disk-checkpoint PageRank; modal-neighbor LPA with stable xxhash64 seed labels (collision checked) and minimum-label ties"}
-    run = FullSystemRun(spark, dataset, source, output, config, record)
+    run = FullSystemRun(spark, dataset, source, output, config, record, dict(kernels or {}))
+    record["transaction_checkpoint"] = _checkpoint_files(run, ["transactions.parquet"])
     run.save()
     print(f"[SYSTEM] Indexed {support['n']:,} {record['scope']} transactions once; cutoffs={cuts}", flush=True)
     return run
@@ -477,26 +503,91 @@ def start_full_system(spark, dataset, output_dir=None, config=None, *, input_dir
 
 def _finish_system_phase(run, phase, started, details):
     from src.common.hardware_guard import protection_snapshot
+    hardware = protection_snapshot()
+    previous = run.record.get("previous_phase_hardware", {})
+    delta_wall = hardware.get("job_wall_seconds", 0)-previous.get("job_wall_seconds", 0)
+    delta_cpu = hardware.get("job_cpu_seconds", 0)-previous.get("job_cpu_seconds", 0)
+    import os
     run.record["phases"][phase] = {"status": "PASS", "elapsed_seconds": round(time.perf_counter()-started, 3),
-                                    **details, "hardware": protection_snapshot()}
+        **details, "hardware": hardware,
+        "measured_interval_seconds": round(delta_wall, 3),
+        "average_job_cpu_percent": round(100*max(0, delta_cpu)/delta_wall/(os.cpu_count() or 1), 2) if delta_wall > 0 else None}
+    run.record["previous_phase_hardware"] = hardware
+    names = {"raw_reconciliation": ["raw_reconciliation.json"],
+        "centrality_full": ["account_metrics.parquet", "degree_distribution.csv", "top10_pagerank.csv"],
+        "communities_full": ["communities.parquet", "community_summary_all.parquet", "community_amounts_by_currency.parquet", "community_top50.csv", "community_size_distribution.csv"],
+        "motif_features": ["motif_features.parquet"], "common_features": ["features.parquet"],
+        "motif_baseline": ["baseline_summary.csv", "baseline_examples.csv", "baseline_currencies.csv"],
+        "motif_benchmark": ["motif_coverage.csv"],
+        "validation": ["walk_forward.csv", "validation_leaderboard.csv", "validation_average_precision.csv", "frozen_rules.json"],
+        "frozen_test": ["test_metrics.csv", "review_budgets.csv", "feature_importance.csv", "final_predictions.parquet", "predictions", "models", "selected_cold_start.csv", "selected_amounts_by_currency.csv"],
+        "reliability": ["reliability_summary.csv", "test_temporal_stability.csv", "graph_contributions.csv"]}.get(phase, [])
+    run.record.setdefault("phase_checkpoints", {})[phase] = _checkpoint_files(run, names)
     run.save()
     print(f"[SYSTEM] {phase}: PASS", flush=True)
     return run.record["phases"][phase]
 
 
+def _checkpoint_files(run, names):
+    paths = []
+    for name in names:
+        path = run.output_dir / name
+        if not path.exists():
+            raise ValueError("Missing checkpoint output: "+name)
+        if path.suffix == ".parquet" and not (path / "_SUCCESS").exists():
+            raise ValueError("Incomplete Parquet checkpoint: "+name)
+        paths.extend(sorted(p for p in path.rglob("*") if p.is_file() and not p.name.startswith(".")) if path.is_dir() else [path])
+    return [{**file_fingerprint(p), "path": p.relative_to(run.output_dir).as_posix()} for p in paths]
+
+
+def _verify_checkpoint_files(run, members):
+    if not members:
+        raise ValueError("Checkpoint manifest is empty")
+    roots = sorted({Path(item["path"]).parts[0] for item in members})
+    found = set()
+    for name in roots:
+        path = run.output_dir / name
+        found.update(p.relative_to(run.output_dir).as_posix() for p in path.rglob("*")
+                     if p.is_file() and not p.name.startswith(".")) if path.is_dir() else found.add(name)
+    if found != {item["path"] for item in members}:
+        raise ValueError("Checkpoint file inventory changed")
+    for item in members:
+        path = (run.output_dir / item["path"]).resolve()
+        if not path.is_relative_to(run.output_dir) or not path.exists() or file_fingerprint(path)["sha256"] != item["sha256"]:
+            raise ValueError("Checkpoint hash changed: "+item["path"])
+
+
+def _reuse_system_phase(run, phase):
+    if run.record["phases"].get(phase, {}).get("status") != "PASS":
+        return None
+    _verify_checkpoint_files(run, run.record["phase_checkpoints"][phase])
+    print(f"[SYSTEM] Reused verified {phase}; no computation repeated", flush=True)
+    csv = {"validation": "validation_leaderboard.csv", "frozen_test": "test_metrics.csv",
+           "motif_benchmark": "motif_coverage.csv", "reliability": "reliability_summary.csv"}
+    if phase in csv:
+        return pd.read_csv(run.output_dir / csv[phase])
+    if phase == "motif_baseline":
+        from src.motif.presentation import BaselineAudit
+        return BaselineAudit(pd.read_csv(run.output_dir / "baseline_summary.csv"),
+                             pd.read_csv(run.output_dir / "baseline_examples.csv"),
+                             pd.read_csv(run.output_dir / "baseline_currencies.csv"))
+    return run.record["phases"][phase]
+
+
 def full_system_centrality(run):
     """Task 2 on ALL accounts/edges; summaries are views, not input sampling."""
-    from src.paysim.metrics import dataframe_pagerank
+    reused = _reuse_system_phase(run, "centrality_full")
+    if reused is not None:
+        return reused
+    from src.paysim.metrics import dataframe_pagerank, account_degree_metrics
     from src.common.graph_utils import write_spark_csv
     started = time.perf_counter()
     graph = load_graph(run.spark, str(run.input_dir))
     ids = graph.vertices.select("id")
     edges = graph.edges.select("src", "dst")
-    ranks = dataframe_pagerank(ids, edges, run.output_dir / ".work/full_pagerank", run.config.pagerank_iterations)
-    incoming = edges.groupBy("dst").count().select(F.col("dst").alias("id"), F.col("count").alias("inDegree"))
-    outgoing = edges.groupBy("src").count().select(F.col("src").alias("id"), F.col("count").alias("outDegree"))
-    accounts = (ranks.join(incoming, "id", "left").join(outgoing, "id", "left").fillna(0, subset=["inDegree", "outDegree"])
-        .withColumn("degree", F.col("inDegree")+F.col("outDegree")))
+    ranks = dataframe_pagerank(ids, edges, run.output_dir / ".work/full_pagerank", run.config.pagerank_iterations,
+                              update=run.kernels.get("pagerank_update"))
+    accounts = run.kernel("account_degree_metrics", account_degree_metrics)(ids, edges, ranks)
     accounts.write.parquet(str(run.output_dir / "account_metrics.parquet"))
     accounts = run.table("account_metrics")
     counts = accounts.agg(F.count("*").alias("accounts"), F.sum("degree").alias("degree_sum"),
@@ -513,12 +604,16 @@ def full_system_centrality(run):
 
 def full_system_communities(run):
     """Task 4 full assignments, every community and per-currency amounts."""
+    reused = _reuse_system_phase(run, "communities_full")
+    if reused is not None:
+        return reused
     from src.paysim.community_detection import dataframe_lpa
     from src.common.graph_utils import write_spark_csv
     started = time.perf_counter()
     graph = load_graph(run.spark, str(run.input_dir))
     assignments = dataframe_lpa(graph.vertices, graph.edges.select("src", "dst"),
-                               run.output_dir / ".work/full_lpa", run.config.lpa_iterations)
+                               run.output_dir / ".work/full_lpa", run.config.lpa_iterations,
+                               update=run.kernels.get("lpa_update"))
     assignments.write.parquet(str(run.output_dir / "communities.parquet"))
     assignments = run.table("communities")
     members = assignments.groupBy("label").agg(F.count("*").alias("member_count"))
@@ -550,11 +645,16 @@ def full_system_communities(run):
 
 def full_system_motif_features(run):
     """Run existing causal motifs on the same full indexed transaction table."""
+    reused = _reuse_system_phase(run, "motif_features")
+    if reused is not None:
+        return reused
     started = time.perf_counter()
     tx = run.table("transactions")
     raw = tx.drop("isFraud")
     vertices = load_graph(run.spark, str(run.input_dir)).vertices.select("id")
-    features = build_motif_features(raw, vertices, DATASETS[run.dataset], run.config.analysis.windows_hours)
+    features = run.kernel("build_motif_features", build_motif_features)(
+        raw, vertices, DATASETS[run.dataset], run.config.analysis.windows_hours,
+        checkpoint_dir=run.output_dir / ".work/motif_features")
     try:
         features.write.parquet(str(run.output_dir / "motif_features.parquet"))
     finally:
@@ -574,8 +674,10 @@ def historical_system_snapshot(run, cutoff, directory):
     edges = run.table("transactions").where(F.col("step") <= cutoff).select("src", "dst")
     require_unlabelled(edges)
     ids = edges.select(F.col("src").alias("id")).unionByName(edges.select(F.col("dst").alias("id"))).distinct()
-    ranks = dataframe_pagerank(ids, edges, Path(directory)/"pagerank", run.config.pagerank_iterations)
-    labels = dataframe_lpa(ids, edges, Path(directory)/"lpa", run.config.lpa_iterations)
+    ranks = dataframe_pagerank(ids, edges, Path(directory)/"pagerank", run.config.pagerank_iterations,
+                              update=run.kernels.get("pagerank_update"))
+    labels = dataframe_lpa(ids, edges, Path(directory)/"lpa", run.config.lpa_iterations,
+                           update=run.kernels.get("lpa_update"))
     incoming = edges.groupBy("dst").count().select(F.col("dst").alias("id"), F.col("count").alias("inDegree"))
     outgoing = edges.groupBy("src").count().select(F.col("src").alias("id"), F.col("count").alias("outDegree"))
     sizes = labels.groupBy("label").agg(F.count("*").alias("community_size"))
@@ -616,12 +718,29 @@ def join_system_snapshot(transactions, snapshot):
 
 def full_system_feature_table(run):
     """Five declared snapshots cover training, all validation folds and test."""
+    reused = _reuse_system_phase(run, "common_features")
+    if reused is not None:
+        return reused
     started = time.perf_counter()
     cuts = run.record["snapshot_cutoffs"]
     features = run.table("motif_features")
     block_paths = []
     boundaries = [None, *cuts]
     for index, cutoff in enumerate(boundaries):
+        completed = run.record.get("block_checkpoints", {}).get(str(index))
+        path = run.output_dir / "feature_blocks" / f"block_{index}.parquet"
+        if completed:
+            _verify_checkpoint_files(run, completed)
+            if not (path / "_SUCCESS").exists():
+                raise ValueError("Completed block has no Spark success marker")
+            block_paths.append(path)
+            print(f"[SYSTEM] Reused verified feature block {index}", flush=True)
+            continue
+        import shutil
+        for partial in (path, run.output_dir / "snapshots" / f"snapshot_{index}.parquet",
+                        run.output_dir / ".work" / f"snapshot_{index}"):
+            if partial.exists():
+                shutil.rmtree(partial)
         block = features
         if cutoff is not None:
             block = block.where(F.col("step") > cutoff)
@@ -631,14 +750,22 @@ def full_system_feature_table(run):
         if cutoff is not None:
             print(f"[SYSTEM] Historical snapshot {index}/{len(cuts)}, cutoff={cutoff}", flush=True)
             work = run.output_dir / ".work" / f"snapshot_{index}"
-            snapshot = historical_system_snapshot(run, cutoff, work)
+            snapshot = run.kernel("historical_system_snapshot", historical_system_snapshot)(run, cutoff, work)
             path = run.output_dir / "snapshots" / f"snapshot_{index}.parquet"
             snapshot.write.parquet(str(path))
             snapshot = run.spark.read.parquet(str(path))
-        joined = join_system_snapshot(block, snapshot).withColumn("time_block", F.lit(index))
+        joined = run.kernel("join_system_snapshot", join_system_snapshot)(block, snapshot).withColumn("time_block", F.lit(index))
         path = run.output_dir / "feature_blocks" / f"block_{index}.parquet"
         joined.write.parquet(str(path))
         block_paths.append(path)
+        names = [path.relative_to(run.output_dir).as_posix()]
+        if cutoff is not None:
+            names.append(f"snapshots/snapshot_{index}.parquet")
+        run.record.setdefault("block_checkpoints", {})[str(index)] = _checkpoint_files(run, names)
+        run.save()
+    import shutil
+    if (run.output_dir / "features.parquet").exists():
+        shutil.rmtree(run.output_dir / "features.parquet")
     common = run.spark.read.parquet(*[str(p) for p in block_paths])
     common.write.parquet(str(run.output_dir / "features.parquet"))
     table = run.table("features")
@@ -651,6 +778,9 @@ def full_system_feature_table(run):
 
 def full_system_validation(run):
     """All eight families see identical rows, folds and declared tuning budget."""
+    reused = _reuse_system_phase(run, "validation")
+    if reused is not None:
+        return reused
     from src.motif.config import SYSTEM_FAMILY_GROUPS
     from src.motif.evaluation import require_unlabelled
     started = time.perf_counter()
@@ -660,20 +790,23 @@ def full_system_validation(run):
     boundaries = run.record["snapshot_cutoffs"][1:]
     records, aps = [], []
     for fold, (start, end) in enumerate(zip(boundaries[:-1], boundaries[1:]), 1):
-        for family in SYSTEM_FAMILY_GROUPS:
-            print(f"[SYSTEM] Validation {fold}/3: {family}, train<={start}, validation<={end}", flush=True)
-            model = fit_risk_model(features, truth, start, family, run.config.analysis, spill_training=True)
-            try:
+        prepared = run.kernel("prepare_training_prefix", prepare_training_prefix)(
+            features, truth, start, run.config.analysis, spill_training=True)
+        try:
+            for family in SYSTEM_FAMILY_GROUPS:
+                print(f"[SYSTEM] Validation {fold}/3: {family}, train<={start}, validation<={end}", flush=True)
+                model = run.kernel("fit_prepared_model", fit_prepared_model)(prepared, family, run.config.analysis)
                 interval = features.where((F.col("step") > start) & (F.col("step") <= end))
-                scores = score_transactions(model, interval)
+                scores = run.kernel("score_transactions", score_transactions)(model, interval)
                 histogram = score_histogram(scores, truth, start, end)
-                curve, ap = precision_recall_curve(histogram)
+                curve, ap = run.kernel("precision_recall_curve", precision_recall_curve)(histogram)
                 aps.append({"fold": fold, "family": family, "average_precision": ap,
                             "transactions": int(histogram["count"].sum())})
                 for threshold in run.config.analysis.score_thresholds:
-                    records.append({"fold": fold, "family": family, "threshold": threshold, **metrics_at_threshold(histogram, threshold)})
-            finally:
-                model.scales.unpersist(blocking=True)
+                    records.append({"fold": fold, "family": family, "threshold": threshold,
+                                    **run.kernel("metrics_at_threshold", metrics_at_threshold)(histogram, threshold)})
+        finally:
+            prepared.close()
     folds = pd.DataFrame(records)
     counts = folds.groupby("fold").transactions.nunique()
     if not (counts == 1).all():
@@ -733,6 +866,9 @@ def load_full_system_model(run, family):
 
 def full_system_test(run):
     """Freeze -> refit -> export all ablations; test never selects a new rule."""
+    reused = _reuse_system_phase(run, "frozen_test")
+    if reused is not None:
+        return reused
     from src.motif.config import SYSTEM_FAMILY_GROUPS
     from src.motif.evaluation import binary_metrics
     started = time.perf_counter()
@@ -744,11 +880,13 @@ def full_system_test(run):
     truth = tx.select("event_id", "isFraud")
     support = tx.where(F.col("step") > cutoff).agg(F.count("*").alias("n"), F.sum("isFraud").alias("p")).first()
     metrics, budgets, importances = [], [], []
-    for family in SYSTEM_FAMILY_GROUPS:
-        frozen_system_rules(run)
-        print(f"[SYSTEM] Frozen refit/test: {family}", flush=True)
-        model = fit_risk_model(features, truth, cutoff, family, run.config.analysis, spill_training=True)
-        try:
+    prepared = run.kernel("prepare_training_prefix", prepare_training_prefix)(
+        features, truth, cutoff, run.config.analysis, spill_training=True)
+    try:
+        for family in SYSTEM_FAMILY_GROUPS:
+            frozen_system_rules(run)
+            print(f"[SYSTEM] Frozen refit/test: {family}", flush=True)
+            model = run.kernel("fit_prepared_model", fit_prepared_model)(prepared, family, run.config.analysis)
             directory = run.output_dir / "models" / family
             directory.mkdir(parents=True, exist_ok=True)
             if model.pipeline is not None:
@@ -759,8 +897,8 @@ def full_system_test(run):
             importance = model.importance().assign(family=family)
             importances += importance.to_dict("records")
             threshold = float(rules["family_rules"][family]["threshold"])
-            scores = score_transactions(model, future).select("event_id", "risk_score")
-            prediction = scores.withColumn("alert", F.col("risk_score") >= threshold).join(truth, "event_id")
+            prediction = run.kernel("frozen_prediction", frozen_prediction)(model, future, truth, threshold,
+                score_model=run.kernel("score_transactions", score_transactions))
             path = run.output_dir / "predictions" / (family+".parquet")
             prediction.write.parquet(str(path))
             saved = run.spark.read.parquet(str(path))
@@ -770,7 +908,7 @@ def full_system_test(run):
             if checks.n != support.n or checks.unique_ids != support.n or checks.p != support.p:
                 raise ValueError("Final ablation coverage differs from the common test denominator")
             histogram = saved.groupBy("risk_score", "isFraud").count().toPandas()
-            curve, ap = precision_recall_curve(histogram)
+            curve, ap = run.kernel("precision_recall_curve", precision_recall_curve)(histogram)
             curve.to_csv(run.output_dir / ("pr_curve_"+family+".csv"), index=False, encoding="utf-8-sig")
             row = {"model": family, "threshold": threshold, **binary_metrics(checks.n, checks.p, checks.tp, checks.fp),
                    "average_precision": ap, "selected_on_validation": family == rules["selection"]["family"]}
@@ -785,8 +923,8 @@ def full_system_test(run):
                 examples = context.where(condition).orderBy(F.desc("risk_score"), "event_key", "event_id").limit(run.config.analysis.example_limit)
                 columns = [c for c in ("event_id", "event_key", "step", "src", "dst", "type", "amount", "payment_currency", "risk_score", "alert", "isFraud", "snapshot_as_of", "src_seen", "dst_seen", "cycle3_count", "cycle3_witness") if c in examples.columns]
                 examples.select(columns).toPandas().to_json(run.output_dir / f"examples_{family}_{case}.json", orient="records", indent=2, force_ascii=False)
-        finally:
-            model.scales.unpersist(blocking=True)
+    finally:
+        prepared.close()
     table = pd.DataFrame(metrics)
     table.to_csv(run.output_dir / "test_metrics.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(budgets).to_csv(run.output_dir / "review_budgets.csv", index=False, encoding="utf-8-sig")
@@ -795,7 +933,7 @@ def full_system_test(run):
     if selected != "abstain":
         loaded = load_full_system_model(run, selected)
         try:
-            replay = score_transactions(loaded, future).select("event_id", F.col("risk_score").alias("replayed"))
+            replay = run.kernel("score_transactions", score_transactions)(loaded, future).select("event_id", F.col("risk_score").alias("replayed"))
             saved = run.spark.read.parquet(str(run.output_dir / "predictions" / (selected+".parquet")))
             if replay.join(saved, "event_id").where(F.abs(F.col("replayed")-F.col("risk_score")) > 1e-12).limit(1).count():
                 raise ValueError("Reloaded selected model does not reproduce test scores")
@@ -827,7 +965,9 @@ def full_system_test(run):
         F.sum((F.col("novelty_alert") & (F.col("isFraud")==1)).cast("long")).alias("tp")).first()
     run.record["novelty_baseline"] = binary_metrics(support.n, support.p, int(novelty_counts.tp), int(novelty_counts.alerts-novelty_counts.tp))
     if selected == "abstain":
-        run.record["selected_test_metrics"] = binary_metrics(support.n, support.p, 0, 0)
+        run.record["selected_test_metrics"] = {"model": "abstain", "threshold": 1.0,
+            **binary_metrics(support.n, support.p, 0, 0),
+            "average_precision": float(support.p/support.n), "selected_on_validation": True}
     else:
         run.record["selected_test_metrics"] = _records(table[table.model==selected])[0]
     _finish_system_phase(run, "frozen_test", started, {"models": len(metrics), "test_transactions": support.n,
@@ -837,13 +977,124 @@ def full_system_test(run):
 
 def full_system_baseline(run):
     """Original coursework queries remain separate from label-blind inference."""
+    reused = _reuse_system_phase(run, "motif_baseline")
+    if reused is not None:
+        return reused
     from src.motif.presentation import baseline_audit
     started = time.perf_counter()
-    audit = baseline_audit(run.spark, run.dataset, run.input_dir if run.record["scope"]!="full" else None)
+    audit = baseline_audit(run.spark, run.dataset, run.input_dir if run.record["scope"]!="full" else None,
+                           kernels=run.kernels)
     audit.summary.to_csv(run.output_dir / "baseline_summary.csv", index=False, encoding="utf-8-sig")
     audit.examples.to_csv(run.output_dir / "baseline_examples.csv", index=False, encoding="utf-8-sig")
+    (audit.currencies if len(audit.currencies.columns) else pd.DataFrame(columns=["payment_currency","count"])).to_csv(
+        run.output_dir / "baseline_currencies.csv", index=False, encoding="utf-8-sig")
     _finish_system_phase(run, "motif_baseline", started, {"interpretation": "original query / label audit; never inference features"})
     return audit
+
+
+def full_system_motif_benchmark(run):
+    """Audit structure coverage against truth AFTER label-blind construction."""
+    reused = _reuse_system_phase(run, "motif_benchmark")
+    if reused is not None:
+        return reused
+    started = time.perf_counter()
+    features = run.table("motif_features")
+    truth = run.table("transactions").select("event_id", "isFraud")
+    labelled = features.join(truth, "event_id")
+    names = ["cycle3_count", *[f"{kind}_{h}h" for kind in
+             ("relay", "reciprocal", "fanin", "fanout") for h in run.config.analysis.windows_hours]]
+    expressions = [F.count("*").alias("n"), F.sum("isFraud").alias("p")]
+    for index, name in enumerate(names):
+        hit = F.col(name) > 0
+        expressions += [F.sum(hit.cast("long")).alias(f"hit_{index}"),
+                        F.sum((hit & (F.col("isFraud")==1)).cast("long")).alias(f"positive_{index}")]
+    full = labelled.agg(*expressions).first()
+    test = labelled.where(F.col("step") > run.record["snapshot_cutoffs"][-1]).agg(*expressions).first()
+    rows = []
+    for scope, counts in (("full", full), ("test", test)):
+        for index, name in enumerate(names):
+            hit, positive = int(counts[f"hit_{index}"] or 0), int(counts[f"positive_{index}"] or 0)
+            rows.append({"scope": scope, "motif": name, "transactions": counts.n,
+                "positives": int(counts.p), "covered_transactions": hit, "covered_positives": positive,
+                "positive_coverage": positive/counts.p if counts.p else None,
+                "positive_fraction_when_present": positive/hit if hit else None,
+                "population_prevalence": counts.p/counts.n,
+                "interpretation": "overlapping structural coverage; not a detector prediction"})
+    table = pd.DataFrame(rows)
+    table.to_csv(run.output_dir / "motif_coverage.csv", index=False, encoding="utf-8-sig")
+    _finish_system_phase(run, "motif_benchmark", started, {"full_rows": full.n, "test_rows": test.n,
+        "test_positives": int(test.p), "motif_groups": len(names), "labels_used_for_inference": False})
+    return table
+
+
+def temporal_test_context(final):
+    """Five chronological test periods; all equal timestamps stay together."""
+    cuts = sorted(set(int(x) for x in final.approxQuantile("step", [.2,.4,.6,.8], .001)))
+    block = F.lit(0)
+    for cutoff in cuts:
+        block = block + (F.col("step") > cutoff).cast("int")
+    return final.select("event_id", "step").withColumn("test_period", block), cuts
+
+
+def full_system_reliability(run):
+    """Frozen-model temporal stability, uncertainty and matched ablations.
+
+    No extra model selection: these are posthoc diagnostics of the same test.
+    Wilson intervals are nominal row-binomial intervals, not account-cluster CIs.
+    """
+    reused = _reuse_system_phase(run, "reliability")
+    if reused is not None:
+        return reused
+    from src.motif.evaluation import binary_metrics
+    started = time.perf_counter()
+    rules = frozen_system_rules(run)
+    final = run.table("final_predictions")
+    context, cuts = run.kernel("temporal_test_context", temporal_test_context)(final)
+    summaries = []
+    for family, rule in rules["family_rules"].items():
+        prediction = run.spark.read.parquet(str(run.output_dir / "predictions" / (family+".parquet")))
+        hist = prediction.join(context, "event_id").groupBy("test_period", "risk_score", "isFraud").count().toPandas()
+        for period, values in hist.groupby("test_period"):
+            row = metrics_at_threshold(values, float(rule["threshold"]))
+            _, ap = precision_recall_curve(values)
+            row["precision_low95"], row["precision_high95"] = wilson_interval(row["TP"], row["alerts"])
+            row["recall_low95"], row["recall_high95"] = wilson_interval(row["TP"], row["fraud"])
+            summaries.append({"model": family, "test_period": int(period),
+                "threshold": rule["threshold"], **row, "average_precision": ap})
+    periods = pd.DataFrame(summaries)
+    expected = run.record["phases"]["frozen_test"]
+    for family, part in periods.groupby("model"):
+        if int(part.transactions.sum()) != expected["test_transactions"] or int(part.fraud.sum()) != expected["test_positives"]:
+            raise ValueError("Temporal reliability diagnostics lost test transactions")
+    periods.to_csv(run.output_dir / "test_temporal_stability.csv", index=False, encoding="utf-8-sig")
+    validation = pd.DataFrame(rules["family_rules"]).T.reset_index(names="model")
+    table = validation[["model", "threshold", "mean_F1", "worst_F1", "std_F1"]].copy()
+    table = table.merge(periods.groupby("model").agg(test_period_min_F1=("F1","min"),
+        test_period_max_F1=("F1","max"), test_period_std_F1=("F1","std"),
+        positive_periods=("fraud",lambda x:int((x>0).sum()))).reset_index(), on="model")
+    table.to_csv(run.output_dir / "reliability_summary.csv", index=False, encoding="utf-8-sig")
+    # Matched test population; the contrasts describe association, not causality.
+    metrics = pd.read_csv(run.output_dir / "test_metrics.csv").set_index("model")
+    contrasts = []
+    pairs = [("motif_alone", "motif_assisted", "transaction_only"),
+             ("centrality_alone", "transaction_centrality", "transaction_only"),
+             ("community_alone", "transaction_community", "transaction_only"),
+             ("all_graph", "full_fusion", "transaction_only"),
+             ("motif_in_fusion", "full_fusion", "without_motifs"),
+             ("centrality_in_fusion", "full_fusion", "without_centrality"),
+             ("community_in_fusion", "full_fusion", "without_community")]
+    for name, enhanced, reference in pairs:
+        contrasts.append({"contrast": name, "enhanced": enhanced, "reference": reference,
+            **{"delta_"+metric: float(metrics.loc[enhanced,metric]-metrics.loc[reference,metric])
+               for metric in ("precision","recall","F1","average_precision")}})
+    pd.DataFrame(contrasts).to_csv(run.output_dir / "graph_contributions.csv", index=False, encoding="utf-8-sig")
+    details = {"status": "PASS", "test_period_cutoffs": cuts, "test_periods": len(cuts)+1,
+        "all_family_period_coverage": "PASS", "selected_model_reload": expected["full_test_model_reload"],
+        "preprocessing_fits": 4, "tree_fits": 36,
+        "uncertainty": "95% Wilson; not adjusted for account/time dependence",
+        "stability_claim": "Observed temporal variation, not a guarantee of external generalization"}
+    _finish_system_phase(run, "reliability", started, details)
+    return table
 
 
 def finalize_full_system(run):
@@ -852,6 +1103,8 @@ def finalize_full_system(run):
     required = ("centrality_full", "communities_full", "motif_features", "common_features", "validation", "frozen_test")
     if any(run.record["phases"].get(name, {}).get("status") != "PASS" for name in required):
         raise ValueError("Full system still has incomplete phases")
+    if run.record["scope"] == "full" and any(run.record["phases"].get(p, {}).get("status") != "PASS" for p in ("reliability", "motif_benchmark")):
+        raise ValueError("Full reliability and motif coverage diagnostics are required")
     if run.record["scope"] == "full" and run.record["phases"].get("raw_reconciliation", {}).get("status") != "PASS":
         raise ValueError("Full raw reconciliation is required before acceptance")
     if run.record.get("status") == "completed":
@@ -910,9 +1163,11 @@ def full_system_main(argv=None):
         full_system_baseline(run)
         full_system_motif_features(run)
         full_system_feature_table(run)
+        full_system_motif_benchmark(run)
         full_system_validation(run)
         plot_system_validation(run)
         print(full_system_test(run).to_string(index=False))
+        full_system_reliability(run)
         plot_system_results(run)
         system_case_evidence(run)
         print(finalize_full_system(run).to_string(index=False))
@@ -923,6 +1178,9 @@ def full_system_main(argv=None):
 
 def full_system_raw_reconciliation(run):
     """Full duplicate-preserving raw/Parquet comparison, not a spot check."""
+    reused = _reuse_system_phase(run, "raw_reconciliation")
+    if reused is not None:
+        return reused
     from pyspark import StorageLevel
     started = time.perf_counter()
     if run.record["scope"] != "full":
@@ -960,6 +1218,7 @@ def full_system_raw_reconciliation(run):
             expected_vertices.unpersist(blocking=True)
         raw_files = [raw_file]
     details["raw_files"] = [file_fingerprint(path) for path in raw_files]
+    (run.output_dir / "raw_reconciliation.json").write_text(json.dumps(details, indent=2)+"\n", encoding="utf-8")
     return _finish_system_phase(run, "raw_reconciliation", started, details)
 
 if __name__ == "__main__":

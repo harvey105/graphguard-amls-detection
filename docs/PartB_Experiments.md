@@ -1,6 +1,179 @@
+# Full-system đã hoàn tất trên hai datasets — 24/10/2026
+
+**DONE FIXED — code, notebook execution và full project gate đã kiểm chứng trên native Windows; chưa push Git.** Software/data integrity PASS và predictive reliability là hai kết luận riêng.
+
+| Dataset | Family | Precision | Recall | F1 | AP | Alerts |
+| --- | --- | --- | --- | --- | --- | --- |
+| IBM AML | transaction_only | 9.07% | 48.30% | 15.27% | 5.62% | 9,584 |
+| IBM AML | full_fusion [selected] | 10.09% | 27.79% | 14.80% | 5.87% | 4,956 |
+| PaySim | transaction_only | 81.01% | 19.67% | 31.65% | 17.00% | 1,032 |
+| PaySim | full_fusion | 58.31% | 26.00% | 35.96% | 28.98% | 1,895 |
+| PaySim | validation-selected: without_centrality | 58.12% | 26.09% | 36.02% | 26.58% | 1,908 |
+
+Mọi family dùng cùng full input/index, causal features và test denominator trong từng dataset. IBM target là laundering; PaySim target là fraud. Không gộp F1 hai dataset hoặc xem một cảnh báo là kết luận pháp lý.
+
+## IBM AML — `run_20261024T081350344149Z`
+
+- Notebook: [IBM_full_system.ipynb](../notebooks/IBM_full_system.ipynb); 35 code cells, 24 definitions khớp module Python.
+- Full input: 518,581 accounts / 5,078,345 transactions / 5,177 positives. Test: 1,017,821 rows / 1,799 positives.
+- Frozen rule `full_fusion`, threshold=0.5; TP=500, FP=4,456, FN=1,299, TN=1,011,566.
+- Precision95% Wilson: [9.28%, 10.96%]; recall95% Wilson: [25.77%, 29.91%]. Đây là nominal row-binomial CI, chưa điều chỉnh account/time correlation.
+- F1 qua5 test periods: 3.32%–28.79%; đây là quan sát biến động, không phải chứng nhận ổn định cao.
+- Peak job commit toàn các phase=6.27/8 GiB; minimum available host RAM=13.39 GiB; sampled maximum job CPU=91.67% (toàn máy).
+
+| Family | Threshold | Precision | Recall | F1 | AP | Selected on validation |
+| --- | --- | --- | --- | --- | --- | --- |
+| transaction_only | 0.5 | 9.07% | 48.30% | 15.27% | 5.62% | False |
+| transaction_novelty | 0.5 | 9.07% | 48.30% | 15.27% | 5.62% | False |
+| transaction_centrality | 0.5 | 9.15% | 49.14% | 15.42% | 5.83% | False |
+| motif_assisted | 0.5 | 10.67% | 25.85% | 15.10% | 5.67% | False |
+| transaction_community | 0.5 | 9.07% | 48.30% | 15.27% | 5.62% | False |
+| full_fusion | 0.5 | 10.09% | 27.79% | 14.80% | 5.87% | True |
+| without_centrality | 0.5 | 10.67% | 25.85% | 15.10% | 5.67% | False |
+| without_motifs | 0.5 | 8.84% | 50.31% | 15.03% | 5.95% | False |
+| without_community | 0.5 | 10.95% | 26.63% | 15.52% | 5.83% | False |
+
+### Độ ổn định theo thời gian của model được chọn
+
+| Period (1–5) | Transactions | Positives | TP | FP | FN | F1 | AP |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 203929 | 205 | 44 | 693 | 161 | 9.34% | 2.82% |
+| 2 | 203134 | 141 | 19 | 985 | 122 | 3.32% | 1.13% |
+| 3 | 203756 | 198 | 56 | 972 | 142 | 9.14% | 2.89% |
+| 4 | 203828 | 159 | 42 | 886 | 117 | 7.73% | 2.45% |
+| 5 | 203174 | 1096 | 339 | 920 | 757 | 28.79% | 16.89% |
+
+### Motif coverage trên cùng test
+
+| Motif | Covered transactions | Covered positives | Positive coverage |
+| --- | --- | --- | --- |
+| cycle3_count | 132 | 41 | 2.28% |
+| relay_24h | 599171 | 461 | 25.63% |
+| relay_168h | 740099 | 795 | 44.19% |
+| reciprocal_24h | 257 | 39 | 2.17% |
+| reciprocal_168h | 1579 | 109 | 6.06% |
+| fanin_24h | 427877 | 909 | 50.53% |
+| fanin_168h | 706216 | 1395 | 77.54% |
+| fanout_24h | 608459 | 532 | 29.57% |
+| fanout_168h | 709096 | 791 | 43.97% |
+
+Coverage là hậu kiểm cấu trúc sau construction không dùng nhãn; các nhóm overlap. Coverage không phải TP hoặc recall của classifier.
+
+### Ngân sách review (selected model)
+
+| Budget | K | TP@K | Precision@K | Recall@K |
+| --- | --- | --- | --- | --- |
+| 0.10% | 1018 | 105 | 10.31% | 5.84% |
+| 0.50% | 5090 | 505 | 9.92% | 28.07% |
+| 1.00% | 10179 | 789 | 7.75% | 43.86% |
+
+### Benchmark thực thi
+
+| Phase | Seconds | Throughput / cost | Đơn vị | Job CPU % | Cumulative peak commit GiB |
+| --- | --- | --- | --- | --- | --- |
+| raw_reconciliation | 66.024 | 76,916.65 | input transactions/s | 46.5 | 5.22 |
+| centrality_full | 39.927 | 127,190.75 | input transactions/s | 35.67 | 5.23 |
+| communities_full | 69.736 | 72,822.43 | input transactions/s | 38.32 | 5.24 |
+| motif_baseline | 11.112 | 824,369.06 | diagnostic prediction rows/s | 41.39 | 5.24 |
+| motif_features | 149.841 | 33,891.56 | feature/audit rows/s | 62.5 | 6.21 |
+| motif_benchmark | 7.586 | 669,436.46 | feature/audit rows/s | 50.67 | 6.21 |
+| common_features | 749.761 | 6,773.29 | feature/audit rows/s | 41.18 | 6.27 |
+| validation | 427.915 | 15.85 | s/fit incl. shared preprocessing | 50.93 | 6.27 |
+| frozen_test | 238.956 | 38,335.04 | test predictions/s incl. refit/export | 48.16 | 5.99 |
+| reliability | 7.449 | 1,229,747.48 | diagnostic prediction rows/s | 11.21 | 5.99 |
+
+Graph throughput chuẩn hóa theo full input E, không phải số lần đọc vật lý sau mọi iteration. Validation cost chia27 fits; frozen-test throughput tính9 × test N và bao gồm refit/export/replay. CPU đo theo khoảng giữa phase milestones, có thể bao gồm hiển thị/I/O; peak commit là high-water mark tích lũy trong process. Các bước serial/I/O không cần duy trì90–100% CPU.
+
+## PaySim — `run_20261024T084918669391Z`
+
+- Notebook: [PaySIM_full_system.ipynb](../notebooks/PaySIM_full_system.ipynb); 36 code cells, 25 definitions khớp module Python.
+- Full input: 9,073,900 accounts / 6,362,620 transactions / 8,213 positives. Test: 1,248,736 rows / 4,250 positives.
+- Frozen rule `without_centrality`, threshold=0.7; TP=1,109, FP=799, FN=3,141, TN=1,243,687.
+- Precision95% Wilson: [55.90%, 60.32%]; recall95% Wilson: [24.80%, 27.44%]. Đây là nominal row-binomial CI, chưa điều chỉnh account/time correlation.
+- F1 qua5 test periods: 27.05%–40.90%; đây là quan sát biến động, không phải chứng nhận ổn định cao.
+- Peak job commit toàn các phase=6.58/8 GiB; minimum available host RAM=13.02GiB; sampled maximum job CPU=90.06% (toàn máy).
+
+| Family | Threshold | Precision | Recall | F1 | AP | Selected on validation |
+| --- | --- | --- | --- | --- | --- | --- |
+| transaction_only | 0.7 | 81.01% | 19.67% | 31.65% | 17.00% | False |
+| transaction_novelty | 0.7 | 63.85% | 26.09% | 37.05% | 20.29% | False |
+| transaction_centrality | 0.5 | 64.06% | 25.79% | 36.77% | 22.71% | False |
+| motif_assisted | 0.7 | 58.12% | 26.09% | 36.02% | 26.58% | False |
+| transaction_community | 0.7 | 63.85% | 26.09% | 37.05% | 20.29% | False |
+| full_fusion | 0.7 | 58.31% | 26.00% | 35.96% | 28.98% | False |
+| without_centrality | 0.7 | 58.12% | 26.09% | 36.02% | 26.58% | True |
+| without_motifs | 0.5 | 64.06% | 25.79% | 36.77% | 22.71% | False |
+| without_community | 0.7 | 58.31% | 26.00% | 35.96% | 28.98% | False |
+
+### Độ ổn định theo thời gian của model được chọn
+
+| Period (1–5) | Transactions | Positives | TP | FP | FN | F1 | AP |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 254687 | 226 | 61 | 140 | 165 | 28.57% | 15.36% |
+| 2 | 266247 | 216 | 66 | 206 | 150 | 27.05% | 16.10% |
+| 3 | 271053 | 116 | 35 | 47 | 81 | 35.35% | 13.63% |
+| 4 | 207968 | 1336 | 371 | 107 | 965 | 40.90% | 37.18% |
+| 5 | 248781 | 2356 | 576 | 299 | 1780 | 35.65% | 29.08% |
+
+### Motif coverage trên cùng test
+
+| Motif | Covered transactions | Covered positives | Positive coverage |
+| --- | --- | --- | --- |
+| cycle3_count | 0 | 0 | 0.00% |
+| relay_24h | 5 | 0 | 0.00% |
+| relay_168h | 21 | 0 | 0.00% |
+| reciprocal_24h | 0 | 0 | 0.00% |
+| reciprocal_168h | 0 | 0 | 0.00% |
+| fanin_24h | 240844 | 154 | 3.62% |
+| fanin_168h | 602017 | 895 | 21.06% |
+| fanout_24h | 186 | 0 | 0.00% |
+| fanout_168h | 1226 | 1 | 0.02% |
+
+Coverage là hậu kiểm cấu trúc sau construction không dùng nhãn; các nhóm overlap. Coverage không phải TP hoặc recall của classifier.
+
+### Ngân sách review (selected model)
+
+| Budget | K | TP@K | Precision@K | Recall@K |
+| --- | --- | --- | --- | --- |
+| 0.10% | 1249 | 900 | 72.06% | 21.18% |
+| 0.50% | 6244 | 1523 | 24.39% | 35.84% |
+| 1.00% | 12488 | 2044 | 16.37% | 48.09% |
+
+### Benchmark thực thi
+
+| Phase | Seconds | Throughput / cost | Đơn vị | Job CPU % | Cumulative peak commit GiB |
+| --- | --- | --- | --- | --- | --- |
+| raw_reconciliation | 58.007 | 109,687.11 | input transactions/s | 51.03 | 5.31 |
+| centrality_full | 102.446 | 62,107.06 | input transactions/s | 59.36 | 5.93 |
+| communities_full | 271.678 | 23,419.71 | input transactions/s | 56.99 | 5.99 |
+| motif_baseline | 27.041 | 415,614.22 | diagnostic prediction rows/s | 57.52 | 5.99 |
+| motif_features | 103.701 | 61,355.44 | feature/audit rows/s | 61.12 | 6.06 |
+| motif_benchmark | 8.083 | 787,160.71 | feature/audit rows/s | 54.04 | 6.06 |
+| common_features | 1133.274 | 5,614.37 | feature/audit rows/s | 49.93 | 6.58 |
+| validation | 437.617 | 16.21 | s/fit incl. shared preprocessing | 51.11 | 6.58 |
+| frozen_test | 257.488 | 43,647.18 | test predictions/s incl. refit/export | 46.65 | 6.58 |
+| reliability | 7.900 | 1,422,610.63 | diagnostic prediction rows/s | 12.28 | 6.58 |
+
+Graph throughput chuẩn hóa theo full input E, không phải số lần đọc vật lý sau mọi iteration. Validation cost chia27 fits; frozen-test throughput tính9 × test N và bao gồm refit/export/replay. CPU đo theo khoảng giữa phase milestones, có thể bao gồm hiển thị/I/O; peak commit là high-water mark tích lũy trong process. Các bước serial/I/O không cần duy trì90–100% CPU.
+
+## Đã kiểm chứng và giới hạn
+
+- AST source copies khớp Python; source/input/config/output hashes gắn đúng run. Không relabel outputs lịch sử.
+- All-account metrics và all-community summaries; full raw reconciliation; full features/event index; causal snapshot checks;9matchedfamilies; selected-model reload toàn test; independent confusion/AP và selected temporal metrics đều PASS.
+- Một lượt đầu bị JVM heap OOM do deserialized local checkpoints khi tăng concurrency. Đã dừng, kiểm tra stack, sửa sang Parquet stages và giới hạn writer/read buffers, xác minh tiny fixture rồi chạy full mới với cùng RAM caps. Lượt lỗi được giữ là failed; không dùng làm evidence đạt.
+- IBM bị lỗi display sau validation; sửa notebook-only column rendering và verified resume cùng source/input/config. Frozen rule giữ nguyên. Phase runtimes có thể thuộc các kernel trong cùng logical run; không dùng elapsed của kernel cuối làm toàn bộ thời gian full run.
+- Dữ liệu tổng hợp và reused internal temporal holdout. Cần untouched external holdout cho generalization; không kết luận mọi motif/community là laundering.
+- GPU chưa có backend được xác minh; CPU 100% capacity, affinity toàn bộ, Spark concurrency theo heap; memory guard/mutex/spill giữ nguyên.
+- Full project gate chạy đúng native PowerShell entry point của make check, exit0. Log chi tiết được tạo khi chạy [project gate](../scripts/check_project.ps1).
+
+
+---
+
+## Tài liệu / kết quả lịch sử theo scope khi ghi
+
 # Part B — Experiments
 
-> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [checkpoint](../agent_job.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
+> **Scope/date:** các bảng bên dưới là kết quả bàn giao trước full-system ngày 23/10. IBM full-system đã PASS; PaySim dừng theo user tại8/15cells/snapshot5 và gate chung còn pending. Xem [hướng dẫn code và notebook](Code_Explainer.md); không lấy sample hay motif-only test ở đây làm kết quả fusion mới.
 
 ## Task 1 — Graph Construction (15đ)
 
@@ -147,7 +320,7 @@ CLI PowerShell và API dùng cùng pipeline; model/amount scales/report/examples
 
 ### Tài nguyên khi tái lập motif v2
 
-Chỉ một tác vụ nặng chạy tại một thời điểm; hardware guard bắt buộc giới hạn CPU 10%, tối đa 2 logical CPUs, JVM heap ≤6 GiB và job commit ≤10 GiB trên máy 32 GiB. Có admission và watchdog giữ RAM/commit dự phòng, cùng thu hồi tiến trình con khi kernel chết. Không tăng tài nguyên sau resource stop. GPU chưa được stack Windows native này sử dụng; nhiệt độ CPU không có sensor tin cậy. Xem [quy trình bảo vệ](../README.md#bảo-vệ-tài-nguyên-trên-máy-windows) và [skill](../.agents/skills/graphguard-powershell/SKILL.md).
+Chỉ một tác vụ nặng chạy tại một thời điểm; hardware guard bắt buộc giới hạn CPU 10%, tối đa 2 logical CPUs, JVM heap ≤6 GiB và job commit ≤10 GiB trên máy 32 GiB. Có admission và watchdog giữ RAM/commit dự phòng, cùng thu hồi tiến trình con khi kernel chết. Không tăng tài nguyên sau resource stop. GPU chưa được stack Windows native này sử dụng; nhiệt độ CPU không có sensor tin cậy. Xem [quy trình bảo vệ](../.agents/skills/graphguard-powershell/SKILL.md#protect-this-workstation-before-computation) và [skill](../.agents/skills/graphguard-powershell/SKILL.md).
 
 
 ## Task 4 — Community Detection (nhãn nhiệm vụ trong PCCV)

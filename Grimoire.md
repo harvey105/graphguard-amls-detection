@@ -2,7 +2,7 @@
 
 > **Mục đích:** Đọc từ đầu dù chưa biết graph, Spark hay thuật toán. Sau mỗi phần, bạn phải trả lời được: *nó là gì, objective của nó là gì, công thức hoạt động ra sao, và nó được dùng ở bước nào của project*. Tên thuật ngữ tiếng Anh được giữ nguyên; phần tiếng Việt giải thích nghĩa và cách dùng. Công thức mô tả mô hình toán học; kết quả cụ thể của thư viện có thể phụ thuộc phiên bản và cách triển khai.
 >
-**Thứ tự ưu tiên:** [Đề gốc](graphX_subject.md) quy định nội dung phải nộp → [bản kiến trúc nhóm](BIG_Data_Group6.md) là đề xuất thực hiện → [bảng phân công](BDA%20-%20PCCV%20-%20Trang%20t%C3%ADnh1.csv) là lịch và trách nhiệm → code hiện có là trạng thái triển khai. Không lấy một câu trong proposal làm yêu cầu của thầy nếu đề gốc không nói vậy.
+**Thứ tự ưu tiên:** [đề bài GraphGuard](BIG_Data_Group6.md) quy định nội dung phải nộp → [bản kiến trúc nhóm](BIG_Data_Group6.md) là đề xuất thực hiện → bảng phân công nội bộ là lịch và trách nhiệm → code hiện có là trạng thái triển khai. Không lấy một câu trong proposal làm yêu cầu của thầy nếu đề gốc không nói vậy.
 
 ## Mục lục / đường học
 
@@ -59,7 +59,7 @@ vertices(id, account_type, balance) + edges(src, dst, amount, step, type, isFrau
 | **Task 3** | Tìm mẫu giao dịch vòng | `graph.find` cho `A→B→C→A`, filter cả ba `amount > 10000`, kết quả và diễn giải |
 | **Task 4** | Phân cộng đồng | Chạy LPA, tìm và giải thích cộng đồng đáng chú ý; đối chiếu Connected Components ở Part A |
 
-Rubric Part B: Graph Construction & Metrics 15 điểm; PageRank & Motif Search 25 điểm; Community Detection & Insights 25 điểm. **Degree nằm trong Task 2 nhưng rubric không nói chính xác thuộc bucket 15 hay 25 điểm.** Làm đầy đủ dù cách chấm chưa rõ. Task 4 ghi “Community Detection & Connected Components”, còn phần pipeline nhấn mạnh chạy LPA; vì vậy đưa CC vào đối chiếu thực nghiệm nếu đủ điều kiện để giảm rủi ro bỏ sót rubric. [Xem đề gốc](graphX_subject.md).
+Rubric Part B: Graph Construction & Metrics 15 điểm; PageRank & Motif Search 25 điểm; Community Detection & Insights 25 điểm. **Degree nằm trong Task 2 nhưng rubric không nói chính xác thuộc bucket 15 hay 25 điểm.** Làm đầy đủ dù cách chấm chưa rõ. Task 4 ghi “Community Detection & Connected Components”, còn phần pipeline nhấn mạnh chạy LPA; vì vậy đưa CC vào đối chiếu thực nghiệm nếu đủ điều kiện để giảm rủi ro bỏ sót rubric. [đề bài GraphGuard](BIG_Data_Group6.md).
 
 ### 1.4 Ba câu phân biệt để không lạc đề
 
@@ -163,7 +163,7 @@ $$RF=\frac{1}{|V|}\sum_{v\in V}|R(v)|;\qquad RF\ge 1\text{ đối với vertex c
 
 ### 4.4 Kết nối với project và giới hạn suy luận
 
-PaySim handoff báo Max In-Degree 113, Max Out-Degree 3 trên bản đầy đủ. Đây là **kết quả nhóm báo cáo** trong [handoff](person2_handoff.md), chưa được kiểm chứng lại ở workspace hiện tại do thiếu raw/full graph. Nó gợi ý tải không đều ở account nhận nhiều tiền; *chưa đủ* để khẳng định phân phối degree tuân power law hoặc Vertex Cut chắc chắn tối ưu. Muốn phát biểu thực nghiệm, đo histogram/quantiles degree, partition sizes, runtime/shuffle và memory trên cùng workload. `spark.sql.shuffle.partitions=8` trong code là số partitions cho một số shuffle DataFrame, **không** có nghĩa ta đã cấu hình `GraphX.partitionBy(RandomVertexCut)`.
+PaySim handoff báo Max In-Degree 113, Max Out-Degree 3 trên bản đầy đủ. Đây là **kết quả nhóm báo cáo** trong [handoff](docs/person2_handoff.md), chưa được kiểm chứng lại ở workspace hiện tại do thiếu raw/full graph. Nó gợi ý tải không đều ở account nhận nhiều tiền; *chưa đủ* để khẳng định phân phối degree tuân power law hoặc Vertex Cut chắc chắn tối ưu. Muốn phát biểu thực nghiệm, đo histogram/quantiles degree, partition sizes, runtime/shuffle và memory trên cùng workload. `spark.sql.shuffle.partitions=8` trong code là số partitions cho một số shuffle DataFrame, **không** có nghĩa ta đã cấu hình `GraphX.partitionBy(RandomVertexCut)`.
 
 **Câu trả lời Part A:** Edge Cut gán vertices cho partitions và cắt các cạnh liên máy; Vertex Cut gán edges cho partitions và nhân bản vertices. Chúng đánh đổi communication, replication và cân bằng tải. GraphX chủ đích dùng biểu diễn Vertex Cut; GraphFrames ở tầng DataFrame có kế hoạch thực thi Spark SQL, còn backend GraphX có cơ chế riêng.
 
@@ -207,13 +207,13 @@ Nếu không lọc raw và giữ mọi giao dịch, $|E|=m$. `src` và `dst` ph�
 | Edge thời gian | `timestamp` | `step` nguyên int | Dùng `step` là proxy giờ mô phỏng, giải thích trong báo cáo |
 | Edge bổ sung | Không yêu cầu `type`, `isFraud` | Có cả hai | Hữu ích cho diễn giải và đối chiếu nhãn |
 
-Xem triển khai: [ETL mapping](src/utils/etl_mapping.py), [graph construction](src/graph_analysis.py), [handoff](person2_handoff.md).
+Xem triển khai: [ETL mapping](src/paysim/etl_mapping.py), [graph construction](src/paysim/graph_analysis.py), [handoff](docs/person2_handoff.md).
 
 **Chỗ cần xem kỹ:** `F.max_by(balance, step)` không giải quyết trường hợp account có **nhiều sự kiện trong cùng một `step`** theo thứ tự xác định; PaySim chỉ có độ phân giải giờ. Nếu hai dòng cùng step có balance khác nhau, kết quả tie có thể không ổn định. `max_by` cũng có thể chọn giá trị balance không đại diện cho Merchant. Nêu chính sách tie rõ, kiểm tra số account bị tie, và nếu cần thêm event order đáng tin cậy từ nguồn; không tự bịa thứ tự khi raw không có. Đừng gọi balance này là “số dư cuối cùng chắc chắn đúng” nếu chưa xác thực.
 
 ### 5.3 Tình trạng dữ liệu trong workspace này
 
-Tại lúc viết Grimoire, repo có `data/processed/sample/{vertices,edges}.parquet`; không có `data/raw/` hay full `data/processed/{vertices,edges}.parquet` trong workspace. [Handoff](person2_handoff.md) báo **full:** 9.073.900 vertices, 6.362.620 edges, 8.213 fraud edges; **sample:** 193.143 vertices, 100.111 edges, 153 fraud edges. Các số full là **số nhóm ghi lại**, không phải kết quả tôi vừa chạy lại từ raw. Sample là graph được lấy mẫu theo edges rồi giữ các vertices liên quan; nó có thể mất cycle, đường đi và community. Không dùng “không tìm thấy trên sample” để kết luận “không có trên full”.
+Tại lúc viết Grimoire, repo có `data/processed/sample/{vertices,edges}.parquet`; không có `data/raw/` hay full `data/processed/{vertices,edges}.parquet` trong workspace. [Handoff](docs/person2_handoff.md) báo **full:** 9.073.900 vertices, 6.362.620 edges, 8.213 fraud edges; **sample:** 193.143 vertices, 100.111 edges, 153 fraud edges. Các số full là **số nhóm ghi lại**, không phải kết quả tôi vừa chạy lại từ raw. Sample là graph được lấy mẫu theo edges rồi giữ các vertices liên quan; nó có thể mất cycle, đường đi và community. Không dùng “không tìm thấy trên sample” để kết luận “không có trên full”.
 
 ### 5.4 Kiểm tra chất lượng dữ liệu trước mọi thuật toán
 
@@ -243,7 +243,7 @@ g = GraphFrame(v, e)
 print(g.vertices.count(), g.edges.count())
 ```
 
-`graphframes-py` là Python package; GraphFrames còn cần JVM jar tương ứng Spark/Scala. Xem [GraphFrames installation](https://graphframes.io/02-quick-start/01-installation.html) và hàm cấu hình đang dùng ở [graph_analysis.py](src/graph_analysis.py). Đừng đoán phiên bản từ trí nhớ. `requirements.txt` hiện ghi cả `graphframes==0.6` và `graphframes-py==0.12.2`; cần kiểm tra/xử lý xung đột package trước khi chạy môi trường mới, nhưng Grimoire này không tự sửa dependency của nhóm.
+`graphframes-py` là Python package; GraphFrames còn cần JVM jar tương ứng Spark/Scala. Xem [GraphFrames installation](https://graphframes.io/02-quick-start/01-installation.html) và hàm cấu hình đang dùng ở [graph_analysis.py](src/paysim/graph_analysis.py). Đừng đoán phiên bản từ trí nhớ. `requirements.txt` hiện ghi cả `graphframes==0.6` và `graphframes-py==0.12.2`; cần kiểm tra/xử lý xung đột package trước khi chạy môi trường mới, nhưng Grimoire này không tự sửa dependency của nhóm.
 
 ---
 
@@ -374,7 +374,7 @@ cycles.select("a.id", "b.id", "c.id", "e1.amount", "e2.amount", "e3.amount").sho
 
 ### 8.3 Điểm nghẽn dataset: 0 cycle trong PaySim theo handoff
 
-[Handoff hiện tại](person2_handoff.md) khẳng định đã kiểm tra full 6.362.620 giao dịch và tìm thấy **0 directed 3-cycles**. Workspace này không chứa raw/full graph để tôi tái lập kết quả. Vì vậy đưa vào báo cáo theo đúng dạng: “Theo kết quả kiểm tra full dataset của nhóm, query directed 3-cycle cho 0 kết quả; cần đính kèm code/log tái lập.” Nếu full graph thực sự có **0 cycle trước khi lọc amount**, hạ threshold từ `10000` không thể sinh cycle: filter chỉ loại bớt, không tạo đường mới. Đây là lỗi logic trong gợi ý “tinh chỉnh threshold để có cycle”.
+[Handoff hiện tại](docs/person2_handoff.md) khẳng định đã kiểm tra full 6.362.620 giao dịch và tìm thấy **0 directed 3-cycles**. Workspace này không chứa raw/full graph để tôi tái lập kết quả. Vì vậy đưa vào báo cáo theo đúng dạng: “Theo kết quả kiểm tra full dataset của nhóm, query directed 3-cycle cho 0 kết quả; cần đính kèm code/log tái lập.” Nếu full graph thực sự có **0 cycle trước khi lọc amount**, hạ threshold từ `10000` không thể sinh cycle: filter chỉ loại bớt, không tạo đường mới. Đây là lỗi logic trong gợi ý “tinh chỉnh threshold để có cycle”.
 
 **Cách hoàn thành Task 3 mà vẫn đúng đề:**
 
@@ -383,7 +383,7 @@ cycles.select("a.id", "b.id", "c.id", "e1.amount", "e2.amount", "e3.amount").sho
 3. Giải thích PaySim mô phỏng fraud kiểu `TRANSFER → CASH_OUT`, vì thế motif vòng không phản ánh kịch bản chính trong data card.
 4. Báo cáo **phân tích bổ sung** trên PaySim bằng 2-hop relay; nếu muốn minh họa cycle thật trên dataset khác, dùng AMLSim và ghi rõ tên dataset, mapping, phạm vi và nguồn.
 
-Đề yêu cầu cyclic transaction detection; **2-hop relay không thay thế vòng 3-node**. Nếu giảng viên yêu cầu bắt buộc *có* cycle từ dữ liệu thật, nhóm cần chọn dataset có cycle và vẫn chạy query gốc. Dữ liệu AMLSim khác schema và nhãn, cần ETL/kiểm chứng lại. [Đề gốc](graphX_subject.md), [PaySim data card](https://www.kaggle.com/datasets/ealaxi/paysim1/data), [bài về AMLSim](https://arxiv.org/abs/2306.16424).
+Đề yêu cầu cyclic transaction detection; **2-hop relay không thay thế vòng 3-node**. Nếu giảng viên yêu cầu bắt buộc *có* cycle từ dữ liệu thật, nhóm cần chọn dataset có cycle và vẫn chạy query gốc. Dữ liệu AMLSim khác schema và nhãn, cần ETL/kiểm chứng lại. [đề bài GraphGuard](BIG_Data_Group6.md), [PaySim data card](https://www.kaggle.com/datasets/ealaxi/paysim1/data), [bài về AMLSim](https://arxiv.org/abs/2306.16424).
 
 ### 8.4 Mẫu thay thế bổ sung: 2-hop relay
 
@@ -521,7 +521,7 @@ Lưu lại dataset path/version, số vertices/edges, câu query, threshold, `ma
 
 ### 11.1 Ai đang làm gì, cần hiểu gì, bàn giao gì?
 
-Bảng này tóm tắt [phân công gốc](BDA%20-%20PCCV%20-%20Trang%20t%C3%ADnh1.csv); “Người 1–7” là ký hiệu của nhóm, không suy đoán danh tính bạn.
+Bảng này tóm tắt bảng phân công nội bộ; “Người 1–7” là ký hiệu của nhóm, không suy đoán danh tính bạn.
 
 | Người | Trách nhiệm chính | Đầu vào | Bàn giao và người cần nhận |
 |---|---|---|---|
@@ -607,7 +607,7 @@ Bảng này tóm tắt [phân công gốc](BDA%20-%20PCCV%20-%20Trang%20t%C3%ADn
 
 ### 12.2 Nguồn gốc nên học theo thứ tự
 
-1. **Đề và tài liệu nhóm:** [graphX_subject.md](graphX_subject.md) → [BIG_Data_Group6.md](BIG_Data_Group6.md) → [bảng phân công](BDA%20-%20PCCV%20-%20Trang%20t%C3%ADnh1.csv) → [Person 2 handoff](person2_handoff.md). Đọc đề trước để biết cái gì bắt buộc.
+1. **Đề và tài liệu nhóm:** [đề bài GraphGuard](BIG_Data_Group6.md) → [BIG_Data_Group6.md](BIG_Data_Group6.md) → bảng phân công nội bộ → [Person 2 handoff](docs/person2_handoff.md). Đọc đề trước để biết cái gì bắt buộc.
 2. **Khởi đầu Spark:** [Spark SQL, DataFrames and Datasets Guide (Spark 3.5.1)](https://spark.apache.org/docs/3.5.1/sql-programming-guide.html); [Cluster Mode Overview](https://spark.apache.org/docs/3.5.1/cluster-overview.html). Học DataFrame, lazy execution, partitions và actions.
 3. **GraphFrames chính thức:** [Quick Start](https://graphframes.io/02-quick-start/02-quick-start.html), [Installation](https://graphframes.io/02-quick-start/01-installation.html), [Internals](https://graphframes.io/01-about/02-architecture.html), [Python API](https://graphframes.io/api/python/graphframes.html). Học GraphFrame trước khi chạy thuật toán.
 4. **Part A GraphX và partitioning:** [Spark GraphX Programming Guide](https://spark.apache.org/docs/3.5.7/graphx-programming-guide.html), nhất là Property Graph, Vertex/Edge RDDs, Optimized Representation; [GraphFrames About](https://graphframes.io/01-about/01-index.html). Chú ý version trong repo là PySpark 3.5.1 còn guide GraphX liên kết là nhánh 3.5.x gần tương thích về khái niệm.

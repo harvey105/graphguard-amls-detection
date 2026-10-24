@@ -50,49 +50,78 @@ def _prepare_amounts(features: DataFrame, scales: DataFrame) -> DataFrame:
     ).withColumn("fx_payment", (F.col("payment_currency") != F.col("receiving_currency")).cast("double"))
 
 
-def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family: str, config: AnalysisConfig, *, spill_training: bool = False) -> RiskModel:
-    """Fit only on the prefix, including preprocessing and class weights.
+@dataclass
+class PreparedTraining:
+    """One label join, q90 fit and category fit shared by a prefix's 9 trees."""
+    labelled: DataFrame
+    scales: DataFrame
+    indexer: object
+    training: dict
 
-    sqrt(negative/positive) reduces imbalance without duplicating rows. The
-    weighted leaf score is a ranking score, not a calibrated fraud probability.
-    """
+    def close(self, keep_scales=False):
+        self.labelled.unpersist(blocking=True)
+        if not keep_scales:
+            self.scales.unpersist(blocking=True)
+
+
+def family_feature_names(family, config):
+    # Explicit allowlists exclude label, witness/account IDs and future data.
+    names = ["type_index", "currency_index", "scaled_amount", "unseen_amount_group", "fx_payment"]
+    groups = {"motif": motif_numeric_columns(config.windows_hours),
+              "centrality": CENTRALITY_COLUMNS, "community": COMMUNITY_COLUMNS,
+              "novelty": ["src_seen", "dst_seen"]}
+    for group in SYSTEM_FAMILY_GROUPS[family]:
+        names += groups[group]
+    return names
+
+
+def prepare_training_prefix(features, truth, train_end, config, *, spill_training=True):
+    """Fit preprocessing only on this prefix, then materialize once on disk."""
+    from pyspark import StorageLevel
     require_unlabelled(features)
-    if family not in SYSTEM_FAMILY_GROUPS:
-        raise ValueError(f"Unknown model family: {family}")
     train = features.where(F.col("step") <= train_end)
     scales = train.where(F.col("amount") > 0).groupBy("payment_currency", "type").agg(
         F.percentile_approx("amount", 0.9, 10_000).alias("training_q90")
-    ).localCheckpoint(eager=True)
-    names = ["type_index", "currency_index", "scaled_amount", "unseen_amount_group", "fx_payment"]
-    numeric = []
-    for group in SYSTEM_FAMILY_GROUPS[family]:
-        numeric += {"motif": motif_numeric_columns(config.windows_hours),
-                    "centrality": CENTRALITY_COLUMNS, "community": COMMUNITY_COLUMNS, "novelty": ["src_seen", "dst_seen"]}[group]
-    names += numeric
-    available = ["event_id", "step", "type", "payment_currency", "receiving_currency", "amount", *numeric]
-    labelled = _prepare_amounts(train.select(available), scales).join(
-        truth.select("event_id", "isFraud"), "event_id"
-    )
+    ).persist(StorageLevel.DISK_ONLY)
+    scales.count()
+    labelled = _prepare_amounts(train, scales).join(truth.select("event_id", "isFraud"), "event_id")
     support = labelled.agg(F.count("*").alias("n"), F.sum("isFraud").alias("p")).first()
     n, p = int(support.n), int(support.p or 0)
-    weight = math.sqrt((n - p) / p) if 0 < p < n else 1.0
+    weight = math.sqrt((n-p)/p) if 0 < p < n else 1.0
     metadata = {"train_end": int(train_end), "rows": n, "fraud": p,
                 "positive_class_weight": weight, "status": "fitted" if 0 < p < n else "abstain: one training class"}
-    if not 0 < p < n:
-        return RiskModel(family, None, scales, names, metadata)
-    from pyspark import StorageLevel
-    labelled = labelled.withColumn("_weight", F.when(F.col("isFraud") == 1, weight).otherwise(1.0)).persist(
-        StorageLevel.DISK_ONLY if spill_training else StorageLevel.MEMORY_AND_DISK)
     indexer = StringIndexer(inputCols=["type", "payment_currency"], outputCols=["type_index", "currency_index"],
-                            stringOrderType="alphabetAsc", handleInvalid="keep")
+                           stringOrderType="alphabetAsc", handleInvalid="keep").fit(labelled)
+    encoded = indexer.transform(labelled).withColumn(
+        "_weight", F.when(F.col("isFraud") == 1, weight).otherwise(1.0)
+    ).persist(StorageLevel.DISK_ONLY if spill_training else StorageLevel.MEMORY_AND_DISK)
+    encoded.count()
+    return PreparedTraining(encoded, scales, indexer, metadata)
+
+
+def fit_prepared_model(prepared, family, config):
+    """Train the same tree on a declared feature subset; reuse preprocessing."""
+    from pyspark.ml import PipelineModel
+    names = family_feature_names(family, config)
+    if prepared.training["status"] != "fitted":
+        return RiskModel(family, None, prepared.scales, names, dict(prepared.training))
     assembler = VectorAssembler(inputCols=names, outputCol="features", handleInvalid="error")
     tree = DecisionTreeClassifier(labelCol="isFraud", featuresCol="features", weightCol="_weight",
         maxDepth=config.tree_depth, maxBins=64, minInstancesPerNode=config.minimum_leaf_rows, seed=config.seed)
+    fitted = Pipeline(stages=[assembler, tree]).fit(prepared.labelled)
+    # The exported pipeline still accepts raw categories when it is reloaded.
+    pipeline = PipelineModel(stages=[prepared.indexer, *fitted.stages])
+    return RiskModel(family, pipeline, prepared.scales, names, dict(prepared.training))
+
+
+def fit_risk_model(features: DataFrame, truth: DataFrame, train_end: int, family: str,
+                   config: AnalysisConfig, *, spill_training: bool = False) -> RiskModel:
+    """Compatibility entry point for the independent motif notebooks."""
+    prepared = prepare_training_prefix(features, truth, train_end, config, spill_training=spill_training)
     try:
-        fitted = Pipeline(stages=[indexer, assembler, tree]).fit(labelled)
+        return fit_prepared_model(prepared, family, config)
     finally:
-        labelled.unpersist(blocking=True)
-    return RiskModel(family, fitted, scales, names, metadata)
+        prepared.close(keep_scales=True)
 
 
 def score_transactions(model: RiskModel, features: DataFrame) -> DataFrame:
@@ -103,6 +132,16 @@ def score_transactions(model: RiskModel, features: DataFrame) -> DataFrame:
     prepared = _prepare_amounts(features, model.scales)
     scored = model.pipeline.transform(prepared)
     return scored.select(*features.columns, vector_to_array("probability")[1].alias("risk_score"))
+
+
+def frozen_prediction(model, features, truth, threshold, *, score_model=None):
+    """One alert per transaction; truth is attached only after scoring."""
+    scorer = score_model or score_transactions
+    scores = scorer(model, features).select("event_id", "risk_score")
+    return (
+        scores.withColumn("alert", F.col("risk_score") >= float(threshold))
+        .join(truth.select("event_id", "isFraud"), "event_id")
+    )
 
 
 def score_histogram(scores: DataFrame, truth: DataFrame, start: int | None, end: int | None) -> pd.DataFrame:

@@ -32,7 +32,7 @@ class ResourcePolicy:
     reserve_bytes: int
     max_heap_gib: int
     workers: int = 2
-    cpu_percent: int = 10
+    cpu_percent: int = 100
 
     @classmethod
     def for_memory(cls, total: int):
@@ -41,7 +41,11 @@ class ResourcePolicy:
         heap = min(6, budget // GIB - 3)
         if heap < 2:
             raise RuntimeError("Insufficient RAM for the protected Spark profile (about 16 GiB required)")
-        return cls(budget, reserve, heap)
+        # The user authorizes the available CPUs. Concurrent Spark tasks must
+        # still fit the unchanged heap; sort/hash operators spill to disk.
+        logical = len(psutil.Process().cpu_affinity()) if os.name == "nt" else (os.cpu_count() or 1)
+        workers = max(1, min(logical, heap * 4))
+        return cls(budget, reserve, heap, workers)
 
     def spark_limits(self, requested_heap: str, requested_master: str):
         match = re.fullmatch(r"(\d+)([gGmM])", requested_heap)
@@ -67,13 +71,14 @@ class ResourcePolicy:
         profile cannot later upgrade its heap or job limit in the same kernel.
         """
         base = cls.for_memory(total)
-        heap, _ = base.spark_limits(requested_heap, "local[2]")
+        heap, _ = base.spark_limits(requested_heap, f"local[{base.workers}]")
         mib = int(heap[:-1])
         if mib >= base.max_heap_gib * 1024:
             return base
         rounded_gib = (mib + 1023) // 1024
         budget = min(base.job_bytes, (rounded_gib + 3) * GIB)
-        return cls(budget, base.reserve_bytes, min(base.max_heap_gib, rounded_gib))
+        return cls(budget, base.reserve_bytes, min(base.max_heap_gib, rounded_gib),
+                   min(base.workers, rounded_gib * 4), base.cpu_percent)
 
 
 def pressure_reason(policy: ResourcePolicy, available: int, commit_free: int,
@@ -84,8 +89,8 @@ def pressure_reason(policy: ResourcePolicy, available: int, commit_free: int,
         return "Windows commit reserve exhausted"
     if disk_free < 5 * GIB:
         return "Temporary/workspace disk reserve below 5 GiB"
-    if cpu_percent >= 85:
-        return "Host CPU remains >=85%; stop our workload to release capacity"
+    # High CPU is authorized work, not memory pressure. RAM/commit/disk remain
+    # mandatory stop conditions, independently of CPU utilization.
     return None
 
 
@@ -116,6 +121,13 @@ class ExtendedLimits(C.Structure):
 
 class CPULimits(C.Structure):
     _fields_ = [("flags", W.DWORD), ("rate", W.DWORD)]
+
+
+class AccountingInfo(C.Structure):
+    _fields_ = [(name, C.c_longlong) for name in
+                ("user_time", "kernel_time", "period_user_time", "period_kernel_time")] + [
+                    (name, W.DWORD) for name in
+                    ("page_faults", "total_processes", "active_processes", "terminated_processes")]
 
 
 class WindowsGuard:
@@ -165,8 +177,6 @@ class WindowsGuard:
                 raise RuntimeError("Not enough Windows commit headroom for a protected Spark run")
             if self.disk_free() < 12 * GIB:
                 raise RuntimeError("At least 12 GiB free on temp/workspace drives required for spilling")
-            if psutil.cpu_percent(interval=1) >= 70:
-                raise RuntimeError("Host CPU already >=70%; defer Spark until the machine is idle")
             self.job = self.api.CreateJobObjectW(None, None)
             if not self.job:
                 raise C.WinError(C.get_last_error())
@@ -174,7 +184,10 @@ class WindowsGuard:
             # Commit budget + inherited CPU affinity + below-normal priority.
             # Do not set BREAKAWAY_OK. Children (JVM/workers) inherit the job.
             self.limits.basic.flags = 0x200 | 0x10 | 0x20 | 0x2000
-            allowed = psutil.Process().cpu_affinity()[:self.policy.workers]
+            # Preserve every CPU allowed by Windows. Task concurrency is set
+            # separately; Java GC/JIT can use other available cores as needed.
+            allowed = psutil.Process().cpu_affinity()
+            self.allowed_cpus = allowed
             self.limits.basic.affinity = sum(1 << core for core in allowed)
             self.limits.basic.priority = 0x4000  # BELOW_NORMAL_PRIORITY_CLASS
             self.limits.job_memory = self.policy.job_bytes
@@ -186,11 +199,12 @@ class WindowsGuard:
             self.started = time.monotonic()
             self.minimum_available = initial.avail_phys
             self.maximum_host_cpu = 0.0
+            self.maximum_job_cpu = 0.0
             self.thread = threading.Thread(target=self._watch, name="GraphGuard-resource-watchdog", daemon=True)
             self.thread.start()
             atexit.register(self.close)
-            print(f"[RESOURCE] One workload; CPU hard cap {self.policy.cpu_percent}%; "
-                  f"<=2 logical CPUs; job commit cap {self.policy.job_bytes/GIB:.1f} GiB; "
+            print(f"[RESOURCE] One workload; CPU capacity {self.policy.cpu_percent}%; "
+                  f"{len(allowed)} CPUs available / {self.policy.workers} Spark tasks; job commit cap {self.policy.job_bytes/GIB:.1f} GiB; "
                   f"RAM reserve {self.policy.reserve_bytes/GIB:.1f} GiB", flush=True)
         except BaseException:
             self.close()
@@ -214,7 +228,16 @@ class WindowsGuard:
         measured = ExtendedLimits()
         if not self.api.QueryInformationJobObject(self.job, 9, C.byref(measured), C.sizeof(measured), None):
             raise C.WinError(C.get_last_error())
-        return {"cpu_hard_cap_percent": self.policy.cpu_percent, "max_logical_cpus": self.policy.workers,
+        accounting = AccountingInfo()
+        if not self.api.QueryInformationJobObject(self.job, 1, C.byref(accounting), C.sizeof(accounting), None):
+            raise C.WinError(C.get_last_error())
+        elapsed = max(time.monotonic() - self.started, 0.001)
+        cpu_seconds = (accounting.user_time + accounting.kernel_time) / 10_000_000
+        return {"cpu_hard_cap_percent": self.policy.cpu_percent, "max_logical_cpus": len(self.allowed_cpus),
+            "spark_task_slots": self.policy.workers,
+            "job_cpu_seconds": round(cpu_seconds, 3), "job_wall_seconds": round(elapsed, 3),
+            "average_job_cpu_percent": round(100 * cpu_seconds / elapsed / (os.cpu_count() or 1), 2),
+            "maximum_job_cpu_percent": round(self.maximum_job_cpu, 2),
             "job_commit_cap_gib": round(self.policy.job_bytes/GIB, 2),
             "peak_job_commit_gib": round(measured.peak_job_memory/GIB, 2),
             "minimum_available_ram_gib": round(self.minimum_available/GIB, 2),
@@ -232,7 +255,14 @@ class WindowsGuard:
                 self.maximum_host_cpu = max(self.maximum_host_cpu, cpu)
                 reason = pressure_reason(self.policy, status.avail_phys, status.avail_page, self.disk_free(), cpu)
                 strikes = strikes + 1 if reason else 0
-                if (reason and strikes >= (5 if cpu >= 85 else 2)) or status.avail_phys < 2 * GIB:
+                measured = self.snapshot()
+                current = (time.monotonic(), measured["job_cpu_seconds"])
+                previous = getattr(self, "_previous_cpu", current)
+                if current[0] > previous[0]:
+                    self.maximum_job_cpu = max(self.maximum_job_cpu,
+                        100 * max(0, current[1]-previous[1]) / (current[0]-previous[0]) / (os.cpu_count() or 1))
+                self._previous_cpu = current
+                if (reason and strikes >= 2) or status.avail_phys < 2 * GIB:
                     print("[RESOURCE STOP] " + (reason or "Critical RAM pressure"), file=sys.stderr, flush=True)
                     self.api.TerminateJobObject(self.job, 73)
                     return
