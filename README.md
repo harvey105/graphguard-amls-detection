@@ -139,7 +139,9 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
      - *Total Degree*: Kiểm chứng bất biến bảo toàn cạnh $\sum d = 2E$ (10.156.690 trên IBM; 12.725.240 trên PaySim).
      - *Damped PageRank*: 10 vòng lặp power iteration với hệ số suy giảm $d = 0,85$. Cơ chế dịch chuyển tức thời đồng đều (Uniform Teleportation) ngăn chặn triệt để hiện tượng 2,15 triệu Merchant sink nodes hút cạn điểm rank của mạng lưới:
 
-       $$\text{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\mathrm{in}}(u)} \frac{\text{PR}^{(k)}(v)}{d_{\mathrm{out}}(v)}$$
+$$
+\mathrm{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\mathrm{in}}(u)} \frac{\mathrm{PR}^{(k)}(v)}{d_{\mathrm{out}}(v)}
+$$
 
      - *Synchronous LPA*: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
    - **Luồng B — Trích xuất Đặc trưng Causal Chống Rò rỉ (Strict-Past Causal Analytics)**:
@@ -162,7 +164,9 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
    - Mô phỏng chính xác hoạt động vận hành ngân hàng theo thời gian: Fold 1 (Train $\le 40\%$, Val $40\% \to 50\%$), Fold 2 (Train $\le 50\%$, Val $50\% \to 65\%$), Fold 3 (Train $\le 65\%$, Val $65\% \to 80\%$).
    - Mô hình phân loại: Cây quyết định có trọng số (Weighted DecisionTree, `maxDepth=5`, `minInstancesPerNode=50`, `maxBins=64`). Trọng số cân bằng nhãn dương:
 
-     $$w_+ = \sqrt{\frac{N_{\mathrm{train}} - P_{\mathrm{train}}}{P_{\mathrm{train}}}}$$
+$$
+w_+ = \sqrt{\frac{N_{\mathrm{train}} - P_{\mathrm{train}}}{P_{\mathrm{train}}}}
+$$
 
    - Quét lưới 12 ngưỡng $\theta \in [0,001; 0,99]$. Khóa cứng quy tắc (`freeze rule`) dựa trên Mean Validation F1 trước khi bước vào tập Test.
 
@@ -206,7 +210,9 @@ Trong nghiệp vụ phòng chống tội phạm tài chính, **Rửa tiền (Mon
 - **Rửa tiền (IBM AML)** là quá trình hợp thức hóa tiền bất hợp pháp. Tội phạm bắt buộc phải luân chuyển dòng tiền qua nhiều tài khoản, ngân hàng trung gian và các loại ngoại tệ khác nhau để làm mờ dấu vết (quá trình Layering), cuối cùng quay vòng khép kín trở lại tài khoản kẻ chủ mưu (Round-tripping). Vì vậy, đồ thị IBM có mật độ dày, xuất hiện nhiều tự giao dịch và **chu trình 3 đỉnh khép kín theo thời gian**.
 - **Gian lận Chiếm đoạt Tài khoản (PaySim Mobile)** là hành vi trộm cắp tài sản. Kẻ gian đột nhập vào tài khoản người dùng, chuyển gấp tiền sang tài khoản trung gian (mule account) và ngay lập tức rút tiền mặt (cash-out) để tẩu tán khỏi hệ thống ngân hàng di động. Luồng tiền này mang bản chất **thoát ly hệ thống một chiều (System-Exit, Acyclic)**:
 
-  $$\text{Nạn nhân} \xrightarrow{\text{TRANSFER}} \text{Tài khoản Mule} \xrightarrow{\text{CASH-OUT}} \text{Rút tiền mặt}$$
+$$
+\text{Nạn nhân} \xrightarrow{\quad\text{TRANSFER}\quad} \text{Tài khoản Mule} \xrightarrow{\quad\mathrm{CASH\_OUT}\quad} \text{Rút tiền mặt}
+$$
 
   Vì là đồ thị phi chu trình ($0$ chu trình 3 đỉnh), thuật toán motif trên PaySim đã chuyển hướng chính xác sang **Mẫu hình chuyển tiếp 2 bước (2-Hop Relay Motif)** để bẫy hành vi rút tiền của tài khoản mule.
 
