@@ -47,13 +47,13 @@ Dự án GraphGuard được định hướng và giải quyết triệt để t
   * *Kết luận*: Trên PaySim, bậc vào cực đại lên tới $113$ (tài khoản tụ gom tiền `C1286084959`), trong khi có tới $2.150.401$ tài khoản Merchant chỉ nhận tiền và không bao giờ chuyển đi (Sink Nodes). Bằng cách áp dụng Damped PageRank ($d = 0,85$, 10 iterations) kết hợp cơ chế dịch chuyển tức thời đồng đều (Uniform Teleportation), GraphGuard ngăn chặn triệt để hiện tượng hố đen hút cạn rank, bảo tồn tổng năng lượng mạng lưới $\sum \text{Rank} = |V|$.
 * **RQ3 — Khám phá Cấu trúc Đồ thị & Chuyển dịch Mẫu hình (Topological Discovery & Relay Motifs)**:
   * *Câu hỏi*: Vì sao trên toàn bộ 6,36 triệu giao dịch PaySim hoàn toàn không xuất hiện chu trình 3 đỉnh có hướng ($0$ directed 3-cycles), và giải pháp thay thế bằng mẫu hình chuyển tiếp rút tiền mặt (`TRANSFER → CASH_OUT`) mang lại giá trị gì?
-  * *Kết luận*: PaySim mang bản chất dòng tiền tẩu tán một chiều (Acyclic system-exit flow). Khi kẻ gian chiếm đoạt tài khoản, tiền lập tức được chuyển sang tài khoản trung gian (mule) rồi rút tiền mặt ra khỏi hệ sinh thái di động. Việc chuyển đổi phân tích sang **2-Hop Relay Motif** đã bắt trúng hành vi rút tiền của tài khoản mule, giúp tăng Recall thêm $+6,42\%$ điểm phần trăm và nâng AP từ $17,00\%$ lên $26,58\%$.
+  * *Kết luận*: PaySim mang bản chất dòng tiền tẩu tán một chiều (Acyclic system-exit flow). Khi kẻ gian chiếm đoạt tài khoản, tiền lập tức được chuyển sang tài khoản trung gian (mule) rồi rút tiền mặt ra khỏi hệ sinh thái di động. Việc chuyển đổi phân tích sang **2-Hop Relay Motif** đã bắt trúng hành vi rút tiền của tài khoản mule, giúp tăng Recall thêm +6,42% điểm phần trăm và nâng AP từ 17,00% lên 26,58%.
 * **RQ4 — Cấu trúc Phân cụm Cộng đồng & Phân bổ Rủi ro (LPA Community Profiling & Risk Enrichment)**:
   * *Câu hỏi*: Thuật toán lan truyền nhãn đồng bộ (Synchronous LPA) tạo ra các cộng đồng có đặc trưng gì về quy mô, dòng tiền, loại hình giao dịch và tỷ lệ nhiễm nhãn tội phạm?
   * *Kết luận*: Cấu trúc cộng đồng tuân theo phân bố đuôi dài dạng Zipf (trên PaySim hình thành 5,43 triệu cụm, trên IBM hình thành 314.722 cụm). Tỷ lệ giao dịch vượt biên giới cụm (`cross_fraction`) và kích thước cụm (`comm_size`) cung cấp ngữ cảnh mạnh mẽ giúp mô hình nhận diện các tổ chức rửa tiền liên ngân hàng có quy mô lớn.
 * **RQ5 — Đối chiếu Đa Hình thái & Khả năng Mở rộng Kiến trúc (Cross-Morphology & Adapter Extensibility)**:
   * *Câu hỏi*: Bộ dữ liệu liên ngân hàng IBM AML HI-Small khác biệt như thế nào so với PaySim về hình thái mạng lưới, và kiến trúc GraphGuard có thể tái sử dụng qua cơ chế Adapter hay không?
-  * *Kết luận*: Khác hoàn toàn với tính chất phi chu trình của PaySim, đồ thị IBM AML xuất hiện $54$ chu trình 3 đỉnh khép kín theo thời gian và $591.212$ tự giao dịch nội bộ ($11,64\%$). Thông qua `DatasetAdapter` chuẩn hóa schema, toàn bộ các module phân tích Degree, PageRank, Sweep-line Motifs và Weighted Decision Tree đã được tái sử dụng thành công $100\%$ mà không cần viết lại lõi thuật toán.
+  * *Kết luận*: Khác hoàn toàn với tính chất phi chu trình của PaySim, đồ thị IBM AML xuất hiện 54 chu trình 3 đỉnh khép kín theo thời gian và 591.212 tự giao dịch nội bộ (11,64%). Thông qua `DatasetAdapter` chuẩn hóa schema, toàn bộ các module phân tích Degree, PageRank, Sweep-line Motifs và Weighted Decision Tree đã được tái sử dụng thành công 100% mà không cần viết lại lõi thuật toán.
 
 ---
 
@@ -97,7 +97,9 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
 ### 2.1. Sơ đồ Khái quát 7 Giai đoạn (7-Stage Pipeline Overview)
 
 ![GraphGuard 7-Stage Pipeline Overview](report/figures/graphguard_pipeline_overview.png)
+
 > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [graphguard_pipeline_overview.drawio](report/figures/graphguard_pipeline_overview.drawio)
+
 
 
 ### Hợp đồng Dữ liệu Đồ thị (Graph Data Contracts)
@@ -122,7 +124,6 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
    - Hệ thống tiếp nhận nguồn cấp dữ liệu tài chính đa dạng qua `DatasetSpec`: IBM AML chứa dữ liệu 11 định chế ngân hàng và 15 loại tiền tệ; PaySim chứa nhật ký giao dịch tiền di động (Mobile Money log) với 5 loại hình thanh toán.
 
    ![Stage 0: Raw Ingestion & Graph Data Contract](report/figures/stage0_raw_ingestion.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [stage0_raw_ingestion.drawio](report/figures/stage0_raw_ingestion.drawio)
 
 2. **Stage 1 — ETL Phân tán & Cổng Kiểm định Toàn vẹn 2 Chiều (Distributed ETL & Integrity Gate)**:
    - **Phân vùng Cắt Đỉnh (Vertex Cut Partitioning)**: Giải quyết điểm nghẽn mạng do tính chất lệch bậc cực đoan trong thanh toán bán lẻ (In-degree của PaySim đạt tới 113). Dữ liệu được nén dạng Snappy Parquet (giảm từ 500 MB xuống 272,9 MB).
@@ -131,24 +132,23 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
    - **Chỉ mục Vật lý Bất biến**: Sinh `event_id` cho từng giao dịch vật lý và `event_key` để phá vỡ thế hòa (tie-breaking) hoàn toàn khách quan, không chứa nhãn gian lận.
 
    ![Stage 1: Distributed ETL & 2-Way Integrity Gate](report/figures/stage1_etl_integrity.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [stage1_etl_integrity.drawio](report/figures/stage1_etl_integrity.drawio)
+
 
 3. **Stage 2 — Động cơ Phân tích Đồ thị Song luồng (Dual-Stream Graph Analytics Engines)**:
    - **Luồng A — Phân tích Toàn cảnh (Full Descriptive Analytics)**:
      - *Total Degree*: Kiểm chứng bất biến bảo toàn cạnh $\sum d = 2E$ (10.156.690 trên IBM; 12.725.240 trên PaySim).
      - *Damped PageRank*: 10 vòng lặp power iteration với hệ số suy giảm $d = 0,85$. Cơ chế dịch chuyển tức thời đồng đều (Uniform Teleportation) ngăn chặn triệt để hiện tượng 2,15 triệu Merchant sink nodes hút cạn điểm rank của mạng lưới:
-       $$\text{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\text{in}}(u)} \frac{\text{PR}^{(k)}(v)}{d_{\text{out}}(v)}$$
+
+       $$\text{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\mathrm{in}}(u)} \frac{\text{PR}^{(k)}(v)}{d_{\mathrm{out}}(v)}$$
+
      - *Synchronous LPA*: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
    - **Luồng B — Trích xuất Đặc trưng Causal Chống Rò rỉ (Strict-Past Causal Analytics)**:
      - Tạo 5 mốc Quantile Snapshots tại 20%, 40%, 50%, 65%, 80% thời gian.
-     - *Bất biến As-Of*: Mọi giao dịch tại thời điểm $t$ chỉ được phép tra cứu snapshot quá khứ gần nhất thỏa mãn:
-       $$T_{\text{snap}} < t$$
-     - *Sweep-Line Temporal Motifs*: Cửa sổ trượt 24h và 168h chỉ quét sự kiện quá khứ thỏa mãn:
-       $$s < t \quad \text{và} \quad 0 < t - s \leq W$$
-       Các giao dịch phát sinh cùng timestamp ($\Delta t = 0$) không được tính là quá khứ của nhau.
+     - *Bất biến As-Of*: Mọi giao dịch tại thời điểm $t$ chỉ được phép tra cứu snapshot quá khứ gần nhất thỏa mãn: $T_{\text{snap}} < t$.
+     - *Sweep-Line Temporal Motifs*: Cửa sổ trượt 24h và 168h chỉ quét sự kiện quá khứ thỏa mãn: $s < t$ và $0 < t - s \le W$. Các giao dịch phát sinh cùng timestamp ($\Delta t = 0$) không được tính là quá khứ của nhau.
 
    ![Stage 2: Dual-Stream Graph Analytics](report/figures/stage2_dual_graph_analytics.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [stage2_dual_graph_analytics.drawio](report/figures/stage2_dual_graph_analytics.drawio)
+
 
 4. **Stage 3 — Bảng Đặc trưng Chung & 9 Cấu hình Đối chứng (Factorial Feature Fusion)**:
    - Tổng hợp một dòng đặc trưng duy nhất (Common Feature Row) cho mỗi giao dịch gồm 4 nhóm: **T** (Transaction), **C** (Centrality), **M** (Motifs), **L** (Community Context).
@@ -156,26 +156,28 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
    - **Bảo mật Thông tin Danh tính**: Nghiêm cấm đưa nhãn ground-truth, số tài khoản (Account ID) hay mã cộng đồng số (Numeric Community ID) vào tập đặc trưng.
 
    ![Stage 3: Factorial Feature Fusion](report/figures/stage3_feature_fusion.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [stage3_feature_fusion.drawio](report/figures/stage3_feature_fusion.drawio)
+
 
 5. **Stage 4 — Kiểm định Tịnh tiến 3 Fold & Khóa Ngưỡng (Walk-Forward Validation)**:
-   - Mô phỏng chính xác hoạt động vận hành ngân hàng theo thời gian: Fold 1 (Train $\le 40\% \to$ Val $(40\%, 50\%]$), Fold 2 (Train $\le 50\% \to$ Val $(50\%, 65\%]$), Fold 3 (Train $\le 65\% \to$ Val $(65\%, 80\%]$).
+   - Mô phỏng chính xác hoạt động vận hành ngân hàng theo thời gian: Fold 1 (Train $\le 40\%$, Val $40\% \to 50\%$), Fold 2 (Train $\le 50\%$, Val $50\% \to 65\%$), Fold 3 (Train $\le 65\%$, Val $65\% \to 80\%$).
    - Mô hình phân loại: Cây quyết định có trọng số (Weighted DecisionTree, `maxDepth=5`, `minInstancesPerNode=50`, `maxBins=64`). Trọng số cân bằng nhãn dương:
-     $$w_+ = \sqrt{\frac{N_{\text{train}} - P_{\text{train}}}{P_{\text{train}}}}$$
+
+     $$w_+ = \sqrt{\frac{N_{\mathrm{train}} - P_{\mathrm{train}}}{P_{\mathrm{train}}}}$$
+
    - Quét lưới 12 ngưỡng $\theta \in [0,001; 0,99]$. Khóa cứng quy tắc (`freeze rule`) dựa trên Mean Validation F1 trước khi bước vào tập Test.
 
    ![Stage 4: Walk-Forward Validation & Rule Freezing](report/figures/stage4_walk_forward_validation.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [stage4_walk_forward_validation.drawio](report/figures/stage4_walk_forward_validation.drawio)
+
 
 6. **Stage 5 & 6 — Huấn luyện Lại, Đánh giá Test Tương lai & Phân loại Đa tiêu chí (Frozen Inference & Triage)**:
    - Huấn luyện lại mô hình trên prefix $\le 80\%$, thực thi suy luận trên tập kiểm tra tương lai ($> 80\%$).
    - Đánh giá toàn diện: Ma trận nhầm lẫn, đường cong PR, Average Precision chính xác, khoảng tin cậy Wilson 95%, độ ổn định qua 5 chu kỳ thời gian và ngân sách review điều tra viên (Top-0,1%, 0,5%, 1,0%).
 
    ![Stage 5: Test Inference & Generalization Evaluation](report/figures/stage5_test_inference.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (Stage 5)*: [stage5_test_inference.drawio](report/figures/stage5_test_inference.drawio)
+
 
    ![Stage 6: Operational Triage & STR Evidence Witnesses](report/figures/stage6_triage_evidence.png)
-   > 📥 *Mã nguồn sơ đồ Draw.io gốc (Stage 6)*: [stage6_triage_evidence.drawio](report/figures/stage6_triage_evidence.drawio)
+
 
 ---
 
@@ -185,15 +187,15 @@ Nhằm bảo đảm tính tuân thủ pháp lý và loại trừ hoàn toàn hi�
 
 #### 1. Tiến trình Thời gian Tịnh tiến & Bất biến As-Of (Walk-Forward Timeline & Invariants)
 ![Protocol Walk-Forward Timeline](report/figures/protocol_walk_forward_timeline.png)
-> 📥 *Mã nguồn sơ đồ Draw.io gốc (Protocol 1)*: [protocol_walk_forward_timeline.drawio](report/figures/protocol_walk_forward_timeline.drawio)
+
 
 #### 2. Ma trận Đối chứng Phân rã Tín hiệu 9 Họ Mô hình (Factorial Feature Ablation Matrix)
 ![Protocol Feature Ablation Matrix](report/figures/protocol_feature_ablation_matrix.png)
-> 📥 *Mã nguồn sơ đồ Draw.io gốc (Protocol 2)*: [protocol_feature_ablation_matrix.drawio](report/figures/protocol_feature_ablation_matrix.drawio)
+
 
 #### 3. Các Công thức Tối ưu hóa Toán học Phân tán (Distributed Mathematical Formulations)
 ![Protocol Mathematical Formulations](report/figures/protocol_mathematical_formulations.png)
-> 📥 *Mã nguồn sơ đồ Draw.io gốc (Protocol 3)*: [protocol_mathematical_formulations.drawio](report/figures/protocol_mathematical_formulations.drawio)
+
 
 ---
 
@@ -203,7 +205,9 @@ Trong nghiệp vụ phòng chống tội phạm tài chính, **Rửa tiền (Mon
 
 - **Rửa tiền (IBM AML)** là quá trình hợp thức hóa tiền bất hợp pháp. Tội phạm bắt buộc phải luân chuyển dòng tiền qua nhiều tài khoản, ngân hàng trung gian và các loại ngoại tệ khác nhau để làm mờ dấu vết (quá trình Layering), cuối cùng quay vòng khép kín trở lại tài khoản kẻ chủ mưu (Round-tripping). Vì vậy, đồ thị IBM có mật độ dày, xuất hiện nhiều tự giao dịch và **chu trình 3 đỉnh khép kín theo thời gian**.
 - **Gian lận Chiếm đoạt Tài khoản (PaySim Mobile)** là hành vi trộm cắp tài sản. Kẻ gian đột nhập vào tài khoản người dùng, chuyển gấp tiền sang tài khoản trung gian (mule account) và ngay lập tức rút tiền mặt (cash-out) để tẩu tán khỏi hệ thống ngân hàng di động. Luồng tiền này mang bản chất **thoát ly hệ thống một chiều (System-Exit, Acyclic)**:
-  $$\text{Nạn nhân} \xrightarrow{\text{TRANSFER}} \text{Tài khoản Mule} \xrightarrow{\text{CASH\_OUT}} \text{Rút tiền mặt}$$
+
+  $$\text{Nạn nhân} \xrightarrow{\text{TRANSFER}} \text{Tài khoản Mule} \xrightarrow{\text{CASH-OUT}} \text{Rút tiền mặt}$$
+
   Vì là đồ thị phi chu trình ($0$ chu trình 3 đỉnh), thuật toán motif trên PaySim đã chuyển hướng chính xác sang **Mẫu hình chuyển tiếp 2 bước (2-Hop Relay Motif)** để bẫy hành vi rút tiền của tài khoản mule.
 
 | Đặc trưng Hình thái Đồ thị | IBM AML (HI-Small) | PaySim Mobile Money | Ý nghĩa Nghiệp vụ Ngân hàng & Big Data |
@@ -262,10 +266,10 @@ L   : Ngữ cảnh phân cụm cộng đồng LPA (Quy mô cộng đồng, tỷ 
 ### 4.2. Ý nghĩa Nghiệp vụ của Độ Lệch Đóng Góp (Ablation Contrasts)
 
 - **Đóng góp của Cấu trúc Vi mô (Motif Contribution)**:
-  - Trên IBM AML, cấu hình có motif (`motif_assisted`) giúp nâng Precision thêm $+1,60\%$ điểm phần trăm so với baseline, chứng minh motif giúp bộ lọc loại trừ hiệu quả các giao dịch thương mại hợp pháp có vẻ ngoài giống rửa tiền.
-  - Trên PaySim, motif đóng vai trò quyết định khi nâng Recall thêm $+6,42\%$ điểm phần trăm và nâng AP thêm $+9,58\%$ điểm phần trăm. Tầm quan trọng của đặc trưng (Feature Importance) chỉ ra rằng `receiver_in_168h` (số lượt tiền đổ về tài khoản thụ hưởng trong 7 ngày) chiếm tới **46,5%** trọng số phân loại của cây quyết định.
+  - Trên IBM AML, cấu hình có motif (`motif_assisted`) giúp nâng Precision thêm +1,60% điểm phần trăm so với baseline, chứng minh motif giúp bộ lọc loại trừ hiệu quả các giao dịch thương mại hợp pháp có vẻ ngoài giống rửa tiền.
+  - Trên PaySim, motif đóng vai trò quyết định khi nâng Recall thêm +6,42% điểm phần trăm và nâng AP thêm +9,58% điểm phần trăm. Tầm quan trọng của đặc trưng (Feature Importance) chỉ ra rằng `receiver_in_168h` (số lượt tiền đổ về tài khoản thụ hưởng trong 7 ngày) chiếm tới **46,5%** trọng số phân loại của cây quyết định.
 - **Đóng góp của Tích hợp Toàn diện (Full Graph Fusion)**:
-  - Trên PaySim, việc kết hợp đầy đủ cả 3 trụ cột đồ thị (`full_fusion`) nâng Average Precision lên mức cao nhất **28,98%** (tăng $+11,98\%$ điểm phần trăm so với baseline 17,00%), khẳng định năng lực xếp hạng rủi ro vượt trội của không gian đặc trưng đa chiều.
+  - Trên PaySim, việc kết hợp đầy đủ cả 3 trụ cột đồ thị (`full_fusion`) nâng Average Precision lên mức cao nhất **28,98%** (tăng +11,98% điểm phần trăm so với baseline 17,00%), khẳng định năng lực xếp hạng rủi ro vượt trội của không gian đặc trưng đa chiều.
 
 ---
 
@@ -273,7 +277,7 @@ L   : Ngữ cảnh phân cụm cộng đồng LPA (Quy mô cộng đồng, tỷ 
 
 Trong thực tế hoạt động tại các ngân hàng, **Ngân sách Thẩm tra Rủi ro (Compliance Capacity)** luôn bị giới hạn: đội ngũ chuyên viên phòng chống gian lận chỉ có thể mở hồ sơ điều tra chuyên sâu cho khoảng **0,1% đến 1,0%** tổng lượng giao dịch phát sinh mỗi ngày. 
 
-Do đó, năng lực xếp hạng rủi ro chính xác (Risk Ranking / Average Precision) có giá trị kinh tế sống còn. GraphGuard đánh giá hiệu quả hoạt động theo các hạn mức ngân sách kiểm toán thực tế ($f \in \{0,1\%, 0,5\%, 1,0\%\}$):
+Do đó, năng lực xếp hạng rủi ro chính xác (Risk Ranking / Average Precision) có giá trị kinh tế sống còn. GraphGuard đánh giá hiệu quả hoạt động theo các hạn mức ngân sách kiểm toán thực tế ($f \in \{0{,}1;\, 0{,}5;\, 1{,}0\}\%$, tương ứng Top 0,1%, Top 0,5%, Top 1,0%):
 
 | Tập dữ liệu | Ngân sách Thẩm tra ($f$) | Số lượng giao dịch duyệt ($K$) | Số gian lận bắt được ($\text{TP}@K$) | Tỷ lệ chuẩn xác ($\text{Precision}@K$) | Tỷ lệ bao phủ gian lận ($\text{Recall}@K$) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
