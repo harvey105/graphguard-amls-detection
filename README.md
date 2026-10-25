@@ -143,7 +143,9 @@ $$
 \mathrm{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\mathrm{in}}(u)} \frac{\mathrm{PR}^{(k)}(v)}{d_{\mathrm{out}}(v)}
 $$
 
-     - *Synchronous LPA*: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
+     
+   - *Synchronous LPA*: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
+     
    - **Luồng B — Trích xuất Đặc trưng Causal Chống Rò rỉ (Strict-Past Causal Analytics)**:
      - Tạo 5 mốc Quantile Snapshots tại 20%, 40%, 50%, 65%, 80% thời gian.
      - *Bất biến As-Of*: Mọi giao dịch tại thời điểm $t$ chỉ được phép tra cứu snapshot quá khứ gần nhất thỏa mãn: $T_{\text{snap}} < t$.
