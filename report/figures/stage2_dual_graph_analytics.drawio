@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-2-Dual-Stream-Graph-Analytics">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t2" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 2: Dual-Stream Graph Analytics Engines&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Decoupled Stream Architecture &amp;bull; Stream A: Descriptive Global Graph &amp;bull; Stream B: Strict-Past Causal Snapshots &amp;amp; Motifs&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1400" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b2_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Stream A:&lt;/b&gt; PageRank + LPA&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b2_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Stream B:&lt;/b&gt; 5 Snapshots (20-80%)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b2_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Leakage:&lt;/b&gt; 0.00% Zero Lookahead&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2330" y="32" width="200" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: GraphFrame Source (Cyan/Blue Theme) -->
+        <mxCell id="card_s2_src" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="380" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_src" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. GRAPHFRAME SOURCE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Validated Parquet Staging&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="380" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_src1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;Input Graph Partitioning:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Pre-partitioned Vertex Cut RDDs&lt;br&gt;&amp;bull; Zero dangling edge verification&lt;br&gt;&amp;bull; 0 null attributes guaranteed&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="340" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_src2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;IBM AML Scale:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 518,581 Vertices&lt;br&gt;&amp;bull; 5,078,345 Directed Edges&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="340" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_src3" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;PaySim Mobile Scale:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 9,073,900 Vertices&lt;br&gt;&amp;bull; 6,362,620 Directed Edges&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="390" width="340" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s2_src" value="Memory Guard: 5 GiB JVM Mutex" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="380" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Stream A Container (Purple/Indigo Theme) -->
+        <mxCell id="card_s2_stra" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="525" y="125" width="1080" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_stra" value="&lt;b style=&quot;font-size:22px;color:#6d28d9;&quot;&gt;STREAM A: DESCRIPTIVE FULL GRAPH TOPOLOGY&lt;/b&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt; (Global Structural Characterization)&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="525" y="130" width="1080" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_deg" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Total Degree Invariant&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; \(\sum d = 2E\) verified&lt;br&gt;&amp;bull; IBM: 10.16M degree sum&lt;br&gt;&amp;bull; PaySim: 12.73M degree sum&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="545" y="170" width="335" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_pr" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Damped PageRank (d=0.85)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; 10 Power Iterations on Spark&lt;br&gt;&amp;bull; Virtual uniform teleportation&lt;br&gt;&amp;bull; Neutralizes 2.15M sink nodes&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="895" y="170" width="340" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_lpa" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Synchronous LPA&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; 5 Bilateral message iterations&lt;br&gt;&amp;bull; Deterministic xxhash64 tie-break&lt;br&gt;&amp;bull; IBM: 314k | PaySim: 5.43M clusters&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="170" width="335" height="135" as="geometry" />
+        </mxCell>
+
+        <!-- Stream B Container (Amber/Orange Theme) -->
+        <mxCell id="card_s2_strb" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="525" y="355" width="1080" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_strb" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;STREAM B: STRICT-PAST CAUSAL FEATURE EXTRACTION&lt;/b&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt; (Zero Lookahead Leakage)&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="525" y="360" width="1080" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_snap" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;5 Quantile Snapshots&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; \(Q \in \{20\%, 40\%, 50\%, 65\%, 80\%\}\)&lt;br&gt;&amp;bull; Graph states compiled at freeze&lt;br&gt;&amp;bull; Zero future edge contamination&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="545" y="400" width="335" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_asof" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Strict As-Of Invariant&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Join condition: \(T_{\text{snap}} &amp;lt; t_i\) strictly&lt;br&gt;&amp;bull; Zero lookahead peeking&lt;br&gt;&amp;bull; Cold-start priors: score=0, is_new=1&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="895" y="400" width="340" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="box_s2_mot" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Sweep-Line Motifs&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Causal sliding windows: 24h &amp;amp; 168h&lt;br&gt;&amp;bull; 2-Hop relay &amp;amp; 3-Cycle ring motifs&lt;br&gt;&amp;bull; Concurrent ties (\(\Delta t = 0\)) decoupled&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=10;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="400" width="335" height="135" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Causal Fusion Staging (Emerald/Green Theme) -->
+        <mxCell id="card_s2_fuse" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1680" y="125" width="400" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_fuse" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;3. CAUSAL FUSION STAGING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Single Common Feature Row&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1680" y="135" width="400" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_fuse1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;Common Feature Assembly:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Combines [T, C, M, L] into single feature row per physical transaction&lt;br&gt;&amp;bull; Strict schema validation before export&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="190" width="360" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_fuse2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;32 MiB Disk Cut Staging:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Writes to Parquet intermediate disk&lt;br&gt;&amp;bull; Avoids in-memory RDD checkpoints&lt;br&gt;&amp;bull; Safe streaming under 5 GiB heap cap&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="295" width="360" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_fuse3" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;Immediate Unpersisting:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Calls unpersist(blocking=True) on graphs&lt;br&gt;&amp;bull; Prevents accumulated JVM memory bloat&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="400" width="360" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s2_fuse" value="Guarantees Zero JVM Heap Bloat" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1680" y="510" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Stage 3 Ready (Rose/Crimson Theme) -->
+        <mxCell id="card_s2_s3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2145" y="125" width="385" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_s3" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;4. STAGE 3 READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Factorial Fusion Staging&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2145" y="135" width="385" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_s3_1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Common Feature Matrix:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; [T + C + M + L] feature vectors ready&lt;br&gt;&amp;bull; 9 Ablation configurations defined&lt;br&gt;&amp;bull; Chronologically ordered on disk&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2165" y="190" width="345" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s2_s3_2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Zero Lookahead Audit Pass:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Verified: 0 future edges incorporated&lt;br&gt;&amp;bull; Scalers &amp;amp; weights derived only on train&lt;br&gt;&amp;bull; Safe for Walk-Forward 3-Fold testing&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2165" y="325" width="345" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s2_s3" value="Output: data/features/common_features/" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2145" y="510" width="385" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Outside Boxes (Completely Straight Horizontal Connectors) -->
+        <mxCell id="e2_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.233;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s2_src" target="card_s2_stra">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.767;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s2_src" target="card_s2_strb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.233;" edge="1" parent="1" source="card_s2_stra" target="card_s2_fuse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.767;" edge="1" parent="1" source="card_s2_strb" target="card_s2_fuse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2_5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s2_fuse" target="card_s2_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Mathematical Foundation -->
+        <mxCell id="panel_s2_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s2_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;GRAPH ALGORITHMIC FOUNDATION: PAGERANK SINK REPAIR &amp;amp; STRICT-PAST SWEEP-LINE THEOREMS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Dangling Node Resolution -->
+        <mxCell id="s2_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_k1" value="&lt;b style=&quot;font-size:22px;color:#6d28d9;&quot;&gt;1. Dangling Node Resolution &amp;amp; Google Matrix Teleportation&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s2_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;\(r^{(t+1)}(u) = \frac{1-d}{|V|} + d \left[ \sum_{v \in \mathcal{N}_{\text{in}}(u)} \frac{r^{(t)}(v)}{d_{\text{out}}(v)} + \frac{1}{|V|} \sum_{v \in D} r^{(t)}(v) \right], \quad \sum r(u) = 1.0\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s2_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Sink Trap Phenomenon:&lt;/b&gt; In PaySim, 2,150,401 merchant nodes only receive funds (\(d_{\text{out}} = 0\)). Without teleportation repair, network rank energy leaks to 0.&lt;br&gt;&amp;bull; &lt;b&gt;Dangling Mass Conservation:&lt;/b&gt; The virtual teleportation term \(\frac{1}{|V|} \sum_{v \in D} r(v)\) redistributes dangling mass uniformly, maintaining \(\sum_{u \in V} r(u) = 1.0\).&lt;br&gt;&amp;bull; &lt;b&gt;Spark GraphFrames Fix:&lt;/b&gt; Eliminates NaN float overflows and task crashes during large-scale iterative computation.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Strict As-Of Topological Snapshot Invariant -->
+        <mxCell id="s2_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_k2" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;2. Strict As-Of Topological Snapshot Invariant&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s2_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:19px;color:#b45309;&quot;&gt;\(T_{\text{snap}} = \max \{ Q_k \mid Q_k &lt; t_i, \; Q_k \in \{20\%, 40\%, 50\%, 65\%, 80\%\} \} \implies \text{Zero Lookahead}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s2_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;As-Of Lookup Theorem:&lt;/b&gt; Every transaction event at timestamp \(t_i\) is joined strictly with pre-computed snapshot graph \(G_{&lt; t_i}\) where \(T_{\text{snap}} &lt; t_i\).&lt;br&gt;&amp;bull; &lt;b&gt;Zero Future Peeking:&lt;/b&gt; Future edges (\(\ge t_i\)) are mathematically inaccessible during feature extraction, eliminating lookahead bias completely.&lt;br&gt;&amp;bull; &lt;b&gt;Cold-Start Handling:&lt;/b&gt; New nodes entering after \(T_{\text{snap}}\) receive base PageRank \(1/|V|\) and default degree 0 with an active is_new indicator flag.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Sweep-Line Causal Temporal Motifs -->
+        <mxCell id="s2_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s2_k3" value="&lt;b style=&quot;font-size:22px;color:#047857;&quot;&gt;3. Sweep-Line Causal Temporal Motifs&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s2_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:19px;color:#047857;&quot;&gt;\(s &lt; t \quad \land \quad 0 &lt; t - s \le W, \quad W \in \{24\text{h}, 168\text{h}\}, \quad \text{Ties } (\Delta t = 0) \text{ decoupled}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s2_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Sliding Causal Horizon:&lt;/b&gt; For any transaction event at timestamp \(t\), queries past events at timestamp \(s\) strictly bounded by \(t - W \le s &lt; t\).&lt;br&gt;&amp;bull; &lt;b&gt;Concurrent Event Tie-Break:&lt;/b&gt; Events with identical timestamp (\(\Delta t = 0\)) cannot form past history for each other, preventing circular causality in batch ETL.&lt;br&gt;&amp;bull; &lt;b&gt;Mule &amp;amp; Smurfing Detection:&lt;/b&gt; 2-hop relay flags fast transfer-to-cashout drains; 3-cycle flags closed circular smurfing paths.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption2" value="Stage 2 Architecture: Dual-Stream Graph Analytics Engines on Apache Spark and GraphFrames. Stream A executes global descriptive graph metrics with sink-safe PageRank (d=0.85) and Synchronous LPA. Stream B compiles strictly causal As-Of quantile snapshots and sweep-line temporal motifs, eliminating future lookahead bias." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

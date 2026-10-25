@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Protocol-Mathematical-Formulations">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1330" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="tp3" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Mathematical Foundations &amp;amp; Distributed Optimization Principles&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Formulations of 5 Core Pipeline Equations &amp;bull; Distributed GraphFrames &amp;bull; Robust Quantiles &amp;bull; Wilson Confidence Intervals&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1600" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="bp3_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Engine:&lt;/b&gt; Spark SQL + GraphFrames&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp3_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Formulas:&lt;/b&gt; 5 Core Equations&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="230" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp3_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Rigor:&lt;/b&gt; LaTeX MathJax Rendered&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2290" y="32" width="240" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Extreme Imbalance Weighting (Cyan Theme) -->
+        <mxCell id="card_eq1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="780" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eq1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. EXTREME IMBALANCE CLASS WEIGHTING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Square-Root Damped Loss Objective&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="780" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq1_math" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:25px;color:#0369a1;&quot;&gt;\(w_+ = \sqrt{\frac{N_{\text{train}} - P_{\text{train}}}{P_{\text{train}}}}, \quad w_- = 1.0\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="95" y="195" width="730" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq1_desc" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;The 1:1200 Instability Problem:&lt;/b&gt; Naive inverse frequency weighting assigns \(w_+ \approx 1,200\), causing tree gradients to oscillate violently and inflate false positives by 10x.&lt;br&gt;&amp;bull; &lt;b&gt;Square-Root Stabilization:&lt;/b&gt; Setting \(w_+ = \sqrt{1200} \approx 34.6\) boosts rare positive recall without sacrificing model calibration.&lt;br&gt;&amp;bull; &lt;b&gt;Prefix Isolation Invariant:&lt;/b&gt; \(N_{\text{train}}\) and \(P_{\text{train}}\) are counted strictly on the training fold (\(\le 80\%\)), ensuring strictly lookahead-free gradient steps.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="95" y="300" width="730" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_eq1" value="Objective: Stabilized Tree Splitting under 0.1% Positive Prevalence" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="780" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Robust Stratified Amount Scaling (Amber Theme) -->
+        <mxCell id="card_eq2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="890" y="125" width="790" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eq2" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;2. ROBUST STRATIFIED AMOUNT SCALING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Non-Parametric Quantile Normalization&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="890" y="135" width="790" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq2_math" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:25px;color:#b45309;&quot;&gt;\(\tilde{x}_{\text{amt}} = \frac{x_{\text{amt}}}{q_{90}(x_{\text{amt}} \mid \text{currency}, \text{type})}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="915" y="195" width="740" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq2_desc" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Fat-Tail Resilience:&lt;/b&gt; Financial transaction amounts span \$1 to \$10,000,000+. Standard z-score normalization is destroyed by extreme laundering transfers.&lt;br&gt;&amp;bull; &lt;b&gt;Stratified Quantiles:&lt;/b&gt; Computing \(q_{90}\) conditioned on currency (IBM) or transfer type (PaySim) normalizes heterogeneous distribution scales.&lt;br&gt;&amp;bull; &lt;b&gt;Audit Invariant:&lt;/b&gt; Scale factor \(q_{90}\) is computed exclusively on the training prefix and frozen for test inference, preventing distribution leakage across time.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="915" y="300" width="740" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_eq2" value="Normalization: Outlier-Resistant Dynamic Stratification" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="890" y="590" width="790" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Repaired Damped Google Matrix Iteration (Purple Theme) -->
+        <mxCell id="card_eq3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="125" width="810" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eq3" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;3. REPAIRED DAMPED GOOGLE MATRIX ITERATION&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Virtual Teleportation with Dangling Mass Conservation&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="135" width="810" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq3_math" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:23px;color:#6d28d9;&quot;&gt;\(r^{(t+1)}(u) = \frac{1-d}{|\mathcal{V}|} + d \left[ \sum_{v \to u} \frac{A_{vu} r^{(t)}(v)}{d_{\text{out}}(v)} + \frac{1}{|\mathcal{V}|} \sum_{v \in \mathcal{D}} r^{(t)}(v) \right]\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="195" width="760" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq3_desc" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Dangling Sink Holes:&lt;/b&gt; Accounts with \(d_{\text{out}}(v) = 0\) (cash-out mules) absorb probability mass, causing total PageRank to decay to zero.&lt;br&gt;&amp;bull; &lt;b&gt;Virtual Teleportation Term:&lt;/b&gt; \(\frac{1}{|\mathcal{V}|} \sum_{v \in \mathcal{D}} r(v)\) redistributes dangling mass uniformly, maintaining the invariant \(\sum_{u \in \mathcal{V}} r(u) = 1.0\).&lt;br&gt;&amp;bull; &lt;b&gt;Spark GraphFrames Fix:&lt;/b&gt; Eliminates NaN float overflow and division-by-zero crashes on native Windows execution.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="300" width="760" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_eq3" value="Conservation: Strict Total Probability Conservation on Large Graphs" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="590" width="810" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Equations 4 & 5 (Emerald & Rose) -->
+        <mxCell id="pnl_tp3_bot" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="680" width="2460" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp3_bot" value="&lt;b style=&quot;font-size:26px;color:#0369a1;&quot;&gt;DISTRIBUTED TOPOLOGICAL CLUSTERING &amp;amp; STATISTICAL AUDIT UNCERTAINTY BOUNDS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="695" width="1600" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Synchronous Bilateral Label Voting (LPA) (Emerald Theme) -->
+        <mxCell id="card_eq4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="755" width="1190" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eq4" value="&lt;b style=&quot;font-size:23px;color:#047857;&quot;&gt;4. Synchronous Deterministic Label Propagation Algorithm (LPA)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="125" y="768" width="1140" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq4_math" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#047857;&quot;&gt;\(\mathcal{C}^{(t+1)}(u) = \arg\max_{c} \sum_{v \in \mathcal{N}(u)} w_{uv} \cdot \mathbb{I}(\mathcal{C}^{(t)}(v) = c), \quad \text{Tie-Break: } \min_{c \in \text{Ties}} \text{signed\_xxhash64}(c)\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="815" width="1140" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq4_desc" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Race Conditions in Distributed LPA:&lt;/b&gt; Asynchronous updates across Spark executor threads yield non-deterministic community boundaries based on network packet arrival order.&lt;br&gt;&amp;bull; &lt;b&gt;Synchronous Snapshot Invariant:&lt;/b&gt; GraphGuard updates all node labels simultaneously at step \(t+1\) using only state from step \(t\), preserving network causality.&lt;br&gt;&amp;bull; &lt;b&gt;Cryptographic Determinism:&lt;/b&gt; In multi-label voting ties, the label minimizing &lt;code&gt;signed_xxhash64&lt;/code&gt; is chosen, guaranteeing identical clusters across any hardware environment.&lt;br&gt;&amp;bull; &lt;b&gt;Zero Random Seeds:&lt;/b&gt; Eliminates pseudo-random volatility in compliance auditing.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="125" y="905" width="1140" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: Wilson 95% Score Confidence Interval (Rose Theme) -->
+        <mxCell id="card_eq5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="755" width="1170" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eq5" value="&lt;b style=&quot;font-size:23px;color:#be123c;&quot;&gt;5. Wilson Score 95% Audit Interval Formulation&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1355" y="768" width="1120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq5_math" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#be123c;&quot;&gt;\(\text{CI}_{95\%}(\hat{p}) = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \quad z = 1.95996\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1355" y="815" width="1120" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="box_eq5_desc" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;The Wald Approximation Collapse:&lt;/b&gt; Traditional normal intervals (\(\hat{p} \pm z\sqrt{\hat{p}(1-\hat{p})/n}\)) collapse or overshoot [0, 1] when fraud rates are close to zero.&lt;br&gt;&amp;bull; &lt;b&gt;Inverted Hypothesis Test:&lt;/b&gt; The Wilson formulation represents the exact inversion of the score test, centering the interval on a shrinkage prior.&lt;br&gt;&amp;bull; &lt;b&gt;Regulatory Governance (SR 11-7):&lt;/b&gt; Enables auditors to verify whether performance gains (e.g., PaySim [55.90%, 60.32%]) are statistically significant or mere variance.&lt;br&gt;&amp;bull; &lt;b&gt;Judicial Proof:&lt;/b&gt; Provides admissible confidence bounds for legal filings.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1355" y="905" width="1120" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption_tp3" value="Protocol Architecture 3: Mathematical formulations underpinning GraphGuard. From square-root class balance damping and robust quantile scaling to repaired dangling-mass PageRank, deterministic xxhash64 LPA voting, and Wilson score intervals, all components are engineered for distributed numerical stability and regulatory audit compliance." style="text;html=1;align=left;verticalAlign=top;fontSize=19;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1265" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-3-Factorial-Feature-Fusion">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t3" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 3: Factorial Feature Fusion &amp;amp; 9 Ablation Model Families&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Unified Signal Representation &amp;bull; Privacy Governance &amp;bull; 9 Factorial Ablation Matrix Configurations &amp;bull; Stage 4 Hand-Off&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1500" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b3_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Signals:&lt;/b&gt; 4 Groups (T, C, M, L)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b3_2" value="&lt;span style=&quot;font-size:18px;color:#b45309;&quot;&gt;&lt;b&gt;Ablations:&lt;/b&gt; 9 Model Families&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="250" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b3_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Privacy:&lt;/b&gt; Zero Raw ID Leakage&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="32" width="220" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Four Signal Streams (Cyan Theme) -->
+        <mxCell id="card_s3_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. FOUR SIGNAL STREAMS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Multi-Scale Graph &amp;amp; Transaction Signals&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_t" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;T (Transaction Properties):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Non-parametric scaling: \(\tilde{x}_{\text{amt}} = x / q_{90}\)&lt;br&gt;&amp;bull; Type index, novelty flags, cyclical hour encoding&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_c" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;C (Topological Centrality):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; As-Of In-Degree, Out-Degree &amp;amp; Degree Ratio&lt;br&gt;&amp;bull; Distributed PageRank (\(\alpha=0.85\)) authority hubs&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_ml" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;M &amp;amp; L (Motifs &amp;amp; Communities):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 24h &amp;amp; 168h fan-in, fan-out, relay &amp;amp; 3-cycles&lt;br&gt;&amp;bull; LPA community size &amp;amp; cross-community ratio&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s3_1" value="Source: Stage 2 Graph Analytics Pipeline" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Privacy Governance Gate (Purple Theme) -->
+        <mxCell id="card_s3_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_2" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. PRIVACY GOVERNANCE GATE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Identity Defense &amp;amp; Anti-Leakage Wall&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_noid" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Forbids Raw Account Strings:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Excludes &lt;code&gt;nameOrig&lt;/code&gt;, &lt;code&gt;nameDest&lt;/code&gt;, account IDs&lt;br&gt;&amp;bull; Eliminates memorization of known entities&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_nocomm" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Forbids Numeric Cluster IDs:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Permits only topological invariants (size, ratio)&lt;br&gt;&amp;bull; Prevents partition artifact overfitting&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_nolbl" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Zero Target Label Leakage:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Fraud labels isolated strictly to training loss targets&lt;br&gt;&amp;bull; Complies with GDPR Art. 22 &amp;amp; FCRA guidelines&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s3_2" value="Policy: Spark Schema Allowlist Firewall" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Common Feature Row (Amber Theme) -->
+        <mxCell id="card_s3_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_3" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;3. COMMON FEATURE ROW&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Single Physical Vector per Event&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_vec" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Unified Multi-Signal Schema:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;event_id&lt;/code&gt;, &lt;code&gt;event_key&lt;/code&gt;, &lt;code&gt;timestamp&lt;/code&gt;, &lt;code&gt;step&lt;/code&gt;&lt;br&gt;&amp;bull; Scaled amount, centrality, motif counts, LPA metrics&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_col" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Strict Columnar Storage:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Strongly typed float32 / int32 primitives&lt;br&gt;&amp;bull; 32 MiB Snappy Parquet row-group staging&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_repr" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Unbiased Benchmark Guarantee:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Identical feature row fed into all 9 models&lt;br&gt;&amp;bull; Eliminates pipeline variance &amp;amp; data discrepancies&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s3_3" value="Storage: data/features/stage3_unified_features" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: 9 Factorial Ablation Families (Emerald Theme) -->
+        <mxCell id="card_s3_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_4" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;4. 9 FACTORIAL ABLATIONS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Systematic Signal Decomposition Matrix&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_base" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Baselines &amp;amp; Single Signals:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;baseline_raw&lt;/code&gt; [T only]: Tabular benchmark&lt;br&gt;&amp;bull; &lt;code&gt;centrality&lt;/code&gt; [C] &amp;bull; &lt;code&gt;motifs&lt;/code&gt; [M] &amp;bull; &lt;code&gt;comm&lt;/code&gt; [L]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_loo" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Leave-One-Out (Ablation Tests):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;without_centrality&lt;/code&gt; [T+M+L] (PaySim)&lt;br&gt;&amp;bull; &lt;code&gt;without_motifs&lt;/code&gt; [T+C+L] &amp;bull; &lt;code&gt;without_comm&lt;/code&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_full" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Full Fusion &amp;amp; Graph-Only:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;graph_only&lt;/code&gt; [C+M+L]: Zero tabular features&lt;br&gt;&amp;bull; &lt;code&gt;full_fusion&lt;/code&gt; [T+C+M+L] (IBM AML winner)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s3_4" value="Matrix: 9 Model Configurations per Fold" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: Stage 4 Ready (Rose Theme) -->
+        <mxCell id="card_s3_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. STAGE 4 READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Chronological Validation Hand-Off&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_slice" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Temporal Slicing Invariant:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Rows sorted strictly by physical timestamp&lt;br&gt;&amp;bull; Zero future lookahead or temporal inversion&lt;br&gt;&amp;bull; Deterministic expanding window boundaries&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="190" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s3_gate" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Downstream Invariant Pass:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Zero null features across all 11.4M rows&lt;br&gt;&amp;bull; Checkpointed feature catalog ready for MLlib&lt;br&gt;&amp;bull; Safe heap loading under 5 GiB JVM cap&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="315" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s3_5" value="Hand-Off: Walk-Forward Validation Engine" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="510" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Between Consecutive Cards -->
+        <mxCell id="e3_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s3_1" target="card_s3_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s3_2" target="card_s3_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s3_3" target="card_s3_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s3_4" target="card_s3_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Feature Engineering & Ablation Mechanics -->
+        <mxCell id="panel_s3_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s3_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;FEATURE ENGINEERING &amp;amp; FACTORIAL ABLATION GOVERNANCE MECHANICS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Quantile Scaling -->
+        <mxCell id="s3_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_k1" value="&lt;b style=&quot;font-size:22px;color:#0369a1;&quot;&gt;1. Quantile Scaling &amp;amp; Non-Parametric Normalization&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s3_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#0369a1;&quot;&gt;\(\tilde{x}_{\text{amt}} = \frac{x_{\text{amt}}}{q_{90}(x_{\text{amt}} \mid \text{curr}, \text{type})}, \quad \mu_{\text{fold}} \perp \text{Test}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s3_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Heavy-Tailed Financial Skew:&lt;/b&gt; Financial transaction amounts span 7 orders of magnitude ($0.01 to $10,000,000+). Standard z-score scaling collapses under extreme outliers.&lt;br&gt;&amp;bull; &lt;b&gt;90th Percentile Scaling:&lt;/b&gt; Divides by the 90th percentile conditioned on transaction type and currency, preserving relative magnitudes without blowing up tree splits.&lt;br&gt;&amp;bull; &lt;b&gt;Strict Horizon Isolation:&lt;/b&gt; Percentiles are computed exclusively on chronological training prefixes without lookahead into future validation or test periods.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Factorial Ablation Theorem -->
+        <mxCell id="s3_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_k2" value="&lt;b style=&quot;font-size:22px;color:#047857;&quot;&gt;2. Factorial Ablation Decomposition Theorem&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s3_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#047857;&quot;&gt;\(\Delta F_1(\mathcal{S}) = F_1(\mathcal{F}_{\text{all}}) - F_1(\mathcal{F}_{\text{all}} \setminus \{\mathcal{S}\}), \quad \mathcal{S} \in \{C, M, L\}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s3_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Controlled Marginal Attribution:&lt;/b&gt; Factorial design isolates the exact marginal gain of centrality (C), motifs (M), and community structure (L) over tabular properties.&lt;br&gt;&amp;bull; &lt;b&gt;Empirical Discovery:&lt;/b&gt; On PaySim, omitting centrality (&lt;code&gt;without_centrality&lt;/code&gt;) boosts test F1 from 31.91% to 36.02% by eliminating hub-induced false positives.&lt;br&gt;&amp;bull; &lt;b&gt;Synergistic Fusion:&lt;/b&gt; On IBM AML, all 4 signal groups (&lt;code&gt;full_fusion&lt;/code&gt;) are required to suppress alert fatigue by -48.3% while maintaining high recall.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Privacy Allowlist -->
+        <mxCell id="s3_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s3_k3" value="&lt;b style=&quot;font-size:22px;color:#6d28d9;&quot;&gt;3. Allowlist Privacy &amp;amp; Legal Information Barrier&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s3_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#6d28d9;&quot;&gt;\(\mathcal{F}_{\text{admissible}} \cap \{\text{Raw\_ID}, \text{Comm\_ID}\} = \emptyset, \quad \mathcal{I}(Y; \text{ID}) \to 0\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s3_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Anti-Leakage Governance:&lt;/b&gt; Machine learning models must not memorize historical customer IDs or specific bank account strings, as fraudsters frequently abandon compromised accounts.&lt;br&gt;&amp;bull; &lt;b&gt;Cluster ID Generalization:&lt;/b&gt; Discarding raw LPA cluster IDs ensures models do not memorize training-fold partitions, but instead learn structural sizing and cross-border edge ratios.&lt;br&gt;&amp;bull; &lt;b&gt;Regulatory Alignment:&lt;/b&gt; Enforces GDPR Article 22, FCRA, and Basel Committee standards on explainable, non-discriminatory automated risk decisioning.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption3" value="Stage 3 Architecture: Factorial Feature Fusion pipeline combining Transaction (T), Centrality (C), Motifs (M), and Communities (L) under strict privacy allowlists into unified 32 MiB Snappy Parquet row groups for 9 factorial ablation families." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

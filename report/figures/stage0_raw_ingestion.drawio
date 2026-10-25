@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-0-Raw-Ingestion-and-Contracts">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t0" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 0: Multi-Format Raw Ingestion &amp;amp; Graph Data Contracts&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Dual Ingestion Engine &amp;bull; 11,440,965 Transactions &amp;bull; Immutable DatasetSpec &amp;amp; Vertex-Edge Schema Binding&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1400" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b0_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Scale:&lt;/b&gt; 11.44M Tx &amp;bull; 9.59M Accts&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b0_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Specs:&lt;/b&gt; IBM AML + PaySim&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="240" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b0_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Gate:&lt;/b&gt; 0 Dangling / 0 Null&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2300" y="32" width="230" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- 1. Raw Feeds Card (Cyan/Blue Theme) -->
+        <mxCell id="card_s0_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. RAW INGESTION FEEDS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Multi-Format Financial Streams&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_ibm" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:20px;color:#0369a1;&quot;&gt;IBM AML HI-Small Feed:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 5,078,345 Rows &amp;bull; 518,581 Accounts&lt;br&gt;&amp;bull; 11 Banks &amp;bull; 15 Currencies&lt;br&gt;&amp;bull; 5,177 Laundering Positives (0.10%)&lt;br&gt;&amp;bull; Formats: ACH, Wire, Cheque, CC&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_pay" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:20px;color:#0369a1;&quot;&gt;PaySim Mobile Money Feed:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 6,362,620 Rows &amp;bull; 9,073,900 Accounts&lt;br&gt;&amp;bull; 8,213 Fraud Positives (0.13%)&lt;br&gt;&amp;bull; 5 Types: TRANSFER, CASH_OUT,&lt;br&gt;&amp;nbsp;&amp;nbsp;CASH_IN, DEBIT, PAYMENT (1–744h)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="320" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s0_1" value="Simulators: AMLworld Simulator &amp;amp; EMSS" style="text;html=1;align=center;verticalAlign=middle;fontSize:16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 2. DatasetSpec Adapter Card (Purple/Indigo Theme) -->
+        <mxCell id="card_s0_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_2" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. DATASETSPEC ADAPTER&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Schema Binding &amp;amp; Normalization&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_spec1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Composite ID Formation:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; IBM: BankID_AccountID composite key&lt;br&gt;&amp;bull; PaySim: Preserves C / M account prefix&lt;br&gt;&amp;bull; Eliminates cross-bank ID collisions&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_spec2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Temporal Normalization:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; ISO Timestamp \(\to\) Epoch Second integer&lt;br&gt;&amp;bull; Step (1–744h) \(\to\) Continuous Relative Hour&lt;br&gt;&amp;bull; Aligns heterogeneous time scales&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_spec3" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Deterministic Tie-Breaking:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Assigns event_id &amp;bull; event_key per tx&lt;br&gt;&amp;bull; Guarantees zero order ambiguity on Spark&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s0_2" value="Decouples Raw Schemas from Logic Core" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 3. Graph Contracts Card (Emerald/Green Theme) -->
+        <mxCell id="card_s0_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_3" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;3. GRAPH CONTRACTS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;GraphFrames Schema Binding&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_c_ibm" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;IBM Property Graph Contract:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Vertices (518,581):&lt;/b&gt; id, bank_id, account_id&lt;br&gt;&amp;bull; &lt;b&gt;Edges (5,078,345):&lt;/b&gt; src, dst, amount, timestamp, currency, format, label&lt;br&gt;&amp;bull; Bank ID zero-padding normalizer active&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="190" width="405" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_c_pay" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;PaySim Mobile Contract V1:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Vertices (9,073,900):&lt;/b&gt; id, account_type, balance&lt;br&gt;&amp;bull; &lt;b&gt;Edges (6,362,620):&lt;/b&gt; src, dst, amount, step, type, isFraud ground-truth&lt;br&gt;&amp;bull; Zero dangling edge verification active&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="325" width="405" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s0_3" value="Strict Schema Binding: GraphFrames RDD" style="text;html=1;align=center;verticalAlign=middle;fontSize:16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Integrity Audit Card (Amber/Orange Theme) -->
+        <mxCell id="card_s0_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_4" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;4. INTEGRITY AUDIT&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Relational Invariant Verification&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_inv1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Referential Integrity Check:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; \(\forall e = (u,v) \in E \implies u \in V \land v \in V\)&lt;br&gt;&amp;bull; Left anti-join returns count = 0&lt;br&gt;&amp;bull; Zero dangling edges on both graphs&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_inv2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Bank Disambiguation Repair:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Standardizes bank codes: '1' \(\to\) '001'&lt;br&gt;&amp;bull; Eliminates 515,088 ghost account splits&lt;br&gt;&amp;bull; Recovers exact 518,581 true accounts&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_inv3" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Privacy &amp;amp; PII Boundary:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Ground truth labels isolated from features&lt;br&gt;&amp;bull; Account IDs excluded from model inputs&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s0_4" value="BCBS 239 Data Governance Standard" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 5. Staging Delivery Card (Rose/Crimson Theme) -->
+        <mxCell id="card_s0_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. STAGE 1 READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Lossless Staging Hand-Off&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_del1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Validated Ingestion Totals:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; 11,440,965 Transactions verified&lt;br&gt;&amp;bull; 0 Dangling edges across all feeds&lt;br&gt;&amp;bull; 0 Null critical attributes in vertices&lt;br&gt;&amp;bull; Multiset loss \(\Delta = 0\) (Exact match)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="190" width="400" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s0_del2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Parquet Staging Storage:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Snappy columnar compression active&lt;br&gt;&amp;bull; 32 MiB bounded row-group partitions&lt;br&gt;&amp;bull; Safe streaming under 5 GiB JVM heap&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="325" width="400" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s0_5" value="Gate Status: PASS (Ready for Stage 1)" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="510" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Between Consecutive Cards (Clean Straight Horizontal Connectors) -->
+        <mxCell id="e0_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s0_1" target="card_s0_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e0_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s0_2" target="card_s0_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e0_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s0_3" target="card_s0_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e0_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s0_4" target="card_s0_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Mathematical Invariants & Verification Suite -->
+        <mxCell id="panel_s0_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s0_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;DATA CONTRACT SPECIFICATION: MATHEMATICAL INVARIANTS &amp;amp; VERIFICATION SUITE&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1300" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Referential Integrity -->
+        <mxCell id="s0_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_k1" value="&lt;b style=&quot;font-size:22px;color:#0369a1;&quot;&gt;1. Referential Integrity &amp;amp; Zero Dangling Invariant&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s0_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#0369a1;&quot;&gt;\(\forall e = (u,v) \in E \implies u \in V \land v \in V, \quad E_{\text{src}} \setminus V = \emptyset \land E_{\text{dst}} \setminus V = \emptyset\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s0_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;GraphFrames RDD Integrity:&lt;/b&gt; Spark GraphX requires every edge endpoint to resolve to a valid vertex row in the underlying RDD partition.&lt;br&gt;&amp;bull; &lt;b&gt;Two-Way Anti-Join Verification:&lt;/b&gt; Automated tests execute left anti-joins &lt;code&gt;E.antiJoin(V, E.src == V.id)&lt;/code&gt; and &lt;code&gt;E.antiJoin(V, E.dst == V.id)&lt;/code&gt;, asserting an exact row count of 0.&lt;br&gt;&amp;bull; &lt;b&gt;Production Crash Prevention:&lt;/b&gt; Eliminates silent JVM null-pointer exceptions and executor task failures during iterative PageRank joins.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Multiset Lossless Pipeline -->
+        <mxCell id="s0_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_k2" value="&lt;b style=&quot;font-size:22px;color:#047857;&quot;&gt;2. Multiset Equality &amp;amp; Lossless Ingestion Theorem&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s0_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#047857;&quot;&gt;\(\text{Multiset}(E_{\text{raw}}) = \text{Multiset}(E_{\text{parquet}}), \quad E_{\text{raw}} \setminus E_{\text{parquet}} = \emptyset \land E_{\text{parquet}} \setminus E_{\text{raw}} = \emptyset\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s0_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Bi-Directional Reconciliation:&lt;/b&gt; Proves that ETL transformation drops zero physical transaction records and injects zero duplicate ghost edges.&lt;br&gt;&amp;bull; &lt;b&gt;Exact Audit Match Counts:&lt;/b&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;ndash; PaySim Match: 6,362,620 raw rows = 6,362,620 parquet rows (0 loss)&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;ndash; IBM AML Match: 5,078,345 raw rows = 5,078,345 parquet rows (0 loss)&lt;br&gt;&amp;bull; &lt;b&gt;Cryptographic Row Hash Proof:&lt;/b&gt; Every row contains an immutable 64-bit cryptographic hash verifying byte-level fidelity.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Identity Disambiguation & Privacy (FIXED MATH FORMAT) -->
+        <mxCell id="s0_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s0_k3" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;3. Bank Disambiguation &amp;amp; Privacy Isolation&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s0_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#b45309;&quot;&gt;\(\text{bank\_id} = \text{pad}_3(\text{raw\_id}), \quad \text{id}_{\text{unified}} = \text{bank\_id} \mathbin{\Vert} \text{account\_id}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s0_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;The Bank Normalization Problem:&lt;/b&gt; Raw string IDs without uniform zero-padding caused 515,088 fragmented customer records to be treated as separate external nodes.&lt;br&gt;&amp;bull; &lt;b&gt;Corrected Network Topology:&lt;/b&gt; Restores exactly 518,581 true institutional accounts, correctly reconnecting cross-bank laundering cycles.&lt;br&gt;&amp;bull; &lt;b&gt;Strict Privacy Isolation:&lt;/b&gt; PII and raw account identifiers are strictly quarantined; models only receive topological and behavioral aggregates.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption0" value="Stage 0 Architecture: Multi-format raw data ingestion binding to Graph Data Contracts. Both IBM AML HI-Small and PaySim transaction streams are validated against formal relational invariants ensuring zero dropped records and complete referential integrity." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

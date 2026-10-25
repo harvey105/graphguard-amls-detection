@@ -1,0 +1,5 @@
+[PASS] ibm_aml.full_system: {'status': 'PASS', 'scope': 'full', 'full_transactions': 5078345, 'full_accounts': 518581, 'models': 9, 'test_transactions': 1017821, 'test_positives': 1799, 'predictions_confusion_and_AP': 'independently recomputed', 'artifact_hashes': 'PASS'}
+[PASS] ibm_aml.full_notebook: {'cells': 35, 'figures': 13, 'models': 9, 'executed_source_hashes': 27, 'source_copies': 24, 'scope': 'full'}
+[PASS] paysim.full_system: {'status': 'PASS', 'scope': 'full', 'full_transactions': 6362620, 'full_accounts': 9073900, 'models': 9, 'test_transactions': 1248736, 'test_positives': 4250, 'predictions_confusion_and_AP': 'independently recomputed', 'artifact_hashes': 'PASS'}
+[PASS] paysim.full_notebook: {'cells': 36, 'figures': 12, 'models': 9, 'executed_source_hashes': 27, 'source_copies': 25, 'scope': 'full'}
+Overall: PASS. Report: D:\Desktop_informations\SGK năm 4\SGK kì 1 năm 4\BigData - Phong\Project_graphX\graphguard-amls-detection\results\project_check\latest.json

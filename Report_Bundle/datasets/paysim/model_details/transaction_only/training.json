@@ -1,0 +1,17 @@
+{
+  "feature_names": [
+    "type_index",
+    "currency_index",
+    "scaled_amount",
+    "unseen_amount_group",
+    "fx_payment"
+  ],
+  "training": {
+    "train_end": 355,
+    "rows": 5113884,
+    "fraud": 3963,
+    "positive_class_weight": 35.90831752145736,
+    "status": "fitted"
+  },
+  "has_model": true
+}

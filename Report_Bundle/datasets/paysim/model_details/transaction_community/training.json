@@ -1,0 +1,25 @@
+{
+  "feature_names": [
+    "type_index",
+    "currency_index",
+    "scaled_amount",
+    "unseen_amount_group",
+    "fx_payment",
+    "src_community_size",
+    "src_community_cross_fraction",
+    "src_community_out_transactions",
+    "dst_community_size",
+    "dst_community_cross_fraction",
+    "dst_community_out_transactions",
+    "same_community",
+    "community_endpoints_seen"
+  ],
+  "training": {
+    "train_end": 355,
+    "rows": 5113884,
+    "fraud": 3963,
+    "positive_class_weight": 35.90831752145736,
+    "status": "fitted"
+  },
+  "has_model": true
+}

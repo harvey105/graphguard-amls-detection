@@ -1,0 +1,320 @@
+{
+  "status": "PASS",
+  "task": "Full system ibm_aml",
+  "run_id": "c015ec9e-58a8-4e41-a79b-2b456a7cb482",
+  "created_at_utc": "2026-10-24T08:46:24.028670+00:00",
+  "verification": "automated run; does not record human reviewer approval",
+  "git_revision": "e6b26018dda6f7f3cf5dcfe3b7015861c3695067",
+  "sources": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\scripts\\run_n4_notebook.py",
+      "bytes": 9178,
+      "sha256": "74f6d84366dd65dd80c9eb16fd55795ee25dc3d84b5264d1e4278977a6fb445c"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\graph_utils.py",
+      "bytes": 5622,
+      "sha256": "0f3927e16594eda2a2fff6b0b43c6fc7c54629a25e85fb6908b19b050844d483"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\hardware_guard.py",
+      "bytes": 14570,
+      "sha256": "4a1666a778e3cdeb6dce887b7acd2578eeaf6e87adf5ff6a5ab4396aa7c1554f"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\project_audit.py",
+      "bytes": 60408,
+      "sha256": "44651ab8764856aaddcedd41a836a95d93355258f6a866a84f750a013d2ef1da"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\run_evidence.py",
+      "bytes": 4709,
+      "sha256": "1dea563c30efc07eea18ef605b1f28f5d2e9b75ad091d3950eaeccb0d36e5c35"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\spark_session.py",
+      "bytes": 8473,
+      "sha256": "14d308faf8fe9a386c43af019b146c691a51f651a711a537b2234e6b826c5741"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\common\\windows_runtime.py",
+      "bytes": 2808,
+      "sha256": "31ad3c51e80fb52bbaee3762ff8d938cd55db338317e053fa837d3ce467c1a8c"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\community_detection.py",
+      "bytes": 15077,
+      "sha256": "2b84430b8b85029854a3d134ee10775dc895cc217fd74b7fd1c018c264daaafd"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\etl.py",
+      "bytes": 16960,
+      "sha256": "2602afff5b9d4bf22101f6af3b460c3377add35ce0c1afa6cf9eed25432d6f61"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\motif_finding.py",
+      "bytes": 14158,
+      "sha256": "176b8137e9a3606eed22247685be1080e2c856dab8b0c9a8ec519ed7752db61b"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\verify_communities.py",
+      "bytes": 15172,
+      "sha256": "a5eb48c766380b9889147d9d280ed98688b6123638e2ba823f15749a2c08186e"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\ibm_aml\\visualize.py",
+      "bytes": 7412,
+      "sha256": "6ccab97ef7a24c7a1ed22185075952bb4ed92980619dffda6eb2d2313ac59785"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\__init__.py",
+      "bytes": 76,
+      "sha256": "f42e40287d3de4006d8e0d042b61b38f5726b414b2b94931a6638ba68ecf0f01"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\config.py",
+      "bytes": 4433,
+      "sha256": "7873747a994c2eb6c5b8e2a6a8be145157edff0380d843dfe62eebedf043302c"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\evaluation.py",
+      "bytes": 5406,
+      "sha256": "8746e78334ae5fe5206d68b733dee439254e41c2c01280e6ea30add6ec75d0fb"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\features.py",
+      "bytes": 15865,
+      "sha256": "29345262618eff8850734f0c6a6ce04cdd7e6493583d4a36f7f8eaa32d42665e"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\modeling.py",
+      "bytes": 11272,
+      "sha256": "98d0b8382e1b06ced24710f9312a5cbd3524ecc6730c3563631b18a3a1693bbc"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\pipeline.py",
+      "bytes": 75956,
+      "sha256": "31c88fd8d9eb56b7e91b45802e065580491534c8978f398980d4946f837ad570"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\presentation.py",
+      "bytes": 39191,
+      "sha256": "24a295e1fb1e0ba7b6a94279250389b8aaf278bdb478afcb241cc97797bd8179"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\reviews.py",
+      "bytes": 9849,
+      "sha256": "11a6b62d1e13edb9b06e60959169448672c2d49470cbc7fcb99ee1fad66e7584"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\motif\\toy_cycle.py",
+      "bytes": 3618,
+      "sha256": "44caa76842030eb834f9e854fd7f8b18cd5aabf2498f47c927added6c0eb6fa4"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\paysim\\community_detection.py",
+      "bytes": 20155,
+      "sha256": "3e8e5d9f8c68f0259a6a0a01fc2bf198f33e5e56478975592371390bbf2fa9d8"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\paysim\\etl_mapping.py",
+      "bytes": 4877,
+      "sha256": "bdfe79141a69e513f523c2b3178a2401e49e835f87218acf4d707111a594a24c"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\paysim\\metrics.py",
+      "bytes": 19042,
+      "sha256": "1b47165e794078ccb2e2617243548125450474fd6322578f4b59e67032f2e3fe"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\src\\paysim\\motif_finding.py",
+      "bytes": 13542,
+      "sha256": "1041ab77c8a1063b887f5849e5c2640bb487717bdd7ac459c6f83669e914a64d"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\tests\\test_ibm_aml_etl.py",
+      "bytes": 12538,
+      "sha256": "6b7d4ab67c29e898f178e08bd783aae7974238149ea258b1597fa1e8fc554ecb"
+    }
+  ],
+  "runtime": {
+    "system": "Windows",
+    "python": "3.12.10",
+    "python_executable": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
+    "spark": "3.5.1",
+    "graphframes": "0.12.2",
+    "java": "17.0.20.1",
+    "spark_master": "local[20]",
+    "driver_memory": "5120m",
+    "java_max_heap_bytes": 5368709120,
+    "java_visible_processors": 20,
+    "hardware_guard": {
+      "cpu_hard_cap_percent": 100,
+      "max_logical_cpus": 20,
+      "spark_task_slots": 20,
+      "job_cpu_seconds": 2492.516,
+      "job_wall_seconds": 272.953,
+      "average_job_cpu_percent": 45.66,
+      "maximum_job_cpu_percent": 88.36,
+      "job_commit_cap_gib": 8.0,
+      "peak_job_commit_gib": 5.99,
+      "minimum_available_ram_gib": 14.21,
+      "maximum_host_cpu_percent": 98.2,
+      "thermal_sensor": "CPU temperature unavailable; not a thermal/power hardware guarantee"
+    }
+  },
+  "parameters": {
+    "analysis": {
+      "windows_hours": [
+        24,
+        168
+      ],
+      "fold_fractions": [
+        0.4,
+        0.5,
+        0.65,
+        0.8
+      ],
+      "score_thresholds": [
+        0.001,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.5,
+        0.7,
+        0.9,
+        0.99
+      ],
+      "tree_depth": 5,
+      "minimum_leaf_rows": 50,
+      "seed": 2026,
+      "example_limit": 5,
+      "driver_memory": "5g",
+      "parallelism": 20
+    },
+    "snapshot_fractions": [
+      0.2,
+      0.4,
+      0.5,
+      0.65,
+      0.8
+    ],
+    "review_fractions": [
+      0.001,
+      0.005,
+      0.01
+    ],
+    "pagerank_iterations": 10,
+    "lpa_iterations": 5,
+    "partitions": 128
+  },
+  "metrics": {
+    "scope": "full",
+    "transactions": 5078345,
+    "test_transactions": 1017821
+  },
+  "inputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\data\\processed\\ibm_aml",
+      "files": [
+        {
+          "path": "edges.parquet/part-00000-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25886270,
+          "sha256": "e1cb7e40118521f53aae6b2a2135b73ec013884c2e84427f5b27b838e1c8e3d2"
+        },
+        {
+          "path": "edges.parquet/part-00001-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25886925,
+          "sha256": "7a9804a1552d009d816dc269d67a81592f965700c5f16b72509524b9a4985b16"
+        },
+        {
+          "path": "edges.parquet/part-00002-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25890724,
+          "sha256": "a0dfd796813bf9c2eeb95efdc1ab06df6220e9603cd4642b42e26e1751019bd2"
+        },
+        {
+          "path": "edges.parquet/part-00003-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25891759,
+          "sha256": "332448d81a07a8d3e5503e06599ccb6bbfbb4c10da38993654699c3721c97487"
+        },
+        {
+          "path": "edges.parquet/part-00004-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25885103,
+          "sha256": "2bceab6d027ba9f75469ac4870564d5d560746bda5c84d80dd480c78e6749eb8"
+        },
+        {
+          "path": "edges.parquet/part-00005-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25891904,
+          "sha256": "bbbfd5bfef1898c853e686ce920f892cdd70fd29d51049b9cbda5f5554dab508"
+        },
+        {
+          "path": "edges.parquet/part-00006-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25888504,
+          "sha256": "9ba35e8dd64712bd5255041955906df060827245f55e7ee770039cd6c1b3af87"
+        },
+        {
+          "path": "edges.parquet/part-00007-e979c4f1-9693-4ac4-85fa-95e647ea1306-c000.snappy.parquet",
+          "bytes": 25885896,
+          "sha256": "f397ddeddbd3b4e9b186f50245ad67ab3e01624a2167974b72e10e8934de3d32"
+        },
+        {
+          "path": "vertices.parquet/part-00000-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 822901,
+          "sha256": "2f36603316f8abe1839ffe48e170e1edddd02c51120f157ceaf93ea012dd7387"
+        },
+        {
+          "path": "vertices.parquet/part-00001-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 829389,
+          "sha256": "fc9a842e2f48f0f16c983c3034162b3e948e126ec23a9a31e88ba6898da385b3"
+        },
+        {
+          "path": "vertices.parquet/part-00002-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 825209,
+          "sha256": "90f644ee1f1adea22d5f70fcddf4fbf5ea4bf03ef7661db49affb6e7a5f50e98"
+        },
+        {
+          "path": "vertices.parquet/part-00003-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 828465,
+          "sha256": "9c64b8eea246d73a8242f43a7837dabc82b6ca42fde53d62a0d1ce46a95354e9"
+        },
+        {
+          "path": "vertices.parquet/part-00004-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 830270,
+          "sha256": "15fd4fe354f34a9dda0dc03b267b2ce2b618beeee0b06b4a692fde901cb0d96f"
+        },
+        {
+          "path": "vertices.parquet/part-00005-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 826595,
+          "sha256": "fa2e1301a1c1bae83d2779f57440c1bd57bc1e61b759304a4505fb89404e7c73"
+        },
+        {
+          "path": "vertices.parquet/part-00006-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 832033,
+          "sha256": "16c74dbda834913d80c54d982ead5b88ef0a94de20943b67668f6b8a72a99c38"
+        },
+        {
+          "path": "vertices.parquet/part-00007-cf56242c-5e07-46bd-a777-a0339ec5e62c-c000.snappy.parquet",
+          "bytes": 825181,
+          "sha256": "185a695152286ad00a763249c63b511623107770e4b90371b769259816b4675e"
+        }
+      ],
+      "sha256": "4530ef42597c55dc019575fb10bf9e7185146113c36859208e496a2619a90e6f"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\full_system\\ibm_aml\\run_20261024T081350344149Z\\report.json",
+      "bytes": 395761,
+      "sha256": "b654661f374be5a9f5f7479199f6828cc5a18064b0d7bdad92701a42c743e7d7"
+    },
+    {
+      "path": "D:\\Desktop_informations\\SGK năm 4\\SGK kì 1 năm 4\\BigData - Phong\\Project_graphX\\graphguard-amls-detection\\results\\full_system\\ibm_aml\\run_20261024T081350344149Z\\artifact_index.json",
+      "bytes": 616252,
+      "sha256": "d955ebf5f06e821f4cac6cd1eeefa96a68df8daceb8cc0583fd66ea6a6f755ac"
+    }
+  ]
+}
