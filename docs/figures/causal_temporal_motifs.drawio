@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" modified="2026-10-26T23:55:00.000Z" agent="Mozilla/5.0" version="24.7.17">
+  <diagram id="CausalTemporalMotifs" name="Causal Temporal Motifs" math="1">
+    <mxGraphModel dx="1600" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="695" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="motif_1" value="&lt;div style=&quot;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;border-radius:14px;overflow:hidden;border:2.5px solid #0284C7;box-shadow:0 4px 10px rgba(0,0,0,0.05);&quot;&gt;&lt;div style=&quot;background-color:#0284C7;padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #0284C7;box-sizing:border-box;&quot;&gt;&lt;span style=&quot;background-color:#0369A1;color:#ffffff;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap;flex-shrink:0;&quot;&gt;MOTIF 1&lt;/span&gt;&lt;span style=&quot;color:#ffffff;font-weight:800;font-size:14px;white-space:nowrap;letter-spacing:0.1px;&quot;&gt;FAN-IN: GOM TIỀN&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;background-color:#ffffff;padding:6px 4px;display:flex;justify-content:center;align-items:center;border-bottom:1.5px solid #0284C7;&quot;&gt;
+        &lt;svg width=&quot;255&quot; height=&quot;170&quot; viewBox=&quot;0 0 255 170&quot;&gt;
+          &lt;defs&gt;
+            &lt;marker id=&quot;m1-arr&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#0284C7&quot; /&gt;
+            &lt;/marker&gt;
+          &lt;/defs&gt;
+          &lt;line x1=&quot;68&quot; y1=&quot;45&quot; x2=&quot;168&quot; y2=&quot;78&quot; stroke=&quot;#0284C7&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m1-arr)&quot; /&gt;
+          &lt;line x1=&quot;68&quot; y1=&quot;125&quot; x2=&quot;168&quot; y2=&quot;92&quot; stroke=&quot;#0284C7&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m1-arr)&quot; /&gt;
+          &lt;text x=&quot;95&quot; y=&quot;48&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#0369A1&quot;&gt;Quá khứ: s &lt; t&lt;/text&gt;
+          &lt;text x=&quot;95&quot; y=&quot;128&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#0369A1&quot;&gt;Quá khứ: s &lt; t&lt;/text&gt;
+          &lt;circle cx=&quot;45&quot; cy=&quot;45&quot; r=&quot;22&quot; fill=&quot;#E0F2FE&quot; stroke=&quot;#0284C7&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;45&quot; y=&quot;50&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#0369A1&quot; text-anchor=&quot;middle&quot;&gt;A1&lt;/text&gt;
+          &lt;circle cx=&quot;45&quot; cy=&quot;125&quot; r=&quot;22&quot; fill=&quot;#E0F2FE&quot; stroke=&quot;#0284C7&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;45&quot; y=&quot;130&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#0369A1&quot; text-anchor=&quot;middle&quot;&gt;B1&lt;/text&gt;
+          &lt;circle cx=&quot;195&quot; cy=&quot;85&quot; r=&quot;26&quot; fill=&quot;#0284C7&quot; stroke=&quot;#0369A1&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;195&quot; y=&quot;89&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#ffffff&quot; text-anchor=&quot;middle&quot;&gt;C (Gom)&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;/div&gt;&lt;div style=&quot;background-color:#F0F9FF;padding:14px 14px;flex:1;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;&quot;&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0284C7;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Mẫu hình&lt;/b&gt;: Nhiều tài khoản nguồn chuyển dồn tiền vào 1 tài khoản đích trong quá khứ.&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0284C7;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Cửa sổ trượt&lt;/b&gt;: 24h &amp; 168h (&lt;code&gt;fanin_24h&lt;/code&gt;, &lt;code&gt;fanin_168h&lt;/code&gt;).&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0284C7;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Ý nghĩa AML&lt;/b&gt;: Thủ đoạn gom tiền lừa đảo hoặc cấu trúc hóa dòng tiền (Smurfing / Structuring).&lt;/p&gt;&lt;p style=&quot;margin:0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0284C7;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Phạm vi áp dụng&lt;/b&gt;: &lt;b&gt;Cả 2 dataset&lt;/b&gt; (Phát hiện gom tiền / Smurfing nổi bật ở IBM AML).&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="35" width="286" height="565" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="motif_2" value="&lt;div style=&quot;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;border-radius:14px;overflow:hidden;border:2.5px solid #EA580C;box-shadow:0 4px 10px rgba(0,0,0,0.05);&quot;&gt;&lt;div style=&quot;background-color:#EA580C;padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #EA580C;box-sizing:border-box;&quot;&gt;&lt;span style=&quot;background-color:#C2410C;color:#ffffff;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap;flex-shrink:0;&quot;&gt;MOTIF 2&lt;/span&gt;&lt;span style=&quot;color:#ffffff;font-weight:800;font-size:14px;white-space:nowrap;letter-spacing:0.1px;&quot;&gt;FAN-OUT: TẨU TÁN&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;background-color:#ffffff;padding:6px 4px;display:flex;justify-content:center;align-items:center;border-bottom:1.5px solid #EA580C;&quot;&gt;
+        &lt;svg width=&quot;255&quot; height=&quot;170&quot; viewBox=&quot;0 0 255 170&quot;&gt;
+          &lt;defs&gt;
+            &lt;marker id=&quot;m2-arr&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#EA580C&quot; /&gt;
+            &lt;/marker&gt;
+          &lt;/defs&gt;
+          &lt;line x1=&quot;86&quot; y1=&quot;78&quot; x2=&quot;172&quot; y2=&quot;48&quot; stroke=&quot;#EA580C&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m2-arr)&quot; /&gt;
+          &lt;line x1=&quot;86&quot; y1=&quot;92&quot; x2=&quot;172&quot; y2=&quot;122&quot; stroke=&quot;#EA580C&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m2-arr)&quot; /&gt;
+          &lt;!-- Labels shifted left to prevent overlay by circles A2 and C2 --&gt;
+          &lt;text x=&quot;86&quot; y=&quot;44&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#C2410C&quot;&gt;Tẩu tán: s &lt; t&lt;/text&gt;
+          &lt;text x=&quot;86&quot; y=&quot;136&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#C2410C&quot;&gt;Tẩu tán: s &lt; t&lt;/text&gt;
+          &lt;circle cx=&quot;60&quot; cy=&quot;85&quot; r=&quot;26&quot; fill=&quot;#EA580C&quot; stroke=&quot;#C2410C&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;60&quot; y=&quot;89&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#ffffff&quot; text-anchor=&quot;middle&quot;&gt;B (Tán)&lt;/text&gt;
+          &lt;circle cx=&quot;198&quot; cy=&quot;45&quot; r=&quot;22&quot; fill=&quot;#FFEDD5&quot; stroke=&quot;#EA580C&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;198&quot; y=&quot;50&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#9A3412&quot; text-anchor=&quot;middle&quot;&gt;A2&lt;/text&gt;
+          &lt;circle cx=&quot;198&quot; cy=&quot;125&quot; r=&quot;22&quot; fill=&quot;#FFEDD5&quot; stroke=&quot;#EA580C&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;198&quot; y=&quot;130&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#9A3412&quot; text-anchor=&quot;middle&quot;&gt;C2&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;/div&gt;&lt;div style=&quot;background-color:#FFF7ED;padding:14px 14px;flex:1;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;&quot;&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#EA580C;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Mẫu hình&lt;/b&gt;: Một tài khoản nguồn phân tán tiền ra nhiều tài khoản thụ hưởng khác nhau.&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#EA580C;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Cửa sổ trượt&lt;/b&gt;: 24h &amp; 168h (&lt;code&gt;fanout_24h&lt;/code&gt;, &lt;code&gt;fanout_168h&lt;/code&gt;).&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#EA580C;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Ý nghĩa AML&lt;/b&gt;: Hành vi tẩu tán nhanh tài sản sang mạng lưới mule accounts nhằm che giấu nguồn tiền.&lt;/p&gt;&lt;p style=&quot;margin:0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#EA580C;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Phạm vi áp dụng&lt;/b&gt;: &lt;b&gt;Cả 2 dataset&lt;/b&gt; (Bắt chuỗi tẩu tán tiền nhanh sang nhiều tài khoản ở IBM AML).&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="348" y="35" width="286" height="565" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="motif_3" value="&lt;div style=&quot;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;border-radius:14px;overflow:hidden;border:2.5px solid #0D9488;box-shadow:0 4px 10px rgba(0,0,0,0.05);&quot;&gt;&lt;div style=&quot;background-color:#0D9488;padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #0D9488;box-sizing:border-box;&quot;&gt;&lt;span style=&quot;background-color:#0F766E;color:#ffffff;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap;flex-shrink:0;&quot;&gt;MOTIF 3&lt;/span&gt;&lt;span style=&quot;color:#ffffff;font-weight:800;font-size:14px;white-space:nowrap;letter-spacing:0.1px;&quot;&gt;RELAY: CHUYỂN TIẾP&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;background-color:#ffffff;padding:6px 4px;display:flex;justify-content:center;align-items:center;border-bottom:1.5px solid #0D9488;&quot;&gt;
+        &lt;svg width=&quot;255&quot; height=&quot;170&quot; viewBox=&quot;0 0 255 170&quot;&gt;
+          &lt;defs&gt;
+            &lt;marker id=&quot;m3-arr1&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#0D9488&quot; /&gt;
+            &lt;/marker&gt;
+            &lt;marker id=&quot;m3-arr2&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#E11D48&quot; /&gt;
+            &lt;/marker&gt;
+          &lt;/defs&gt;
+          &lt;line x1=&quot;56&quot; y1=&quot;85&quot; x2=&quot;98&quot; y2=&quot;85&quot; stroke=&quot;#0D9488&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m3-arr1)&quot; /&gt;
+          &lt;line x1=&quot;156&quot; y1=&quot;85&quot; x2=&quot;198&quot; y2=&quot;85&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.8&quot; marker-end=&quot;url(#m3-arr2)&quot; /&gt;
+          &lt;text x=&quot;77&quot; y=&quot;52&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#0F766E&quot; text-anchor=&quot;middle&quot;&gt;Chuyển s &lt; t&lt;/text&gt;
+          &lt;text x=&quot;177&quot; y=&quot;52&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#BE123C&quot; text-anchor=&quot;middle&quot;&gt;Rút (hiện tại t)&lt;/text&gt;
+          &lt;circle cx=&quot;36&quot; cy=&quot;85&quot; r=&quot;20&quot; fill=&quot;#CCFBF1&quot; stroke=&quot;#0D9488&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;36&quot; y=&quot;90&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#0F766E&quot; text-anchor=&quot;middle&quot;&gt;A&lt;/text&gt;
+          &lt;circle cx=&quot;127&quot; cy=&quot;85&quot; r=&quot;26&quot; fill=&quot;#0D9488&quot; stroke=&quot;#0F766E&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;127&quot; y=&quot;89&quot; font-size=&quot;11.5&quot; font-weight=&quot;800&quot; fill=&quot;#ffffff&quot; text-anchor=&quot;middle&quot;&gt;B (Mule)&lt;/text&gt;
+          &lt;circle cx=&quot;219&quot; cy=&quot;85&quot; r=&quot;20&quot; fill=&quot;#FFE4E6&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;219&quot; y=&quot;90&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#BE123C&quot; text-anchor=&quot;middle&quot;&gt;C&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;/div&gt;&lt;div style=&quot;background-color:#F0FDFA;padding:14px 14px;flex:1;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;&quot;&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0D9488;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Mẫu hình&lt;/b&gt;: Chuỗi 2 chặng: Tài khoản B vừa nhận từ A và giao dịch hiện tại rút tiền sang C.&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0D9488;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Cửa sổ trượt&lt;/b&gt;: 24h &amp; 168h (&lt;code&gt;relay_24h&lt;/code&gt;, &lt;code&gt;relay_168h&lt;/code&gt;).&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0D9488;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Ý nghĩa AML&lt;/b&gt;: Đặc trưng cốt lõi tại PaySim: lệnh &lt;code&gt;TRANSFER&lt;/code&gt; ngay trước lệnh &lt;code&gt;CASH_OUT&lt;/code&gt;.&lt;/p&gt;&lt;p style=&quot;margin:0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#0D9488;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Phạm vi áp dụng&lt;/b&gt;: &lt;b&gt;Trọng tâm PaySim&lt;/b&gt; (Mẫu hình tấn công cốt lõi: TRANSFER &rarr; CASH_OUT tức thì).&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="657" y="35" width="286" height="565" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="motif_4" value="&lt;div style=&quot;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;border-radius:14px;overflow:hidden;border:2.5px solid #7C3AED;box-shadow:0 4px 10px rgba(0,0,0,0.05);&quot;&gt;&lt;div style=&quot;background-color:#7C3AED;padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #7C3AED;box-sizing:border-box;&quot;&gt;&lt;span style=&quot;background-color:#6D28D9;color:#ffffff;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap;flex-shrink:0;&quot;&gt;MOTIF 4&lt;/span&gt;&lt;span style=&quot;color:#ffffff;font-weight:800;font-size:14px;white-space:nowrap;letter-spacing:0.1px;&quot;&gt;RECIPROCAL: 2 CHIỀU&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;background-color:#ffffff;padding:6px 4px;display:flex;justify-content:center;align-items:center;border-bottom:1.5px solid #7C3AED;&quot;&gt;
+        &lt;svg width=&quot;255&quot; height=&quot;170&quot; viewBox=&quot;0 0 255 170&quot;&gt;
+          &lt;defs&gt;
+            &lt;marker id=&quot;m4-arr1&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#7C3AED&quot; /&gt;
+            &lt;/marker&gt;
+            &lt;marker id=&quot;m4-arr2&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#6D28D9&quot; /&gt;
+            &lt;/marker&gt;
+          &lt;/defs&gt;
+          &lt;path d=&quot;M 75 70 Q 127 50 178 70&quot; fill=&quot;none&quot; stroke=&quot;#7C3AED&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m4-arr1)&quot; /&gt;
+          &lt;path d=&quot;M 178 100 Q 127 120 75 100&quot; fill=&quot;none&quot; stroke=&quot;#6D28D9&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m4-arr2)&quot; /&gt;
+          &lt;text x=&quot;127&quot; y=&quot;44&quot; font-size=&quot;11&quot; font-weight=&quot;700&quot; fill=&quot;#6D28D9&quot; text-anchor=&quot;middle&quot;&gt;Chiều đi: s &lt; t&lt;/text&gt;
+          &lt;text x=&quot;127&quot; y=&quot;136&quot; font-size=&quot;11&quot; font-weight=&quot;700&quot; fill=&quot;#6D28D9&quot; text-anchor=&quot;middle&quot;&gt;Chiều về: hiện tại t&lt;/text&gt;
+          &lt;circle cx=&quot;55&quot; cy=&quot;85&quot; r=&quot;24&quot; fill=&quot;#F3E8FF&quot; stroke=&quot;#7C3AED&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;55&quot; y=&quot;90&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#5B21B6&quot; text-anchor=&quot;middle&quot;&gt;A&lt;/text&gt;
+          &lt;circle cx=&quot;200&quot; cy=&quot;85&quot; r=&quot;24&quot; fill=&quot;#F3E8FF&quot; stroke=&quot;#7C3AED&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;200&quot; y=&quot;90&quot; font-size=&quot;13&quot; font-weight=&quot;800&quot; fill=&quot;#5B21B6&quot; text-anchor=&quot;middle&quot;&gt;B&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;/div&gt;&lt;div style=&quot;background-color:#FAF5FF;padding:14px 14px;flex:1;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;&quot;&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#7C3AED;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Mẫu hình&lt;/b&gt;: Giao dịch chuyển tiền hoàn trả 2 chiều đối ứng (A &rarr; B &rarr; A) giữa 1 cặp đối tác.&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#7C3AED;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Cửa sổ trượt&lt;/b&gt;: 24h &amp; 168h (&lt;code&gt;reciprocal_24h&lt;/code&gt;, &lt;code&gt;reciprocal_168h&lt;/code&gt;).&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#7C3AED;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Ý nghĩa AML&lt;/b&gt;: Tạo giao dịch khống (Wash Trading), hợp thức hóa luân chuyển hoặc thử nghiệm đường truyền.&lt;/p&gt;&lt;p style=&quot;margin:0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#7C3AED;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Phạm vi áp dụng&lt;/b&gt;: &lt;b&gt;Cả 2 dataset&lt;/b&gt; (Giao dịch khống / Wash trading 2 chiều ở IBM AML).&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="965" y="35" width="286" height="565" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="motif_5" value="&lt;div style=&quot;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;border-radius:14px;overflow:hidden;border:2.5px solid #E11D48;box-shadow:0 4px 10px rgba(0,0,0,0.05);&quot;&gt;&lt;div style=&quot;background-color:#E11D48;padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #E11D48;box-sizing:border-box;&quot;&gt;&lt;span style=&quot;background-color:#BE123C;color:#ffffff;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap;flex-shrink:0;&quot;&gt;MOTIF 5&lt;/span&gt;&lt;span style=&quot;color:#ffffff;font-weight:800;font-size:14px;white-space:nowrap;letter-spacing:0.1px;&quot;&gt;CYCLE-3: CHU TRÌNH&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;background-color:#ffffff;padding:6px 4px;display:flex;justify-content:center;align-items:center;border-bottom:1.5px solid #E11D48;&quot;&gt;
+        &lt;svg width=&quot;255&quot; height=&quot;170&quot; viewBox=&quot;0 0 255 170&quot;&gt;
+          &lt;defs&gt;
+            &lt;marker id=&quot;m5-arr&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;6.5&quot; markerHeight=&quot;6.5&quot; orient=&quot;auto&quot;&gt;
+              &lt;path d=&quot;M 0 1.5 L 10 5 L 0 8.5 z&quot; fill=&quot;#E11D48&quot; /&gt;
+            &lt;/marker&gt;
+          &lt;/defs&gt;
+          &lt;line x1=&quot;140&quot; y1=&quot;48&quot; x2=&quot;188&quot; y2=&quot;108&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m5-arr)&quot; /&gt;
+          &lt;line x1=&quot;182&quot; y1=&quot;125&quot; x2=&quot;72&quot; y2=&quot;125&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; marker-end=&quot;url(#m5-arr)&quot; /&gt;
+          &lt;line x1=&quot;65&quot; y1=&quot;108&quot; x2=&quot;114&quot; y2=&quot;48&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.8&quot; marker-end=&quot;url(#m5-arr)&quot; /&gt;
+          &lt;text x=&quot;185&quot; y=&quot;70&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#9F1239&quot;&gt;Cạnh 1: s &lt; t&lt;/text&gt;
+          &lt;text x=&quot;127&quot; y=&quot;145&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#9F1239&quot; text-anchor=&quot;middle&quot;&gt;Cạnh 2: s &lt; t&lt;/text&gt;
+          &lt;!-- Shifted label left with text-anchor to avoid arrow overlap --&gt;
+          &lt;text x=&quot;10&quot; y=&quot;70&quot; font-size=&quot;10.5&quot; font-weight=&quot;700&quot; fill=&quot;#E11D48&quot;&gt;Khép vòng (t)&lt;/text&gt;
+          &lt;circle cx=&quot;127&quot; cy=&quot;35&quot; r=&quot;20&quot; fill=&quot;#FFE4E6&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;127&quot; y=&quot;40&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#9F1239&quot; text-anchor=&quot;middle&quot;&gt;A&lt;/text&gt;
+          &lt;circle cx=&quot;205&quot; cy=&quot;125&quot; r=&quot;20&quot; fill=&quot;#FFE4E6&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;205&quot; y=&quot;130&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#9F1239&quot; text-anchor=&quot;middle&quot;&gt;B&lt;/text&gt;
+          &lt;circle cx=&quot;50&quot; cy=&quot;125&quot; r=&quot;20&quot; fill=&quot;#FFE4E6&quot; stroke=&quot;#E11D48&quot; stroke-width=&quot;2.5&quot; /&gt;
+          &lt;text x=&quot;50&quot; y=&quot;130&quot; font-size=&quot;12&quot; font-weight=&quot;800&quot; fill=&quot;#9F1239&quot; text-anchor=&quot;middle&quot;&gt;C&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;/div&gt;&lt;div style=&quot;background-color:#FFF1F2;padding:14px 14px;flex:1;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;&quot;&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#E11D48;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Mẫu hình&lt;/b&gt;: Chu trình có hướng 3 đỉnh (A &rarr; B &rarr; C &rarr; A) khép kín trong tối đa 7 ngày.&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#E11D48;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Cửa sổ trượt&lt;/b&gt;: Tối đa 168h (&lt;code&gt;cycle3_count&lt;/code&gt;, &lt;code&gt;cycle3_best_ratio&lt;/code&gt;).&lt;/p&gt;&lt;p style=&quot;margin:0 0 9px 0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#E11D48;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Ý nghĩa AML&lt;/b&gt;: Chu trình rửa tiền có tổ chức kinh điển nhằm luân chuyển tiền bẩn quay lại chủ mưu.&lt;/p&gt;&lt;p style=&quot;margin:0;font-size:14px;color:#0f172a;font-weight:400;line-height:1.34;&quot;&gt;&lt;span style=&quot;color:#E11D48;font-size:15px;&quot;&gt;&#9656;&lt;/span&gt; &lt;b&gt;Phạm vi áp dụng&lt;/b&gt;: &lt;b&gt;Trọng tâm IBM AML&lt;/b&gt; (Khớp 54 chu trình rửa tiền khép kín trong Patterns.txt).&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1274" y="35" width="286" height="565" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="banner_bottom" value="&lt;span style=&quot;color:#1e3a8a;font-weight:900;font-size:16.5px;&quot;&gt;&#10022; NGUYÊN TẮC BẢO TOÀN NHÂN QUẢ:&lt;/span&gt; &lt;span style=&quot;color:#dc2626;font-size:15px;font-weight:700;&quot;&gt;Mọi giao dịch nhân chứng lịch sử bắt buộc thỏa mãn &lt;i&gt;s&lt;/i&gt; &amp;lt; &lt;i&gt;t&lt;/i&gt; (Không rò rỉ tương lai) &amp;bull; Cửa sổ trượt sự kiện hết hạn JVM SQL &amp;bull; Tính tổng tiền tố không chặn&lt;/span&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.5;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="1520" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

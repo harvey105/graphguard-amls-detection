@@ -98,7 +98,6 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
 
 ![GraphGuard 7-Stage Pipeline Overview](report/figures/graphguard_pipeline_overview.png)
 
-> 📥 *Mã nguồn sơ đồ Draw.io gốc (chỉnh sửa / mở rộng)*: [graphguard_pipeline_overview.drawio](report/figures/graphguard_pipeline_overview.drawio)
 
 
 
@@ -121,66 +120,118 @@ Trong kiểm toán mô hình ngân hàng, một hệ thống AI dù có điểm 
 ### Phân tích Chuyên sâu Các Giai đoạn Thực thi (Detailed Phase Execution)
 
 1. **Stage 0 — Nạp Dữ liệu Đa Định dạng & Ký kết Hợp đồng Dữ liệu (Raw Ingestion & Data Contract)**:
-   - Hệ thống tiếp nhận nguồn cấp dữ liệu tài chính đa dạng qua `DatasetSpec`: IBM AML chứa dữ liệu 11 định chế ngân hàng và 15 loại tiền tệ; PaySim chứa nhật ký giao dịch tiền di động (Mobile Money log) với 5 loại hình thanh toán.
+   - **Mô tả kỹ thuật**: Hệ thống tiếp nhận nguồn cấp dữ liệu tài chính đa dạng qua `DatasetSpec`: IBM AML chứa dữ liệu 11 định chế ngân hàng và 15 loại tiền tệ; PaySim chứa nhật ký giao dịch tiền di động (Mobile Money log) với 5 loại hình thanh toán.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Dữ liệu giao dịch từ các định chế ngân hàng đối tác và kênh thanh toán số có đáp ứng tiêu chuẩn định danh khách hàng (KYC/CDD) và tính sẵn sàng pháp lý để truy vết dòng tiền xuyên biên giới mà không làm đứt gãy quan hệ tài khoản hay không?*
+     - *Sự bất đồng nhất về quy chuẩn định danh ngân hàng (Bank ID fragmentation) đang che giấu bao nhiêu thực thể rủi ro ngoài luồng (unmapped/external accounts), đe dọa trực tiếp đến tính hợp lệ của báo cáo tuân thủ?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Tỷ lệ bao phủ thực thể định danh hợp lệ (**Valid Entity Coverage Rate** = $100\%$, tương ứng $518.581$ tài khoản thực trên IBM AML và $9.073.900$ thực thể trên PaySim không bị trùng lặp hay khuyết thiếu danh tính).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Số lượng đỉnh ma phân mảnh danh tính (*Fragmented Ghost Accounts* = $515.088$ tài khoản bị gắn mác "External/Unknown" do lỗi thiếu đệm 0 ở mã ngân hàng đối tác); Độ đa dạng kênh thanh toán và tiền tệ (*Currency & Channel Diversity* = $15$ loại tiền tệ và các kênh điện tín/chuyển khoản ACH, Wire, Cheque cần chuẩn hóa tỷ giá quy đổi $q_{90}$).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Ngưỡng khóa chặn vi phạm hợp đồng dữ liệu (*Data Contract Violation SLA*): Nếu tỷ lệ tài khoản không thể chuẩn hóa danh tính $> 0{,}00\%$, hệ thống kích hoạt cơ chế Data Contract Gate từ chối nạp dữ liệu thô, yêu cầu ngân hàng phát lệnh gửi lại feed dữ liệu chuẩn hóa đệm 0 (`BankID_AccountID`).
 
    ![Stage 0: Raw Ingestion & Graph Data Contract](report/figures/stage0_raw_ingestion.png)
 
 2. **Stage 1 — ETL Phân tán & Cổng Kiểm định Toàn vẹn 2 Chiều (Distributed ETL & Integrity Gate)**:
-   - **Phân vùng Cắt Đỉnh (Vertex Cut Partitioning)**: Giải quyết điểm nghẽn mạng do tính chất lệch bậc cực đoan trong thanh toán bán lẻ (In-degree của PaySim đạt tới 113). Dữ liệu được nén dạng Snappy Parquet (giảm từ 500 MB xuống 272,9 MB).
-   - **Sửa Lỗi Tách Đôi Danh tính Ngân hàng (Bank ID Normalization)**: Chuẩn hóa đệm số 0 ở mã ngân hàng trong IBM ETL, triệt tiêu 515.088 đỉnh ma "External/Unknown" và khôi phục chính xác 518.581 tài khoản thực.
-   - **Đối chiếu Toàn vẹn 2 Chiều (Two-Way Multiset Reconciliation)**: Xác nhận sự trùng khớp tuyệt đối giữa CSV thô và Parquet: $\text{Raw} - \text{Parquet} = 0$ và $\text{Parquet} - \text{Raw} = 0$, cam kết $0$ cạnh treo (dangling edges) và $0$ giá trị `null`.
-   - **Chỉ mục Vật lý Bất biến**: Sinh `event_id` cho từng giao dịch vật lý và `event_key` để phá vỡ thế hòa (tie-breaking) hoàn toàn khách quan, không chứa nhãn gian lận.
+   - **Mô tả kỹ thuật**:
+     - *Phân vùng Cắt Đỉnh (Vertex Cut Partitioning)*: Giải quyết điểm nghẽn mạng do tính chất lệch bậc cực đoan trong thanh toán bán lẻ (In-degree của PaySim đạt tới 113). Dữ liệu được nén dạng Snappy Parquet (giảm từ 500 MB xuống 272,9 MB).
+     - *Sửa Lỗi Tách Đôi Danh tính Ngân hàng (Bank ID Normalization)*: Chuẩn hóa đệm số 0 ở mã ngân hàng trong IBM ETL, triệt tiêu 515.088 đỉnh ma "External/Unknown" và khôi phục chính xác 518.581 tài khoản thực.
+     - *Đối chiếu Toàn vẹn 2 Chiều (Two-Way Multiset Reconciliation)*: Xác nhận sự trùng khớp tuyệt đối giữa CSV thô và Parquet: $\text{Raw} - \text{Parquet} = 0$ và $\text{Parquet} - \text{Raw} = 0$, cam kết $0$ cạnh treo (dangling edges) và $0$ giá trị `null`.
+     - *Chỉ mục Vật lý Bất biến*: Sinh `event_id` cho từng giao dịch vật lý và `event_key` để phá vỡ thế hòa (tie-breaking) hoàn toàn khách quan, không chứa nhãn gian lận.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Quy trình xử lý dữ liệu lớn phân tán có bảo toàn tuyệt đối tính bất biến của chuỗi bằng chứng kiểm toán (Audit Trail) để đảm bảo không một giao dịch đáng ngờ nào bị thất thoát hoặc phát sinh giao dịch "ma" (dangling transactions) ngoài sổ cái hay không?*
+     - *Sự tập trung dòng tiền cực đoan tại các tài khoản trung tâm bán lẻ (Fan-in Hubs) đang tạo ra nguy cơ tắc nghẽn hạ tầng tính toán kiểm toán như thế nào, và được xử lý ra sao để đảm bảo SLA vận hành?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Độ sai lệch đối chiếu đa tập hợp hai chiều (**Two-Way Multiset Discrepancy** = $0$ dòng: $\text{Raw} - \text{Parquet} = 0$ và $\text{Parquet} - \text{Raw} = 0$ trên toàn bộ $11.440.965$ giao dịch).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Tỷ lệ cạnh treo vô thừa nhận (*Dangling Edge Rate* = $0{,}00\%$ — mọi tài khoản `src` và `dst` đều khớp với sổ cái Vertices); Hệ số lệch bậc vào cực đại (*Max In-Degree Skewness* = $113$ cạnh tại hub tụ tiền `C1286084959`, được phân bổ tải nhờ chiến lược Vertex-Cut Partitioning, nén Snappy Parquet giảm dung lượng $45{,}4\%$).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Cơ chế đình chỉ pipeline vi phạm kiểm toán (*Audit Integrity Breach Gate*): Nếu sai lệch số dòng $\ne 0$ hoặc phát hiện $\ge 1$ cạnh treo, hệ thống tự động trả mã lỗi (Exit Code $\ne 0$), đình chỉ toàn bộ chuỗi phân tích rủi ro và phát cảnh báo kiểm toán nội bộ.
 
    ![Stage 1: Distributed ETL & 2-Way Integrity Gate](report/figures/stage1_etl_integrity.png)
 
-
 3. **Stage 2 — Động cơ Phân tích Đồ thị Song luồng (Dual-Stream Graph Analytics Engines)**:
-   - **Luồng A — Phân tích Toàn cảnh (Full Descriptive Analytics)**:
-     - *Total Degree*: Kiểm chứng bất biến bảo toàn cạnh $\sum d = 2E$ (10.156.690 trên IBM; 12.725.240 trên PaySim).
-     - *Damped PageRank*: 10 vòng lặp power iteration với hệ số suy giảm $d = 0,85$. Cơ chế dịch chuyển tức thời đồng đều (Uniform Teleportation) ngăn chặn triệt để hiện tượng 2,15 triệu Merchant sink nodes hút cạn điểm rank của mạng lưới:
+   - **Mô tả kỹ thuật**:
+     - *Luồng A — Phân tích Toàn cảnh (Full Descriptive Analytics)*:
+       - Total Degree: Kiểm chứng bất biến bảo toàn cạnh $\sum d = 2E$ (10.156.690 trên IBM; 12.725.240 trên PaySim).
+       - Damped PageRank: 10 vòng lặp power iteration với hệ số suy giảm $d = 0,85$. Cơ chế dịch chuyển tức thời đồng đều (Uniform Teleportation) ngăn chặn triệt để hiện tượng 2,15 triệu Merchant sink nodes hút cạn điểm rank của mạng lưới:
 
 $$
 \mathrm{PR}^{(k+1)}(u) = \frac{1 - d}{|V|} + d \sum_{v \in \mathcal{N}_{\mathrm{in}}(u)} \frac{\mathrm{PR}^{(k)}(v)}{d_{\mathrm{out}}(v)}
 $$
 
-     
-   - *Synchronous LPA*: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
-     
-   - **Luồng B — Trích xuất Đặc trưng Causal Chống Rò rỉ (Strict-Past Causal Analytics)**:
-     - Tạo 5 mốc Quantile Snapshots tại 20%, 40%, 50%, 65%, 80% thời gian.
-     - *Bất biến As-Of*: Mọi giao dịch tại thời điểm $t$ chỉ được phép tra cứu snapshot quá khứ gần nhất thỏa mãn: $T_{\text{snap}} < t$.
-     - *Sweep-Line Temporal Motifs*: Cửa sổ trượt 24h và 168h chỉ quét sự kiện quá khứ thỏa mãn: $s < t$ và $0 < t - s \le W$. Các giao dịch phát sinh cùng timestamp ($\Delta t = 0$) không được tính là quá khứ của nhau.
+       - Synchronous LPA: 5 vòng lặp truyền tin hai chiều có trọng số theo số lượng cạnh, chọn nhãn bằng hàm băm có dấu `min(signed_xxhash64)` nhằm bảo đảm tính tiền định tuyệt đối trên hệ thống phân tán.
+     - *Luồng B — Trích xuất Đặc trưng Causal Chống Rò rỉ (Strict-Past Causal Analytics)*:
+       - Tạo 5 mốc Quantile Snapshots tại 20%, 40%, 50%, 65%, 80% thời gian.
+       - Bất biến As-Of: Mọi giao dịch tại thời điểm $t$ chỉ được phép tra cứu snapshot quá khứ gần nhất thỏa mãn: $T_{\text{snap}} < t$.
+       - Sweep-Line Temporal Motifs: Cửa sổ trượt 24h và 168h chỉ quét sự kiện quá khứ thỏa mãn: $s < t$ và $0 < t - s \le W$. Các giao dịch phát sinh cùng timestamp ($\Delta t = 0$) không được tính là quá khứ của nhau.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Các mạng lưới tội phạm tài chính đang ẩn mình dưới những cấu trúc liên kết vi mô nào (trạm gom tiền trung gian, chu trình rửa tiền vòng tròn, chuỗi chuyển tiếp tẩu tán rút tiền mặt) mà các luật giám sát tĩnh truyền thống hoàn toàn bỏ lọt?*
+     - *Làm thế nào để đo lường chính xác tầm ảnh hưởng rủi ro của từng nút mạng mà không bị "méo mó" điểm số do sự áp đảo của hàng triệu tài khoản thương nhân chỉ nhận tiền (Sink Nodes)?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Tỷ lệ phát hiện mẫu hình cấu trúc rủi ro cao thời gian thực (**High-Risk Temporal Structural Detection Rate**: bóc tách chính xác $54$ chu trình rửa tiền 3 đỉnh khép kín theo thời gian trên IBM AML; khoanh vùng $1.769$ tài khoản cầu nối routing hubs và $2.150.401$ merchant sink nodes trên PaySim).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Tần suất bùng nổ mẫu hình chuyển tiếp 2 bước (*`2-Hop Relay Motif` / `receiver_in_168h`* — phát hiện dòng tiền tẩu tán rút tiền mặt thần tốc của tài khoản mule); Điểm thẩm thấu Damped PageRank ($d = 0{,}85$, 10 power iterations bảo tồn tổng năng lượng mạng lưới $\sum \text{Rank} = |V|$ chống bẫy sink); Tỷ lệ giao dịch vượt biên giới cụm (*`cross_fraction`* từ $314.722$ cụm IBM và $5{,}43$ triệu cụm PaySim).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Ngưỡng kích hoạt thẩm định nâng cao (*Enhanced Due Diligence — EDD Trigger*): Bất kỳ tài khoản nào nằm trong chu trình 3 đỉnh có hướng hoặc có điểm PageRank thuộc Top 1% kết hợp `cross_fraction` $> 0{,}70$ sẽ tự động bị gắn cờ rủi ro cấu trúc, định tuyến sang quy trình thẩm định danh tính nâng cao.
 
    ![Stage 2: Dual-Stream Graph Analytics](report/figures/stage2_dual_graph_analytics.png)
 
-
 4. **Stage 3 — Bảng Đặc trưng Chung & 9 Cấu hình Đối chứng (Factorial Feature Fusion)**:
-   - Tổng hợp một dòng đặc trưng duy nhất (Common Feature Row) cho mỗi giao dịch gồm 4 nhóm: **T** (Transaction), **C** (Centrality), **M** (Motifs), **L** (Community Context).
-   - Thiết lập 9 họ mô hình factorial ablation nghiêm ngặt để đo lường độc lập giá trị gia tăng của từng nhóm đặc trưng.
-   - **Bảo mật Thông tin Danh tính**: Nghiêm cấm đưa nhãn ground-truth, số tài khoản (Account ID) hay mã cộng đồng số (Numeric Community ID) vào tập đặc trưng.
+   - **Mô tả kỹ thuật**:
+     - Tổng hợp một dòng đặc trưng duy nhất (Common Feature Row) cho mỗi giao dịch gồm 4 nhóm: **T** (Transaction), **C** (Centrality), **M** (Motifs), **L** (Community Context).
+     - Thiết lập 9 họ mô hình factorial ablation nghiêm ngặt để đo lường độc lập giá trị gia tăng của từng nhóm đặc trưng.
+     - *Bảo mật Thông tin Danh tính*: Nghiêm cấm đưa nhãn ground-truth, số tài khoản (Account ID) hay mã cộng đồng số (Numeric Community ID) vào tập đặc trưng.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Khi làm giàu dữ liệu bằng cách tích hợp các chiều không gian đồ thị (vị thế trung tâm, cấu trúc vi mô, ngữ cảnh cộng đồng) vào thuộc tính giao dịch cơ bản, chiều tín hiệu nào đóng vai trò dẫn dắt việc loại bỏ các giao dịch thương mại thông thường bị nghi oan?*
+     - *Làm thế nào để đảm bảo không gian đặc trưng rủi ro tuân thủ nghiêm ngặt quy định bảo vệ dữ liệu cá nhân, không bị "nhiễm" rò rỉ danh tính (Identity Leakage) hay vi phạm đạo đức AI ngân hàng?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Năng lực phân tách rủi ro của không gian đặc trưng tích hợp (**Multidimensional Discriminative Power**: Bảng đặc trưng chung hợp nhất 4 nhóm tín hiệu T, C, M, L thành một vector duy nhất cho từng giao dịch).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Trọng số tầm quan trọng đặc trưng (*Feature Importance Share*: biến motif `receiver_in_168h` chiếm tới $46{,}5\%$ trọng số phân loại trên PaySim; các đặc trưng chuẩn hóa $q_{90}$ theo loại tiền triệt tiêu độ lệch quy mô giao dịch giữa 15 loại tiền tệ); Hệ số triệt tiêu rò rỉ danh tính (*Identity Leakage Resistance* = $0\%$ trường định danh cá nhân/tài khoản/mã cụm số được đưa vào huấn luyện).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Bộ lọc kiểm toán tính ẩn danh và nhân quả (*Fairness & Anti-Leakage Gate*): Tự động quét và loại bỏ mọi trường vi phạm bất biến thời gian $T_{\text{snap}} \ge t$ hoặc có cờ rò rỉ tương lai $\Delta t \le 0$; chỉ các họ đặc trưng vượt qua kiểm duyệt mới được cấp phép chuyển sang tầng mô hình hóa.
 
    ![Stage 3: Factorial Feature Fusion](report/figures/stage3_feature_fusion.png)
 
-
 5. **Stage 4 — Kiểm định Tịnh tiến 3 Fold & Khóa Ngưỡng (Walk-Forward Validation)**:
-   - Mô phỏng chính xác hoạt động vận hành ngân hàng theo thời gian: Fold 1 (Train $\le 40\%$, Val $40\% \to 50\%$), Fold 2 (Train $\le 50\%$, Val $50\% \to 65\%$), Fold 3 (Train $\le 65\%$, Val $65\% \to 80\%$).
-   - Mô hình phân loại: Cây quyết định có trọng số (Weighted DecisionTree, `maxDepth=5`, `minInstancesPerNode=50`, `maxBins=64`). Trọng số cân bằng nhãn dương:
+   - **Mô tả kỹ thuật**:
+     - Mô phỏng chính xác hoạt động vận hành ngân hàng theo thời gian: Fold 1 (Train $\le 40\%$, Val $40\% \to 50\%$), Fold 2 (Train $\le 50\%$, Val $50\% \to 65\%$), Fold 3 (Train $\le 65\%$, Val $65\% \to 80\%$).
+     - Mô hình phân loại: Cây quyết định có trọng số (Weighted DecisionTree, `maxDepth=5`, `minInstancesPerNode=50`, `maxBins=64`). Trọng số cân bằng nhãn dương:
 
 $$
 w_+ = \sqrt{\frac{N_{\mathrm{train}} - P_{\mathrm{train}}}{P_{\mathrm{train}}}}
 $$
 
-   - Quét lưới 12 ngưỡng $\theta \in [0,001; 0,99]$. Khóa cứng quy tắc (`freeze rule`) dựa trên Mean Validation F1 trước khi bước vào tập Test.
+     - Quét lưới 12 ngưỡng $\theta \in [0,001; 0,99]$. Khóa cứng quy tắc (`freeze rule`) dựa trên Mean Validation F1 trước khi bước vào tập Test.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Chiến lược phân loại và thiết lập ngưỡng cảnh báo (Decision Threshold) nào giúp tối ưu hóa sự đánh đổi giữa việc bắt trọn dòng tiền bẩn (Recall) và kiểm soát chi phí vận hành điều tra (Precision) trong điều kiện mất cân bằng nhãn cực đoan (chỉ 0,10% - 0,13%)?*
+     - *Quy trình thẩm định mô hình cần áp dụng cơ chế kiểm soát nào để ngăn chặn hiện tượng rò rỉ dữ liệu tương lai (Lookahead Bias) và tình trạng "học vẹt" (Overfitting) trước khi triển khai thực tế?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Điểm F1-Score trung bình kiểm định tịnh tiến thời gian (**Mean Walk-Forward Validation F1**: Quyết định lựa chọn họ `full_fusion` tại $\theta = 0{,}50$ cho IBM AML và họ `without_centrality` tại $\theta = 0{,}70$ cho PaySim).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Hệ số phạt mất cân bằng nhãn ($w_+ = \sqrt{(N-P)/P}$ bù trừ độ hiếm của nhãn dương trong hàm mất mát); Độ phân tán hiệu năng giữa các fold (*Cross-Fold Stability StdDev*: độ lệch chuẩn F1 qua 3 folds liên tiếp đo lường năng lực chống chịu trước biến động phân phối dữ liệu theo thời gian).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Biên bản đóng băng quy tắc quyết định (*Rule Freezing Protocol SLA*): Toàn bộ siêu tham số và ngưỡng cắt $\theta$ được niêm phong bất biến trước khi chạm vào tập Test tương lai; từ chối mọi yêu cầu tinh chỉnh hậu nghiệm nhằm đảm bảo tính khách quan trước cơ quan kiểm toán mô hình.
 
    ![Stage 4: Walk-Forward Validation & Rule Freezing](report/figures/stage4_walk_forward_validation.png)
 
-
-6. **Stage 5 & 6 — Huấn luyện Lại, Đánh giá Test Tương lai & Phân loại Đa tiêu chí (Frozen Inference & Triage)**:
-   - Huấn luyện lại mô hình trên prefix $\le 80\%$, thực thi suy luận trên tập kiểm tra tương lai ($> 80\%$).
-   - Đánh giá toàn diện: Ma trận nhầm lẫn, đường cong PR, Average Precision chính xác, khoảng tin cậy Wilson 95%, độ ổn định qua 5 chu kỳ thời gian và ngân sách review điều tra viên (Top-0,1%, 0,5%, 1,0%).
+6. **Stage 5 — Huấn luyện Lại & Đánh giá Suy luận Tương lai (Frozen Test Holdout Inference)**:
+   - **Mô tả kỹ thuật**:
+     - Huấn luyện lại mô hình trên toàn bộ prefix $\le 80\%$, thực thi suy luận đóng băng trên tập kiểm tra tương lai ($> 80\%$, tương ứng $1.017.821$ giao dịch IBM AML và $1.248.736$ giao dịch PaySim).
+     - Đánh giá toàn diện: Ma trận nhầm lẫn, đường cong PR, Average Precision chính xác, khoảng tin cậy Wilson 95% của Precision và kiểm tra tính bền vững qua 5 chu kỳ thời gian liên tiếp.
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Khi triển khai vào môi trường vận hành tương lai thực tế, mô hình có duy trì được năng lực xếp hạng rủi ro chính xác và sự ổn định hiệu năng hay bị suy thoái do tội phạm thay đổi thủ đoạn (Concept Drift) theo thời gian?*
+     - *Độ tin cậy thống kê của các cảnh báo phát ra có đủ vững chắc để bảo vệ ngân hàng trước các cuộc thanh tra tuân thủ và kiểm toán độc lập hay không?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Độ chính xác trung bình trên tập kiểm tra tương lai độc lập (**Holdout Average Precision — AP**: Đạt $5{,}87\%$ trên IBM AML và **$26{,}58\%$** trên PaySim, tăng vượt bậc so với mức $17{,}00\%$ của baseline; Precision đạt $10{,}09\%$ trên IBM và $58{,}12\%$ trên PaySim).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Biên độ khoảng tin cậy Wilson 95% của Precision (*95% Wilson CI*: $[9{,}28\%, 10{,}96\%]$ cho IBM và $[55{,}90\%, 60{,}32\%]$ cho PaySim khẳng định độ chính xác thực nghiệm không phải do ngẫu nhiên thống kê); Chỉ số biến thiên hiệu năng qua 5 chu kỳ (*Temporal Degradation Index*: theo dõi F1 và AP qua 5 lát cắt thời gian độc lập ở tập Test để phát hiện sớm dấu hiệu trôi dạt hành vi tội phạm).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Ngưỡng cảnh báo trôi dạt mô hình (*Model Drift Re-training Trigger*): Nếu Average Precision trong một chu kỳ kiểm tra thực tế sụt giảm quá $20\%$ so với mức cơ sở kiểm định, hệ thống tự động kích hoạt cảnh báo Rủi ro Mô hình Cấp 2 và yêu cầu cập nhật snapshot đồ thị mới để tái huấn luyện.
 
    ![Stage 5: Test Inference & Generalization Evaluation](report/figures/stage5_test_inference.png)
 
+7. **Stage 6 — Phân loại Triage Vận hành & Bằng chứng Pháp lý Đồ thị (Operational Triage & STR Evidence Witnesses)**:
+   - **Mô tả kỹ thuật**:
+     - Phân tầng triage vận hành theo ngân sách điều tra viên thực tế: Top 0,1%, Top 0,5%, Top 1,0% giao dịch có điểm số rủi ro cao nhất.
+     - Trích xuất chuỗi bằng chứng pháp lý đồ thị (Forensic Graph Witnesses) có đầy đủ định danh vật lý bất biến và dấu thời gian logic, phục vụ trực tiếp việc lập Báo cáo Giao dịch Đáng ngờ (STR).
+   - **Câu hỏi Nghiệp vụ Trọng tâm**:
+     - *Làm thế nào để tối ưu hóa năng suất xử lý của đội ngũ chuyên viên tuân thủ (SLA điều tra) trong giới hạn ngân sách nghiêm ngặt (chỉ có thể thẩm tra từ 0,1% đến 1,0% giao dịch), nhằm đạt tỷ suất thu hồi tổn thất tài chính (Investigation ROI) cao nhất?*
+     - *Hệ thống cung cấp chuỗi bằng chứng pháp lý (Forensic Audit Trail) trực quan nào để đáp ứng đầy đủ tiêu chuẩn giải trình khi lập Báo cáo Giao dịch Đáng ngờ (STR) gửi Ngân hàng Nhà nước và Cơ quan Phòng chống rửa tiền?*
+   - **Hệ thống Chỉ số Đo lường Bổ trợ**:
+     - **Metric đo lường chính (Primary Metric — What)**: Tỷ lệ chuẩn xác tại hạn mức ngân sách điều tra ưu tiên hàng đầu (**Precision@Top 0,1%**: Đạt tới **$72{,}06\%$** trên PaySim — cứ 10 cảnh báo điều tra viên mở ra thì có hơn 7 trường hợp là gian lận thực tế; bắt được ngay $105$ vụ rửa tiền trong top 0,1% của IBM).
+     - **Chỉ số phân rã / Nguyên nhân (Driver / Explanatory Metrics — Why)**: Tỷ lệ cắt giảm cảnh báo rác (*Alert Fatigue Reduction Rate*: cắt giảm $48{,}3\%$ tổng khối lượng cảnh báo rác từ $9.584$ xuống $4.956$ cảnh báo trên IBM, tiết kiệm hàng nghìn giờ công thẩm tra); Độ bao phủ rủi ro tích lũy (*Cumulative Risk Recall@K*: thu hồi $48{,}09\%$ tổng số vụ gian lận PaySim và $43{,}86\%$ tổng số vụ rửa tiền IBM chỉ với ngân sách thẩm tra $1{,}0\%$ giao dịch cao nhất).
+     - **Chỉ số tác động / Ngưỡng hành động (Impact / Action Trigger — So what / Now what)**: Quy trình tự động hóa hồ sơ pháp lý STR (*Automated STR Dossier Trigger*): Tự động trích xuất chuỗi mắt xích liên đới đồ thị (như Chu trình 3 đỉnh khép kín ID `395137022447` hoặc chuỗi chuyển tiếp rút tiền mặt tài khoản mule ID `60129557010`) kèm mã định danh vật lý bất biến `event_id` làm bằng chứng pháp lý đính kèm hồ sơ phong tỏa tài khoản tức thời và chuyển cơ quan an ninh điều tra.
 
    ![Stage 6: Operational Triage & STR Evidence Witnesses](report/figures/stage6_triage_evidence.png)
 
@@ -489,6 +540,7 @@ graphguard-amls_detection/
 │   ├── CC_vs_LPA_Note.md           # Lý thuyết Connected Components và Label Propagation
 │   ├── DE_Paysim_IBM_Comparison.md # Phân tích chuyên sâu hình thái đồ thị IBM vs PaySim
 │   ├── Code_Explainer.md           # Hướng dẫn liên kết từng cell code notebook với Python modules
+│   ├── COMPREHENSIVE_DATA_DICTIONARY.md  # Từ điển dữ liệu tổng hợp (final version)
 │   ├── PartB_Experiments.md        # Toàn bộ số liệu thực nghiệm gốc và nhật ký hoàn tất
 │   ├── PartB_Comparison.md         # Phân tích đối chiếu chuyên sâu 9 mô hình trên 2 datasets
 │   └── Project_Code_Audit_2026-10-22.md # Nhật ký nghiệm thu toàn diện mã nguồn
