@@ -1,0 +1,727 @@
+{
+  "common/tables/all_18_test_models.csv": {
+    "source_path": "tables/all_18_test_models.csv",
+    "sha256": "7fcdf0e7c50c9b7cf4b79104e4bab3e73c2208ccff441bb7e9dcb501be5b0409",
+    "bytes": 5136
+  },
+  "common/tables/baseline_vs_validation_selected.csv": {
+    "source_path": "tables/baseline_vs_validation_selected.csv",
+    "sha256": "de8d85cd0941eeffd9fa0343621930c76548cfe28e3507ee6babc71c2b96826e",
+    "bytes": 1304
+  },
+  "common/tables/model_families.csv": {
+    "source_path": "tables/model_families.csv",
+    "sha256": "eb04578b9b1a170e18be279d3cddb09e422b94be4c0de863e1646d9f676c5917",
+    "bytes": 559
+  },
+  "common/tables/evaluation_splits.csv": {
+    "source_path": "tables/evaluation_splits.csv",
+    "sha256": "545e2763025ead2843c0fa7bce878586a6513eb459996aa149205b0b734bd899",
+    "bytes": 897
+  },
+  "common/tables/full_time_blocks.csv": {
+    "source_path": "tables/full_time_blocks.csv",
+    "sha256": "167a03a248592c873d60c0674c2f039d8d52579a4a3871a337c704d065d5d870",
+    "bytes": 865
+  },
+  "common/tables/dataset_overview.csv": {
+    "source_path": "tables/dataset_overview.csv",
+    "sha256": "9bef926a065478288a149cf1940c9da8979fa1ce862bd827c81015149753cac0",
+    "bytes": 704
+  },
+  "common/comparison/degree_distribution_paysim_vs_ibm.csv": {
+    "source_path": "comparison/degree_distribution_paysim_vs_ibm.csv",
+    "sha256": "cd4a249b5aa9c624a43c730d27149c86646442588a239b8f74bb7aa65dae4d97",
+    "bytes": 15306
+  },
+  "common/comparison/degree_distribution_paysim_vs_ibm.png": {
+    "source_path": "comparison/degree_distribution_paysim_vs_ibm.png",
+    "sha256": "35d50ad283b5622fb9668727b0aacf95e8f92209d25d6dd2ec974fd559221172",
+    "bytes": 364633
+  },
+  "paysim/tables/baseline_currencies.csv": {
+    "source_path": "datasets/paysim/tables/baseline_currencies.csv",
+    "sha256": "ef12ecd5897e892204f598a3e30a5346ba0c8387c1eb61f62ea30bf41623f43f",
+    "bytes": 27
+  },
+  "paysim/tables/baseline_examples.csv": {
+    "source_path": "datasets/paysim/tables/baseline_examples.csv",
+    "sha256": "a92e017c9a06e73c92075f0f3006589a8561cf10744b3f809d7df17bb3b9f26e",
+    "bytes": 2134
+  },
+  "paysim/tables/baseline_summary.csv": {
+    "source_path": "datasets/paysim/tables/baseline_summary.csv",
+    "sha256": "2fe6e87d4bb4482e89a2a3ec3d8785f173177920720fa408babddfd994c895b4",
+    "bytes": 105
+  },
+  "paysim/tables/community_size_distribution.csv": {
+    "source_path": "datasets/paysim/tables/community_size_distribution.csv",
+    "sha256": "934d9f7d4b404f115da64095a531ee33f88abefe9b3fea3f2ef1b80a268d1044",
+    "bytes": 683
+  },
+  "paysim/tables/community_top50.csv": {
+    "source_path": "datasets/paysim/tables/community_top50.csv",
+    "sha256": "3998ab234c37428e8a925836bba852dfaff1533292e81884591b7f644a94f97c",
+    "bytes": 2056
+  },
+  "paysim/tables/degree_distribution.csv": {
+    "source_path": "datasets/paysim/tables/degree_distribution.csv",
+    "sha256": "f888dde5d326d817b49708c6f2e6872b2b482d565806fa3a7837fa9afc9c3157",
+    "bytes": 695
+  },
+  "paysim/tables/feature_importance.csv": {
+    "source_path": "datasets/paysim/tables/feature_importance.csv",
+    "sha256": "872602acd98f5d3f7d555b6904d17dd8076a9fc38e01f847f9d9e659d10bbf83",
+    "bytes": 7805
+  },
+  "paysim/tables/graph_contributions.csv": {
+    "source_path": "datasets/paysim/tables/graph_contributions.csv",
+    "sha256": "c7737041a4fe640a2d11c83d064b9c943ccde7baa0e3d590e97f8f9442557f1d",
+    "bytes": 951
+  },
+  "paysim/tables/motif_coverage.csv": {
+    "source_path": "datasets/paysim/tables/motif_coverage.csv",
+    "sha256": "f145f36d7bb0f99017b0f84c293eaa1966824f8954669db17e58e3fca19da66a",
+    "bytes": 2661
+  },
+  "paysim/tables/pr_curve_full_fusion.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_full_fusion.csv",
+    "sha256": "5b48855cad85254ffebbbd06e36c4ff798f34e19311edd1b6a1ab4bd16f576ab",
+    "bytes": 734
+  },
+  "paysim/tables/pr_curve_motif_assisted.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_motif_assisted.csv",
+    "sha256": "e270e66cf45a8e7be6c3f09ea520b0e7d59152f8089d2b404a9702574c0e0168",
+    "bytes": 553
+  },
+  "paysim/tables/pr_curve_transaction_centrality.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_transaction_centrality.csv",
+    "sha256": "e77cd65e7aa9bf216d93eec42fac8643bfba9f0805ac1bbe19dadd589cc2730e",
+    "bytes": 500
+  },
+  "paysim/tables/pr_curve_transaction_community.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_transaction_community.csv",
+    "sha256": "e1475083a9370aa48a0601acd03c209c66df489a38d3f1016ff0eb4e0b36d48a",
+    "bytes": 351
+  },
+  "paysim/tables/pr_curve_transaction_novelty.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_transaction_novelty.csv",
+    "sha256": "e1475083a9370aa48a0601acd03c209c66df489a38d3f1016ff0eb4e0b36d48a",
+    "bytes": 351
+  },
+  "paysim/tables/pr_curve_transaction_only.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_transaction_only.csv",
+    "sha256": "2c0e695d8bba09ffbeef4ea4728185e4dc5b79cde32f565f60cd5e41af1dd12a",
+    "bytes": 256
+  },
+  "paysim/tables/pr_curve_without_centrality.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_without_centrality.csv",
+    "sha256": "e270e66cf45a8e7be6c3f09ea520b0e7d59152f8089d2b404a9702574c0e0168",
+    "bytes": 553
+  },
+  "paysim/tables/pr_curve_without_community.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_without_community.csv",
+    "sha256": "5b48855cad85254ffebbbd06e36c4ff798f34e19311edd1b6a1ab4bd16f576ab",
+    "bytes": 734
+  },
+  "paysim/tables/pr_curve_without_motifs.csv": {
+    "source_path": "datasets/paysim/tables/pr_curve_without_motifs.csv",
+    "sha256": "e77cd65e7aa9bf216d93eec42fac8643bfba9f0805ac1bbe19dadd589cc2730e",
+    "bytes": 500
+  },
+  "paysim/tables/reliability_summary.csv": {
+    "source_path": "datasets/paysim/tables/reliability_summary.csv",
+    "sha256": "4a3c8db65b1e23d86a6dbeb80cf6369b8998d2a4bb26788b781e3eac135deff4",
+    "bytes": 1358
+  },
+  "paysim/tables/review_budgets.csv": {
+    "source_path": "datasets/paysim/tables/review_budgets.csv",
+    "sha256": "6ded97532854d5c6d4d6de94ef8e422fe63d389f1dc0917323d948be6bc37688",
+    "bytes": 3919
+  },
+  "paysim/tables/selected_amounts_by_currency.csv": {
+    "source_path": "datasets/paysim/tables/selected_amounts_by_currency.csv",
+    "sha256": "cadc6ae0f23308808aee775293951ad64bcefd2194ed3450886d62899a6c37ab",
+    "bytes": 215
+  },
+  "paysim/tables/selected_case_evidence.csv": {
+    "source_path": "datasets/paysim/tables/selected_case_evidence.csv",
+    "sha256": "d8b1eaadb62a6173e1ab8695c7bbb7de68a7b9f6cd47a23e2ff3e9eef7ce8852",
+    "bytes": 229
+  },
+  "paysim/tables/selected_cold_start.csv": {
+    "source_path": "datasets/paysim/tables/selected_cold_start.csv",
+    "sha256": "8bbc0c61bbd169e8f92b2ff66057ad37429ecb62d3939b0c3ab6ad1305227933",
+    "bytes": 496
+  },
+  "paysim/tables/test_metrics.csv": {
+    "source_path": "datasets/paysim/tables/test_metrics.csv",
+    "sha256": "7fb857e8f8885409a77f973e0ad0977ff669a5555ca2e12f72314f9e9e33c072",
+    "bytes": 2576
+  },
+  "paysim/tables/test_temporal_stability.csv": {
+    "source_path": "datasets/paysim/tables/test_temporal_stability.csv",
+    "sha256": "3143294780b8e7b91fb062bbc9919fea7b12401c34842944c23bc48ae3393140",
+    "bytes": 11649
+  },
+  "paysim/tables/top10_pagerank.csv": {
+    "source_path": "datasets/paysim/tables/top10_pagerank.csv",
+    "sha256": "07b0eb4dbec7577b4a60a6c2f5e2233c28f9e69fa01c004f46de0491b7459b99",
+    "bytes": 432
+  },
+  "paysim/tables/validation_average_precision.csv": {
+    "source_path": "datasets/paysim/tables/validation_average_precision.csv",
+    "sha256": "496b425e19344b58952da98041ec5f6d0448d75f829dc947ac2eea8c1d4f01ce",
+    "bytes": 1340
+  },
+  "paysim/tables/validation_leaderboard.csv": {
+    "source_path": "datasets/paysim/tables/validation_leaderboard.csv",
+    "sha256": "b461571a99e2c89a5de572ae2175e562ee32627d541143c26a78f6fd58410d91",
+    "bytes": 13279
+  },
+  "paysim/tables/walk_forward.csv": {
+    "source_path": "datasets/paysim/tables/walk_forward.csv",
+    "sha256": "0e8e445886a15015d89589d4c0399893a20c186af202ef27c48dea4940d511a6",
+    "bytes": 49324
+  },
+  "paysim/figures/ablation_and_pr.png": {
+    "source_path": "datasets/paysim/figures/ablation_and_pr.png",
+    "sha256": "0eb6a64164be0ddf2c81301e4c79f23d938a0cbe26dd6953945b3b90a816c7bd",
+    "bytes": 81233
+  },
+  "paysim/figures/confusion.png": {
+    "source_path": "datasets/paysim/figures/confusion.png",
+    "sha256": "6b7d7753c15bf5934d33d0f6f5a7ccc21c858529aefa1d6174007db4d4548fa4",
+    "bytes": 21821
+  },
+  "paysim/figures/full_communities.png": {
+    "source_path": "datasets/paysim/figures/full_communities.png",
+    "sha256": "221c3259c3e40492197e8aff4364b9ed856e8b766ba8dfc092d35e099883b751",
+    "bytes": 29167
+  },
+  "paysim/figures/full_degree.png": {
+    "source_path": "datasets/paysim/figures/full_degree.png",
+    "sha256": "12eb2dbbe3f6ef81ca4db9c24c5f2c38e63544cfd82cab72eb483e5b3b72868a",
+    "bytes": 32048
+  },
+  "paysim/figures/full_pagerank.png": {
+    "source_path": "datasets/paysim/figures/full_pagerank.png",
+    "sha256": "d0f874ec35abad84479391df432df4e23a1022bd568a4bd701e8e7cf17a0676b",
+    "bytes": 40578
+  },
+  "paysim/figures/graph_contributions.png": {
+    "source_path": "datasets/paysim/figures/graph_contributions.png",
+    "sha256": "dcdb999fdff538854ec919b8797d20c4cc5e185cee023819f431e445b3bc42ec",
+    "bytes": 39292
+  },
+  "paysim/figures/motif_coverage.png": {
+    "source_path": "datasets/paysim/figures/motif_coverage.png",
+    "sha256": "83c34759ea0751894d734dc0bfa7d4116fb7d03aee5c89879292b55946107ecf",
+    "bytes": 66508
+  },
+  "paysim/figures/review_budgets.png": {
+    "source_path": "datasets/paysim/figures/review_budgets.png",
+    "sha256": "87ec6389317a27f385b9c7d983a4853487d21556e1f2c150672a43072dfce49f",
+    "bytes": 81505
+  },
+  "paysim/figures/selected_importance.png": {
+    "source_path": "datasets/paysim/figures/selected_importance.png",
+    "sha256": "cfd919fe53c8718c8aff48093fe02057b89bc46a937a23373a9bfd6c9f9e2c32",
+    "bytes": 42702
+  },
+  "paysim/figures/temporal_protocol.png": {
+    "source_path": "datasets/paysim/figures/temporal_protocol.png",
+    "sha256": "f4df15b2373b6c1cd5e61693b5fb1c2286a01c9bd6b5bfbb5ad4007728691973",
+    "bytes": 36682
+  },
+  "paysim/figures/temporal_stability.png": {
+    "source_path": "datasets/paysim/figures/temporal_stability.png",
+    "sha256": "e077622263d8a2fe2ea45ee15a091b518e45e0926bc203c7d920f0176d62a96d",
+    "bytes": 86627
+  },
+  "paysim/figures/validation.png": {
+    "source_path": "datasets/paysim/figures/validation.png",
+    "sha256": "c3a2d54dc805c5727ff380e500d03dfd0f5d9e7b446c0165f807095fd751c235",
+    "bytes": 85380
+  },
+  "paysim/examples/examples_full_fusion_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_full_fusion_FN.json",
+    "sha256": "7a4de46f726892b1153bda83eef5302c33ad86ad3a3f3c922c6a229cef4b1dd0",
+    "bytes": 2310
+  },
+  "paysim/examples/examples_full_fusion_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_full_fusion_FP.json",
+    "sha256": "5fbfbd9c9518624880dab7b1f4de65e8d7dede8f793425748a4fbfbfeb71376f",
+    "bytes": 2311
+  },
+  "paysim/examples/examples_full_fusion_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_full_fusion_TP.json",
+    "sha256": "3c1b41cf4fb13cb30bed3ed853e351d03494a442d042b75aeb9e5e3e1b2ed731",
+    "bytes": 2308
+  },
+  "paysim/examples/examples_motif_assisted_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_motif_assisted_FN.json",
+    "sha256": "7a4de46f726892b1153bda83eef5302c33ad86ad3a3f3c922c6a229cef4b1dd0",
+    "bytes": 2310
+  },
+  "paysim/examples/examples_motif_assisted_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_motif_assisted_FP.json",
+    "sha256": "47fe7a3ba01bfb029c7c23ab00265c170982e1e0f565f0b33510a09136544f31",
+    "bytes": 2290
+  },
+  "paysim/examples/examples_motif_assisted_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_motif_assisted_TP.json",
+    "sha256": "e4dd17cb628298e1117508fe64594ae5296715484f9d964eae9ff26943021c0c",
+    "bytes": 2307
+  },
+  "paysim/examples/examples_transaction_centrality_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_centrality_FN.json",
+    "sha256": "3f941b923b0f6a65ce148984f99150a8e80efbe7b52fe76e223fc26d2d8f25ce",
+    "bytes": 2303
+  },
+  "paysim/examples/examples_transaction_centrality_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_centrality_FP.json",
+    "sha256": "5fbfbd9c9518624880dab7b1f4de65e8d7dede8f793425748a4fbfbfeb71376f",
+    "bytes": 2311
+  },
+  "paysim/examples/examples_transaction_centrality_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_centrality_TP.json",
+    "sha256": "3c1b41cf4fb13cb30bed3ed853e351d03494a442d042b75aeb9e5e3e1b2ed731",
+    "bytes": 2308
+  },
+  "paysim/examples/examples_transaction_community_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_community_FN.json",
+    "sha256": "d0e35a4c1ca00c1d4b3a844dc0af8e26146ab10cd3df78ac6f8406c1ac4f90aa",
+    "bytes": 2287
+  },
+  "paysim/examples/examples_transaction_community_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_community_FP.json",
+    "sha256": "47fe7a3ba01bfb029c7c23ab00265c170982e1e0f565f0b33510a09136544f31",
+    "bytes": 2290
+  },
+  "paysim/examples/examples_transaction_community_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_community_TP.json",
+    "sha256": "e4dd17cb628298e1117508fe64594ae5296715484f9d964eae9ff26943021c0c",
+    "bytes": 2307
+  },
+  "paysim/examples/examples_transaction_novelty_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_novelty_FN.json",
+    "sha256": "d0e35a4c1ca00c1d4b3a844dc0af8e26146ab10cd3df78ac6f8406c1ac4f90aa",
+    "bytes": 2287
+  },
+  "paysim/examples/examples_transaction_novelty_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_novelty_FP.json",
+    "sha256": "47fe7a3ba01bfb029c7c23ab00265c170982e1e0f565f0b33510a09136544f31",
+    "bytes": 2290
+  },
+  "paysim/examples/examples_transaction_novelty_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_novelty_TP.json",
+    "sha256": "e4dd17cb628298e1117508fe64594ae5296715484f9d964eae9ff26943021c0c",
+    "bytes": 2307
+  },
+  "paysim/examples/examples_transaction_only_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_only_FN.json",
+    "sha256": "2505f08256e55d8f1be00c9b21265a6d1ff318bcc97f548f608c3a150fd014ce",
+    "bytes": 2325
+  },
+  "paysim/examples/examples_transaction_only_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_only_FP.json",
+    "sha256": "47fe7a3ba01bfb029c7c23ab00265c170982e1e0f565f0b33510a09136544f31",
+    "bytes": 2290
+  },
+  "paysim/examples/examples_transaction_only_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_transaction_only_TP.json",
+    "sha256": "e4dd17cb628298e1117508fe64594ae5296715484f9d964eae9ff26943021c0c",
+    "bytes": 2307
+  },
+  "paysim/examples/examples_without_centrality_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_without_centrality_FN.json",
+    "sha256": "7a4de46f726892b1153bda83eef5302c33ad86ad3a3f3c922c6a229cef4b1dd0",
+    "bytes": 2310
+  },
+  "paysim/examples/examples_without_centrality_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_centrality_FP.json",
+    "sha256": "47fe7a3ba01bfb029c7c23ab00265c170982e1e0f565f0b33510a09136544f31",
+    "bytes": 2290
+  },
+  "paysim/examples/examples_without_centrality_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_centrality_TP.json",
+    "sha256": "e4dd17cb628298e1117508fe64594ae5296715484f9d964eae9ff26943021c0c",
+    "bytes": 2307
+  },
+  "paysim/examples/examples_without_community_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_without_community_FN.json",
+    "sha256": "7a4de46f726892b1153bda83eef5302c33ad86ad3a3f3c922c6a229cef4b1dd0",
+    "bytes": 2310
+  },
+  "paysim/examples/examples_without_community_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_community_FP.json",
+    "sha256": "5fbfbd9c9518624880dab7b1f4de65e8d7dede8f793425748a4fbfbfeb71376f",
+    "bytes": 2311
+  },
+  "paysim/examples/examples_without_community_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_community_TP.json",
+    "sha256": "3c1b41cf4fb13cb30bed3ed853e351d03494a442d042b75aeb9e5e3e1b2ed731",
+    "bytes": 2308
+  },
+  "paysim/examples/examples_without_motifs_FN.json": {
+    "source_path": "datasets/paysim/examples/examples_without_motifs_FN.json",
+    "sha256": "3f941b923b0f6a65ce148984f99150a8e80efbe7b52fe76e223fc26d2d8f25ce",
+    "bytes": 2303
+  },
+  "paysim/examples/examples_without_motifs_FP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_motifs_FP.json",
+    "sha256": "5fbfbd9c9518624880dab7b1f4de65e8d7dede8f793425748a4fbfbfeb71376f",
+    "bytes": 2311
+  },
+  "paysim/examples/examples_without_motifs_TP.json": {
+    "source_path": "datasets/paysim/examples/examples_without_motifs_TP.json",
+    "sha256": "3c1b41cf4fb13cb30bed3ed853e351d03494a442d042b75aeb9e5e3e1b2ed731",
+    "bytes": 2308
+  },
+  "ibm_aml/tables/baseline_currencies.csv": {
+    "source_path": "datasets/ibm_aml/tables/baseline_currencies.csv",
+    "sha256": "54892d8ece2470c6de8998d65424561d98581a8bae9d17fb4b39a48dc3cd2a90",
+    "bytes": 243
+  },
+  "ibm_aml/tables/baseline_examples.csv": {
+    "source_path": "datasets/ibm_aml/tables/baseline_examples.csv",
+    "sha256": "9a631fef6e75f5bd52a1b3c036f43eeb6ccf3e66c5ccdf78847958d24ecd5161",
+    "bytes": 2599
+  },
+  "ibm_aml/tables/baseline_summary.csv": {
+    "source_path": "datasets/ibm_aml/tables/baseline_summary.csv",
+    "sha256": "837281c25bfceb6738d1a7ef8e2c03b6e749fa3a503cca56d67ed18c6da70795",
+    "bytes": 148
+  },
+  "ibm_aml/tables/community_size_distribution.csv": {
+    "source_path": "datasets/ibm_aml/tables/community_size_distribution.csv",
+    "sha256": "d658c8a378b907cb57181ced46250858e8c5afff08ff3db6b1812b6e8f1bcd66",
+    "bytes": 424
+  },
+  "ibm_aml/tables/community_top50.csv": {
+    "source_path": "datasets/ibm_aml/tables/community_top50.csv",
+    "sha256": "fceab17e89212b2e3152fd21bc06d19b0e0bb7245e4c9987c884c4a478bc9fdb",
+    "bytes": 2249
+  },
+  "ibm_aml/tables/degree_distribution.csv": {
+    "source_path": "datasets/ibm_aml/tables/degree_distribution.csv",
+    "sha256": "939b146917127d4f569feb22cd71e21bd8631809351875b0b1d0f191af7ba10f",
+    "bytes": 2179
+  },
+  "ibm_aml/tables/feature_importance.csv": {
+    "source_path": "datasets/ibm_aml/tables/feature_importance.csv",
+    "sha256": "71ef0534148363acf5f14583dcc1a27ec9ab6c139ccc396fd452fc2d79db439e",
+    "bytes": 8161
+  },
+  "ibm_aml/tables/graph_contributions.csv": {
+    "source_path": "datasets/ibm_aml/tables/graph_contributions.csv",
+    "sha256": "4f8319b41b3dc060362803c642181bdf391ee8993bccd5559d56924d187e4236",
+    "bytes": 969
+  },
+  "ibm_aml/tables/motif_coverage.csv": {
+    "source_path": "datasets/ibm_aml/tables/motif_coverage.csv",
+    "sha256": "2aa54e74127d63fa3c029111fabf531646b55d8128cf18a8c15da1d4016b1691",
+    "bytes": 3107
+  },
+  "ibm_aml/tables/pr_curve_full_fusion.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
+    "sha256": "fe5d49ef1c6df0459f7b0b2796b38eba5a569653294178a16c2d136be30e3706",
+    "bytes": 1108
+  },
+  "ibm_aml/tables/pr_curve_motif_assisted.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
+    "sha256": "aadbc98628226850ce2849643866d9005a43bf54825b5705aaebdfff55d2170a",
+    "bytes": 830
+  },
+  "ibm_aml/tables/pr_curve_transaction_centrality.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
+    "sha256": "ad4f6ee8ee4b0a95daa25b13266205960df989c79fccddc067dafe9c1683a4ca",
+    "bytes": 855
+  },
+  "ibm_aml/tables/pr_curve_transaction_community.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
+    "sha256": "76f32231c0d63d2ccaeb28cb37c74669ab1d31a0e6b2680e8627b8104e1026fa",
+    "bytes": 442
+  },
+  "ibm_aml/tables/pr_curve_transaction_novelty.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
+    "sha256": "76f32231c0d63d2ccaeb28cb37c74669ab1d31a0e6b2680e8627b8104e1026fa",
+    "bytes": 442
+  },
+  "ibm_aml/tables/pr_curve_transaction_only.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
+    "sha256": "76f32231c0d63d2ccaeb28cb37c74669ab1d31a0e6b2680e8627b8104e1026fa",
+    "bytes": 442
+  },
+  "ibm_aml/tables/pr_curve_without_centrality.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
+    "sha256": "aadbc98628226850ce2849643866d9005a43bf54825b5705aaebdfff55d2170a",
+    "bytes": 830
+  },
+  "ibm_aml/tables/pr_curve_without_community.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_without_community.csv",
+    "sha256": "b46467681309306347273f9304add7d8a30ab4ed8ab9a6749cba56e73a4ff9f4",
+    "bytes": 971
+  },
+  "ibm_aml/tables/pr_curve_without_motifs.csv": {
+    "source_path": "datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
+    "sha256": "125fc7614c05d2c710dc673d1be067ed6e93afd3cbea7cc415b483bbb76815b8",
+    "bytes": 785
+  },
+  "ibm_aml/tables/reliability_summary.csv": {
+    "source_path": "datasets/ibm_aml/tables/reliability_summary.csv",
+    "sha256": "3bc31119ce6dc3d6ca9ab7c08ebfec25b09ce88740e7744aa718726b1807c48b",
+    "bytes": 1284
+  },
+  "ibm_aml/tables/review_budgets.csv": {
+    "source_path": "datasets/ibm_aml/tables/review_budgets.csv",
+    "sha256": "c14b0403a465dd3a48ed5a28762c34590f48c2df821056753db5a764c9bf9154",
+    "bytes": 4019
+  },
+  "ibm_aml/tables/selected_amounts_by_currency.csv": {
+    "source_path": "datasets/ibm_aml/tables/selected_amounts_by_currency.csv",
+    "sha256": "7f16e02d2a78f5134cc7b0c1312a9f799a17ac161cc0743c9e6ffbc992b60c5f",
+    "bytes": 2049
+  },
+  "ibm_aml/tables/selected_case_evidence.csv": {
+    "source_path": "datasets/ibm_aml/tables/selected_case_evidence.csv",
+    "sha256": "dfb05eb4401441b3ef261f49819bb8e65a8a9ffde60971f27f508490de4f6219",
+    "bytes": 466
+  },
+  "ibm_aml/tables/selected_cold_start.csv": {
+    "source_path": "datasets/ibm_aml/tables/selected_cold_start.csv",
+    "sha256": "af2dceeb905dc5a8d6aa4fa82af12d659761a84312da4981311cbdc69149c92f",
+    "bytes": 451
+  },
+  "ibm_aml/tables/test_metrics.csv": {
+    "source_path": "datasets/ibm_aml/tables/test_metrics.csv",
+    "sha256": "c743b5c1070c7e10f5507ba300cf90951bd11025d44ae45e8abddcc4f37e8b6b",
+    "bytes": 2618
+  },
+  "ibm_aml/tables/test_temporal_stability.csv": {
+    "source_path": "datasets/ibm_aml/tables/test_temporal_stability.csv",
+    "sha256": "8f835de7765b6c68cb287b101ea8a10075c20a0bae060f58f66dd6a58634e887",
+    "bytes": 11870
+  },
+  "ibm_aml/tables/top10_pagerank.csv": {
+    "source_path": "datasets/ibm_aml/tables/top10_pagerank.csv",
+    "sha256": "515e9ea1e75a541ed685d7a997e401a2f70fe7ace275a05c910dc54b9248956d",
+    "bytes": 460
+  },
+  "ibm_aml/tables/validation_average_precision.csv": {
+    "source_path": "datasets/ibm_aml/tables/validation_average_precision.csv",
+    "sha256": "541e81bccdd74d7b172922f5a70656d177a919c43810b52e4a962e72f7d80556",
+    "bytes": 1348
+  },
+  "ibm_aml/tables/validation_leaderboard.csv": {
+    "source_path": "datasets/ibm_aml/tables/validation_leaderboard.csv",
+    "sha256": "f103bf773bd6588f7e14db1ad1b26f72cd8988b63e31efc72485e8a78edffd95",
+    "bytes": 12254
+  },
+  "ibm_aml/tables/walk_forward.csv": {
+    "source_path": "datasets/ibm_aml/tables/walk_forward.csv",
+    "sha256": "3ba20ff16d3850f6562d3a85df667242179427665319e6ecba1f9d1941e4b84f",
+    "bytes": 46167
+  },
+  "ibm_aml/figures/ablation_and_pr.png": {
+    "source_path": "datasets/ibm_aml/figures/ablation_and_pr.png",
+    "sha256": "616cd2f36bafb990dd06fe48d9b7c5bace4ce28030349234fc90753099293b32",
+    "bytes": 79950
+  },
+  "ibm_aml/figures/confusion.png": {
+    "source_path": "datasets/ibm_aml/figures/confusion.png",
+    "sha256": "098016baae8350b920b04a9556956f5a3d9f078a8f35b26b450746b6b02cfad9",
+    "bytes": 20393
+  },
+  "ibm_aml/figures/full_communities.png": {
+    "source_path": "datasets/ibm_aml/figures/full_communities.png",
+    "sha256": "20ef6f0008ba5d9abca87aa19587c703c644c5eabe1f319ff6719bb3313d600b",
+    "bytes": 27899
+  },
+  "ibm_aml/figures/full_degree.png": {
+    "source_path": "datasets/ibm_aml/figures/full_degree.png",
+    "sha256": "fea46d8e4ee24098d3d0c258500db6c969da7959d7fc13d284c67fcf3bf30221",
+    "bytes": 33467
+  },
+  "ibm_aml/figures/full_pagerank.png": {
+    "source_path": "datasets/ibm_aml/figures/full_pagerank.png",
+    "sha256": "aa63a309d4894b28adc4cbe887a0a5df8be08bc9695238a9a422a0fef5c8e2ce",
+    "bytes": 43224
+  },
+  "ibm_aml/figures/graph_contributions.png": {
+    "source_path": "datasets/ibm_aml/figures/graph_contributions.png",
+    "sha256": "3aa90b4723d26c0d9f34df9dd4aa46eb0095436419578932e52ebdcf05a70645",
+    "bytes": 38305
+  },
+  "ibm_aml/figures/motif_coverage.png": {
+    "source_path": "datasets/ibm_aml/figures/motif_coverage.png",
+    "sha256": "87baacbe619dbfa9d742506069688ee2e21cb7bffdd74ad10b83b4f26c3951b9",
+    "bytes": 65297
+  },
+  "ibm_aml/figures/review_budgets.png": {
+    "source_path": "datasets/ibm_aml/figures/review_budgets.png",
+    "sha256": "7502d14cabfc1d66589b9c004f77314bdf6eff7b6584866452a6c4f90c600135",
+    "bytes": 89776
+  },
+  "ibm_aml/figures/selected_case.png": {
+    "source_path": "datasets/ibm_aml/figures/selected_case.png",
+    "sha256": "a6a3bcf5e483f8e09b3012465ddd6fb92f10256970e5fb83fe3f8c6edb197b1c",
+    "bytes": 40606
+  },
+  "ibm_aml/figures/selected_importance.png": {
+    "source_path": "datasets/ibm_aml/figures/selected_importance.png",
+    "sha256": "3df642527ec22b9f409fbdff471bc27a8557741c65b94902a5bc59481161c5ac",
+    "bytes": 42211
+  },
+  "ibm_aml/figures/temporal_protocol.png": {
+    "source_path": "datasets/ibm_aml/figures/temporal_protocol.png",
+    "sha256": "1372ad1b1b26b399831ea441e3d37c30ff7310b64ba85a63720d8703eb152310",
+    "bytes": 40955
+  },
+  "ibm_aml/figures/temporal_stability.png": {
+    "source_path": "datasets/ibm_aml/figures/temporal_stability.png",
+    "sha256": "494dc73347ec4b1db6f713e7702b513d8fe878cade2c8bfbf497a5ee98475f93",
+    "bytes": 91475
+  },
+  "ibm_aml/figures/validation.png": {
+    "source_path": "datasets/ibm_aml/figures/validation.png",
+    "sha256": "2dea491d75d8ce0221ab8e8124cc714a6a07ea2397cd5bcacd358b75df23dd8a",
+    "bytes": 69514
+  },
+  "ibm_aml/examples/examples_full_fusion_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_full_fusion_FN.json",
+    "sha256": "ffa339b84244799b86bedf865853b4e34a5a2976b51776e8eff082833aaf9f3e",
+    "bytes": 2342
+  },
+  "ibm_aml/examples/examples_full_fusion_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_full_fusion_FP.json",
+    "sha256": "51d9a7d6c8adf39446d405ecaa0738cb780923b848753f54bc6c1b0001cbf853",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_full_fusion_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_full_fusion_TP.json",
+    "sha256": "aa1235f54eed47503e35a31496ada17ab3e06d9711149d8d37c0517f85c2def4",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_motif_assisted_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_motif_assisted_FN.json",
+    "sha256": "ffa339b84244799b86bedf865853b4e34a5a2976b51776e8eff082833aaf9f3e",
+    "bytes": 2342
+  },
+  "ibm_aml/examples/examples_motif_assisted_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_motif_assisted_FP.json",
+    "sha256": "dcfe2227479963404ce977129e56dd37e3ebab68a1ac90d6fc0739525b385b66",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_motif_assisted_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_motif_assisted_TP.json",
+    "sha256": "aa1235f54eed47503e35a31496ada17ab3e06d9711149d8d37c0517f85c2def4",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_transaction_centrality_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_centrality_FN.json",
+    "sha256": "0cee1a4e577acfd9d60254518410bdcfded5f923cb38feff0c087df3da2dea72",
+    "bytes": 2353
+  },
+  "ibm_aml/examples/examples_transaction_centrality_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_centrality_FP.json",
+    "sha256": "1ce14843bd854b3ddad06c4cedb50754e4a7bcd887dd9a655ab2d088dc09e9ee",
+    "bytes": 2390
+  },
+  "ibm_aml/examples/examples_transaction_centrality_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_centrality_TP.json",
+    "sha256": "c77d71bb64435e2b79e594f0d00cc9d556a1f222019ed20e4178b947106de560",
+    "bytes": 2396
+  },
+  "ibm_aml/examples/examples_transaction_community_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_community_FN.json",
+    "sha256": "0cee1a4e577acfd9d60254518410bdcfded5f923cb38feff0c087df3da2dea72",
+    "bytes": 2353
+  },
+  "ibm_aml/examples/examples_transaction_community_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_community_FP.json",
+    "sha256": "3d999110119175e92b2608f7860b471059356682cbe627fedbc5a1dff075c90c",
+    "bytes": 2348
+  },
+  "ibm_aml/examples/examples_transaction_community_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_community_TP.json",
+    "sha256": "41c72660a52ea6a50826f7bdd1a134c0ff61b931a8392c146267883352171695",
+    "bytes": 2345
+  },
+  "ibm_aml/examples/examples_transaction_novelty_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_novelty_FN.json",
+    "sha256": "0cee1a4e577acfd9d60254518410bdcfded5f923cb38feff0c087df3da2dea72",
+    "bytes": 2353
+  },
+  "ibm_aml/examples/examples_transaction_novelty_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_novelty_FP.json",
+    "sha256": "3d999110119175e92b2608f7860b471059356682cbe627fedbc5a1dff075c90c",
+    "bytes": 2348
+  },
+  "ibm_aml/examples/examples_transaction_novelty_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_novelty_TP.json",
+    "sha256": "41c72660a52ea6a50826f7bdd1a134c0ff61b931a8392c146267883352171695",
+    "bytes": 2345
+  },
+  "ibm_aml/examples/examples_transaction_only_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_only_FN.json",
+    "sha256": "0cee1a4e577acfd9d60254518410bdcfded5f923cb38feff0c087df3da2dea72",
+    "bytes": 2353
+  },
+  "ibm_aml/examples/examples_transaction_only_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_only_FP.json",
+    "sha256": "3d999110119175e92b2608f7860b471059356682cbe627fedbc5a1dff075c90c",
+    "bytes": 2348
+  },
+  "ibm_aml/examples/examples_transaction_only_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_transaction_only_TP.json",
+    "sha256": "41c72660a52ea6a50826f7bdd1a134c0ff61b931a8392c146267883352171695",
+    "bytes": 2345
+  },
+  "ibm_aml/examples/examples_without_centrality_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_centrality_FN.json",
+    "sha256": "ffa339b84244799b86bedf865853b4e34a5a2976b51776e8eff082833aaf9f3e",
+    "bytes": 2342
+  },
+  "ibm_aml/examples/examples_without_centrality_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_centrality_FP.json",
+    "sha256": "dcfe2227479963404ce977129e56dd37e3ebab68a1ac90d6fc0739525b385b66",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_without_centrality_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_centrality_TP.json",
+    "sha256": "aa1235f54eed47503e35a31496ada17ab3e06d9711149d8d37c0517f85c2def4",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_without_community_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_community_FN.json",
+    "sha256": "ffa339b84244799b86bedf865853b4e34a5a2976b51776e8eff082833aaf9f3e",
+    "bytes": 2342
+  },
+  "ibm_aml/examples/examples_without_community_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_community_FP.json",
+    "sha256": "51d9a7d6c8adf39446d405ecaa0738cb780923b848753f54bc6c1b0001cbf853",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_without_community_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_community_TP.json",
+    "sha256": "aa1235f54eed47503e35a31496ada17ab3e06d9711149d8d37c0517f85c2def4",
+    "bytes": 2343
+  },
+  "ibm_aml/examples/examples_without_motifs_FN.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_motifs_FN.json",
+    "sha256": "0cee1a4e577acfd9d60254518410bdcfded5f923cb38feff0c087df3da2dea72",
+    "bytes": 2353
+  },
+  "ibm_aml/examples/examples_without_motifs_FP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_motifs_FP.json",
+    "sha256": "1ce14843bd854b3ddad06c4cedb50754e4a7bcd887dd9a655ab2d088dc09e9ee",
+    "bytes": 2390
+  },
+  "ibm_aml/examples/examples_without_motifs_TP.json": {
+    "source_path": "datasets/ibm_aml/examples/examples_without_motifs_TP.json",
+    "sha256": "c77d71bb64435e2b79e594f0d00cc9d556a1f222019ed20e4178b947106de560",
+    "bytes": 2396
+  }
+}

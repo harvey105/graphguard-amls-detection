@@ -1,0 +1,4 @@
+﻿event_id,src,dst,step,type,amount,payment_currency,isFraud,example_model,evidence_kind
+377957140586,222_811B83280,150240_812D22980,1662310140,ACH,660.96,Saudi Riyal,1.0,full_fusion,chronological 3-cycle witness
+25769808489,150240_812D22980,119_811C597B0,1662453720,ACH,10005.08,Saudi Riyal,1.0,full_fusion,chronological 3-cycle witness
+395137022447,119_811C597B0,222_811B83280,1662698760,ACH,52873.69,Saudi Riyal,1.0,full_fusion,chronological 3-cycle witness
