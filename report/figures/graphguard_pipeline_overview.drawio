@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="GraphGuard-7-Stage-Overview">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2200" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="hdr_title" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;text-align:center;&quot;&gt;&lt;b style=&quot;font-size:38px;color:#0f172a;&quot;&gt;GraphGuard: End-to-End 7-Stage Pipeline Overview&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:22px;color:#475569;font-weight:400;&quot;&gt;Unified Distributed Graph Analytics &amp;amp; Causal Anti-Leakage Screening Framework&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="35" width="1800" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 0 CARD (Slate Theme) -->
+        <mxCell id="card_s0" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#334155;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="150" width="1800" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s0" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 0&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="168" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s0" value="&lt;b style=&quot;font-size:24px;color:#0f172a;&quot;&gt;RAW INGESTION &amp;amp; DATA CONTRACTS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="166" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s0" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0f172a;font-weight:400;&quot;&gt;Multi-format financial ingestion: IBM AML HI-Small (\(5.08\text{M tx}\)) &amp;amp; PaySim (\(6.36\text{M tx}\)).&lt;br&gt;Defines immutable \(\texttt{DatasetSpec}\) schemas, composite account identifiers \(\text{BankID\_AccountID}\) to resolve entity ambiguity, and non-lossy structural invariant checks.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#334155;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="225" width="1750" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 0 -> 1 -->
+        <mxCell id="arr_0_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#334155;strokeWidth=3.5;" edge="1" parent="1" source="card_s0" target="card_s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 1 CARD (Blue Theme) -->
+        <mxCell id="card_s1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="1800" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s1" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 1&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1d4ed8;strokeColor=#1e40af;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="438" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s1" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;DISTRIBUTED ETL &amp;amp; 2-WAY INTEGRITY GATE&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="436" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s1" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#1e3a8a;font-weight:400;&quot;&gt;Vertex Cut Partitioning (\(P=8\) partitions) to eliminate extreme merchant hub degree skew (\(d_{\text{in}} \le 113\)). Normalizes Bank ID padding (recovering \(518,581\) actual accounts).&lt;br&gt;2-Way Multiset Reconciliation confirms \(\text{Raw} - \text{Parquet} = \emptyset\) and \(\text{Parquet} - \text{Raw} = \emptyset\), guaranteeing \(0\) dangling edges and complete dataset integrity.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2563eb;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="495" width="1750" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 1 -> 2 -->
+        <mxCell id="arr_1_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#2563eb;strokeWidth=3.5;" edge="1" parent="1" source="card_s1" target="card_s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 2 CARD (Purple Theme) -->
+        <mxCell id="card_s2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="690" width="1800" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s2" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 2&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6d28d9;strokeColor=#5b21b6;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="708" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s2" value="&lt;b style=&quot;font-size:24px;color:#5b21b6;&quot;&gt;DUAL-STREAM GRAPH ANALYTICS ENGINES&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="706" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s2" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Stream A (Full Descriptive Analytics):&lt;/b&gt; Total Degree conservation (\(\sum d = 2E\)), Damped PageRank (\(d=0.85\) with uniform teleportation \(\frac{1-d}{|V|}\) sink-hole protection), Synchronous LPA (\(\min(\text{signed\_xxhash64})\) deterministic tie-break).&lt;br&gt;&amp;bull; &lt;b&gt;Stream B (Strict-Past Causal Analytics):&lt;/b&gt; As-Of Quantile Snapshots (\(\mathcal{G}_{&lt; t}\) at \(20\%, 40\%, 50\%, 65\%, 80\%\)) and Sweep-line Motifs (\(\Delta t \in (0, W]\) for \(W \in \{24\text{h}, 168\text{h}\}\)) with zero future lookahead.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="765" width="1750" height="155" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 2 -> 3 -->
+        <mxCell id="arr_2_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#7c3aed;strokeWidth=3.5;" edge="1" parent="1" source="card_s2" target="card_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 3 CARD (Amber Theme) -->
+        <mxCell id="card_s3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="985" width="1800" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s3" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 3&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b45309;strokeColor=#92400e;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1003" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s3" value="&lt;b style=&quot;font-size:24px;color:#92400e;&quot;&gt;FACTORIAL FEATURE FUSION &amp;amp; ABLATION MATRIX&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="1001" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s3" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;Assembles Common Feature Row: \(\mathbf{x} = [\mathbf{x}_T \oplus \mathbf{x}_C \oplus \mathbf{x}_M \oplus \mathbf{x}_L]\) covering Tabular Flow, Centrality, Motifs, and Community Structure.&lt;br&gt;Establishes \(9\) factorial ablation model families to isolate orthogonal signal lift. Applies stratified amount scaling \(\tilde{x}_{\text{amt}} = x / q_{90}\). Strictly forbids raw IDs and ground-truth labels.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1060" width="1750" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 3 -> 4 -->
+        <mxCell id="arr_3_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d97706;strokeWidth=3.5;" edge="1" parent="1" source="card_s3" target="card_s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 4 CARD (Emerald Theme) -->
+        <mxCell id="card_s4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1255" width="1800" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s4" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 4&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#047857;strokeColor=#065f46;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1273" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s4" value="&lt;b style=&quot;font-size:24px;color:#065f46;&quot;&gt;TEMPORAL WALK-FORWARD VALIDATION &amp;amp; RULE FREEZE&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="1271" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s4" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;3 expanding temporal validation folds: Fold 1 (\(\le 40\% \to (40\%, 50\%]\)), Fold 2 (\(\le 50\% \to (50\%, 65\%]\)), Fold 3 (\(\le 65\% \to (65\%, 80\%]\)).&lt;br&gt;Weighted Decision Tree with positive weight \(w_+ = \sqrt{\frac{N_{\text{train}}-P_{\text{train}}}{P_{\text{train}}}}\), 12-threshold grid search, winning model family and threshold \(\theta^*\) strictly frozen before test holdout.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1330" width="1750" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 4 -> 5 -->
+        <mxCell id="arr_4_5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#059669;strokeWidth=3.5;" edge="1" parent="1" source="card_s4" target="card_s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 5 CARD (Orange Theme) -->
+        <mxCell id="card_s5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1525" width="1800" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s5" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 5&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#c2410c;strokeColor=#9a3412;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1543" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s5" value="&lt;b style=&quot;font-size:24px;color:#9a3412;&quot;&gt;FROZEN TEST INFERENCE &amp;amp; OUT-OF-TIME EVALUATION&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="1541" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s5" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#7c2d12;font-weight:400;&quot;&gt;Retrains winning model family on prefix \(\le 80\%\); strictly evaluates future holdout (\(&gt; 80\%\)). Rigorous uncertainty bounds via Wilson 95% Confidence Intervals.&lt;br&gt;IBM AML: \(10.09\%\) Precision (\(-48.3\%\) alert fatigue) | PaySim: \(26.09\%\) Recall, \(+273\) captured frauds (\(+32.6\%\) detection gain) at locked \(\theta^* = 0.70\).&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ea580c;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1600" width="1750" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Down Arrow 5 -> 6 -->
+        <mxCell id="arr_5_6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#ea580c;strokeWidth=3.5;" edge="1" parent="1" source="card_s5" target="card_s6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STAGE 6 CARD (Rose Theme) -->
+        <mxCell id="card_s6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1795" width="1800" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="badge_s6" value="&lt;b style=&quot;font-size:18px;color:#ffffff;&quot;&gt;STAGE 6&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#be123c;strokeColor=#9f1239;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1813" width="160" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title_s6" value="&lt;b style=&quot;font-size:24px;color:#9f1239;&quot;&gt;OPERATIONAL TRIAGE &amp;amp; FORENSIC EVIDENCE WITNESSES&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="1811" width="1560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="body_s6" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#881337;font-weight:400;&quot;&gt;Capacity-constrained review budgets: Top-\(0.1\%\) (PaySim achieves \(72.06\%\) Precision hit rate), Top-\(0.5\%\), Top-\(1.0\%\) triage queues.&lt;br&gt;Extracts court-admissible forensic witnesses \(\mathcal{W}_{\text{SAR}}\): IBM 3-Cycle circular layering &amp;amp; PaySim rapid mule cash-out (\(\Delta \tau \le 45\text{s}\)). Meets Federal Reserve SR 11-7 and FATF governance standards.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=14;spacingLeft=18;spacingRight=18;" vertex="1" parent="1">
+          <mxGeometry x="125" y="1870" width="1750" height="145" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption_overview" value="GraphGuard Architecture: End-to-end 7-stage distributed pipeline from raw multi-format ingestion to forensic STR/SAR audit witnesses, strictly enforcing temporal anti-leakage invariants and resource governance across native Windows execution." style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontColor:#475569;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="100" y="2090" width="1800" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

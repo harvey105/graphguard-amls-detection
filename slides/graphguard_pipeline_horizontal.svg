@@ -1,0 +1,323 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 840" width="1600" height="840">
+  <defs>
+    <style type="text/css">
+      <![CDATA[
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1600px;
+    height: 840px;
+    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  svg.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1600px;
+    height: 840px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  
+  .card {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2.5px solid;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+  }
+  
+  .card-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1.5px solid;
+    flex-shrink: 0;
+  }
+  
+  .badge {
+    border-radius: 6px;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+  
+  .title {
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    letter-spacing: 0.1px;
+    overflow: visible;
+  }
+  
+  .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .bullet-p {
+    margin: 0 0 13px 0;
+    font-weight: 400;
+    line-height: 1.34;
+    color: #0f172a;
+    display: flex;
+    align-items: flex-start;
+  }
+  .bullet-p:last-child {
+    margin: 0;
+  }
+  
+  .bullet-icon {
+    margin-right: 9px;
+    line-height: 1.34;
+    flex-shrink: 0;
+  }
+  
+  .arrow-label {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.25;
+    background: #ffffff;
+    padding: 4px 9px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.08);
+    white-space: nowrap;
+    z-index: 15;
+  }
+  
+  .transition-pill {
+    position: absolute;
+    left: 340px;
+    top: 350px;
+    width: 920px;
+    height: 50px;
+    border-radius: 25px;
+    background: #1e3a8a;
+    border: 2px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 17.5px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
+    z-index: 10;
+  }
+  
+  .invariant-banner {
+    position: absolute;
+    left: 40px;
+    top: 748px;
+    width: 1520px;
+    height: 52px;
+    border-radius: 8px;
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+      ]]>
+    </style>
+  </defs>
+  <foreignObject width="1600" height="840">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:1600px; height:840px; position:relative; background:#ffffff;">
+
+  <!-- ==================== SVG ARROWS (EXACT BORDER TOUCHING) ==================== -->
+  <svg class="overlay" width="1600" height="840" viewBox="0 0 1600 840">
+    <defs>
+      <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#0284C7" />
+      </marker>
+      <marker id="arr-indigo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#4F46E5" />
+      </marker>
+      <marker id="arr-pill-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#2563EB" />
+      </marker>
+      <marker id="arr-pill-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#2563EB" />
+      </marker>
+      <marker id="arr-emerald" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#059669" />
+      </marker>
+      <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#EA580C" />
+      </marker>
+      <marker id="arr-crimson" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#E11D48" />
+      </marker>
+    </defs>
+
+    <!-- Top Row: Stage 0 -> Stage 1 (Touch border at 460 to 590) -->
+    <line x1="460" y1="175" x2="590" y2="175" stroke="#0284C7" stroke-width="3" marker-end="url(#arr-blue)" />
+
+    <!-- Top Row: Stage 1 -> Stage 2 (Touch border at 1010 to 1140) -->
+    <line x1="1010" y1="175" x2="1140" y2="175" stroke="#4F46E5" stroke-width="3" marker-end="url(#arr-indigo)" />
+
+    <!-- Transition Leg 1: Stage 2 bottom (1350, 315) -> Pill right (1260, 375) -->
+    <path d="M 1350 315 L 1350 375 L 1260 375" fill="none" stroke="#2563EB" stroke-width="3.2" stroke-linejoin="round" marker-end="url(#arr-pill-in)" />
+
+    <!-- Transition Leg 2: Pill left (340, 375) -> Stage 3 top (192.5, 435) -->
+    <path d="M 340 375 L 192.5 375 L 192.5 435" fill="none" stroke="#2563EB" stroke-width="3.2" stroke-linejoin="round" marker-end="url(#arr-pill-out)" />
+
+    <!-- Bottom Row: Stage 3 -> Stage 4 (Touch border at 345 to 445) -->
+    <line x1="345" y1="575" x2="445" y2="575" stroke="#059669" stroke-width="3" marker-end="url(#arr-emerald)" />
+
+    <!-- Bottom Row: Stage 4 -> Stage 5 (Touch border at 750 to 850) -->
+    <line x1="750" y1="575" x2="850" y2="575" stroke="#EA580C" stroke-width="3" marker-end="url(#arr-orange)" />
+
+    <!-- Bottom Row: Stage 5 -> Stage 6 (Touch border at 1155 to 1255) -->
+    <line x1="1155" y1="575" x2="1255" y2="575" stroke="#E11D48" stroke-width="3" marker-end="url(#arr-crimson)" />
+  </svg>
+
+  <!-- ==================== ARROW LABELS ==================== -->
+  <div class="arrow-label" style="left: 525px; top: 163px; color: #0284C7;">
+    Parquet<br>Contracts
+  </div>
+  <div class="arrow-label" style="left: 1075px; top: 163px; color: #4F46E5;">
+    Verified<br>Graphs
+  </div>
+  <div class="arrow-label" style="left: 395px; top: 563px; color: #059669;">
+    Feature<br>Matrix
+  </div>
+  <div class="arrow-label" style="left: 800px; top: 563px; color: #EA580C;">
+    Frozen<br>θ* Model
+  </div>
+  <div class="arrow-label" style="left: 1205px; top: 563px; color: #E11D48;">
+    Risk<br>Scores
+  </div>
+
+  <div class="card" style="left: 40px; top: 35px; width: 420px; height: 280px; border-color: #2563EB;">
+    <div class="card-header" style="background-color: #2563EB; border-color: #2563EB; padding: 10px 14px; gap: 10px;">
+      <span class="badge" style="background-color: #1D4ED8; padding: 4px 10px; font-size: 15.5px;">STAGE 0</span>
+      <span class="title" style="font-size: 18.5px;">INGESTION & CONTRACTS</span>
+    </div>
+    <div class="card-body" style="background-color: #F0F7FF; padding: 20px 22px; font-size: 17.5px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #2563EB; font-size: 17px;">&#9656;</span><span>Multi-Source Financial AML Ingestion</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #2563EB; font-size: 17px;">&#9656;</span><span>Composite Entity Disambiguation</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #2563EB; font-size: 17px;">&#9656;</span><span>Immutable DatasetSpec Contracts</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #2563EB; font-size: 17px;">&#9656;</span><span>Zero Dangling Edges Guarantee</span></div>
+
+    </div>
+  </div>
+
+  <div class="card" style="left: 590px; top: 35px; width: 420px; height: 280px; border-color: #0284C7;">
+    <div class="card-header" style="background-color: #0284C7; border-color: #0284C7; padding: 10px 14px; gap: 10px;">
+      <span class="badge" style="background-color: #0369A1; padding: 4px 10px; font-size: 15.5px;">STAGE 1</span>
+      <span class="title" style="font-size: 18.5px;">DISTRIBUTED ETL GATE</span>
+    </div>
+    <div class="card-body" style="background-color: #F0F9FF; padding: 20px 22px; font-size: 17.5px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #0284C7; font-size: 17px;">&#9656;</span><span>Vertex-Cut Partitioning on Hubs</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #0284C7; font-size: 17px;">&#9656;</span><span>Bank ID Prefix Normalization</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #0284C7; font-size: 17px;">&#9656;</span><span>Cryptographic 2-Way Gate Row Audit</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #0284C7; font-size: 17px;">&#9656;</span><span>Lossless Snappy Parquet Serialization</span></div>
+
+    </div>
+  </div>
+
+  <div class="card" style="left: 1140px; top: 35px; width: 420px; height: 280px; border-color: #4F46E5;">
+    <div class="card-header" style="background-color: #4F46E5; border-color: #4F46E5; padding: 10px 14px; gap: 10px;">
+      <span class="badge" style="background-color: #4338CA; padding: 4px 10px; font-size: 15.5px;">STAGE 2</span>
+      <span class="title" style="font-size: 18px;">DUAL-STREAM GRAPH ENGINES</span>
+    </div>
+    <div class="card-body" style="background-color: #F5F3FF; padding: 20px 22px; font-size: 17.5px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #4F46E5; font-size: 17px;">&#9656;</span><span>Stream A: Topology &amp; LPA Communities</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #4F46E5; font-size: 17px;">&#9656;</span><span>Stream B: Strict-Past Causal Snapshots</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #4F46E5; font-size: 17px;">&#9656;</span><span>Temporal Sweep-Line Motif Mining</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #4F46E5; font-size: 17px;">&#9656;</span><span>Zero Lookahead Causal Invariant Barrier</span></div>
+
+    </div>
+  </div>
+
+  <!-- ==================== TRANSITION PILL ==================== -->
+  <div class="transition-pill">
+    TEMPORAL PROTOCOL TRANSITION: Strict-Past Causal Stream (Zero Lookahead Invariant: &nbsp;<i>T</i><sub>snap</sub> &lt; <i>t</i>)
+  </div>
+
+  <div class="card" style="left: 40px; top: 435px; width: 305px; height: 280px; border-color: #7C3AED;">
+    <div class="card-header" style="background-color: #7C3AED; border-color: #7C3AED; padding: 9px 10px; gap: 6px;">
+      <span class="badge" style="background-color: #6D28D9; padding: 3px 7px; font-size: 13px;">STAGE 3</span>
+      <span class="title" style="font-size: 16px;">FEATURE FUSION</span>
+    </div>
+    <div class="card-body" style="background-color: #FAF5FF; padding: 18px 18px; font-size: 16.8px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #7C3AED; font-size: 16px;">&#9656;</span><span>Multimodal Feature Fusion</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #7C3AED; font-size: 16px;">&#9656;</span><span>9 Factorial Ablations</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #7C3AED; font-size: 16px;">&#9656;</span><span>Quantile Feature Scaling</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #7C3AED; font-size: 16px;">&#9656;</span><span>Identity Leakage Shielding</span></div>
+
+    </div>
+  </div>
+
+  <div class="card" style="left: 445px; top: 435px; width: 305px; height: 280px; border-color: #059669;">
+    <div class="card-header" style="background-color: #059669; border-color: #059669; padding: 9px 10px; gap: 6px;">
+      <span class="badge" style="background-color: #047857; padding: 3px 7px; font-size: 13px;">STAGE 4</span>
+      <span class="title" style="font-size: 13.5px;">WALK-FORWARD & FREEZE</span>
+    </div>
+    <div class="card-body" style="background-color: #ECFDF5; padding: 18px 18px; font-size: 16.8px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #059669; font-size: 16px;">&#9656;</span><span>3 Chronological Folds</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #059669; font-size: 16px;">&#9656;</span><span>Square-Root Class Weight</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #059669; font-size: 16px;">&#9656;</span><span>Decision Rule Freezing (θ*)</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #059669; font-size: 16px;">&#9656;</span><span>Out-of-Time Model Locking</span></div>
+
+    </div>
+  </div>
+
+  <div class="card" style="left: 850px; top: 435px; width: 305px; height: 280px; border-color: #EA580C;">
+    <div class="card-header" style="background-color: #EA580C; border-color: #EA580C; padding: 9px 10px; gap: 6px;">
+      <span class="badge" style="background-color: #C2410C; padding: 3px 7px; font-size: 13px;">STAGE 5</span>
+      <span class="title" style="font-size: 13.5px;">FROZEN TEST INFERENCE</span>
+    </div>
+    <div class="card-body" style="background-color: #FFF7ED; padding: 18px 18px; font-size: 16.8px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #EA580C; font-size: 16px;">&#9656;</span><span>Out-of-Time Holdout Testing</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #EA580C; font-size: 16px;">&#9656;</span><span>Single-Pass Forward Scoring</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #EA580C; font-size: 16px;">&#9656;</span><span>Verified Topological Lift</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #EA580C; font-size: 16px;">&#9656;</span><span>False Alarm Suppression Gate</span></div>
+
+    </div>
+  </div>
+
+  <div class="card" style="left: 1255px; top: 435px; width: 305px; height: 280px; border-color: #E11D48;">
+    <div class="card-header" style="background-color: #E11D48; border-color: #E11D48; padding: 9px 10px; gap: 6px;">
+      <span class="badge" style="background-color: #BE123C; padding: 3px 7px; font-size: 13px;">STAGE 6</span>
+      <span class="title" style="font-size: 15px;">OPERATIONAL TRIAGE</span>
+    </div>
+    <div class="card-body" style="background-color: #FFF1F2; padding: 18px 18px; font-size: 16.8px;">
+      <div class="bullet-p"><span class="bullet-icon" style="color: #E11D48; font-size: 16px;">&#9656;</span><span>Top-0.1% Triage Alert Queues</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #E11D48; font-size: 16px;">&#9656;</span><span>Forensic Dossiers (<i>W</i><sub>SAR</sub>)</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #E11D48; font-size: 16px;">&#9656;</span><span>Rapid Mule &amp; Ring Detection</span></div>
+<div class="bullet-p"><span class="bullet-icon" style="color: #E11D48; font-size: 16px;">&#9656;</span><span>US Fed SR 11-7 Compliance</span></div>
+
+    </div>
+  </div>
+
+  <!-- ==================== CORE INVARIANT BANNER ==================== -->
+  <div class="invariant-banner">
+    <span style="color: #1e3a8a; font-weight: 900; font-size: 17.5px; margin-right: 12px;">✦ CORE INVARIANT:</span>
+    <span style="color: #dc2626; font-size: 16px; font-weight: 700;">
+      All graph &amp; motif features strictly satisfy <i>T</i><sub>feature</sub> &lt; <i>t</i><sub>event</sub> &bull; Cryptographic 2-way gate guarantees 100% lossless row ETL &bull; Decision rules frozen pre-deployment
+    </span>
+  </div>
+
+    </div>
+  </foreignObject>
+</svg>

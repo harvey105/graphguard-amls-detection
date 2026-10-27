@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-6-Triage-Forensics">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1330" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t6" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 6: Operational Triage &amp;amp; Forensic Evidence Witnesses&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Capacity-Constrained Queues (Top-K) &amp;bull; Graph Subgraph Path Witnesses &amp;bull; STR/SAR Audit Packaging &amp;bull; SR 11-7 Governance&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1550" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b6_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Top-0.1% Budget:&lt;/b&gt; 72.06% Prec&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b6_2" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Top-1.0% Budget:&lt;/b&gt; 48.09% Rec&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="250" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b6_3" value="&lt;span style=&quot;font-size:18px;color:#b45309;&quot;&gt;&lt;b&gt;Audit:&lt;/b&gt; SR 11-7 &amp;amp; FATF Ready&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="32" width="220" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Capacity Allocation (Cyan Theme) -->
+        <mxCell id="card_s6_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. CAPACITY BUDGET SLICING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Top-K Operational Review Budgets&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_top01" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Top 0.1% Budget (Elite Review):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; PaySim Precision: &lt;b&gt;72.06%&lt;/b&gt; (900 hits / 1,249 tx)&lt;br&gt;&amp;bull; IBM AML Precision: 10.02% (Top 1,018 queue)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="195" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_top05" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Top 0.5% Budget (Balanced Load):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; PaySim Precision: 38.86% | Recall: 28.56%&lt;br&gt;&amp;bull; IBM AML Precision: &lt;b&gt;11.26%&lt;/b&gt; (Peak triage)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="325" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_top10" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Top 1.0% Budget (Max Catch):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; PaySim Recall: &lt;b&gt;48.09%&lt;/b&gt; (2,044 frauds caught)&lt;br&gt;&amp;bull; Captures half of all illicit transactions&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="455" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s6_1" value="Policy: Workload-Matched FTE Queuing" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="445" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Evidence Witness Payloads (Amber Theme) -->
+        <mxCell id="card_s6_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_2" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;2. EVIDENCE WITNESS PAYLOADS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Self-Contained Graph Witnesses&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_ibm_wit" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;IBM AML 3-Cycle Smurfing Ring:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Tx ID:&lt;/b&gt; 395137022447 | Laundering = True&lt;br&gt;&amp;bull; &lt;b&gt;Cycle:&lt;/b&gt; 101740 \(\to\) 72153 \(\to\) 81710 \(\to\) 101740&lt;br&gt;&amp;bull; &lt;b&gt;Forensics:&lt;/b&gt; 12.4h duration, sum \$1.42M&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="595" y="195" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_pay_wit" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;PaySim Rapid Mule Drain Scheme:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Tx ID:&lt;/b&gt; 60129557010 | Fraud = True&lt;br&gt;&amp;bull; &lt;b&gt;Drain:&lt;/b&gt; CASH_OUT \$1.28M within 45s&lt;br&gt;&amp;bull; &lt;b&gt;Forensics:&lt;/b&gt; Balance drained to exact \$0&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="595" y="325" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_json" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Deterministic JSON Witness Format:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Full topology, timestamps &amp;amp; edge sums&lt;br&gt;&amp;bull; Self-contained SAR/STR evidentiary payload&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="595" y="455" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s6_2" value="Artifact: data/witnesses/evidence_records.json" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="590" width="445" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Production Triage Queue (Purple Theme) -->
+        <mxCell id="card_s6_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_3" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;3. PRODUCTION TRIAGE QUEUE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Automated Prioritized AML Routing&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_tiers" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Tiered Operational Routing:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Tier 1 (&gt; 95% Conf):&lt;/b&gt; Auto account hold&lt;br&gt;&amp;bull; &lt;b&gt;Tier 2 &amp;amp; 3:&lt;/b&gt; Prioritized analyst triage&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="195" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_prio" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Wilson Confidence Prioritization:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Ranked by lower 95% Wilson bound&lt;br&gt;&amp;bull; Eliminates small-sample anomaly spikes&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="325" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_integ" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Case Management Integration:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Integrates with Actimize, SAS, Fenergo&lt;br&gt;&amp;bull; Direct API push with zero conversion lag&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="455" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s6_3" value="Routing: Enterprise AML Case Management" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="590" width="445" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Admissibility & Governance (Emerald Theme) -->
+        <mxCell id="card_s6_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_4" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;4. ADMISSIBILITY &amp;amp; GOVERNANCE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Regulatory Compliance &amp;amp; Audit Integrity&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_sr11" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Federal Reserve SR 11-7 Compliance:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Bounded shallow trees: transparent logic&lt;br&gt;&amp;bull; Zero black-box neural net or embeddings&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="195" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_fatf" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;FATF Rec 16 (Travel Rule):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Full origin &amp;amp; beneficiary audit trail&lt;br&gt;&amp;bull; Multi-hop smurfing ring topology proofs&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="325" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_custody" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Cryptographic Chain of Custody:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; SHA-256 lineage back to raw Stage 0 CSV&lt;br&gt;&amp;bull; Fully reproducible native Windows run&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="455" width="405" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s6_4" value="Governance: Non-Blackbox Decision Audit" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="590" width="445" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: Production Ready (Rose Theme) -->
+        <mxCell id="card_s6_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. PRODUCTION READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Law Enforcement &amp;amp; FIU Handoff&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_sar" value="&lt;div style=&quot;text-align:left;line-height:1.5;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Automated Regulatory SAR Filing:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Pre-fills FinCEN / FIU narrative fields&lt;br&gt;&amp;bull; Embeds visual graph witness &amp;amp; roles&lt;br&gt;&amp;bull; Cuts STR filing preparation to seconds&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="195" width="400" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s6_gate" value="&lt;div style=&quot;text-align:left;line-height:1.5;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Native Windows End-to-End Gate:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Stages 0 to 6 completed with zero data loss&lt;br&gt;&amp;bull; Bounded within 5 GiB heap &amp;amp; 8 GiB job RAM&lt;br&gt;&amp;bull; Fully verified native reproduction pipeline&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="395" width="400" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s6_5" value="Filing: Law Enforcement &amp;amp; FIU Submissions" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="590" width="440" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Inter-Card Horizontal Arrows -->
+        <mxCell id="arr_s6_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0284c7;strokeWidth=3;" edge="1" parent="1" source="card_s6_1" target="card_s6_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s6_23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d97706;strokeWidth=3;" edge="1" parent="1" source="card_s6_2" target="card_s6_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s6_34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7c3aed;strokeWidth=3;" edge="1" parent="1" source="card_s6_3" target="card_s6_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s6_45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#059669;strokeWidth=3;" edge="1" parent="1" source="card_s6_4" target="card_s6_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Knowledge Panel -->
+        <mxCell id="pnl_s6_bot" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="680" width="2460" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_bot" value="&lt;b style=&quot;font-size:26px;color:#0369a1;&quot;&gt;OPERATIONAL TRIAGE ECONOMICS &amp;amp; FORENSIC SAR/STR EVIDENCE PACKAGING&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="695" width="1600" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Column 1: Triage Capacity Allocation Economics (Cyan) -->
+        <mxCell id="col_s6_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_k1" value="&lt;b style=&quot;font-size:23px;color:#0369a1;&quot;&gt;1. Human Review Capacity Allocation Economics&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s6_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#0369a1;&quot;&gt;\(\text{Queue}_{\text{opt}} = \min(B_{\text{FTE}},\, \text{Top}_K), \quad \mathbb{E}[\text{Hits}] = B_{\text{FTE}} \times \text{Precision}(K)\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s6_k1" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Fixed Headcount Constraint:&lt;/b&gt; Financial compliance units have fixed FTE investigator capacity and cannot review unranked alert queues exceeding staffing thresholds.&lt;br&gt;&amp;bull; &lt;b&gt;Top-K Capacity Slicing:&lt;/b&gt; Maps alert generation directly to review capacity budgets (0.1%, 0.5%, 1.0%), guaranteeing high precision in operational queues.&lt;br&gt;&amp;bull; &lt;b&gt;72.06% Precision Hit Rate:&lt;/b&gt; In the Top-0.1% budget, nearly 3 out of every 4 reviewed transactions are confirmed fraudulent, eliminating wasted analyst hours.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 2: SAR/STR Witness Structure (Amber) -->
+        <mxCell id="col_s6_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="920" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_k2" value="&lt;b style=&quot;font-size:23px;color:#b45309;&quot;&gt;2. Suspicious Transaction Report (SAR/STR) Witness Format&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="940" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s6_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#b45309;&quot;&gt;\(\mathcal{W}_{\text{SAR}} = \{e_t,\, \mathcal{G}_{\text{sub}}^{(k)},\, \text{Path}(u \to \dots \to v),\, \Delta\tau,\, \Phi_{\text{motif}}\}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="940" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s6_k2" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Evidentiary Admissibility:&lt;/b&gt; Black-box probability scores are legally insufficient for filing Suspicious Activity Reports (SAR/STR) with regulatory authorities.&lt;br&gt;&amp;bull; &lt;b&gt;Deterministic Subgraph Payloads:&lt;/b&gt; GraphGuard packages the full directed topological path, transaction velocity (\(\Delta\tau\)), amounts, and motif roles.&lt;br&gt;&amp;bull; &lt;b&gt;Audit Admissibility:&lt;/b&gt; Delivers concrete structural evidence (e.g. 3-cycle circular smurfing paths, rapid mule draining) ready for judicial prosecution.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="940" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 3: Wilson Uncertainty Bounds (Emerald) -->
+        <mxCell id="col_s6_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="755" width="770" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s6_k3" value="&lt;b style=&quot;font-size:23px;color:#047857;&quot;&gt;3. Wilson Uncertainty Bounds in Production Governance&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="768" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s6_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#047857;&quot;&gt;\(\hat{p}_{\text{lower}} = \frac{\hat{p} + \frac{z^2}{2n} - z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}} &gt; \theta_{\text{regulatory}}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="815" width="730" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s6_k3" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Statistical Risk Governance:&lt;/b&gt; Financial regulators require proof that model performance is not an artifact of small sample sizes or lucky test intervals.&lt;br&gt;&amp;bull; &lt;b&gt;Conservative Risk Guarantees:&lt;/b&gt; Operating queues are governed by the lower 95% Wilson confidence bound (\(\hat{p}_{\text{lower}}\)) to guarantee minimum compliance performance.&lt;br&gt;&amp;bull; &lt;b&gt;End-to-End System Integrity:&lt;/b&gt; Assures financial executives and external regulators of mathematical rigor across the entire AML pipeline.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="905" width="730" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption6" value="Stage 6 Architecture: Production AML Triage with capacity-constrained review budgets (Top 0.1%, 0.5%, 1.0%), producing forensic subgraph evidence witnesses for Suspicious Transaction Reports (STR/SAR) and meeting Federal Reserve SR 11-7 and FATF governance standards." style="text;html=1;align=left;verticalAlign=top;fontSize=19;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1265" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

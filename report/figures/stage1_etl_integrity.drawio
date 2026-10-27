@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-1-Distributed-ETL-and-Integrity-Gate">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t1" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 1: Distributed ETL &amp;amp; 2-Way Multiset Reconciliation Gate&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Vertex Cut Partitioning &amp;bull; Identity Normalization &amp;bull; 2-Way Multiset Invariant Gate &amp;bull; Lossless Snappy Parquet Staging&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1400" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b1_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Partitions:&lt;/b&gt; 8 (Vertex Cut)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b1_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Compression:&lt;/b&gt; 272.9 MB (-45%)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b1_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Gate:&lt;/b&gt; PASS (Exit 0)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2330" y="32" width="200" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Identity Normalizer (Cyan/Sky Theme) -->
+        <mxCell id="card_s1_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. IDENTITY NORMALIZER&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Bank Code Disambiguation&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_pad" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;Zero-Padding Standardization:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Converts raw '1' \(\to\) '001', '24' \(\to\) '024'&lt;br&gt;&amp;bull; Eliminates bank identifier string collisions&lt;br&gt;&amp;bull; Resolves canonical account namespaces&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_prune" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;Prunes 515,088 Ghost Accounts:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Unifies spurious 'External/Unknown' nodes&lt;br&gt;&amp;bull; Recovers exactly 518,581 true accounts&lt;br&gt;&amp;bull; Restores true circular smurfing paths&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_keys" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#0369a1;&quot;&gt;Resolved Composite Keys:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0c4a6e;font-family:monospace;font-weight:400;&quot;&gt;&amp;bull; 001_A110156789 &amp;bull; 024_B1100012480&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s1_1" value="Module: src/ibm_aml/etl.py" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Vertex Cut Partitioning (Purple/Indigo Theme) -->
+        <mxCell id="card_s1_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_2" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. VERTEX CUT PARTITIONING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Skew Balancing &amp;amp; Edge Routing&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_skew" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Tackles Extreme Hub Skew:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; PaySim max in-degree reaches 113&lt;br&gt;&amp;bull; 2.15M merchant sink nodes with in-degree &amp;gt; 0&lt;br&gt;&amp;bull; Standard edge cut causes memory explosion&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_strat" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;2D Edge Partitioning Strategy:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; \(P(u, v) = \text{hash}(u, v) \pmod 8\)&lt;br&gt;&amp;bull; High-degree vertices cut across partitions&lt;br&gt;&amp;bull; Bounded vertex replication factor \(\le 2\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_hot" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#6d28d9;&quot;&gt;Zero Network Shuffle Hotspots:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Bounded heap memory under 5 GiB JVM cap&lt;br&gt;&amp;bull; Balances executor CPU utilization uniformly&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s1_2" value="Architecture: Spark GraphX Pregel Engine" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: 2-Way Multiset Reconciliation Gate (Amber/Orange Theme) -->
+        <mxCell id="card_s1_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_3" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;3. 2-WAY RECONCILIATION GATE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Formal Bi-Directional Integrity Audit&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_chk1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Difference Check 1 (Completeness):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; \(\text{Count}(E_{\text{raw}} \setminus E_{\text{parquet}}) \equiv 0\)&lt;br&gt;&amp;bull; Every raw CSV record exists in Parquet&lt;br&gt;&amp;bull; 0 dropped records across all batches&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_chk2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Difference Check 2 (Fidelity):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; \(\text{Count}(E_{\text{parquet}} \setminus E_{\text{raw}}) \equiv 0\)&lt;br&gt;&amp;bull; No phantom, spurious, or duplicated rows&lt;br&gt;&amp;bull; Confirmed 0 loss &amp;bull; 0 dangling edges&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_aud" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#b45309;&quot;&gt;Zero Loss &amp;amp; Zero Null Gate:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; PaySim: 6,362,620 = 6,362,620 (Match)&lt;br&gt;&amp;bull; IBM: 5,078,345 = 5,078,345 (Match)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s1_3" value="Auditor: src/common/graph_utils.py" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Snappy Parquet Sink (Emerald/Green Theme) -->
+        <mxCell id="card_s1_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_4" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;4. SNAPPY PARQUET SINK&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Physical Storage &amp;amp; Chunking&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_phys" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;Immutable Physical Index:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;event_id&lt;/code&gt;: Monotonic transaction identity&lt;br&gt;&amp;bull; &lt;code&gt;event_key&lt;/code&gt;: Stable cryptographic tie-breaker&lt;br&gt;&amp;bull; Preserves physical event ordering on disk&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_foot" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;Columnar Storage Footprint:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; PaySim: 272.9 MB (reduced from 500 MB CSV)&lt;br&gt;&amp;bull; IBM AML: 215.4 MB Snappy compressed&lt;br&gt;&amp;bull; I/O throughput speedup 3.8x over CSV&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_rowg" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#047857;&quot;&gt;32 MiB Row Group Staging:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Enables fine-grained executor unpersisting&lt;br&gt;&amp;bull; Eliminates deserialized RDD heap caching&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s1_4" value="Storage: data/processed/paysim | ibm_aml" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: GraphFrames Construction Ready (Rose/Crimson Theme) -->
+        <mxCell id="card_s1_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. GRAPHFRAMES READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Stage 2 Hand-Off Staging&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_gf1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Graph Construction Input:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Vertices DataFrame:&lt;/b&gt; Clean, unique IDs&lt;br&gt;&amp;bull; &lt;b&gt;Edges DataFrame:&lt;/b&gt; Bounded, strictly typed&lt;br&gt;&amp;bull; Pre-partitioned for distributed joins&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="190" width="400" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s1_gf2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Downstream Invariant Pass:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Zero Dangling Edges guaranteed&lt;br&gt;&amp;bull; Zero Null Attributes in property graphs&lt;br&gt;&amp;bull; Safe heap loading under 5 GiB JVM cap&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="325" width="400" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s1_5" value="Ready for PageRank &amp;amp; Synchronous LPA" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="510" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Between Consecutive Cards (Clean Straight Horizontal Connectors) -->
+        <mxCell id="e1_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s1_1" target="card_s1_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s1_2" target="card_s1_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s1_3" target="card_s1_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s1_4" target="card_s1_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Distributed Graph Systems Mechanics -->
+        <mxCell id="panel_s1_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s1_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;DISTRIBUTED GRAPH SYSTEMS MECHANICS: RECONCILIATION GATE &amp;amp; PARTITIONING INVARIANTS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Vertex Cut vs Edge Cut -->
+        <mxCell id="s1_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_k1" value="&lt;b style=&quot;font-size:22px;color:#0369a1;&quot;&gt;1. Vertex Cut vs Edge Cut in Scale-Free Graphs&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s1_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#0369a1;&quot;&gt;\(P(e = (u,v)) = \text{hash}(u, v) \pmod K, \quad \text{Replication Factor} \le 2\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s1_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Power-Law Skew in Banking:&lt;/b&gt; In edge-cut partitioning, high-degree merchant hubs (PaySim in-degree 113) create massive network communication hotspots during iterative joins.&lt;br&gt;&amp;bull; &lt;b&gt;GraphX Vertex Cut Solution:&lt;/b&gt; Assigns edges to partitions using 2D hash routing, cutting high-degree vertices across partitions and routing messages via local vertex mirrors.&lt;br&gt;&amp;bull; &lt;b&gt;Resource Stability:&lt;/b&gt; Prevents single-executor OOM crashes and balances memory commit evenly.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Exact Multiset Reconciliation Protocol -->
+        <mxCell id="s1_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_k2" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;2. Exact Bi-Directional Multiset Invariant Protocol&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s1_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#b45309;&quot;&gt;\(\Delta_{\text{fwd}} = E_{\text{raw}}.\text{exceptAll}(E_{\text{parquet}}) \equiv \emptyset, \quad \Delta_{\text{rev}} = E_{\text{parquet}}.\text{exceptAll}(E_{\text{raw}}) \equiv \emptyset\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s1_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Bi-Directional Multiset Difference:&lt;/b&gt; Both forward difference (\(\Delta_{\text{fwd}}\)) and reverse difference (\(\Delta_{\text{rev}}\)) are evaluated across Spark worker nodes.&lt;br&gt;&amp;bull; &lt;b&gt;Cryptographic Row Hash Proof:&lt;/b&gt; Computes 64-bit cryptographic row hashes &lt;code&gt;signed_xxhash64(all_cols)&lt;/code&gt; across CSV and Parquet partitions.&lt;br&gt;&amp;bull; &lt;b&gt;Verification Outcome:&lt;/b&gt; Both counts evaluate to exactly 0, providing mathematical certainty of lossless staging.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Memory Guard & Windows Mutex -->
+        <mxCell id="s1_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s1_k3" value="&lt;b style=&quot;font-size:22px;color:#047857;&quot;&gt;3. Memory Guard &amp;amp; Windows Mutex Constraint&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s1_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#047857;&quot;&gt;\(\text{Heap}_{\text{JVM}} \le 5\,\text{GiB}, \quad \text{Commit}_{\text{Host}} \le 8\,\text{GiB}, \quad \text{Mutex}(\text{SparkSession}) = 1\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s1_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Native Hardware Protection:&lt;/b&gt; Native Windows Job Object enforces an 8 GiB Hard Process Cap and 5 GiB JVM Heap limit under strict CPU load.&lt;br&gt;&amp;bull; &lt;b&gt;Parquet Staging Stream:&lt;/b&gt; 32 MiB row-groups enable sequential disk reading without accumulating deserialized objects in RAM.&lt;br&gt;&amp;bull; &lt;b&gt;Workload Concurrency Guard:&lt;/b&gt; Workload lock ensures no concurrent heavy Spark sessions run simultaneously, preventing system thrashing.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption1" value="Stage 1 Architecture: Distributed ETL pipeline with Vertex Cut Partitioning (8 partitions) and 2-way multiset reconciliation gate. The pipeline normalizes bank identifiers, eliminates dangling edges, and stages compact Snappy Parquet files under strict hardware resource limits." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

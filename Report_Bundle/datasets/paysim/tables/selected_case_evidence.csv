@@ -1,0 +1,2 @@
+﻿event_id,src,dst,step,type,amount,payment_currency,isFraud,example_model,evidence_kind
+60129557010,C676427076,C1523524779,470,CASH_OUT,864994.24,PaySim unit,1.0,without_centrality,transaction only; no eligible motif witness

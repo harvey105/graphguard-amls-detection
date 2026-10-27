@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-4-Walk-Forward-Validation">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t4" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 4: Temporal Walk-Forward Validation &amp;amp; Rule Freezing&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;3 Expanding Chronological Folds &amp;bull; Weighted Decision Tree Learner &amp;bull; 12-Threshold Grid Tuning &amp;bull; Rule Freezing Gate&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1500" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b4_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Folds:&lt;/b&gt; 3 Expanding Slices&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="240" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b4_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Balance:&lt;/b&gt; \(w_+ = \sqrt{(N-P)/P}\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2010" y="32" width="290" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b4_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Gate:&lt;/b&gt; Frozen Pre-Test&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2320" y="32" width="210" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Expanding Time Folds (Cyan Theme) -->
+        <mxCell id="card_s4_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. EXPANDING TIME FOLDS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Forward-Chaining Temporal Slices&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_f1" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Fold 1 (Prefix 50% Horizon):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Train on prefix: \(\le 40\%\) of time history&lt;br&gt;&amp;bull; Validate on horizon: \((40\%, 50\%]\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_f2" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Fold 2 (Prefix 65% Horizon):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Train on cumulative history: \(\le 50\%\)&lt;br&gt;&amp;bull; Validate on horizon: \((50\%, 65\%]\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_f3" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Fold 3 (Prefix 80% Horizon):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Train on cumulative history: \(\le 65\%\)&lt;br&gt;&amp;bull; Validate on horizon: \((65\%, 80\%]\) &amp;bull; Zero lookahead&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s4_1" value="Framework: Forward-Chaining Temporal Splits" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Weighted Tree Learner (Purple Theme) -->
+        <mxCell id="card_s4_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_2" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. WEIGHTED TREE LEARNER&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Spark MLlib Classification Engine&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_hp" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Bounded Hyperparameters:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;code&gt;maxDepth = 5&lt;/code&gt; &amp;bull; &lt;code&gt;minInstancesPerNode = 50&lt;/code&gt;&lt;br&gt;&amp;bull; &lt;code&gt;maxBins = 64&lt;/code&gt; &amp;bull; &lt;code&gt;impurity = Gini&lt;/code&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_w" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Square-Root Damped Loss Weight:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; \(w_+ = \sqrt{(N_{\text{train}} - P_{\text{train}}) / P_{\text{train}}}, \quad w_- = 1.0\)&lt;br&gt;&amp;bull; Neutralizes 0.10% extreme label rarity&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_aud" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Auditable Decision Paths:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Shallow rule branches permit complete human audit&lt;br&gt;&amp;bull; Fully meets Federal Reserve SR 11-7 standards&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s4_2" value="Engine: pyspark.ml.classification.DecisionTreeClassifier" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: 12-Threshold Grid Tuning (Amber Theme) -->
+        <mxCell id="card_s4_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_3" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;3. 12-THRESHOLD GRID TUNING&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Precision-Recall Boundary Exploration&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_grid" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;12 Threshold Evaluation Points:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; \(\theta \in [0.001, 0.005, 0.01, 0.02, 0.05, 0.10,\)&lt;br&gt;&amp;bull; \(\quad\quad 0.20, 0.30, 0.40, 0.50, 0.70, 0.90]\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_opt" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Cross-Fold Harmonic Optimization:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Evaluates mean \(F_1(\theta)\) across all 3 folds&lt;br&gt;&amp;bull; Balances false alarm suppression and recall&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_res" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Optimal Operating Points Selected:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; PaySim: \(\theta^* = 0.70\) (Prec 58.32%, Rec 26.09%)&lt;br&gt;&amp;bull; IBM AML: \(\theta^* = 0.50\) (Prec 10.09%, -48.3% Alerts)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s4_3" value="Evaluator: Cross-Fold Harmonic Optimizer" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Rule Freezing Gate (Emerald Theme) -->
+        <mxCell id="card_s4_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_4" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;4. RULE FREEZING GATE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Pre-Test Audit &amp;amp; Specification Lock&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_sel" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Freezes Winning Model Families:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; PaySim: &lt;code&gt;without_centrality&lt;/code&gt; @ \(\theta^* = 0.70\)&lt;br&gt;&amp;bull; IBM AML: &lt;code&gt;full_fusion&lt;/code&gt; @ \(\theta^* = 0.50\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_lock" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Cryptographic Specification Lock:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Decision tree rules serialized &amp;amp; hashed&lt;br&gt;&amp;bull; Thresholds recorded in immutable ledger&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_blind" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Zero-Peeking Integrity Protocol:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Test set remains 100% untouched and unseen&lt;br&gt;&amp;bull; Fully prohibits post-hoc parameter tweaking&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s4_4" value="Audit Gate: Pre-Registered Production Seal" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: Stage 5 Ready (Rose Theme) -->
+        <mxCell id="card_s4_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. STAGE 5 READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Test Holdout Hand-Off&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_hand1" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Prefix Model Refit Input:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Deliver frozen configuration to prefix trainer&lt;br&gt;&amp;bull; Re-trains model on full cumulative \(\le 80\%\) data&lt;br&gt;&amp;bull; Maximizes training sample support safely&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="190" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s4_hand2" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Holdout Test Readiness:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Prepares 2.27M test transactions (&gt; 80%)&lt;br&gt;&amp;bull; Frozen thresholds \(\theta^*\) immutable during inference&lt;br&gt;&amp;bull; Deterministic execution pipeline established&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="315" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s4_5" value="Hand-Off: Stage 5 Test Holdout Inference" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="510" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Between Consecutive Cards -->
+        <mxCell id="e4_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s4_1" target="card_s4_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s4_2" target="card_s4_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s4_3" target="card_s4_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s4_4" target="card_s4_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Validation Rigor & Class Loss Formulations -->
+        <mxCell id="panel_s4_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s4_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;TEMPORAL VALIDATION RIGOR &amp;amp; DAMPED CLASS IMBALANCE FORMULATIONS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Forward-Chaining Proof -->
+        <mxCell id="s4_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_k1" value="&lt;b style=&quot;font-size:22px;color:#0369a1;&quot;&gt;1. Forward-Chaining Temporal Stability Proof&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s4_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#0369a1;&quot;&gt;\(\mathcal{T}_{\text{train}} \cap \mathcal{T}_{\text{val}} = \emptyset, \quad \max(t_{\text{train}}) &lt; \min(t_{\text{val}})\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s4_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Anti-Leakage Temporal Order:&lt;/b&gt; Standard randomized K-fold cross-validation is fundamentally flawed for financial graphs, as future edges leak into historical partitions.&lt;br&gt;&amp;bull; &lt;b&gt;Strict Horizon Expansion:&lt;/b&gt; Models train only on historical events up to horizon \(T_k\) and validate on subsequent unobserved windows \((T_k, T_{k+1}]\).&lt;br&gt;&amp;bull; &lt;b&gt;Production Generalization:&lt;/b&gt; Simulates actual enterprise deployment conditions where bank AML models score unseen future transaction streams.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Damped Class Weighting -->
+        <mxCell id="s4_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_k2" value="&lt;b style=&quot;font-size:22px;color:#6d28d9;&quot;&gt;2. Square-Root Damped Class Loss Weighting&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s4_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#6d28d9;&quot;&gt;\(w_+ = \sqrt{\frac{N_{\text{train}} - P_{\text{train}}}{P_{\text{train}}}}, \quad w_- = 1.0\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s4_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Failure of Linear Balancing:&lt;/b&gt; In extreme imbalance (\(P \approx 0.1\%\)), standard inverse frequency sets \(w_+ \approx 1000\), creating massive false positive alerts and tree volatility.&lt;br&gt;&amp;bull; &lt;b&gt;Square-Root Heuristic:&lt;/b&gt; Damps the penalty down to \(w_+ \approx \sqrt{1000} \approx 31.6\), providing balanced gradient incentive for Gini impurity splits.&lt;br&gt;&amp;bull; &lt;b&gt;Empirical Stability:&lt;/b&gt; Stabilizes decision boundaries, avoiding alert queue flooding while achieving robust fraud recall across all 3 expanding folds.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Threshold Optimization -->
+        <mxCell id="s4_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s4_k3" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;3. Cross-Fold Harmonic Threshold Optimization&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s4_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#b45309;&quot;&gt;\(\theta^* = \arg\max_\theta \frac{1}{K} \sum_{k=1}^K F_1^{(k)}(\theta), \quad F_1 = \frac{2 \cdot P \cdot R}{P + R}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s4_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Harmonic Objective:&lt;/b&gt; Optimizes the threshold \(\theta\) across 12 candidate operating points using cross-fold average \(F_1\) to penalize fold-specific over-tuning.&lt;br&gt;&amp;bull; &lt;b&gt;Optimal Operating Points:&lt;/b&gt; Yields \(\theta^* = 0.70\) for PaySim (&lt;code&gt;without_centrality&lt;/code&gt;) and \(\theta^* = 0.50\) for IBM AML (&lt;code&gt;full_fusion&lt;/code&gt;).&lt;br&gt;&amp;bull; &lt;b&gt;Rule Freezing Gate:&lt;/b&gt; Rules and operating thresholds are cryptographically sealed before the test holdout inference stage is initiated.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption4" value="Stage 4 Architecture: Chronological Walk-Forward Validation across 3 expanding time folds. Uses square-root damped class loss weighting in PySpark MLlib Decision Trees, sweeps 12 threshold operating points, and cryptographically freezes optimal rules before test inference." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

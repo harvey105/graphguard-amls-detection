@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "original_export_consistency_checks": 2502,
+  "all_payload_hashes_match": true,
+  "unchanged_original_files_still_match_repo": true,
+  "new_report_html_links_resolve": true,
+  "new_report_html_external_dependencies": 0,
+  "no_pipeline_rerun": true,
+  "no_spark_started": true,
+  "no_git_push": true,
+  "archive_note": "ZIP CRC and file hashes checked after final archive creation; whole ZIP SHA-256 supplied beside ZIP to avoid circular hash."
+}

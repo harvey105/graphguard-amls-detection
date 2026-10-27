@@ -1,0 +1,20 @@
+# ibm_aml: without_centrality
+
+Đây là tham số đã fit trên toàn bộ prefix ≤80%, đọc từ model đã lưu; không huấn luyện lại.
+
+Ngưỡng frozen: 0.5. Score là tỷ lệ weighted class mass tại leaf, không phải calibrated probability. Feature index/categorical index phải đọc cùng training.json và saved_model_parameters.json (StringIndexer labelsArray). Amount scaling phải dùng amount_scales.csv và mã _prepare_amounts; không áp dụng điều kiện lên raw amount thay cho scaled_amount.
+
+| leaf_id | condition | risk_score | alert_at_frozen_threshold | training_raw_count |
+| --- | --- | --- | --- | --- |
+| 3 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h <= 0.5 | 0.0004482565987371995 | False | 3245742 |
+| 5 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h > 0.5 AND fanin_24h <= 0.5 | 0.0 | False | 333 |
+| 6 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h > 0.5 AND fanin_24h > 0.5 | 0.6606690521386115 | True | 94 |
+| 7 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h > 37.5 | 0.0470318837533314 | False | 353011 |
+| 10 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND reciprocal_168h <= 0.5 | 0.04422925606959436 | False | 227970 |
+| 13 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND reciprocal_168h > 0.5 AND sender_out_24h <= 0.5 AND scaled_amount <= 0.0053856437412503951 | 0.6709008463002325 | True | 126 |
+| 14 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND reciprocal_168h > 0.5 AND sender_out_24h <= 0.5 AND scaled_amount > 0.0053856437412503951 | 0.2036726941551204 | False | 273 |
+| 15 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND reciprocal_168h > 0.5 AND sender_out_24h > 0.5 | 0.8880597705860658 | True | 102 |
+| 18 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount <= 0.084770401717523453 | 0.2459328369038959 | False | 119167 |
+| 20 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fanin_168h <= 5.5 | 0.3765152636474221 | False | 36084 |
+| 21 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fanin_168h > 5.5 | 0.780899401887747 | True | 6713 |
+| 22 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 | 0.06501907764929095 | False | 70909 |

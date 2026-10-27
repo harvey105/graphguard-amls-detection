@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Protocol-Feature-Ablation-Matrix">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1330" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="tp2" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Controlled Ablation Architecture: 9 Factorial Model Families&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Factorial Decomposition of Signals (T, C, M, L) &amp;bull; Incremental Utility &amp;bull; Domain Divergence &amp;bull; Rigorous Attribution&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1600" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="bp2_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Signals:&lt;/b&gt; T, C, M, L&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp2_2" value="&lt;span style=&quot;font-size:18px;color:#b45309;&quot;&gt;&lt;b&gt;IBM AML:&lt;/b&gt; full_fusion [T+C+M+L]&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1990" y="32" width="280" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp2_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;PaySim:&lt;/b&gt; without_centrality [T+M+L]&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2290" y="32" width="240" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: 4 Signal Families Definition (Cyan Theme) -->
+        <mxCell id="card_tp2_sig" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="580" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_sig" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. FOUR SIGNAL FAMILIES&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Independent Topological Dimensions&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="580" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_sig_t" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;T &amp;bull; Tabular &amp;amp; Flow Features:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Scaled amount \(\tilde{x}_{\text{amt}} = x/q_{90}\), balance deltas, account type&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="195" width="540" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_sig_c" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;C &amp;bull; Global Centrality Features:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Repaired PageRank, in-degree, out-degree, total degree&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="540" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_sig_m" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;M &amp;bull; Motifs &amp;amp; Rolling Bursts:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; 3-cycle smurfing rings, rolling temporal bursts (1h, 24h, 168h)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="395" width="540" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_sig_l" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;L &amp;bull; Community Structure:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Synchronous LPA label, cluster size, community boundary ratio&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="495" width="540" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp2_sig" value="Exhaustive Topological Coverage" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="595" width="580" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Factorial 9-Family Matrix (Purple Theme) -->
+        <mxCell id="card_tp2_mat" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="700" y="125" width="1180" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_mat" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. FACTORIAL EXPERIMENT MATRIX (9 MODEL FAMILIES)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Exhaustive Combinations Evaluated Across All 3 Slices&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="135" width="1180" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Table Header -->
+        <mxCell id="tbl_hdr" value="&lt;div style=&quot;font-size:16px;color:#0f172a;line-height:28px;&quot;&gt;&lt;b&gt;Model Family&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:240px;&quot;&gt;&lt;/span&gt;&lt;b&gt;T&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:35px;&quot;&gt;&lt;/span&gt;&lt;b&gt;C&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:35px;&quot;&gt;&lt;/span&gt;&lt;b&gt;M&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:35px;&quot;&gt;&lt;/span&gt;&lt;b&gt;L&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:80px;&quot;&gt;&lt;/span&gt;&lt;b&gt;PaySim F1&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:80px;&quot;&gt;&lt;/span&gt;&lt;b&gt;IBM AML F1&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#7c3aed;strokeWidth=1.5;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="195" width="1140" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Table Rows -->
+        <mxCell id="tbl_r1" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;tabular_only (Baseline)&lt;span style=&quot;display:inline-block;width:220px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;31.65%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.07%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="233" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r2" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;graph_only (Pure Topology)&lt;span style=&quot;display:inline-block;width:195px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;22.40%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;5.12%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="268" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r3" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;tabular_centrality&lt;span style=&quot;display:inline-block;width:265px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;31.10%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.22%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="303" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r4" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;tabular_motifs&lt;span style=&quot;display:inline-block;width:285px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;34.80%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.65%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="338" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r5" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;tabular_communities&lt;span style=&quot;display:inline-block;width:235px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;32.10%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.18%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="373" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r6" value="&lt;div style=&quot;font-size:16px;color:#047857;line-height:24px;&quot;&gt;&lt;b&gt;without_centrality [T+M+L] (PaySim Winner)&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:68px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;&lt;b&gt;36.02% (BEST)&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:42px;&quot;&gt;&lt;/span&gt;9.81%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="408" width="1140" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r7" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;without_motifs&lt;span style=&quot;display:inline-block;width:285px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;31.85%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.35%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="445" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r8" value="&lt;div style=&quot;font-size:16px;color:#334155;line-height:24px;&quot;&gt;without_communities&lt;span style=&quot;display:inline-block;width:235px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;ndash;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;35.12%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;9.78%&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="480" width="1140" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_r9" value="&lt;div style=&quot;font-size:16px;color:#b45309;line-height:24px;&quot;&gt;&lt;b&gt;full_fusion [T+C+M+L] (IBM AML Winner)&lt;/b&gt;&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:28px;&quot;&gt;&lt;/span&gt;[&amp;#10003;]&lt;span style=&quot;display:inline-block;width:75px;&quot;&gt;&lt;/span&gt;35.80%&lt;span style=&quot;display:inline-block;width:95px;&quot;&gt;&lt;/span&gt;&lt;b&gt;10.09% (BEST)&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;align=left;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="720" y="515" width="1140" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ft_tp2_mat" value="Controlled Cross-Validation Benchmark on All 3 Slices" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="700" y="595" width="1180" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Winner Isolation Findings (Amber Theme) -->
+        <mxCell id="card_tp2_win" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="125" width="590" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_win" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;3. EMPIRICAL ARCHITECTURAL FINDINGS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Domain Topological Divergence&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="135" width="590" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_win_pay" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;PaySim Discovery: No Centrality Benefit&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Mule cashouts operate via rapid, transient burner accounts&lt;br&gt;&amp;bull; High-degree PageRank adds noisy hub bias into tree splits&lt;br&gt;&amp;bull; Excluding Centrality [T+M+L] achieved highest F1: &lt;b&gt;36.02%&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1960" y="195" width="550" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_win_ibm" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;IBM AML Discovery: Centrality Synergies&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Inter-bank smurfing rings cycle money across high-volume hubs&lt;br&gt;&amp;bull; Full fusion [T+C+M+L] is mandatory to capture global cycles&lt;br&gt;&amp;bull; Cuts false-positive alert fatigue by &lt;b&gt;-48.3%&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1960" y="325" width="550" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_win_core" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Core Topological Inductive Bias Law:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;No single universal model exists for both domains&lt;/b&gt;&lt;br&gt;&amp;bull; Graph architecture must conform to physical money laundering flow&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1960" y="455" width="550" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp2_win" value="Proven: Inductive Bias Must Match Threat Structure" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="590" width="590" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Inter-Card Horizontal Arrows -->
+        <mxCell id="arr_tp2_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0284c7;strokeWidth=3;" edge="1" parent="1" source="card_tp2_sig" target="card_tp2_mat">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_tp2_23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7c3aed;strokeWidth=3;" edge="1" parent="1" source="card_tp2_mat" target="card_tp2_win">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Feature Attribution & Gain Decomposition -->
+        <mxCell id="pnl_tp2_bot" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="680" width="2460" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_bot" value="&lt;b style=&quot;font-size:26px;color:#0369a1;&quot;&gt;FEATURE ATTRIBUTION &amp;amp; TREE-BASED SPLIT IMPORTANCE DECOMPOSITION&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="695" width="1600" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Column 1: Mandatory Factorial Need (Cyan) -->
+        <mxCell id="col_tp2_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_k1" value="&lt;b style=&quot;font-size:23px;color:#0369a1;&quot;&gt;1. Mandatory Need for Factorial Ablation&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp2_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#0369a1;&quot;&gt;\(\Delta F_1(\mathcal{S}) = F_1(\mathcal{F}_{\text{all}}) - F_1(\mathcal{F}_{\text{all}} \setminus \mathcal{S}), \quad \mathcal{S} \in \{T, C, M, L\}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp2_k1" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Anti-Bloat Governance:&lt;/b&gt; Black-box pipelines frequently ingest dozens of overlapping features without verifying incremental utility.&lt;br&gt;&amp;bull; &lt;b&gt;Orthogonal Signal Validation:&lt;/b&gt; Testing all 9 sub-combinations systematically isolates whether graph metrics actually improve fraud detection or simply add compute cost.&lt;br&gt;&amp;bull; &lt;b&gt;Production Efficiency:&lt;/b&gt; Discarding unhelpful signals (e.g. Centrality on PaySim) saves significant GraphFrames cluster execution time.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 2: PaySim Split Gain Importance (Emerald) -->
+        <mxCell id="col_tp2_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="920" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_k2" value="&lt;b style=&quot;font-size:23px;color:#047857;&quot;&gt;2. PaySim Split Gain Importance (LightGBM)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="940" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp2_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#047857;&quot;&gt;\(\text{Gain}(M) = 46.5\% \ (\text{receiver\_in\_168h}) + 29.3\% \ (\text{bursts}) = 75.8\%\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="940" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp2_k2" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Dominant Signal:&lt;/b&gt; &lt;code&gt;receiver_in_168h&lt;/code&gt; accounts for &lt;b&gt;46.5%&lt;/b&gt; of total tree split gain, capturing mule accounts aggregating illicit inflows.&lt;br&gt;&amp;bull; &lt;b&gt;Secondary Signal:&lt;/b&gt; &lt;code&gt;scaled_amount&lt;/code&gt; contributes &lt;b&gt;24.2%&lt;/b&gt; of total gain via robust quantile normalizers.&lt;br&gt;&amp;bull; &lt;b&gt;Structural Motifs:&lt;/b&gt; Temporal burst interactions provide the remaining &lt;b&gt;29.3%&lt;/b&gt; of gain, elevating recall by +32.6% over the tabular baseline.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="940" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 3: IBM AML Multi-Hop Attribution (Amber) -->
+        <mxCell id="col_tp2_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="755" width="770" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp2_k3" value="&lt;b style=&quot;font-size:23px;color:#b45309;&quot;&gt;3. IBM AML Multi-Hop Graph Attribution&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="768" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp2_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#b45309;&quot;&gt;\(\Phi_{\text{cycle3}} \implies \Delta\text{Prec} = +1.02\%, \quad \Delta\text{Alerts} = -48.3\%\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="815" width="730" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp2_k3" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Cycle Participation:&lt;/b&gt; The 3-cycle motif indicator eliminates over 4,600 non-cyclic benign transactions from investigator queues.&lt;br&gt;&amp;bull; &lt;b&gt;PageRank Synergies:&lt;/b&gt; Hub accounts actively participating in cycles receive elevated risk scores, yielding a +1.02% precision boost.&lt;br&gt;&amp;bull; &lt;b&gt;Community Boundary Ratio:&lt;/b&gt; Cross-community edge density from LPA flags smurfing dispersion across disconnected banking networks.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="905" width="730" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption_tp2" value="Protocol Architecture 2: 9-family factorial ablation matrix. GraphGuard systematically decomposes Tabular, Centrality, Motif, and Community signals, proving that optimal topology is domain-dependent: PaySim thrives on transient burst motifs without centrality, whereas IBM AML requires full 4-way fusion to dismantle complex smurfing rings." style="text;html=1;align=left;verticalAlign=top;fontSize=19;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1265" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

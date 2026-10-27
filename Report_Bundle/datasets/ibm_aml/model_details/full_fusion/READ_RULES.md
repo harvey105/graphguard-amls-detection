@@ -1,0 +1,24 @@
+# ibm_aml: full_fusion
+
+Đây là tham số đã fit trên toàn bộ prefix ≤80%, đọc từ model đã lưu; không huấn luyện lại.
+
+Ngưỡng frozen: 0.5. Score là tỷ lệ weighted class mass tại leaf, không phải calibrated probability. Feature index/categorical index phải đọc cùng training.json và saved_model_parameters.json (StringIndexer labelsArray). Amount scaling phải dùng amount_scales.csv và mã _prepare_amounts; không áp dụng điều kiện lên raw amount thay cho scaled_amount.
+
+| leaf_id | condition | risk_score | alert_at_frozen_threshold | training_raw_count |
+| --- | --- | --- | --- | --- |
+| 3 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h <= 0.5 | 0.0004482565987371995 | False | 3245742 |
+| 5 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h > 0.5 AND fanin_24h <= 0.5 | 0.0 | False | 333 |
+| 6 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h <= 37.5 AND reciprocal_168h > 0.5 AND fanin_24h > 0.5 | 0.6606690521386115 | True | 94 |
+| 7 | type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND fanout_24h > 37.5 | 0.0470318837533314 | False | 353011 |
+| 11 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank <= 0.8577698995813583 AND reciprocal_168h <= 0.5 | 0.030112962889084223 | False | 212271 |
+| 13 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank <= 0.8577698995813583 AND reciprocal_168h > 0.5 AND sender_out_24h <= 0.5 | 0.3976329690689443 | False | 107 |
+| 14 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank <= 0.8577698995813583 AND reciprocal_168h > 0.5 AND sender_out_24h > 0.5 | 0.8790315038280875 | True | 75 |
+| 16 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount <= 0.0018133467186479144 | 0.035925924402732005 | False | 3724 |
+| 18 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 0.0018133467186479144 AND dst_community_cross_fraction <= 0.84698996655518388 | 0.22895379374620872 | False | 11418 |
+| 19 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 0.0018133467186479144 AND dst_community_cross_fraction > 0.84698996655518388 | 0.5145798166150171 | True | 876 |
+| 22 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount <= 0.084770401717523453 | 0.2459328369038959 | False | 119167 |
+| 24 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fanin_168h <= 5.5 | 0.3765152636474221 | False | 36084 |
+| 25 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fanin_168h > 5.5 | 0.780899401887747 | True | 6713 |
+| 27 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank <= 0.8577698995813583 | 0.03705097266445648 | False | 64923 |
+| 29 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank > 0.8577698995813583 AND scaled_amount <= 4.9901270682958172 | 0.23954366299034494 | False | 5662 |
+| 30 | type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 4.9901270682958172 | 0.6834349690829333 | True | 324 |

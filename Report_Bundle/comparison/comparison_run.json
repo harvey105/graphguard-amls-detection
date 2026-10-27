@@ -1,0 +1,32 @@
+{
+  "schema_version": "graphguard.full_degree_comparison.v1",
+  "status": "PASS",
+  "scope": "full",
+  "created_utc": "2026-10-24T09:32:40.822535+00:00",
+  "system": "Windows",
+  "python": "3.12.10",
+  "pandas": "3.0.5",
+  "matplotlib": "3.11.2",
+  "inputs": {
+    "paysim": {
+      "run_id": "run_20261024T084918669391Z",
+      "report_sha256": "a4c2c5b78598b796203f57d5e2b4f7c293636ea93fb1cb3369cc2df54fb3d3e7",
+      "degree_csv_sha256": "f888dde5d326d817b49708c6f2e6872b2b482d565806fa3a7837fa9afc9c3157",
+      "vertices": 9073900,
+      "edges": 6362620
+    },
+    "ibm_aml": {
+      "run_id": "run_20261024T081350344149Z",
+      "report_sha256": "b654661f374be5a9f5f7479199f6828cc5a18064b0d7bdad92701a42c743e7d7",
+      "degree_csv_sha256": "939b146917127d4f569feb22cd71e21bd8631809351875b0b1d0f191af7ba10f",
+      "vertices": 518581,
+      "edges": 5078345
+    }
+  },
+  "source_sha256": "bd4caf26888724b86e0f026a52f0334e3c272b40331b29c733a2161be75d029c",
+  "outputs": {
+    "degree_distribution_paysim_vs_ibm.csv": "cd4a249b5aa9c624a43c730d27149c86646442588a239b8f74bb7aa65dae4d97",
+    "degree_distribution_paysim_vs_ibm.png": "35d50ad283b5622fb9668727b0aacf95e8f92209d25d6dd2ec974fd559221172"
+  },
+  "Spark_started": false
+}

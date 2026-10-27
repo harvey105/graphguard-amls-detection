@@ -1,0 +1,404 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CELL_GUIDE</title><style>body{font:16px/1.65 system-ui,Segoe UI,sans-serif;max-width:1200px;margin:30px auto;padding:0 22px;color:#203044;background:#fff}h1,h2,h3{line-height:1.3;color:#123d61}a{color:#126299}pre{background:#f1f5f8;padding:18px;overflow:auto;font:13px/1.55 Consolas,monospace;white-space:pre-wrap}code{font-family:Consolas,monospace}table{border-collapse:collapse;display:block;overflow:auto;max-width:100%;font-size:13px}td,th{border:1px solid #d5dfe7;padding:7px 12px;white-space:nowrap}th{background:#eaf1f8}img{max-width:100%;height:auto}blockquote{border-left:4px solid #14849c;padding:10px 18px;background:#eff9fa}details{margin:14px 0;border:1px solid #dae2e9;padding:10px}.cell{border-top:2px solid #dce8f0;margin-top:25px;padding-top:10px}.output{overflow:auto}nav{position:sticky;top:0;background:#fffef2;padding:9px;border-bottom:1px solid #ddd}li{margin:6px 0}</style><body><nav><a href="../00_START_HERE.html">Bundle home</a> · <a href="CELL_GUIDE.md">Markdown</a></nav><h1>Hướng dẫn trình bày từng code cell</h1>
+<p>Các cell và output đều đã chạy trong original full notebook. Không thực thi lại khi xem. HTML tĩnh giữ code và toàn bộ saved output. Function copy được đối chiếu AST với source snapshot; import còn lại có thể tra src/.</p>
+<h2>ibm_aml</h2>
+<p><a href="IBM_full_system.ipynb">Notebook gốc</a> · <a href="IBM_full_system.html">Xem code và output offline</a></p>
+<h3>Cell 1 — code-environment</h3>
+<p><strong>Mục đích:</strong> Xác nhận runtime Windows, dependency pins và bảo vệ bộ nhớ trước tính toán.</p>
+<p><strong>Đọc code:</strong> Khởi động qua session factory có guard; không tạo SparkSession bên ngoài guard.</p>
+<p><strong>Đọc output:</strong> Đọc master/task slots, heap và job cap thực tế. CPU available không đồng nghĩa mọi phase đều CPU-bound.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=1.</p>
+<h3>Cell 2 — code-protocol</h3>
+<p><strong>Mục đích:</strong> Khai báo trước các đối chứng, tuning budget và temporal protocol.</p>
+<p><strong>Đọc code:</strong> SYSTEM_FAMILY_GROUPS quyết định feature allowlist; mỗi family được train trên cùng prefix.</p>
+<p><strong>Đọc output:</strong> Không lấy metric tốt nhất trên test làm model được chọn; novelty control tách hiệu ứng tài khoản mới.</p>
+<p><strong>Saved output:</strong> 2 blocks; execution_count=2.</p>
+<h3>Cell 3 — code-edge-contract</h3>
+<p><strong>Mục đích:</strong> Giữ đúng contract giao dịch chung cho mọi nhánh.</p>
+<p><strong>Đọc code:</strong> Kiểm tra amount/time/labels/keys, cast có kiểm soát; hash content không chứa nhãn.</p>
+<p><strong>Đọc output:</strong> Sai dữ liệu thì dừng; không dùng việc cast thành null để che lỗi.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>normalize_edges</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=3.</p>
+<h3>Cell 4 — code-full-index</h3>
+<p><strong>Mục đích:</strong> Tạo và persist index một lần; hiển thị scope/counts và lịch train/validation/test thật.</p>
+<p><strong>Đọc code:</strong> Full input là canonical processed data; event_id và timestamp cutoffs được dùng chung.</p>
+<p><strong>Đọc output:</strong> Năm dòng là preview của full input. So sánh full count với unique IDs; timeline cho biết cutoff thực tế.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=4.</p>
+<h3>Cell 5 — code-raw-reconciliation</h3>
+<p><strong>Mục đích:</strong> Đối chiếu toàn bộ raw mapping với Parquet theo hai chiều, giữ duplicate multiplicity.</p>
+<p><strong>Đọc code:</strong> exceptAll hai chiều kiểm tra mapping; raw/source hashes giữ provenance.</p>
+<p><strong>Đọc output:</strong> Cả raw_minus_parquet và parquet_minus_raw phải bằng0. Số dòng bằng nhau riêng nó chưa chứng minh mapping đúng.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=5.</p>
+<h3>Cell 6 — code-pagerank-update</h3>
+<p><strong>Mục đích:</strong> Thể hiện phép truyền rank theo hướng giao dịch.</p>
+<p><strong>Đọc code:</strong> Rank nguồn nhân transition weight; tổng incoming và reset term tạo rank vòng mới.</p>
+<p><strong>Đọc output:</strong> Checkpoint/loop được import từ dataframe_pagerank; kernel hiển thị ở đây chạy trong từng iteration.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>pagerank_update</code> (<a href="../src/paysim/metrics.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=6.</p>
+<h3>Cell 7 — code-degree-metrics</h3>
+<p><strong>Mục đích:</strong> Tính in/out/total degree từ full physical edges.</p>
+<p><strong>Đọc code:</strong> groupBy đếm multiplicity; left join và fillna giữ isolate.</p>
+<p><strong>Đọc output:</strong> Invariant tổng degree=2E sẽ được kiểm tra trong bước full analytics.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>account_degree_metrics</code> (<a href="../src/paysim/metrics.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=7.</p>
+<h3>Cell 8 — code-full-centrality</h3>
+<p><strong>Mục đích:</strong> Chạy PR10/full Degree, export mọi account và biểu diễn phân bố/hubs.</p>
+<p><strong>Đọc code:</strong> Kernels trong hai cell trước được truyền vào backend; assertions kiểm tra mass và coverage.</p>
+<p><strong>Đọc output:</strong> Top10 chỉ là structural hubs từ full graph. Detector chưa được train ở bước này.</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=8.</p>
+<h3>Cell 9 — code-lpa-update</h3>
+<p><strong>Mục đích:</strong> Giải thích cập nhật community labels thay vì chỉ gọi hàm LPA.</p>
+<p><strong>Đọc code:</strong> Join nhãn hàng xóm → cộng phiếu → min(-votes,label) → cập nhật đồng bộ.</p>
+<p><strong>Đọc output:</strong> Tie rule khác GraphX unspecified ties nên không ép partition hai backend giống nhau.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>lpa_update</code> (<a href="../src/paysim/community_detection.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=9.</p>
+<h3>Cell 10 — code-full-communities</h3>
+<p><strong>Mục đích:</strong> Xuất mọi assignment, community summary và amount theo currency, rồi kiểm tra độc lập.</p>
+<p><strong>Đọc code:</strong> Full assignments và all-summary được đối chiếu SQL; plot/top10 chỉ là view.</p>
+<p><strong>Đọc output:</strong> positive_tx_count là posthoc label audit, không đi vào feature tạo cảnh báo. Internal/cross edges cần cộng về E.</p>
+<p><strong>Saved output:</strong> 4 blocks; execution_count=10.</p>
+<h3>Cell 11 — code-cycle-query</h3>
+<p><strong>Mục đích:</strong> Cho thấy query 3-cycle và điều kiện ba accounts khác nhau.</p>
+<p><strong>Đọc code:</strong> GraphFrame.find tìm vòng có hướng; chưa kết luận fraud từ topology.</p>
+<p><strong>Đọc output:</strong> Một vòng có thể được trả ở ba rotations; bước collapse xử lý duplicate rotations.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>find_three_node_cycles</code> (<a href="../src/motif/toy_cycle.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=11.</p>
+<h3>Cell 12 — code-motif-baseline</h3>
+<p><strong>Mục đích:</strong> Chạy baseline full và so với baseline bàn giao, giữ kết quả bằng0 nếu dữ liệu cho như vậy.</p>
+<p><strong>Đọc code:</strong> Baseline chỉ mô tả các query của đề; không dùng nó làm label cho model.</p>
+<p><strong>Đọc output:</strong> Không có positive trong baseline không có nghĩa toàn dataset không fraud. Đọc causal coverage và benchmark tiếp theo.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=12.</p>
+<h3>Cell 13 — code-rolling-history</h3>
+<p><strong>Mục đích:</strong> Tính rolling counts bằng activation/expiry và cumulative sums.</p>
+<p><strong>Đọc code:</strong> Giữ timestamp ties; loại keys chỉ xuất hiện một timestamp vì strict-past count của chúng bằng0.</p>
+<p><strong>Đọc output:</strong> Đây là tối ưu phép tính tương đương, không phải cắt sample hoặc bỏ các transaction khỏi evaluation.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>_sweep_counts</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=13.</p>
+<h3>Cell 14 — code-star-relay-history</h3>
+<p><strong>Mục đích:</strong> Tính sender/receiver histories và fan/relay candidates theo cửa sổ24/168h.</p>
+<p><strong>Đọc code:</strong> Role events, currency keys và điều kiện type riêng PaySim; gọi expiry-prefix kernel phía trên.</p>
+<p><strong>Đọc output:</strong> Same-partner paths còn được trừ sau đó để A→B→A không bị gọi là relay ba accounts.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_star_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=14.</p>
+<h3>Cell 15 — code-reciprocal-history</h3>
+<p><strong>Mục đích:</strong> Phân biệt reciprocal hai accounts với relay ba accounts.</p>
+<p><strong>Đọc code:</strong> Canonical account pair, hai hướng và strict-past witness window.</p>
+<p><strong>Đọc output:</strong> Witness là event thật; role counts bằng0 có thể là kết quả đúng của cấu trúc dữ liệu.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_reciprocal_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=15.</p>
+<h3>Cell 16 — code-cycle-topology</h3>
+<p><strong>Mục đích:</strong> Tìm account cycle không dùng labels hoặc amounts.</p>
+<p><strong>Đọc code:</strong> Distinct topology trước GraphFrames matching tránh nhân mọi tổ hợp historical transactions.</p>
+<p><strong>Đọc output:</strong> Collapse topology không bỏ multiplicity khi temporal transactions được join lại.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>find_topological_cycles</code> (<a href="../src/ibm_aml/motif_finding.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=16.</p>
+<h3>Cell 17 — code-chronological-cycle</h3>
+<p><strong>Mục đích:</strong> Tạo witness cycle hợp lệ tại thời điểm giao dịch đóng vòng.</p>
+<p><strong>Đọc code:</strong> Ba rotations, strict chronology, cùng currency và positive amounts; giữ event IDs thật.</p>
+<p><strong>Đọc output:</strong> Cycle có thật không tự chứng minh money laundering hoặc cùng một khoản tiền đi hết vòng.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_temporal_cycle_features</code> (<a href="../src/ibm_aml/motif_finding.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=17.</p>
+<h3>Cell 18 — code-disk-motif-checkpoint</h3>
+<p><strong>Mục đích:</strong> Giữ lineage và dữ liệu trung gian trên đĩa dưới heap5GiB.</p>
+<p><strong>Đọc code:</strong> Ghi Parquet rồi đọc lại cắt lineage; tránh MemoryStore.putIteratorAsValues khi nhiều task cùng hoạt động.</p>
+<p><strong>Đọc output:</strong> Tăng CPU concurrency cần bỏ object cache lớn và giảm Parquet buffers; không tăng heap/job cap.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>materialize_motif_stage</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=18.</p>
+<h3>Cell 19 — code-motif-feature-builder</h3>
+<p><strong>Mục đích:</strong> Kết hợp star/reciprocal/cycle features và giữ một row cho mỗi transaction.</p>
+<p><strong>Đọc code:</strong> Trừ same-partner histories, giới hạn cycle gap theo dataset units; fill0 chỉ cho feature không có motif.</p>
+<p><strong>Đọc output:</strong> Các function trong notebook phía trên thực sự được gọi bởi builder, không phải code minh họa rời kết quả.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_motif_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=19.</p>
+<h3>Cell 20 — code-motif-full-and-coverage</h3>
+<p><strong>Mục đích:</strong> Chạy toàn bộ causal motifs và benchmark structural coverage đối với nhãn.</p>
+<p><strong>Đọc code:</strong> Label chỉ join sau construction để đo coverage/enrichment, không điều kiện hóa feature.</p>
+<p><strong>Đọc output:</strong> Coverage không phải precision/recall của model. Các motif overlap nên không cộng các hàng thành tổng.</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=20.</p>
+<h3>Cell 21 — code-historical-snapshot</h3>
+<p><strong>Mục đích:</strong> Tính C/L trên prefix đúng thời điểm.</p>
+<p><strong>Đọc code:</strong> Lọc step≤cutoff, gọi PR/LPA và tính community size/cross fraction từ edges không có label.</p>
+<p><strong>Đọc output:</strong> Không dùng positive_tx_count của full community audit làm feature; chỉ dùng structural statistics.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>historical_system_snapshot</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=21.</p>
+<h3>Cell 22 — code-snapshot-join</h3>
+<p><strong>Mục đích:</strong> Join src/dst snapshots mà không dùng numeric community IDs làm feature.</p>
+<p><strong>Đọc code:</strong> Kiểm tra strict timing, seen flags, same-community và fill defaults có kiểm soát.</p>
+<p><strong>Đọc output:</strong> Unknown history không bị gán là fraud; novelty control đo riêng ảnh hưởng này.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>join_system_snapshot</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=22.</p>
+<h3>Cell 23 — code-common-feature-table</h3>
+<p><strong>Mục đích:</strong> Materialize một feature table đầy đủ, cùng event index cho9families.</p>
+<p><strong>Đọc code:</strong> Full rows/unique IDs và future-snapshot assertion; completed block checkpoints có hash để resume.</p>
+<p><strong>Đọc output:</strong> Feature bằng0 hoặc account unseen không phải predicted isFraud=0. Chưa có model prediction ở đây.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=23.</p>
+<h3>Cell 24 — code-amount-normalization</h3>
+<p><strong>Mục đích:</strong> Cho thấy chuẩn hóa theo training q90 và nhóm feature cụ thể của từng family.</p>
+<p><strong>Đọc code:</strong> log1p(amount/train_q90), unknown-group/FX flags và explicit group allowlist.</p>
+<p><strong>Đọc output:</strong> Không cộng nominal amounts khác currency. Full fusion luôn gồm transaction+C+M+L.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>_prepare_amounts</code> (<a href="../src/motif/modeling.py">source</a>), <code>family_feature_names</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=24.</p>
+<h3>Cell 25 — code-shared-training-prefix</h3>
+<p><strong>Mục đích:</strong> Tách preprocessing fit khỏi9model fits, giảm repeated scans.</p>
+<p><strong>Đọc code:</strong> Chỉ train≤cutoff; fit q90/indexer; truth join; class weights; persist DISK_ONLY.</p>
+<p><strong>Đọc output:</strong> Validation/test tương lai không được dùng fit q90/category vocab hoặc class weights.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>prepare_training_prefix</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=25.</p>
+<h3>Cell 26 — code-weighted-tree</h3>
+<p><strong>Mục đích:</strong> Cho thấy assembler, classifier và exported pipeline thật.</p>
+<p><strong>Đọc code:</strong> Chọn subset theo family, fit cùng tree architecture trên encoded prefix, gắn indexer đã fit khi export.</p>
+<p><strong>Đọc output:</strong> Các đối chứng cùng preprocessing/budget giúp tránh so sánh lệch population hoặc model capacity.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>fit_prepared_model</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=26.</p>
+<h3>Cell 27 — code-score-and-alert</h3>
+<p><strong>Mục đích:</strong> Phân biệt risk score, alert và ground truth.</p>
+<p><strong>Đọc code:</strong> Transform bằng model đã fit; so score với threshold; labels chỉ join sau scoring.</p>
+<p><strong>Đọc output:</strong> risk_score không phải calibrated probability; isFraud là truth, alert là prediction.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>score_transactions</code> (<a href="../src/motif/modeling.py">source</a>), <code>frozen_prediction</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=27.</p>
+<h3>Cell 28 — code-exact-metrics</h3>
+<p><strong>Mục đích:</strong> Hiển thị cách tính benchmark từ score histogram, gồm score ties.</p>
+<p><strong>Đọc code:</strong> TP/FP theo frozen threshold; cumulative grouped scores tạo precision/recall và exact AP.</p>
+<p><strong>Đọc output:</strong> Accuracy dễ bị majority class che lấp; đọc P/R/F1/AP, số alerts và prevalence thay vì chỉ accuracy.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>metrics_at_threshold</code> (<a href="../src/motif/modeling.py">source</a>), <code>precision_recall_curve</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=28.</p>
+<h3>Cell 29 — code-walk-forward</h3>
+<p><strong>Mục đích:</strong> Thực thi vòng lặp train/validation và đóng băng lựa chọn trước test.</p>
+<p><strong>Đọc code:</strong> Prefix preprocess một lần,9trees; mọi thresholds trên validation; SHA ghi frozen rules.</p>
+<p><strong>Đọc output:</strong> Đọc worst/std cùng mean. Không đổi family/ngưỡng sau khi đã xem test, kể cả full fusion không tốt hơn baseline.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>full_system_validation</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 4 blocks; execution_count=29.</p>
+<h3>Cell 30 — code-frozen-test</h3>
+<p><strong>Mục đích:</strong> Xuất prediction và benchmark cuối; kiểm tra coverage/reload.</p>
+<p><strong>Đọc code:</strong> full_system_test dùng các training/scoring/alert kernels đã hiện phía trên; rule vẫn kiểm SHA trước từng family.</p>
+<p><strong>Đọc output:</strong> Đọc TP/FP/FN và alert rate trước khi kết luận. Selected_on_validation đánh dấu lựa chọn hợp lệ, không chọn theo bảng test.</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=30.</p>
+<h3>Cell 31 — code-benchmark-results</h3>
+<p><strong>Mục đích:</strong> Đọc kết quả với graphs, ngân sách review và baseline cùng mẫu số.</p>
+<p><strong>Đọc code:</strong> Biểu đồ ablation/PR/confusion; exact Top-K và chênh lệch selected-baseline.</p>
+<p><strong>Đọc output:</strong> Giá trị âm vẫn giữ nguyên. Một model ít alerts hơn có thể tăng precision nhưng giảm recall.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=31.</p>
+<h3>Cell 32 — code-temporal-reliability</h3>
+<p><strong>Mục đích:</strong> Đo stability thực tế và phơi bày giới hạn của reliability claim.</p>
+<p><strong>Đọc code:</strong> Chia test theo time quantiles, giữ timestamp ties, cùng rule cho mọi period; không train lại.</p>
+<p><strong>Đọc output:</strong> Có thể xảy ra F1=0 ở một period hoặc feature importance=0. Phải giải thích bằng support và contribution, không ép kết quả khác0.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>temporal_test_context</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 10 blocks; execution_count=32.</p>
+<h3>Cell 33 — code-case-evidence</h3>
+<p><strong>Mục đích:</strong> Giải thích một cảnh báo và cả thất bại của detector bằng giao dịch thật.</p>
+<p><strong>Đọc code:</strong> TP/FP/FN lấy từ frozen predictions; evidence truy xuất event IDs thực.</p>
+<p><strong>Đọc output:</strong> Ground truth chỉ dùng audit sau prediction. Witness xác nhận cấu trúc/thời gian, chưa chứng minh cùng một khoản tiền hoặc nguyên nhân dự đoán.</p>
+<p><strong>Saved output:</strong> 9 blocks; execution_count=33.</p>
+<h3>Cell 34 — code-independent-acceptance</h3>
+<p><strong>Mục đích:</strong> Nghiệm thu artifact bằng phép kiểm tra độc lập rồi xuất runtime benchmark.</p>
+<p><strong>Đọc code:</strong> Recompute confusion/AP từ saved predictions; hash index/source/input; không chỉ tin training report.</p>
+<p><strong>Đọc output:</strong> PASS không có nghĩa đạt precision/recall ngoài thực tế. Các số CPU là đo theo phase, có bước I/O/serial.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=34.</p>
+<h3>Cell 35 — code-close-session</h3>
+<p><strong>Mục đích:</strong> Giải phóng kernel-owned Spark sau khi hoàn tất và lưu thông số tài nguyên.</p>
+<p><strong>Đọc code:</strong> Đóng session có kiểm soát; không chạy notebook thứ hai trước khi runner này kết thúc.</p>
+<p><strong>Đọc output:</strong> Đối chiếu peak commit/available RAM với guard budget; đây không phải kiểm định phần cứng hoặc nhiệt độ.</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=35.</p>
+<h2>paysim</h2>
+<p><a href="PaySIM_full_system.ipynb">Notebook gốc</a> · <a href="PaySIM_full_system.html">Xem code và output offline</a></p>
+<h3>Cell 1 — code-environment</h3>
+<p><strong>Mục đích:</strong> Xác nhận runtime Windows, dependency pins và bảo vệ bộ nhớ trước tính toán.</p>
+<p><strong>Đọc code:</strong> Khởi động qua session factory có guard; không tạo SparkSession bên ngoài guard.</p>
+<p><strong>Đọc output:</strong> Đọc master/task slots, heap và job cap thực tế. CPU available không đồng nghĩa mọi phase đều CPU-bound.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=1.</p>
+<h3>Cell 2 — code-protocol</h3>
+<p><strong>Mục đích:</strong> Khai báo trước các đối chứng, tuning budget và temporal protocol.</p>
+<p><strong>Đọc code:</strong> SYSTEM_FAMILY_GROUPS quyết định feature allowlist; mỗi family được train trên cùng prefix.</p>
+<p><strong>Đọc output:</strong> Không lấy metric tốt nhất trên test làm model được chọn; novelty control tách hiệu ứng tài khoản mới.</p>
+<p><strong>Saved output:</strong> 2 blocks; execution_count=2.</p>
+<h3>Cell 3 — code-edge-contract</h3>
+<p><strong>Mục đích:</strong> Giữ đúng contract giao dịch chung cho mọi nhánh.</p>
+<p><strong>Đọc code:</strong> Kiểm tra amount/time/labels/keys, cast có kiểm soát; hash content không chứa nhãn.</p>
+<p><strong>Đọc output:</strong> Sai dữ liệu thì dừng; không dùng việc cast thành null để che lỗi.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>normalize_edges</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=3.</p>
+<h3>Cell 4 — code-full-index</h3>
+<p><strong>Mục đích:</strong> Tạo và persist index một lần; hiển thị scope/counts và lịch train/validation/test thật.</p>
+<p><strong>Đọc code:</strong> Full input là canonical processed data; event_id và timestamp cutoffs được dùng chung.</p>
+<p><strong>Đọc output:</strong> Năm dòng là preview của full input. So sánh full count với unique IDs; timeline cho biết cutoff thực tế.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=4.</p>
+<h3>Cell 5 — code-raw-reconciliation</h3>
+<p><strong>Mục đích:</strong> Đối chiếu toàn bộ raw mapping với Parquet theo hai chiều, giữ duplicate multiplicity.</p>
+<p><strong>Đọc code:</strong> exceptAll hai chiều kiểm tra mapping; raw/source hashes giữ provenance.</p>
+<p><strong>Đọc output:</strong> Cả raw_minus_parquet và parquet_minus_raw phải bằng0. Số dòng bằng nhau riêng nó chưa chứng minh mapping đúng.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=5.</p>
+<h3>Cell 6 — code-pagerank-update</h3>
+<p><strong>Mục đích:</strong> Thể hiện phép truyền rank theo hướng giao dịch.</p>
+<p><strong>Đọc code:</strong> Rank nguồn nhân transition weight; tổng incoming và reset term tạo rank vòng mới.</p>
+<p><strong>Đọc output:</strong> Checkpoint/loop được import từ dataframe_pagerank; kernel hiển thị ở đây chạy trong từng iteration.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>pagerank_update</code> (<a href="../src/paysim/metrics.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=6.</p>
+<h3>Cell 7 — code-degree-metrics</h3>
+<p><strong>Mục đích:</strong> Tính in/out/total degree từ full physical edges.</p>
+<p><strong>Đọc code:</strong> groupBy đếm multiplicity; left join và fillna giữ isolate.</p>
+<p><strong>Đọc output:</strong> Invariant tổng degree=2E sẽ được kiểm tra trong bước full analytics.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>account_degree_metrics</code> (<a href="../src/paysim/metrics.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=7.</p>
+<h3>Cell 8 — code-full-centrality</h3>
+<p><strong>Mục đích:</strong> Chạy PR10/full Degree, export mọi account và biểu diễn phân bố/hubs.</p>
+<p><strong>Đọc code:</strong> Kernels trong hai cell trước được truyền vào backend; assertions kiểm tra mass và coverage.</p>
+<p><strong>Đọc output:</strong> Top10 chỉ là structural hubs từ full graph. Detector chưa được train ở bước này.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=8.</p>
+<h3>Cell 9 — code-lpa-update</h3>
+<p><strong>Mục đích:</strong> Giải thích cập nhật community labels thay vì chỉ gọi hàm LPA.</p>
+<p><strong>Đọc code:</strong> Join nhãn hàng xóm → cộng phiếu → min(-votes,label) → cập nhật đồng bộ.</p>
+<p><strong>Đọc output:</strong> Tie rule khác GraphX unspecified ties nên không ép partition hai backend giống nhau.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>lpa_update</code> (<a href="../src/paysim/community_detection.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=9.</p>
+<h3>Cell 10 — code-full-communities</h3>
+<p><strong>Mục đích:</strong> Xuất mọi assignment, community summary và amount theo currency, rồi kiểm tra độc lập.</p>
+<p><strong>Đọc code:</strong> Full assignments và all-summary được đối chiếu SQL; plot/top10 chỉ là view.</p>
+<p><strong>Đọc output:</strong> positive_tx_count là posthoc label audit, không đi vào feature tạo cảnh báo. Internal/cross edges cần cộng về E.</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=10.</p>
+<h3>Cell 11 — code-cycle-query</h3>
+<p><strong>Mục đích:</strong> Cho thấy query 3-cycle và điều kiện ba accounts khác nhau.</p>
+<p><strong>Đọc code:</strong> GraphFrame.find tìm vòng có hướng; chưa kết luận fraud từ topology.</p>
+<p><strong>Đọc output:</strong> Một vòng có thể được trả ở ba rotations; bước collapse xử lý duplicate rotations.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>find_three_node_cycles</code> (<a href="../src/motif/toy_cycle.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=11.</p>
+<h3>Cell 12 — code-relay-query</h3>
+<p><strong>Mục đích:</strong> Trình bày query relay theo type/amount/time của PaySim.</p>
+<p><strong>Đọc code:</strong> Tách TRANSFER và CASH_OUT, distinct accounts và giới hạn gap.</p>
+<p><strong>Đọc output:</strong> Baseline query và strict-past detector có ranh giới khác nhau; same-hour matches phải báo mơ hồ.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>find_relays</code> (<a href="../src/paysim/motif_finding.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=12.</p>
+<h3>Cell 13 — code-motif-baseline</h3>
+<p><strong>Mục đích:</strong> Chạy baseline full và so với baseline bàn giao, giữ kết quả bằng0 nếu dữ liệu cho như vậy.</p>
+<p><strong>Đọc code:</strong> Baseline chỉ mô tả các query của đề; không dùng nó làm label cho model.</p>
+<p><strong>Đọc output:</strong> Không có positive trong baseline không có nghĩa toàn dataset không fraud. Đọc causal coverage và benchmark tiếp theo.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=13.</p>
+<h3>Cell 14 — code-rolling-history</h3>
+<p><strong>Mục đích:</strong> Tính rolling counts bằng activation/expiry và cumulative sums.</p>
+<p><strong>Đọc code:</strong> Giữ timestamp ties; loại keys chỉ xuất hiện một timestamp vì strict-past count của chúng bằng0.</p>
+<p><strong>Đọc output:</strong> Đây là tối ưu phép tính tương đương, không phải cắt sample hoặc bỏ các transaction khỏi evaluation.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>_sweep_counts</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=14.</p>
+<h3>Cell 15 — code-star-relay-history</h3>
+<p><strong>Mục đích:</strong> Tính sender/receiver histories và fan/relay candidates theo cửa sổ24/168h.</p>
+<p><strong>Đọc code:</strong> Role events, currency keys và điều kiện type riêng PaySim; gọi expiry-prefix kernel phía trên.</p>
+<p><strong>Đọc output:</strong> Same-partner paths còn được trừ sau đó để A→B→A không bị gọi là relay ba accounts.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_star_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=15.</p>
+<h3>Cell 16 — code-reciprocal-history</h3>
+<p><strong>Mục đích:</strong> Phân biệt reciprocal hai accounts với relay ba accounts.</p>
+<p><strong>Đọc code:</strong> Canonical account pair, hai hướng và strict-past witness window.</p>
+<p><strong>Đọc output:</strong> Witness là event thật; role counts bằng0 có thể là kết quả đúng của cấu trúc dữ liệu.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_reciprocal_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=16.</p>
+<h3>Cell 17 — code-cycle-topology</h3>
+<p><strong>Mục đích:</strong> Tìm account cycle không dùng labels hoặc amounts.</p>
+<p><strong>Đọc code:</strong> Distinct topology trước GraphFrames matching tránh nhân mọi tổ hợp historical transactions.</p>
+<p><strong>Đọc output:</strong> Collapse topology không bỏ multiplicity khi temporal transactions được join lại.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>find_topological_cycles</code> (<a href="../src/ibm_aml/motif_finding.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=17.</p>
+<h3>Cell 18 — code-chronological-cycle</h3>
+<p><strong>Mục đích:</strong> Tạo witness cycle hợp lệ tại thời điểm giao dịch đóng vòng.</p>
+<p><strong>Đọc code:</strong> Ba rotations, strict chronology, cùng currency và positive amounts; giữ event IDs thật.</p>
+<p><strong>Đọc output:</strong> Cycle có thật không tự chứng minh money laundering hoặc cùng một khoản tiền đi hết vòng.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_temporal_cycle_features</code> (<a href="../src/ibm_aml/motif_finding.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=18.</p>
+<h3>Cell 19 — code-disk-motif-checkpoint</h3>
+<p><strong>Mục đích:</strong> Giữ lineage và dữ liệu trung gian trên đĩa dưới heap5GiB.</p>
+<p><strong>Đọc code:</strong> Ghi Parquet rồi đọc lại cắt lineage; tránh MemoryStore.putIteratorAsValues khi nhiều task cùng hoạt động.</p>
+<p><strong>Đọc output:</strong> Tăng CPU concurrency cần bỏ object cache lớn và giảm Parquet buffers; không tăng heap/job cap.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>materialize_motif_stage</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=19.</p>
+<h3>Cell 20 — code-motif-feature-builder</h3>
+<p><strong>Mục đích:</strong> Kết hợp star/reciprocal/cycle features và giữ một row cho mỗi transaction.</p>
+<p><strong>Đọc code:</strong> Trừ same-partner histories, giới hạn cycle gap theo dataset units; fill0 chỉ cho feature không có motif.</p>
+<p><strong>Đọc output:</strong> Các function trong notebook phía trên thực sự được gọi bởi builder, không phải code minh họa rời kết quả.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>build_motif_features</code> (<a href="../src/motif/features.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=20.</p>
+<h3>Cell 21 — code-motif-full-and-coverage</h3>
+<p><strong>Mục đích:</strong> Chạy toàn bộ causal motifs và benchmark structural coverage đối với nhãn.</p>
+<p><strong>Đọc code:</strong> Label chỉ join sau construction để đo coverage/enrichment, không điều kiện hóa feature.</p>
+<p><strong>Đọc output:</strong> Coverage không phải precision/recall của model. Các motif overlap nên không cộng các hàng thành tổng.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=21.</p>
+<h3>Cell 22 — code-historical-snapshot</h3>
+<p><strong>Mục đích:</strong> Tính C/L trên prefix đúng thời điểm.</p>
+<p><strong>Đọc code:</strong> Lọc step≤cutoff, gọi PR/LPA và tính community size/cross fraction từ edges không có label.</p>
+<p><strong>Đọc output:</strong> Không dùng positive_tx_count của full community audit làm feature; chỉ dùng structural statistics.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>historical_system_snapshot</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=22.</p>
+<h3>Cell 23 — code-snapshot-join</h3>
+<p><strong>Mục đích:</strong> Join src/dst snapshots mà không dùng numeric community IDs làm feature.</p>
+<p><strong>Đọc code:</strong> Kiểm tra strict timing, seen flags, same-community và fill defaults có kiểm soát.</p>
+<p><strong>Đọc output:</strong> Unknown history không bị gán là fraud; novelty control đo riêng ảnh hưởng này.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>join_system_snapshot</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=23.</p>
+<h3>Cell 24 — code-common-feature-table</h3>
+<p><strong>Mục đích:</strong> Materialize một feature table đầy đủ, cùng event index cho9families.</p>
+<p><strong>Đọc code:</strong> Full rows/unique IDs và future-snapshot assertion; completed block checkpoints có hash để resume.</p>
+<p><strong>Đọc output:</strong> Feature bằng0 hoặc account unseen không phải predicted isFraud=0. Chưa có model prediction ở đây.</p>
+<p><strong>Saved output:</strong> 4 blocks; execution_count=24.</p>
+<h3>Cell 25 — code-amount-normalization</h3>
+<p><strong>Mục đích:</strong> Cho thấy chuẩn hóa theo training q90 và nhóm feature cụ thể của từng family.</p>
+<p><strong>Đọc code:</strong> log1p(amount/train_q90), unknown-group/FX flags và explicit group allowlist.</p>
+<p><strong>Đọc output:</strong> Không cộng nominal amounts khác currency. Full fusion luôn gồm transaction+C+M+L.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>_prepare_amounts</code> (<a href="../src/motif/modeling.py">source</a>), <code>family_feature_names</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=25.</p>
+<h3>Cell 26 — code-shared-training-prefix</h3>
+<p><strong>Mục đích:</strong> Tách preprocessing fit khỏi9model fits, giảm repeated scans.</p>
+<p><strong>Đọc code:</strong> Chỉ train≤cutoff; fit q90/indexer; truth join; class weights; persist DISK_ONLY.</p>
+<p><strong>Đọc output:</strong> Validation/test tương lai không được dùng fit q90/category vocab hoặc class weights.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>prepare_training_prefix</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=26.</p>
+<h3>Cell 27 — code-weighted-tree</h3>
+<p><strong>Mục đích:</strong> Cho thấy assembler, classifier và exported pipeline thật.</p>
+<p><strong>Đọc code:</strong> Chọn subset theo family, fit cùng tree architecture trên encoded prefix, gắn indexer đã fit khi export.</p>
+<p><strong>Đọc output:</strong> Các đối chứng cùng preprocessing/budget giúp tránh so sánh lệch population hoặc model capacity.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>fit_prepared_model</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=27.</p>
+<h3>Cell 28 — code-score-and-alert</h3>
+<p><strong>Mục đích:</strong> Phân biệt risk score, alert và ground truth.</p>
+<p><strong>Đọc code:</strong> Transform bằng model đã fit; so score với threshold; labels chỉ join sau scoring.</p>
+<p><strong>Đọc output:</strong> risk_score không phải calibrated probability; isFraud là truth, alert là prediction.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>score_transactions</code> (<a href="../src/motif/modeling.py">source</a>), <code>frozen_prediction</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=28.</p>
+<h3>Cell 29 — code-exact-metrics</h3>
+<p><strong>Mục đích:</strong> Hiển thị cách tính benchmark từ score histogram, gồm score ties.</p>
+<p><strong>Đọc code:</strong> TP/FP theo frozen threshold; cumulative grouped scores tạo precision/recall và exact AP.</p>
+<p><strong>Đọc output:</strong> Accuracy dễ bị majority class che lấp; đọc P/R/F1/AP, số alerts và prevalence thay vì chỉ accuracy.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>metrics_at_threshold</code> (<a href="../src/motif/modeling.py">source</a>), <code>precision_recall_curve</code> (<a href="../src/motif/modeling.py">source</a>).</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=29.</p>
+<h3>Cell 30 — code-walk-forward</h3>
+<p><strong>Mục đích:</strong> Thực thi vòng lặp train/validation và đóng băng lựa chọn trước test.</p>
+<p><strong>Đọc code:</strong> Prefix preprocess một lần,9trees; mọi thresholds trên validation; SHA ghi frozen rules.</p>
+<p><strong>Đọc output:</strong> Đọc worst/std cùng mean. Không đổi family/ngưỡng sau khi đã xem test, kể cả full fusion không tốt hơn baseline.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>full_system_validation</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=30.</p>
+<h3>Cell 31 — code-frozen-test</h3>
+<p><strong>Mục đích:</strong> Xuất prediction và benchmark cuối; kiểm tra coverage/reload.</p>
+<p><strong>Đọc code:</strong> full_system_test dùng các training/scoring/alert kernels đã hiện phía trên; rule vẫn kiểm SHA trước từng family.</p>
+<p><strong>Đọc output:</strong> Đọc TP/FP/FN và alert rate trước khi kết luận. Selected_on_validation đánh dấu lựa chọn hợp lệ, không chọn theo bảng test.</p>
+<p><strong>Saved output:</strong> 5 blocks; execution_count=31.</p>
+<h3>Cell 32 — code-benchmark-results</h3>
+<p><strong>Mục đích:</strong> Đọc kết quả với graphs, ngân sách review và baseline cùng mẫu số.</p>
+<p><strong>Đọc code:</strong> Biểu đồ ablation/PR/confusion; exact Top-K và chênh lệch selected-baseline.</p>
+<p><strong>Đọc output:</strong> Giá trị âm vẫn giữ nguyên. Một model ít alerts hơn có thể tăng precision nhưng giảm recall.</p>
+<p><strong>Saved output:</strong> 6 blocks; execution_count=32.</p>
+<h3>Cell 33 — code-temporal-reliability</h3>
+<p><strong>Mục đích:</strong> Đo stability thực tế và phơi bày giới hạn của reliability claim.</p>
+<p><strong>Đọc code:</strong> Chia test theo time quantiles, giữ timestamp ties, cùng rule cho mọi period; không train lại.</p>
+<p><strong>Đọc output:</strong> Có thể xảy ra F1=0 ở một period hoặc feature importance=0. Phải giải thích bằng support và contribution, không ép kết quả khác0.</p>
+<p><strong>Kernel được show trong cell:</strong> <code>temporal_test_context</code> (<a href="../src/motif/pipeline.py">source</a>).</p>
+<p><strong>Saved output:</strong> 10 blocks; execution_count=33.</p>
+<h3>Cell 34 — code-case-evidence</h3>
+<p><strong>Mục đích:</strong> Giải thích một cảnh báo và cả thất bại của detector bằng giao dịch thật.</p>
+<p><strong>Đọc code:</strong> TP/FP/FN lấy từ frozen predictions; evidence truy xuất event IDs thực.</p>
+<p><strong>Đọc output:</strong> Ground truth chỉ dùng audit sau prediction. Witness xác nhận cấu trúc/thời gian, chưa chứng minh cùng một khoản tiền hoặc nguyên nhân dự đoán.</p>
+<p><strong>Saved output:</strong> 8 blocks; execution_count=34.</p>
+<h3>Cell 35 — code-independent-acceptance</h3>
+<p><strong>Mục đích:</strong> Nghiệm thu artifact bằng phép kiểm tra độc lập rồi xuất runtime benchmark.</p>
+<p><strong>Đọc code:</strong> Recompute confusion/AP từ saved predictions; hash index/source/input; không chỉ tin training report.</p>
+<p><strong>Đọc output:</strong> PASS không có nghĩa đạt precision/recall ngoài thực tế. Các số CPU là đo theo phase, có bước I/O/serial.</p>
+<p><strong>Saved output:</strong> 3 blocks; execution_count=35.</p>
+<h3>Cell 36 — code-close-session</h3>
+<p><strong>Mục đích:</strong> Giải phóng kernel-owned Spark sau khi hoàn tất và lưu thông số tài nguyên.</p>
+<p><strong>Đọc code:</strong> Đóng session có kiểm soát; không chạy notebook thứ hai trước khi runner này kết thúc.</p>
+<p><strong>Đọc output:</strong> Đối chiếu peak commit/available RAM với guard budget; đây không phải kiểm định phần cứng hoặc nhiệt độ.</p>
+<p><strong>Saved output:</strong> 1 blocks; execution_count=36.</p></body></html>

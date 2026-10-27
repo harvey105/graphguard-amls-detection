@@ -1,0 +1,91 @@
+Tuần,Người,Vai trò,Việc cần làm cụ thể,Input,Output,Ngày,Người review,Mục báo cáo,Barem,Status,Ghi chú
+1,Tuệ Minh,Lead,Chạy python src/graph_analysis.py → lưu log [PASS]; log Task 1,Raw dataset; bảng ánh xạ cột Mục 4.1,results/paysim/task1_verification.log,21/9,—,Part B — Task 1 Graph Construction,Task 1 (15đ),Đã xong,Deadline cứng
+,Thảo,DE,Viết src/common/spark_session.py (get_graph_session()) + README.md,Repo hiện tại; tài liệu cài đặt PySpark/GraphFrames,2 file,21/9,Tuệ Minh,Hạ tầng code (không tính điểm trực tiếp),—,Đã xong,readme làm sau
+,Khánh,Motif,Học graph.find() + tạo toy graph có cycle 3-node; chạy query (a)-[e1]->(b);(b)-[e2]->(c);(c)-[e3]->(a),GraphFrame hoàn chỉnh; code motif từ toy example,Demo toy,21/9,Phương,Part B — Task 3 Motif Finding,Task 3 (25đ),Đã xong,
+,Hoàng,LPA,Nghiên cứu LPA: công thức update label; điều kiện hội tụ; ghi chú non-determinism,GraphFrame hoàn chỉnh; GraphFrames LPA API,Ghi chú,21/9,Châu Anh,Part B — Task 4 Community Detection,Task 4 (25đ),Đã xong,
+,Tuệ Minh,Lead,Review log Task 1 của Thảo; comment lên repo nếu có vấn đề,Raw dataset; bảng ánh xạ cột Mục 4.1,Comment,22/9,—,Part B — Task 1 Graph Construction,Task 1 (15đ),Đã xong,src/paysim/etl_mapping.py
+,Thảo,DE,Reorganize src/ → src/paysim/; src/common/; src/ibm_aml/; update import paths,Repo hiện tại; tài liệu cài đặt PySpark/GraphFrames,Commit,22/9,Tuệ Minh,Hạ tầng code (không tính điểm trực tiếp),—,Đã xong,
+,Phương,Graph Alg,Draft Mục 3.3 PageRank 6 bước (random walk → Markov → công thức → sink-node → damping 0.85 → hội tụ),GraphFrames docs; bài báo gốc PageRank (Page & Brin),Draft 3.3,22/9,Khánh,Part A — Mục 3.3 Đạo hàm PageRank,Part A (35đ),Đã xong,
+,Tuệ Minh,Lead,Final Task 1 → tag done; test lại python -m src.paysim.graph_analysis,Raw dataset; bảng ánh xạ cột Mục 4.1,Task 1 (done),23/9,—,Part B — Task 1 Graph Construction,Task 1 (15đ),Đã xong,
+,Thảo,DE,Bắt đầu research IBM schema + đọc docs IBM AML,Raw CSV IBM AML; tài liệu IBM AML GNN benchmark,—,23/9,—,Part B — Task 1 IBM (mở rộng),Task 1 (15đ),Đã xong,
+,Khánh,Motif,Review 3.3 của Phương: check toán + sink-node + ký hiệu,GraphFrames docs; bài báo gốc PageRank (Page & Brin),Comment,25/9,—,Part A — Mục 3.3 Đạo hàm PageRank,Part A (35đ),Đã xong,
+,Hoàng,LPA,Draft Mục 3.4: CC vs LPA (định nghĩa; thuật toán; use case),GraphFrames docs; tài liệu lý thuyết LPA / Connected Components,Draft 3.4,25/9,Châu Anh,Part A — Mục 3.4 CC vs LPA,Part A (35đ),Đã xong,
+,Châu Anh,LPA support,Verify CC lý thuyết; đánh giá PaySim có cấu trúc community rõ không (phối hợp Thảo),GraphFrames docs; tài liệu lý thuyết LPA / Connected Components,Góp ý 3.4,25/9,Hoàng,Part A — Mục 3.4 CC vs LPA,Part A (35đ),Đã xong,
+,Tuấn Anh,Report,Nhận outline Mục 3.2 từ Tuệ Minh; draft Vertex Cut vs Edge Cut + lý do GraphX chọn vertex-cut,Đề bài gốc; tài liệu Spark graph partitioning,Draft 3.2,25/9,Tuệ Minh,Part A — Mục 3.2 Vertex Cut vs Edge Cut,Part A (35đ),Đã xong,[DSEB 65A] BDA - G6
+,Tuệ Minh,Lead,Review 3.2 của Tuấn Anh,Đề bài gốc; tài liệu Spark graph partitioning,Comment,26/9,—,Part A — Mục 3.2 Vertex Cut vs Edge Cut,Part A (35đ),Đã xong,
+,Phương,Graph Alg,Fix 3.3 theo comment Khánh,GraphFrames docs; bài báo gốc PageRank (Page & Brin),3.3 v2,27/9,Khánh,Part A — Mục 3.3 Đạo hàm PageRank,Part A (35đ),Đã xong,"có thể fix chút xíu là nội dung để chữ trắng, loại bỏ mấy cái dòng chữ màu xám có thể gây khó đọc hoặc thay thế bằng cách viết nội dung mới, hạn chế viết mấy cái, bạn này chưa note hay chưa điền vào, còn về kiến thức xu hướng viết nên viết kiểu Khái niệm -> Đóng vai trò gì, (example project) -> cách nó hoạt động trong architecture (có thể lấy example code ngắn nếu cần) -> một số phòng vệ như leakage hay gì đó mà PageRank phòng vệ được để ra output mong muốn kiểu v, có gì công thức xuyên suốt bài vẫn nêu rõ và giữ được => mục đích dễ đọc hiểu luôn concept thôi, không bị giống báo cáo quá
+
+báo lại ngày nào xong "
+,Tuấn Anh,Report,Fix 3.2 theo comment Tuệ Minh,Đề bài gốc; tài liệu Spark graph partitioning,3.2 v2,27/9,Tuệ Minh,Part A — Mục 3.2 Vertex Cut vs Edge Cut,Part A (35đ),Đã xong,
+,Thảo,DE,Draft IBM ETL: map cột (Account; Account.1; Timestamp; From Bank; Amount Received; Is Laundering); build node (bank; account); xuất Parquet,Raw CSV IBM AML; tài liệu IBM AML GNN benchmark,src/ibm_aml/etl.py,27/9,Khánh,Part B — Task 1 IBM (mở rộng),Task 1 (15đ),Đã xong,"File tạo thêm/add content: (*) là main code files quan trọng để chạy, others là files phụ để check/analysis/bàn giao việc cho tasks sau
+
+-person2_handoff.md (có một số nd cần thêm vào readme)
+-docs\DE_Paysim_IBM_Comparison.md
+-src\ibm_aml\audit_ibm_post_fix.py
+-src\ibm_aml\probe_bank_ids.py
+-src/ibm_aml/etl.py (*)
+-src/common/graph_utils.py (*)
+-tests/test_ibm_aml_etl.py (*)"
+,Cả nhóm,—,Sync Chủ nhật — chốt W1; ghi biên bản,Tiến độ cá nhân trong tuần,Biên bản,27/9,—,Weekly sync,—,Đã xong,
+ ,Khánh,Motif,Final 3.3,GraphFrames docs; bài báo gốc PageRank (Page & Brin),3.3 (done),28/9,—,Part A — Mục 3.3 Đạo hàm PageRank,Part A (35đ),Đã xong,
+,Tuệ Minh,Lead,Final 3.2,Đề bài gốc; tài liệu Spark graph partitioning,3.2 (done),28/9,—,Part A — Mục 3.2 Vertex Cut vs Edge Cut,Part A (35đ),Đã xong,
+,Khánh,Motif,Review IBM ETL của Thảo (schema + integrity: 0 dangling; 0 null),Raw CSV IBM AML; bảng ánh xạ IBM,Comment,28/9,—,Part B — Task 1 IBM (mở rộng),Task 1 (15đ),Đã xong,gửi riêng cho Thảo rồi
+,Thảo,DE,Fix IBM ETL theo comment Khánh,Raw CSV IBM AML; bảng ánh xạ IBM,Commit,29/9,Khánh,Part B — Task 1 IBM (mở rộng),Task 1 (15đ),Đã xong,"chỉnh một số cái make check null, add thêm N4_Review_IBM_ETL_2026-09-29.md để biết chỉnh sửa gì, add thêm bank id vì code thiếu, chỉnh thêm 1 chút add thêm contract collumn theo yêu cầu của BIG_Data_Group6.md là ndung toàn bộ project chúng ta thực hiện"
+,Hoàng,LPA,Draft Task 4 PaySim: code community_detection.py — setCheckpointDir BẮT BUỘC + labelPropagation(maxIter=5) + extract communities,GraphFrame hoàn chỉnh; GraphFrames LPA API,Code + CSV,29/9,Châu Anh,Part B — Task 4 Community Detection,Task 4 (25đ),,
+,Thảo,DE,Final IBM ETL; build GraphFrame IBM; verify integrity,Raw CSV IBM AML; bảng ánh xạ IBM,IBM GraphFrame (done),30/9,Tuệ Minh,Part B — Task 1 IBM (mở rộng),Task 1 (15đ),,⚠️ BẮT BUỘC setCheckpointDir
+,Châu Anh,Graph Alg,"Draft Task 2 PaySim: code metrics.py — degree distribution + PageRank(reset=0.15; maxIter=10) + top 10 hub + caveat ""PR ≠ fraud""",GraphFrame hoàn chỉnh từ Task 1,Code + CSV + PNG,30/9,Phương,Part B — Task 2 Degree + PageRank,Task 2 (25đ),Đã xong,
+,Khánh,Motif,Draft Task 3 PaySim: code motif_finding.py — query 3-node cycle (=0) + 2-hop relay TRANSFER→CASH_OUT threshold >10000,GraphFrame hoàn chỉnh; code motif từ toy example,Code + CSV,30/9,Phương,Part B — Task 3 Motif Finding,Task 3 (25đ),,
+,Tuệ Minh,Lead,Draft Mục 3.1: GraphX vs GraphFrames (bảng so sánh RDD vs DataFrame; Catalyst/Tungsten; đánh đổi; lý do chọn),Spark docs: GraphX RDD vs GraphFrames DataFrame; Catalyst/Tungsten,Draft 3.1,1/10,Tuấn Anh,Part A — Mục 3.1 GraphX vs GraphFrames,Part A (35đ),Đợi check,
+,Khánh,Motif,Draft Task 3 IBM: code ibm_motif.py — 3-node cycle trên IBM (có cycle thật),IBM GraphFrame (từ Thảo 30/9); code motif từ toy example,Code,1/10,Hoàng,Part B — Task 3 IBM (mở rộng),Task 3 (25đ),,
+,Hoàng,LPA,Draft Task 4 IBM: code LPA trên IBM,IBM GraphFrame (từ Thảo 30/9); GraphFrames LPA API,Code,1/10,Khánh,Part B — Task 4 IBM (mở rộng),Task 4 (25đ),,
+,Châu Anh,Graph Alg,Draft Task 2 IBM: degree + PageRank IBM,IBM GraphFrame (từ Thảo 30/9),Code,1/10,Phương,Part B — Task 2 IBM (mở rộng),Task 2 (25đ),Đang làm,
+,Phương,Graph Alg,Review Task 2 PaySim + Task 3 PaySim của Châu Anh/Khánh,GraphFrame hoàn chỉnh từ Task 1,Comment,2/10,—,Part B — Task 2 Degree + PageRank,Task 2 (25đ),Đã xong,"Check xong của Châu Anh, đủ output rùi"
+,Châu Anh,Graph Alg,Review Task 4 PaySim của Hoàng: chạy LPA 2-3 lần check stability,GraphFrame hoàn chỉnh; GraphFrames LPA API,Nhận xét,2/10,—,Part B — Task 4 Community Detection,Task 4 (25đ),,
+,Tuấn Anh,Report,Review 3.1 của Tuệ Minh,Spark docs: GraphX RDD vs GraphFrames DataFrame; Catalyst/Tungsten,Comment,2/10,—,Part A — Mục 3.1 GraphX vs GraphFrames,Part A (35đ),Đã xong,
+,Châu Anh,Graph Alg,Fix Task 2 PaySim theo Phương,GraphFrame hoàn chỉnh từ Task 1,Commit,3/10,—,Part B — Task 2 Degree + PageRank,Task 2 (25đ),,
+,Khánh,Motif,Fix Task 3 PaySim theo Phương,GraphFrame hoàn chỉnh; code motif từ toy example,Commit,3/10,—,Part B — Task 3 Motif Finding,Task 3 (25đ),,
+,Hoàng,LPA,Fix Task 4 PaySim theo Châu Anh,GraphFrame hoàn chỉnh; GraphFrames LPA API,Commit,3/10,—,Part B — Task 4 Community Detection,Task 4 (25đ),,
+,Tuệ Minh,Lead,Fix 3.1 theo Tuấn Anh,Spark docs: GraphX RDD vs GraphFrames DataFrame; Catalyst/Tungsten,3.1 v2,3/10,Tuấn Anh,Part A — Mục 3.1 GraphX vs GraphFrames,Part A (35đ),,
+,Khánh,Motif,Draft Task 3 IBM (tiếp) — chạy motif trên IBM GraphFrame,IBM GraphFrame (từ Thảo 30/9),Code + CSV,3/10,Hoàng,Part B — Task 3 IBM (mở rộng),Task 3 (25đ),,
+,Hoàng,LPA,Draft Task 4 IBM (tiếp) — chạy LPA trên IBM GraphFrame,IBM GraphFrame (từ Thảo 30/9),Code + CSV,3/10,Khánh,Part B — Task 4 IBM (mở rộng),Task 4 (25đ),,
+,Châu Anh,Graph Alg,Draft Task 2 IBM (tiếp) — chạy degree + PageRank trên IBM GraphFrame,IBM GraphFrame (từ Thảo 30/9),Code + CSV,3/10,Phương,Part B — Task 2 IBM (mở rộng),Task 2 (25đ),,
+,Phương,Graph Alg,Final Task 2 + Task 3 PaySim,GraphFrame hoàn chỉnh từ Task 1,,4/10,Tuệ Minh,Part B — Task 2 Degree + PageRank,Task 2 (25đ),,
+,Châu Anh,Graph Alg,Final Task 4 PaySim,GraphFrame hoàn chỉnh; GraphFrames LPA API,,4/10,Tuệ Minh,Part B — Task 4 Community Detection,Task 4 (25đ),,
+,Tuấn Anh,Report,Final 3.1,Spark docs: GraphX RDD vs GraphFrames DataFrame; Catalyst/Tungsten,,4/10,Tuệ Minh,Part A — Mục 3.1 GraphX vs GraphFrames,Part A (35đ),,
+,Cả nhóm,—,Sync Chủ nhật,Tiến độ cá nhân trong tuần,Biên bản,4/10,—,Weekly sync,—,,
+3,Phương,Graph Alg,Review Task 2 IBM của Châu Anh,IBM GraphFrame; kết quả Task 2 IBM,Comment,5/10,—,Part B — Task 2 IBM (mở rộng),Task 2 (25đ),,
+,Hoàng,LPA,Review Task 3 IBM của Khánh,IBM GraphFrame; kết quả Task 3 IBM,Comment,5/10,—,Part B — Task 3 IBM (mở rộng),Task 3 (25đ),,
+,Khánh,Motif,Review Task 4 IBM của Hoàng,IBM GraphFrame; kết quả Task 4 IBM,Comment,5/10,—,Part B — Task 4 IBM (mở rộng),Task 4 (25đ),,
+,Châu Anh,Graph Alg,Fix Task 2 IBM theo Phương,IBM GraphFrame; kết quả Task 2 IBM,Commit,6/10,—,Part B — Task 2 IBM (mở rộng),Task 2 (25đ),,
+,Khánh,Motif,Fix Task 3 IBM theo Hoàng,IBM GraphFrame; kết quả Task 3 IBM,Commit,6/10,—,Part B — Task 3 IBM (mở rộng),Task 3 (25đ),,
+,Hoàng,LPA,Fix Task 4 IBM theo Khánh,IBM GraphFrame; kết quả Task 4 IBM,Commit,6/10,—,Part B — Task 4 IBM (mở rộng),Task 4 (25đ),,
+,Phương,Graph Alg,Final Task 2 IBM,IBM GraphFrame; kết quả Task 2 IBM,,7/10,Tuệ Minh,Part B — Task 2 IBM (mở rộng),Task 2 (25đ),,
+,Hoàng,LPA,Final Task 3 IBM,IBM GraphFrame; kết quả Task 3 IBM,,7/10,Tuệ Minh,Part B — Task 3 IBM (mở rộng),Task 3 (25đ),,
+,Khánh,Motif,Final Task 4 IBM,IBM GraphFrame; kết quả Task 4 IBM,,7/10,Tuệ Minh,Part B — Task 4 IBM (mở rộng),Task 4 (25đ),,
+,Phương,Graph Alg,Bắt đầu Draft Comparison section: PaySim (0 cycle; acyclic) vs IBM (có cycle; 8 typologies),Kết quả Task 1-4 PaySim + IBM final,Draft,7/10,Tuệ Minh,Part B — Cross-dataset Comparison (mở rộng),Part B,,
+,Châu Anh,Graph Alg,Review 3.4 của Hoàng+Tuấn Anh,GraphFrames docs; tài liệu lý thuyết LPA / Connected Components,Comment,8/10,—,Part A — Mục 3.4 CC vs LPA,Part A (35đ),,
+,Tuấn Anh,Report,Fix 3.4 theo Châu Anh,GraphFrames docs; tài liệu lý thuyết LPA / Connected Components,3.4 v2,9/10,Châu Anh,Part A — Mục 3.4 CC vs LPA,Part A (35đ),,
+,Châu Anh,Graph Alg,Final 3.4,GraphFrames docs; tài liệu lý thuyết LPA / Connected Components,3.4 (done),10/10,Tuệ Minh,Part A — Mục 3.4 CC vs LPA,Part A (35đ),,
+,Phương,Graph Alg,Draft Comparison section (tiếp) — hoàn thiện so sánh PaySim vs IBM,Kết quả Task 1-4 PaySim + IBM final,Draft Comparison,10/10,Tuệ Minh,Part B — Cross-dataset Comparison (mở rộng),Part B,,
+,Tuấn Anh,Report,Part B skeleton (mục lục + chỗ chờ data),Kết quả Task 1-4 PaySim + IBM,Skeleton,11/10,Tuệ Minh,Part B — Tổng hợp,Part B (Task 1-4),,
+,Tuệ Minh,Lead,Outline Report chi tiết (map barem 35/15/25/25),Toàn bộ output Task 1-4 + Part A,Outline,11/10,Tuấn Anh,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Cả nhóm,—,Sync Chủ nhật,Tiến độ cá nhân trong tuần,Biên bản,11/10,—,Weekly sync,—,,
+4,Tuệ Minh,Lead,GO/NO-GO Connected Components (mở rộng tự chọn),Tiến độ Task 1-4 từ cả nhóm,Quyết định,12/10,Cả nhóm,Quyết định phạm vi mở rộng (CC đầy đủ),Mở rộng tự chọn,,
+,Thảo,DE,QA IBM pipeline: so số liệu; cross-check raw,Toàn bộ output Task 1-4 + Part A,QA report,13/10,Tuệ Minh,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Tuệ Minh,Lead,Review Comparison của Phương,Kết quả Task 1-4 trên PaySim và IBM,Comment,14/10,—,Part B — Cross-dataset Comparison (mở rộng),Part B,,
+,Phương,Graph Alg,Fix Comparison,Kết quả Task 1-4 trên PaySim và IBM,v2,15/10,Tuệ Minh,Part B — Cross-dataset Comparison (mở rộng),Part B,,
+,Tuấn Anh,Report,Draft Part B: tổng hợp kết quả Task 1-4 PaySim + IBM + comparison,Kết quả Task 1-4 PaySim + IBM,Draft Part B,16/10,Tuệ Minh,Part B — Tổng hợp,Part B (Task 1-4),,
+,Phương,Graph Alg,Final Comparison,Kết quả Task 1-4 trên PaySim và IBM,,16/10,—,Part B — Cross-dataset Comparison (mở rộng),Part B,,
+,Tuệ Minh,Lead,Review Part B của Tuấn Anh,Kết quả Task 1-4 PaySim + IBM,Comment,17/10,—,Part B — Tổng hợp,Part B (Task 1-4),,
+,Thảo,DE,QA IBM pipeline (tiếp),Toàn bộ output Task 1-4 + Part A,QA report,17/10,Tuệ Minh,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Tuấn Anh,Report,Fix Part B theo Tuệ Minh,Kết quả Task 1-4 PaySim + IBM,Part B v2,18/10,Tuệ Minh,Part B — Tổng hợp,Part B (Task 1-4),,
+,Tuệ Minh,Lead,Final Part B,Kết quả Task 1-4 PaySim + IBM,,18/10,—,Part B — Tổng hợp,Part B (Task 1-4),,
+,Cả nhóm,—,Sync Chủ nhật,Tiến độ cá nhân trong tuần,Biên bản,18/10,—,Weekly sync,—,,
+5,Tuệ Minh+Tuấn Anh,Integration,"Integrate Part A + B → Report hoàn chỉnh; thêm ""Empirical Finding: 0 cycle PaySim"" + ""Cross-dataset Comparison""",Toàn bộ output Task 1-4 + Part A,Report draft,19/10,Cả nhóm,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Cả nhóm,—,QA lần 1: check barem 35/15/25/25; format; link; hình,Toàn bộ output Task 1-4 + Part A,QA checklist,20/10,—,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Tuệ Minh+Tuấn Anh,Integration,Fix theo QA,Toàn bộ output Task 1-4 + Part A,Report v2,21/10,—,QA toàn báo cáo (barem 35/15/25/25),Toàn bài,,
+,Cả nhóm,Report,Chuẩn bị slide + video demo backup,"Báo cáo hoàn chỉnh; kết quả nổi bật (top hub, cycle, community)",Slide + video,22/10,Cả nhóm,Trình bày / Bảo vệ,Thuyết trình,Chưa bắt đầu,
+,Cả nhóm,—,Rehearsal Q&A — chia câu hỏi theo người,"Báo cáo hoàn chỉnh; kết quả nổi bật (top hub, cycle, community)",Q&A prep,23/10,—,,Thuyết trình,,
+,Tuệ Minh,Lead,Code freeze + final check repo (README; requirements; docs; src; results),Repo hiện tại; tài liệu cài đặt PySpark/GraphFrames,Repo clean,24/10,—,Hạ tầng code (không tính điểm trực tiếp),—,,
+,Tuệ Minh,Lead,Buffer — fix lỗi phát sinh,—,—,25/10,—,—,—,,
+,Tuệ Minh,Lead,NỘP BÀI,Báo cáo + slide + repo,,26/10,—,Nộp bài,Toàn bài,,

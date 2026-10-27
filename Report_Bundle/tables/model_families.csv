@@ -1,0 +1,10 @@
+﻿family,T,C,M,L,novelty_only,meaning
+transaction_only,1,0,0,0,0,Baseline thuộc tính giao dịch
+transaction_novelty,1,0,0,0,1,T + cờ tài khoản đã thấy; đối chứng cold start
+transaction_centrality,1,1,0,0,0,T + Degree/PageRank
+motif_assisted,1,0,1,0,0,T + motif/history
+transaction_community,1,0,0,1,0,T + community context
+full_fusion,1,1,1,1,0,Đủ ba nhóm đồ thị
+without_centrality,1,0,1,1,0,T + motif + communities
+without_motifs,1,1,0,1,0,T + centrality + communities
+without_community,1,1,1,0,0,T + centrality + motif

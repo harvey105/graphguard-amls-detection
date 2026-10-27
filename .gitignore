@@ -11,6 +11,9 @@ venv/
 ENV/
 .vscode/
 .idea/
+.venv-backup/
+env/
+.venv-failed/
 
 # OS generated files
 Thumbs.db
@@ -76,3 +79,4 @@ results/full_system/
 /agent_job.md
 /designs_Explain.md
 /designs.md
+/GraphGuard_FULL_Report_Bundle_2026-10-24

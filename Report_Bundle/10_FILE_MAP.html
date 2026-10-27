@@ -1,0 +1,36 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10_FILE_MAP</title><style>body{font:16px/1.65 system-ui,Segoe UI,sans-serif;max-width:1200px;margin:30px auto;padding:0 22px;color:#203044;background:#fff}h1,h2,h3{line-height:1.3;color:#123d61}a{color:#126299}pre{background:#f1f5f8;padding:18px;overflow:auto;font:13px/1.55 Consolas,monospace;white-space:pre-wrap}code{font-family:Consolas,monospace}table{border-collapse:collapse;display:block;overflow:auto;max-width:100%;font-size:13px}td,th{border:1px solid #d5dfe7;padding:7px 12px;white-space:nowrap}th{background:#eaf1f8}img{max-width:100%;height:auto}blockquote{border-left:4px solid #14849c;padding:10px 18px;background:#eff9fa}details{margin:14px 0;border:1px solid #dae2e9;padding:10px}.cell{border-top:2px solid #dce8f0;margin-top:25px;padding-top:10px}.output{overflow:auto}nav{position:sticky;top:0;background:#fffef2;padding:9px;border-bottom:1px solid #ddd}li{margin:6px 0}</style><body><nav><a href="00_START_HERE.html">Bundle home</a> · <a href="10_FILE_MAP.md">Markdown</a></nav><h1>Bản đồ bundle</h1>
+<pre>00_START_HERE.md / .html     Mở đầu; HTML đọc offline bằng trình duyệt
+01...09_*.md                Toàn bộ nội dung report, method, results, reliability, slides, dictionary
+tables/                    Bảng tổng hợp 2 dataset + exact splits + feature lists + catalog
+datasets/
+  ibm_aml/                 Chỉ completed full IBM run
+  paysim/                  Chỉ completed full PaySim run
+    portable_summary.json  Summary và toàn bộ config/phases/metrics đã lưu
+    tables/                Tất cả root CSV exports của full run; gồm9PRcurves
+    figures/               PNG gốc: IBM13 / PaySim12
+    examples/              TP/FP/FN minh họa của cả9families từ full test
+    provenance/            report/run/artifact_index/frozen_rules giữ nguyên byte
+    model_details/         Model archive + tree nodes/rules/vocab/scales/training của9families
+comparison/                Full degree comparison CSV/PNG + provenance
+notebooks/                 2 full notebooks có output +2HTML offline + cell guide
+src/                       Exact source snapshot đã được hash trong hai accepted runs
+scripts/run_n4_notebook.py Runner source dependency; không có job tự khởi chạy
+tests/test_ibm_aml_etl.py   Source dependency được ghi trong accepted run, không thực thi
+reference/                 PCCV và requirements cho ngữ cảnh
+evidence/                  Existing full-only verifierlog + gate summary
+validation/                Kết quả kiểm tra consistency khi đóng gói
+BUNDLE_MANIFEST.json       Nguồn, SHA,bytes cho từng payload file
+CHECKSUMS.sha256            Toàn bộ file trừ chính checksumfile</pre>
+<h2>Tìm code đúng phần</h2>
+<p>• <a href="src/motif/pipeline.py">Full pipeline, historical snapshot, validation, frozen test</a></p>
+<p>• <a href="src/motif/features.py">Motif history/features và disk stages</a></p>
+<p>• <a href="src/ibm_aml/motif_finding.py">Chronological3cycle IBM</a>, <a href="src/paysim/motif_finding.py">relay PaySim</a></p>
+<p>• <a href="src/paysim/metrics.py">Degree/PageRank</a>, <a href="src/paysim/community_detection.py">LPA</a></p>
+<p>• <a href="src/motif/modeling.py">Preprocessing,tree,exact metrics</a>, <a href="src/motif/evaluation.py">evaluation</a></p>
+<p>• <a href="src/motif/presentation.py">Presentation,figures,case evidence</a></p>
+<p>• <a href="src/common/project_audit.py">Independent audit</a>, <a href="src/common/hardware_guard.py">hardware guard</a></p>
+<p>• <a href="src/ibm_aml/etl.py">IBM ETL</a>, <a href="src/paysim/etl_mapping.py">PaySim mapping</a></p>
+<p>src/motif/toy_cycle.py là tên module của kernel3cycle dùng lại trong full pipeline; bundle không chứa toy/sample-run results. Folder source là snapshot để tra cứu, không là bản clone có đủ data/setup để chạy lại project. Dùng Git repo nếu cần phát triển tiếp.</p>
+<h2>Provenance và cách chia sẻ</h2>
+<p>Chia sẻ ZIP toàn bộ; giữ cấu trúc khi giải nén. Original artifact_index liệt kê cả dữ liệu lớn không đóng gói để lưu chain of evidence, không có nghĩa các file đó nằm trong bundle. BUNDLE_MANIFEST mới là inventory thực tế của bundle. Các absolute producer paths trong original JSON/notebook được giữ để không làm sai chứng cứ gốc; các hướng dẫn mới dùng relative paths.</p>
+<p>Chỉ reference và các full-run artifacts cần báo cáo được đưa vào. Không có agent_job.md, designs_Explain.md, designs.md hay Git credentials. Không có raw/full feature/prediction Parquet, partial/failed/sample benchmark. Không push Git khi đóng gói.</p></body></html>

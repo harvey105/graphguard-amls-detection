@@ -1,0 +1,6 @@
+{
+  "source_file": "results\\project_check\\final_presentation_make_check.log",
+  "source_sha256": "9c904662d6c8a6087f16922c083800b5a5b6d73a23a37ca05ceed086c6693887",
+  "full_gate_pass_footer": true,
+  "note": "Existing gate included software fixtures as well as full acceptance. This summary is not a dataset benchmark and the gate was not rerun."
+}

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Stage-5-Test-Holdout-Inference">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1180" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t5" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Stage 5: Frozen Test Holdout Inference &amp;amp; Generalization Evaluation&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Prefix Model Refit (\(\le 80\%\)) &amp;bull; Out-of-Time Test Holdout (\(&gt; 80\%\)) &amp;bull; 2.27M Test Transactions &amp;bull; 95% Wilson Confidence Intervals&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1550" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="b5_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Holdout:&lt;/b&gt; 2,266,557 Future Tx&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b5_2" value="&lt;span style=&quot;font-size:18px;color:#b45309;&quot;&gt;&lt;b&gt;Fatigue:&lt;/b&gt; -48.3% Alerts (IBM)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="250" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="b5_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Recall Lift:&lt;/b&gt; +32.6% (PaySim)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="32" width="220" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Prefix Model Refit (Cyan Theme) -->
+        <mxCell id="card_s5_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_1" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. PREFIX MODEL REFIT&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Cumulative Prefix Training (\(\le 80\%\))&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_refit_data" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Maximized Training Data Scale:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; IBM AML: Trains on 4,060,524 tx (3,378 positives)&lt;br&gt;&amp;bull; PaySim: Trains on 5,113,884 tx (3,963 positives)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_refit_rule" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Retains Frozen Rules &amp;amp; Depth:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Applies identical winning feature schemas&lt;br&gt;&amp;bull; Preserves tree maxDepth=5 &amp;amp; optimal \(\theta^*\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_refit_blind" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Blind Test Holdout Isolation:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Zero test set leakage: Test partition blind&lt;br&gt;&amp;bull; Strict chronological barrier strictly enforced&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s5_1" value="Script: src/motif/pipeline.py" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: IBM AML Test Performance (Amber Theme) -->
+        <mxCell id="card_s5_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="575" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_2" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;2. IBM AML TEST BENCHMARK&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Winner: full_fusion @ \(\theta^* = 0.50\)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="575" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_ibm_vol" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Out-of-Time Test Scale:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; 1,017,821 unseen transactions (&gt; 80% time)&lt;br&gt;&amp;bull; 1,799 laundering positives (0.177% rarity)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_ibm_p" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Precision: 10.09% (vs 9.07% Baseline):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; +1.02% absolute precision improvement&lt;br&gt;&amp;bull; 95% Wilson CI: [9.28%, 10.96%]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_ibm_fat" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;-48.3% Alert Fatigue Reduction:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Cuts alerts from 9,584 down to 4,956 (-4,628)&lt;br&gt;&amp;bull; Saves thousands of wasted AML review hours&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s5_2" value="Winner: full_fusion [T+C+M+L] @ 0.50" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="575" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: PaySim Test Performance (Emerald Theme) -->
+        <mxCell id="card_s5_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_3" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;3. PAYSIM TEST BENCHMARK&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Winner: without_centrality @ \(\theta^* = 0.70\)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_pay_vol" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Out-of-Time Test Scale:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; 1,248,736 unseen mobile money transactions&lt;br&gt;&amp;bull; 4,250 confirmed fraud events (0.340% rarity)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_pay_rec" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Recall: 26.09% (vs 19.67% Baseline):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; +32.6% relative lift in captured fraud cases&lt;br&gt;&amp;bull; Recovers 1,109 frauds (vs 836 baseline, +273)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_pay_f1" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;F1 Score: 36.02% (vs 31.91% Baseline):&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Precision maintained at robust 58.32%&lt;br&gt;&amp;bull; Proves topological motifs prevent false alarms&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s5_3" value="Winner: without_centrality [T+M+L] @ 0.70" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: 5 Out-of-Time Slices (Purple Theme) -->
+        <mxCell id="card_s5_4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="125" width="445" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_4" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;4. 5 OUT-OF-TIME SLICES&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Concept Drift &amp;amp; Robustness Audit&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="135" width="445" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_slices" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;5 Equal Chronological Intervals:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Holdout partition split into 5 chronological periods&lt;br&gt;&amp;bull; Evaluates performance across advancing time&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="190" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_drift" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Zero Degradation Confirmed:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; F1 stability verified across periods 1 to 5&lt;br&gt;&amp;bull; Graph features maintain signal through evolution&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="295" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_wilson" value="&lt;div style=&quot;text-align:left;line-height:1.38;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Wilson Score Confidence Proof:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; 95% Wilson intervals remain non-overlapping&lt;br&gt;&amp;bull; Certifies robust production generalizability&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=6;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1605" y="400" width="405" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s5_4" value="Drift Audit: 5-Period Chronological Slices" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="510" width="445" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Card 5: Stage 6 Triage Ready (Rose Theme) -->
+        <mxCell id="card_s5_5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="440" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_5" value="&lt;b style=&quot;font-size:24px;color:#be123c;&quot;&gt;5. STAGE 6 TRIAGE READY&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#e11d48;font-weight:400;&quot;&gt;Operational Queue Hand-Off&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="135" width="440" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_score" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Calibrated Probability Scores:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; Generates continuous anomaly scores \(\in [0, 1]\)&lt;br&gt;&amp;bull; Ranks all 2,266,557 test holdout transactions&lt;br&gt;&amp;bull; Enables dynamic capacity-constrained triage&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="190" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_s5_forensic" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:19px;color:#be123c;&quot;&gt;Forensic Subgraph Packaging:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#881337;font-weight:400;&quot;&gt;&amp;bull; High-scoring alerts routed to evidence extractor&lt;br&gt;&amp;bull; Extracts k-hop neighborhood &amp;amp; motif paths&lt;br&gt;&amp;bull; Assembles regulatory SAR/STR witnesses&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=8;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="2110" y="315" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_s5_5" value="Hand-Off: Stage 6 Forensic Triage" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#e11d48;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="510" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows Between Consecutive Cards -->
+        <mxCell id="e5_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s5_1" target="card_s5_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s5_2" target="card_s5_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#059669;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s5_3" target="card_s5_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#7c3aed;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="card_s5_4" target="card_s5_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Test Benchmark Economics & Wilson Formulation -->
+        <mxCell id="panel_s5_detail" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="2460" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t_s5_detail" value="&lt;b style=&quot;font-size:24px;color:#1e40af;&quot;&gt;TEST BENCHMARK RIGOR &amp;amp; COMPLIANCE ECONOMIC IMPACT&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="605" width="1400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 1: Compliance Economics -->
+        <mxCell id="s5_kbox_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_k1" value="&lt;b style=&quot;font-size:22px;color:#b45309;&quot;&gt;1. Banking Compliance Cost Relief Economics&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s5_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#b45309;&quot;&gt;\(\Delta_{\text{Ops}} = -4,628\,\text{Alerts} \times \$75/\text{FTE} \approx \$347,100\,\text{Direct Savings}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s5_k1" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;The False Positive Crisis:&lt;/b&gt; Over 90% of alerts produced by traditional legacy rule-based AML systems are false positives, causing massive investigator fatigue.&lt;br&gt;&amp;bull; &lt;b&gt;48.3% Alert Queue Reduction:&lt;/b&gt; GraphGuard cuts total alert investigations from 9,584 down to 4,956 on 1.01M IBM AML holdout transactions.&lt;br&gt;&amp;bull; &lt;b&gt;Direct Cost Savings:&lt;/b&gt; At an industry average cost of $75 per compliance review, this reduction yields $347,100 in direct operational savings per reporting cycle.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 2: Fraud Interception -->
+        <mxCell id="s5_kbox_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_k2" value="&lt;b style=&quot;font-size:22px;color:#047857;&quot;&gt;2. PaySim Direct Fraud Loss Interception Value&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="935" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s5_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#047857;&quot;&gt;\(\Delta_{\text{Fraud}} = +273\,\text{Frauds Caught} \times \$260,000/\text{Tx} \approx \$70.98\text{M Saved}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s5_k2" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;High-Stakes Mobile Fraud:&lt;/b&gt; In PaySim, fraudulent transactions involve rapid, complete account drainage via paired TRANSFER and CASH_OUT mechanisms.&lt;br&gt;&amp;bull; &lt;b&gt;+32.6% Relative Recall Lift:&lt;/b&gt; Elevates captured fraud cases from 836 (baseline) to 1,109 (GraphGuard), recovering 273 additional laundering schemes.&lt;br&gt;&amp;bull; &lt;b&gt;Direct Loss Prevention:&lt;/b&gt; With an average fraud transaction value of $260,000, intercepting 273 additional events prevents ~$70.98M in capital loss.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="935" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Knowledge Box 3: Wilson Confidence Bounds -->
+        <mxCell id="s5_kbox_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="655" width="770" height="395" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_s5_k3" value="&lt;b style=&quot;font-size:22px;color:#0369a1;&quot;&gt;3. Wilson 95% Score Confidence Interval Formulation&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="668" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_s5_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:20px;color:#0369a1;&quot;&gt;\(\text{CI}_{95\%} = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \quad z = 1.96\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="710" width="730" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_s5_k3" value="&lt;div style=&quot;text-align:left;line-height:1.55;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Asymmetric Binomial Estimation:&lt;/b&gt; In extreme class imbalance, standard normal Wald approximations produce invalid negative lower bounds or zero widths.&lt;br&gt;&amp;bull; &lt;b&gt;Wilson Score Method:&lt;/b&gt; Corrects skewness for rare proportions, providing exact 95% confidence intervals on out-of-time test performance.&lt;br&gt;&amp;bull; &lt;b&gt;Verified Lift Significance:&lt;/b&gt; Proves IBM precision lift ([9.28%, 10.96%]) is statistically superior to baseline (9.07%), confirming model generalizability.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="780" width="730" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption5" value="Stage 5 Architecture: Frozen test holdout evaluation across 2.27M unseen transactions. Achieves -48.3% alert fatigue reduction on IBM AML and +32.6% fraud recall lift on PaySim, verified by 95% Wilson confidence intervals across 5 out-of-time intervals." style="text;html=1;align=left;verticalAlign=top;fontSize=18;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1090" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

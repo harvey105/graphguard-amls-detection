@@ -1,0 +1,888 @@
+[
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/baseline_currencies.csv",
+    "rows": 15,
+    "columns": [
+      "payment_currency",
+      "count"
+    ],
+    "purpose": "Chi tiết currency của baseline IBM; header-only ở PaySim là không áp dụng."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/baseline_examples.csv",
+    "rows": 54,
+    "columns": [
+      "a",
+      "b",
+      "c",
+      "transaction_combinations"
+    ],
+    "purpose": "Ví dụ witness lấy từ kết quả full baseline; không phải sampled input, không dùng tính benchmark."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/baseline_summary.csv",
+    "rows": 1,
+    "columns": [
+      "dataset",
+      "fraud_edges",
+      "label_audit_raw_cycles",
+      "directed_account_cycles",
+      "transaction_combinations",
+      "USD_above_10000_cycles"
+    ],
+    "purpose": "Baseline truy vấn gốc trên full graph; label audit để mô tả, không phải predictive test."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/community_size_distribution.csv",
+    "rows": 69,
+    "columns": [
+      "member_count",
+      "count"
+    ],
+    "purpose": "Phân bố kích thước toàn bộ cộng đồng LPA; count là số cộng đồng."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/community_top50.csv",
+    "rows": 50,
+    "columns": [
+      "label",
+      "member_count",
+      "unique_banks_count",
+      "total_tx_count",
+      "positive_tx_count",
+      "internal_tx_count",
+      "cross_tx_count"
+    ],
+    "purpose": "50 cộng đồng lớn nhất của full LPA; positive_tx_count chỉ audit nhãn, không gọi toàn cộng đồng là gian lận."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/degree_distribution.csv",
+    "rows": 303,
+    "columns": [
+      "degree",
+      "account_count"
+    ],
+    "purpose": "Phân bố total degree của toàn bộ tài khoản, kể cả degree 0; sum account_count = V, sum degree*count = 2E."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/feature_importance.csv",
+    "rows": 195,
+    "columns": [
+      "feature",
+      "importance",
+      "family"
+    ],
+    "purpose": "Impurity-based importance từng feature/family; số 0 là không được tree dùng, không phải bằng chứng nhân quả."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/graph_contributions.csv",
+    "rows": 7,
+    "columns": [
+      "contrast",
+      "enhanced",
+      "reference",
+      "delta_precision",
+      "delta_recall",
+      "delta_F1",
+      "delta_average_precision"
+    ],
+    "purpose": "Chênh lệch chỉ số giữa các family tại threshold riêng đã freeze; ablation quan sát, không causal contribution."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/motif_coverage.csv",
+    "rows": 18,
+    "columns": [
+      "scope",
+      "motif",
+      "transactions",
+      "positives",
+      "covered_transactions",
+      "covered_positives",
+      "positive_coverage",
+      "positive_fraction_when_present",
+      "population_prevalence",
+      "interpretation"
+    ],
+    "purpose": "Coverage 9 nhóm motif ở full/test; covered_positives không phải TP của classifier; các nhóm chồng lấp."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
+    "rows": 16,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
+    "rows": 12,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
+    "rows": 12,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
+    "rows": 6,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
+    "rows": 6,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
+    "rows": 6,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
+    "rows": 12,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_without_community.csv",
+    "rows": 14,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
+    "rows": 11,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/reliability_summary.csv",
+    "rows": 9,
+    "columns": [
+      "model",
+      "threshold",
+      "mean_F1",
+      "worst_F1",
+      "std_F1",
+      "test_period_min_F1",
+      "test_period_max_F1",
+      "test_period_std_F1",
+      "positive_periods"
+    ],
+    "purpose": "Tóm tắt F1 validation và biến thiên F1 5 khoảng test cho từng family."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/review_budgets.csv",
+    "rows": 27,
+    "columns": [
+      "model",
+      "review_fraction",
+      "K",
+      "transactions",
+      "fraud",
+      "TP_at_K",
+      "precision_at_K",
+      "recall_at_K",
+      "tie_policy"
+    ],
+    "purpose": "Exact top-K review ở 0.1%, 0.5%, 1% test; tie-break cố định, không tối ưu sau test."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/selected_amounts_by_currency.csv",
+    "rows": 59,
+    "columns": [
+      "payment_currency",
+      "case",
+      "transactions",
+      "payment_amount"
+    ],
+    "purpose": "Tổng payment_amount theo currency và TP/FP/FN/TN; không cộng các currency thành một USD total."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/selected_case_evidence.csv",
+    "rows": 3,
+    "columns": [
+      "event_id",
+      "src",
+      "dst",
+      "step",
+      "type",
+      "amount",
+      "payment_currency",
+      "isFraud",
+      "example_model",
+      "evidence_kind"
+    ],
+    "purpose": "Giao dịch thật và history witness của một selected-model test TP; witness có thể nằm trước test."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/selected_cold_start.csv",
+    "rows": 3,
+    "columns": [
+      "history_group",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate"
+    ],
+    "purpose": "Test theo lịch sử seen/unseen của family được validation chọn; phân rã counts, không chia ngẫu nhiên."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/test_metrics.csv",
+    "rows": 9,
+    "columns": [
+      "model",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate",
+      "average_precision",
+      "selected_on_validation",
+      "precision_low95",
+      "precision_high95",
+      "recall_low95",
+      "recall_high95"
+    ],
+    "purpose": "Toàn bộ test của 9 families tại từng threshold đã chọn trên validation; ma trận nhầm lẫn + PR/F1/AP + CI."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/test_temporal_stability.csv",
+    "rows": 45,
+    "columns": [
+      "model",
+      "test_period",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate",
+      "precision_low95",
+      "precision_high95",
+      "recall_low95",
+      "recall_high95",
+      "average_precision"
+    ],
+    "purpose": "9 families × 5 khoảng test; tổng counts theo family bằng test_metrics."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/top10_pagerank.csv",
+    "rows": 10,
+    "columns": [
+      "id",
+      "pagerank",
+      "inDegree",
+      "outDegree",
+      "degree"
+    ],
+    "purpose": "10 tài khoản PageRank lớn nhất từ full descriptive analytics; không phải chỉ chạy trên 10 tài khoản."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/validation_average_precision.csv",
+    "rows": 27,
+    "columns": [
+      "fold",
+      "family",
+      "average_precision",
+      "transactions"
+    ],
+    "purpose": "AP validation theo từng family/fold; dùng cho đánh giá ranking."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/validation_leaderboard.csv",
+    "rows": 108,
+    "columns": [
+      "family",
+      "threshold",
+      "mean_F1",
+      "worst_F1",
+      "std_F1",
+      "mean_precision",
+      "TP",
+      "FP",
+      "FN",
+      "transactions",
+      "folds"
+    ],
+    "purpose": "9 families × 12 thresholds; trung bình/worst/std 3 folds; đây là dữ liệu chọn mô hình."
+  },
+  {
+    "dataset": "ibm_aml",
+    "path": "datasets/ibm_aml/tables/walk_forward.csv",
+    "rows": 324,
+    "columns": [
+      "fold",
+      "family",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate"
+    ],
+    "purpose": "3 folds × 9 families × 12 thresholds; mỗi dòng là validation fold, không phải final test."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/baseline_currencies.csv",
+    "rows": 0,
+    "columns": [
+      "payment_currency",
+      "count"
+    ],
+    "purpose": "Chi tiết currency của baseline IBM; header-only ở PaySim là không áp dụng."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/baseline_examples.csv",
+    "rows": 30,
+    "columns": [
+      "source_account",
+      "middle_account",
+      "cashout_account",
+      "transfer_step",
+      "cashout_step",
+      "transfer_amount",
+      "cashout_amount",
+      "transfer_isFraud",
+      "cashout_isFraud"
+    ],
+    "purpose": "Ví dụ witness lấy từ kết quả full baseline; không phải sampled input, không dùng tính benchmark."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/baseline_summary.csv",
+    "rows": 1,
+    "columns": [
+      "dataset",
+      "raw_cycles",
+      "relay_pairs",
+      "same_hour",
+      "fraud_transfer_edges",
+      "fraud_cashout_edges"
+    ],
+    "purpose": "Baseline truy vấn gốc trên full graph; label audit để mô tả, không phải predictive test."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/community_size_distribution.csv",
+    "rows": 99,
+    "columns": [
+      "member_count",
+      "count"
+    ],
+    "purpose": "Phân bố kích thước toàn bộ cộng đồng LPA; count là số cộng đồng."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/community_top50.csv",
+    "rows": 50,
+    "columns": [
+      "label",
+      "member_count",
+      "customer_count",
+      "merchant_count",
+      "total_tx_count",
+      "positive_tx_count",
+      "internal_tx_count",
+      "cross_tx_count"
+    ],
+    "purpose": "50 cộng đồng lớn nhất của full LPA; positive_tx_count chỉ audit nhãn, không gọi toàn cộng đồng là gian lận."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/degree_distribution.csv",
+    "rows": 101,
+    "columns": [
+      "degree",
+      "account_count"
+    ],
+    "purpose": "Phân bố total degree của toàn bộ tài khoản, kể cả degree 0; sum account_count = V, sum degree*count = 2E."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/feature_importance.csv",
+    "rows": 195,
+    "columns": [
+      "feature",
+      "importance",
+      "family"
+    ],
+    "purpose": "Impurity-based importance từng feature/family; số 0 là không được tree dùng, không phải bằng chứng nhân quả."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/graph_contributions.csv",
+    "rows": 7,
+    "columns": [
+      "contrast",
+      "enhanced",
+      "reference",
+      "delta_precision",
+      "delta_recall",
+      "delta_F1",
+      "delta_average_precision"
+    ],
+    "purpose": "Chênh lệch chỉ số giữa các family tại threshold riêng đã freeze; ablation quan sát, không causal contribution."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/motif_coverage.csv",
+    "rows": 18,
+    "columns": [
+      "scope",
+      "motif",
+      "transactions",
+      "positives",
+      "covered_transactions",
+      "covered_positives",
+      "positive_coverage",
+      "positive_fraction_when_present",
+      "population_prevalence",
+      "interpretation"
+    ],
+    "purpose": "Coverage 9 nhóm motif ở full/test; covered_positives không phải TP của classifier; các nhóm chồng lấp."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_full_fusion.csv",
+    "rows": 11,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_motif_assisted.csv",
+    "rows": 8,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_transaction_centrality.csv",
+    "rows": 7,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_transaction_community.csv",
+    "rows": 5,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_transaction_novelty.csv",
+    "rows": 5,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_transaction_only.csv",
+    "rows": 3,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_without_centrality.csv",
+    "rows": 8,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_without_community.csv",
+    "rows": 11,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/pr_curve_without_motifs.csv",
+    "rows": 7,
+    "columns": [
+      "risk_score",
+      "positives",
+      "transactions",
+      "precision",
+      "recall"
+    ],
+    "purpose": "Exact precision-recall bins của family nêu trong tên file; không phải sampled PR curve."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/reliability_summary.csv",
+    "rows": 9,
+    "columns": [
+      "model",
+      "threshold",
+      "mean_F1",
+      "worst_F1",
+      "std_F1",
+      "test_period_min_F1",
+      "test_period_max_F1",
+      "test_period_std_F1",
+      "positive_periods"
+    ],
+    "purpose": "Tóm tắt F1 validation và biến thiên F1 5 khoảng test cho từng family."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/review_budgets.csv",
+    "rows": 27,
+    "columns": [
+      "model",
+      "review_fraction",
+      "K",
+      "transactions",
+      "fraud",
+      "TP_at_K",
+      "precision_at_K",
+      "recall_at_K",
+      "tie_policy"
+    ],
+    "purpose": "Exact top-K review ở 0.1%, 0.5%, 1% test; tie-break cố định, không tối ưu sau test."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/selected_amounts_by_currency.csv",
+    "rows": 4,
+    "columns": [
+      "payment_currency",
+      "case",
+      "transactions",
+      "payment_amount"
+    ],
+    "purpose": "Tổng payment_amount theo currency và TP/FP/FN/TN; không cộng các currency thành một USD total."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/selected_case_evidence.csv",
+    "rows": 1,
+    "columns": [
+      "event_id",
+      "src",
+      "dst",
+      "step",
+      "type",
+      "amount",
+      "payment_currency",
+      "isFraud",
+      "example_model",
+      "evidence_kind"
+    ],
+    "purpose": "Giao dịch thật và history witness của một selected-model test TP; witness có thể nằm trước test."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/selected_cold_start.csv",
+    "rows": 3,
+    "columns": [
+      "history_group",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate"
+    ],
+    "purpose": "Test theo lịch sử seen/unseen của family được validation chọn; phân rã counts, không chia ngẫu nhiên."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/test_metrics.csv",
+    "rows": 9,
+    "columns": [
+      "model",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate",
+      "average_precision",
+      "selected_on_validation",
+      "precision_low95",
+      "precision_high95",
+      "recall_low95",
+      "recall_high95"
+    ],
+    "purpose": "Toàn bộ test của 9 families tại từng threshold đã chọn trên validation; ma trận nhầm lẫn + PR/F1/AP + CI."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/test_temporal_stability.csv",
+    "rows": 45,
+    "columns": [
+      "model",
+      "test_period",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate",
+      "precision_low95",
+      "precision_high95",
+      "recall_low95",
+      "recall_high95",
+      "average_precision"
+    ],
+    "purpose": "9 families × 5 khoảng test; tổng counts theo family bằng test_metrics."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/top10_pagerank.csv",
+    "rows": 10,
+    "columns": [
+      "id",
+      "pagerank",
+      "inDegree",
+      "outDegree",
+      "degree"
+    ],
+    "purpose": "10 tài khoản PageRank lớn nhất từ full descriptive analytics; không phải chỉ chạy trên 10 tài khoản."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/validation_average_precision.csv",
+    "rows": 27,
+    "columns": [
+      "fold",
+      "family",
+      "average_precision",
+      "transactions"
+    ],
+    "purpose": "AP validation theo từng family/fold; dùng cho đánh giá ranking."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/validation_leaderboard.csv",
+    "rows": 108,
+    "columns": [
+      "family",
+      "threshold",
+      "mean_F1",
+      "worst_F1",
+      "std_F1",
+      "mean_precision",
+      "TP",
+      "FP",
+      "FN",
+      "transactions",
+      "folds"
+    ],
+    "purpose": "9 families × 12 thresholds; trung bình/worst/std 3 folds; đây là dữ liệu chọn mô hình."
+  },
+  {
+    "dataset": "paysim",
+    "path": "datasets/paysim/tables/walk_forward.csv",
+    "rows": 324,
+    "columns": [
+      "fold",
+      "family",
+      "threshold",
+      "transactions",
+      "fraud",
+      "alerts",
+      "TP",
+      "FP",
+      "FN",
+      "TN",
+      "precision",
+      "recall",
+      "F1",
+      "prevalence",
+      "alert_rate"
+    ],
+    "purpose": "3 folds × 9 families × 12 thresholds; mỗi dòng là validation fold, không phải final test."
+  }
+]

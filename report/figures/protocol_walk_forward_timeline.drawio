@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Protocol-Walk-Forward-Timeline">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1330" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="tp1" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:36px;color:#0f172a;&quot;&gt;Temporal Anti-Leakage Protocol: Walk-Forward Timeline &amp;amp; Invariants&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:20px;color:#334155;font-weight:400;&quot;&gt;Strict-Past Causal Partitioning &amp;bull; Expanding Slices (40% &amp;rarr; 50% &amp;rarr; 65% &amp;rarr; 80%) &amp;bull; As-Of Dynamic Graph Snapshots &amp;bull; Zero Lookahead&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="25" width="1600" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="bp1_1" value="&lt;span style=&quot;font-size:18px;color:#0369a1;&quot;&gt;&lt;b&gt;Protocol:&lt;/b&gt; Strict Causal Past (\(t &amp;lt; t_0\))&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="32" width="270" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp1_2" value="&lt;span style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;&lt;b&gt;Folds:&lt;/b&gt; 3 Expanding Slices&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="32" width="240" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="bp1_3" value="&lt;span style=&quot;font-size:18px;color:#047857;&quot;&gt;&lt;b&gt;Test Holdout:&lt;/b&gt; &amp;gt; 80% Unseen Future&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2300" y="32" width="230" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Card 1: Chronological Split Horizon (Cyan Theme) -->
+        <mxCell id="card_tp1_split" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="570" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_split" value="&lt;b style=&quot;font-size:24px;color:#0369a1;&quot;&gt;1. CHRONOLOGICAL SPLIT HORIZON&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#0284c7;font-weight:400;&quot;&gt;Expanding-Window Walk-Forward Architecture&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="570" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_split_train" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Initial Calibration Prefix: \([0\%, 40\%]\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;IBM AML:&lt;/b&gt; 2,030,262 tx | &lt;b&gt;PaySim:&lt;/b&gt; 2,556,942 tx&lt;br&gt;&amp;bull; Baseline parameter training &amp;amp; initial quantile anchors&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="195" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_split_folds" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;3 Expanding Validation Folds:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Fold 1:&lt;/b&gt; \((40\%, 50\%]\) evaluated from prefix \(\le 40\%\)&lt;br&gt;&amp;bull; &lt;b&gt;Fold 2:&lt;/b&gt; \((50\%, 65\%]\) evaluated from prefix \(\le 50\%\)&lt;br&gt;&amp;bull; &lt;b&gt;Fold 3:&lt;/b&gt; \((65\%, 80\%]\) evaluated from prefix \(\le 65\%\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="325" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_split_test" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0369a1;&quot;&gt;Frozen Out-of-Time Test Holdout: \(&gt; 80\%\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; Model prefix retrained strictly on \(\le 80\%\)&lt;br&gt;&amp;bull; Evaluated on \(80\%\text{--}100\%\) unseen future holdout&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="455" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp1_split" value="Script: src/models/evaluate_all_slices.py" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#0284c7;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="570" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 2: Causal Dynamic Graph Snapshots (Purple Theme) -->
+        <mxCell id="card_tp1_snap" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="690" y="125" width="570" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_snap" value="&lt;b style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;2. CAUSAL GRAPH SNAPSHOTS&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#7c3aed;font-weight:400;&quot;&gt;Strict-Past Topological State Isolation&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="690" y="135" width="570" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_snap_form" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Formal As-Of Graph Definition:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; \(\mathcal{G}_{&lt; t} = (\mathcal{V}_{&lt; t}, \mathcal{E}_{&lt; t})\) where \(\mathcal{E}_{&lt; t} = \{e \in \mathcal{E} \mid t_e &lt; t\}\)&lt;br&gt;&amp;bull; Target edge \(e_t\) and all future edges are strictly unseen&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="710" y="195" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_snap_algo" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Algorithm Invariant Execution:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; PageRank &amp;amp; LPA execute solely on historical \(\mathcal{E}_{&lt; t}\)&lt;br&gt;&amp;bull; Degree and motif counters look strictly backwards&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="710" y="325" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_snap_win" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#6d28d9;&quot;&gt;Causal Rolling Windows:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; Windows \(W \in \{1\text{h}, 24\text{h}, 168\text{h}\}\) bounded: \(t - W \le s &lt; t\)&lt;br&gt;&amp;bull; Strictly prevents self-target feedback &amp;amp; label leakage&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="710" y="455" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp1_snap" value="Eliminates Network Information Leakage" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#7c3aed;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="690" y="590" width="570" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 3: Microsecond Tie-Breaking & Cold Start (Amber Theme) -->
+        <mxCell id="card_tp1_ties" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="125" width="570" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_ties" value="&lt;b style=&quot;font-size:24px;color:#b45309;&quot;&gt;3. TIE-BREAKING &amp;amp; COLD START&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#d97706;font-weight:400;&quot;&gt;Microsecond Collision &amp;amp; Node Regularization&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="135" width="570" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_ties_ord" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Deterministic Timestamp Ordering:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Edges with identical timestamp (\(\Delta t = 0\)) ordered by:&lt;br&gt;&amp;bull; Tuple \((t, \text{hash}(\text{src}), \text{hash}(\text{dst}), \text{amt})\) uniquely&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="195" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_ties_cold" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;Cold-Start Node Regularization:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; New test accounts without past transaction history&lt;br&gt;&amp;bull; Receive prior base PageRank \(1/|\mathcal{V}|\) and degree 0&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="325" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_ties_sync" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#b45309;&quot;&gt;LPA Deterministic Tie-Breaking:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#78350f;font-weight:400;&quot;&gt;&amp;bull; Ties broken deterministically via \(\min(\text{signed\_xxhash64})\)&lt;br&gt;&amp;bull; Eliminates multi-threading race conditions across nodes&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="455" width="530" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp1_ties" value="Deterministic Replay Across Hardware" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#d97706;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="590" width="570" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Card 4: Zero Future Leakage Guarantee (Emerald Theme) -->
+        <mxCell id="card_tp1_leak" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="1930" y="125" width="600" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_leak" value="&lt;b style=&quot;font-size:24px;color:#047857;&quot;&gt;4. ZERO FUTURE LEAKAGE AUDIT&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:17px;color:#059669;font-weight:400;&quot;&gt;Regulatory Prefix Isolation Compliance&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1930" y="135" width="600" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_leak_stat" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Quantile &amp;amp; Weight Isolation:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Amount scaling \(q_{90}\) and class weight \(w_+\) fitted on \(\le 80\%\)&lt;br&gt;&amp;bull; Zero peeking into test interval distribution statistics&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="195" width="560" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_leak_thresh" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Threshold Freezing Isolation:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Decision threshold \(\theta^*\) locked on cross-validation folds&lt;br&gt;&amp;bull; Strictly frozen; never retuned or snooped on test data&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="325" width="560" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_leak_pass" value="&lt;div style=&quot;text-align:left;line-height:1.45;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#047857;&quot;&gt;Federal Reserve SR 11-7 Compliance:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:16px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; Audited: &lt;b&gt;0.00% future information peeking&lt;/b&gt; across 6M tx&lt;br&gt;&amp;bull; Legally defensible production deployment verification&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=14;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="455" width="560" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ft_tp1_leak" value="Governance: Non-Blackbox Decision Audit" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;color:#059669;font-weight:400;" vertex="1" parent="1">
+          <mxGeometry x="1930" y="590" width="600" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Inter-Card Horizontal Arrows -->
+        <mxCell id="arr_tp1_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0284c7;strokeWidth=3;" edge="1" parent="1" source="card_tp1_split" target="card_tp1_snap">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_tp1_23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7c3aed;strokeWidth=3;" edge="1" parent="1" source="card_tp1_snap" target="card_tp1_ties">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_tp1_34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d97706;strokeWidth=3;" edge="1" parent="1" source="card_tp1_ties" target="card_tp1_leak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lower Detail Panel: Temporal Invariants & Theoretical Guarantees -->
+        <mxCell id="pnl_tp1_bot" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="680" width="2460" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_bot" value="&lt;b style=&quot;font-size:26px;color:#0369a1;&quot;&gt;THEORETICAL GUARANTEES: WHY STANDARD K-FOLD FAILS IN GRAPH PIPELINES &amp;amp; THE AS-OF REPAIR&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="695" width="1600" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Column 1: Temporal Inversion Failure (Cyan) -->
+        <mxCell id="col_tp1_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="100" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_k1" value="&lt;b style=&quot;font-size:23px;color:#0369a1;&quot;&gt;1. Temporal Inversion in Random K-Fold&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp1_k1" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#0369a1;&quot;&gt;\(\mathbb{P}(\text{Leakage} \mid \text{Random Split}) = 1.0, \quad t_{\text{train}} &gt; t_{\text{test}}\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp1_k1" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#0c4a6e;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;The Anachronism Trap:&lt;/b&gt; Random splitting places future transaction \(t_2\) in training and past transaction \(t_1\) (\(t_1 &lt; t_2\)) in testing.&lt;br&gt;&amp;bull; &lt;b&gt;Bidirectional Graph Contamination:&lt;/b&gt; PageRank and LPA computed on the full graph leak future money laundering signals backwards into the past.&lt;br&gt;&amp;bull; &lt;b&gt;Catastrophic Real-World Collapse:&lt;/b&gt; Models reporting 0.99 AUC in randomized lab splits drop below 0.50 AUC in live banking due to broken causal ordering.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="120" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 2: Expanding Walk-Forward Architecture (Purple) -->
+        <mxCell id="col_tp1_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="920" y="755" width="760" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_k2" value="&lt;b style=&quot;font-size:23px;color:#6d28d9;&quot;&gt;2. Expanding-Window Walk-Forward Architecture&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="940" y="768" width="720" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp1_k2" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#6d28d9;&quot;&gt;\(\mathcal{T}_{\text{train}}^{(k)} = [0, T_k], \quad \mathcal{T}_{\text{val}}^{(k)} = (T_k, T_{k+1}], \quad \mathcal{T}_{\text{train}} \cap \mathcal{T}_{\text{val}} = \emptyset\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="940" y="815" width="720" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp1_k2" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#4c1d95;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Production Realism:&lt;/b&gt; In live banking, an institution only possesses transactions up to \(T_k\). Models must be evaluated strictly on the subsequent block \((T_k, T_{k+1}]\).&lt;br&gt;&amp;bull; &lt;b&gt;Cumulative Knowledge Retention:&lt;/b&gt; Expanding prefixes (\(\le 40\% \to \le 50\% \to \le 65\%\)) allow models to accumulate graph topology while adapting to drift.&lt;br&gt;&amp;bull; &lt;b&gt;True Out-of-Time Generalization:&lt;/b&gt; Validation metrics accurately reflect future production capability without retrospective bias.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="940" y="905" width="720" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Column 3: Formal As-Of Graph Proof (Emerald) -->
+        <mxCell id="col_tp1_3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="755" width="770" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_tp1_k3" value="&lt;b style=&quot;font-size:23px;color:#047857;&quot;&gt;3. Formal As-Of Graph Construction Proof&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="768" width="730" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="math_tp1_k3" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;span style=&quot;font-size:24px;color:#047857;&quot;&gt;\(\mathbf{x}_i = f(e_i,\, \mathcal{G}_{&lt; t_i}), \quad \text{burst}_W(u, t_i) = \sum_{e \in \mathcal{E}, \text{src}=u} \mathbb{I}(t_i - W \le t_e &lt; t_i)\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="815" width="730" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="desc_tp1_k3" value="&lt;div style=&quot;text-align:left;line-height:1.6;&quot;&gt;&lt;span style=&quot;font-size:18px;color:#064e3b;font-weight:400;&quot;&gt;&amp;bull; &lt;b&gt;Strict-Past Invariant:&lt;/b&gt; For any transaction \(e_i = (u, v, t_i)\), its feature vector \(\mathbf{x}_i\) satisfies \(\mathbf{x}_i = f(e_i, \mathcal{G}_{&lt; t_i})\) where \(\mathcal{G}_{&lt; t_i} = (\mathcal{V}, \{e \in \mathcal{E} \mid t_e &lt; t_i\})\).&lt;br&gt;&amp;bull; &lt;b&gt;Causal Window Summation:&lt;/b&gt; The strict upper bound \(t_e &lt; t_i\) prevents self-target feedback, ensuring current transaction attributes never corrupt history.&lt;br&gt;&amp;bull; &lt;b&gt;Audit Invariance:&lt;/b&gt; Any independent regulator can replay the event log chronologically and obtain byte-for-byte identical feature states.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="905" width="730" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption_tp1" value="Protocol Architecture 1: Expanding-window walk-forward timeline. Unlike randomized cross-validation which fatally leaks future network topologies into past evaluations, GraphGuard enforces strict-past causal boundaries (\(t_e &lt; t_i\)) and 3 expanding validation folds, guaranteeing reliable, uninflated out-of-time production metrics." style="text;html=1;align=left;verticalAlign=top;fontSize=19;fontColor:#334155;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1265" width="2460" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

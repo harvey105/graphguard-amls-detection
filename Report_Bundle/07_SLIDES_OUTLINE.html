@@ -1,0 +1,66 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07_SLIDES_OUTLINE</title><style>body{font:16px/1.65 system-ui,Segoe UI,sans-serif;max-width:1200px;margin:30px auto;padding:0 22px;color:#203044;background:#fff}h1,h2,h3{line-height:1.3;color:#123d61}a{color:#126299}pre{background:#f1f5f8;padding:18px;overflow:auto;font:13px/1.55 Consolas,monospace;white-space:pre-wrap}code{font-family:Consolas,monospace}table{border-collapse:collapse;display:block;overflow:auto;max-width:100%;font-size:13px}td,th{border:1px solid #d5dfe7;padding:7px 12px;white-space:nowrap}th{background:#eaf1f8}img{max-width:100%;height:auto}blockquote{border-left:4px solid #14849c;padding:10px 18px;background:#eff9fa}details{margin:14px 0;border:1px solid #dae2e9;padding:10px}.cell{border-top:2px solid #dce8f0;margin-top:25px;padding-top:10px}.output{overflow:auto}nav{position:sticky;top:0;background:#fffef2;padding:9px;border-bottom:1px solid #ddd}li{margin:6px 0}</style><body><nav><a href="00_START_HERE.html">Bundle home</a> · <a href="07_SLIDES_OUTLINE.md">Markdown</a></nav><h1>Dàn ý slides và lời trình bày</h1>
+<p>Mỗi slide có thông điệp, nguồn và lưu ý đọc số. Chèn PNG gốc, không chụp ảnh bảng quá dài; bảng9models có thể để phụ lục. Các đường dẫn dưới đây đều thuộc bundle.</p>
+<h2>Slide 1: Bài toán và đầu ra</h2>
+<p><strong>Nội dung chính:</strong> Money laundering/fraud transaction screening; score + alert + graph context.</p>
+<p><strong>Nguồn/visual:</strong> <a href="01_EXECUTIVE_SUMMARY.html">01_EXECUTIVE_SUMMARY.md</a>.</p>
+<p><strong>Lời trình bày:</strong> Nêu IBM laundering và PaySim fraud là hai benchmark riêng; kết quả không phải phán quyết pháp lý.</p>
+<h2>Slide 2: Hai full datasets</h2>
+<p><strong>Nội dung chính:</strong> IBM 5,078,345 giao dịch/518,581 tài khoản; PaySim 6,362,620/9,073,900.</p>
+<p><strong>Nguồn/visual:</strong> <a href="tables/dataset_overview.csv">dataset_overview.csv</a>.</p>
+<p><strong>Lời trình bày:</strong> Nhấn mạnh full HI-Small variant của IBM và full PaySim được chọn; không phải sampled graph.</p>
+<h2>Slide 3: Pipeline thống nhất</h2>
+<p><strong>Nội dung chính:</strong> ETL → integrity → historical features → validation → freeze → test → evidence.</p>
+<p><strong>Nguồn/visual:</strong> <a href="02_METHODS_AND_PARAMETERS.html">02_METHODS_AND_PARAMETERS.md</a>.</p>
+<p><strong>Lời trình bày:</strong> Phân biệt full descriptive graph với strict-past predictive graph.</p>
+<h2>Slide 4: Degree và PageRank</h2>
+<p><strong>Nội dung chính:</strong> IBM mean degree≈19.59; PaySim≈1.40.</p>
+<p><strong>Nguồn/visual:</strong> <a href="comparison/degree_distribution_paysim_vs_ibm.png">degree_distribution_paysim_vs_ibm.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Chọn degree figure so sánh; PageRank đo centrality, không tự dự đoán fraud.</p>
+<h2>Slide 5: LPA/community context</h2>
+<p><strong>Nội dung chính:</strong> IBM314,722 communities; PaySim5,433,491; dùng size/cross fraction, không dùng numeric label.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/full_communities.png">full_communities.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Đính kèm PaySim full_communities; internal-edge=0 không phải fraud=0.</p>
+<h2>Slide 6: Motif và chống leakage</h2>
+<p><strong>Nội dung chính:</strong> History24/168h; cycle/relay chỉ dùng strict-past, ties không tạo history.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/motif_coverage.png">motif_coverage.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Đặt cạnh PaySim motif_coverage. Coverage là structural support, không phải classifier recall.</p>
+<h2>Slide 7: 9 families và optimizer</h2>
+<p><strong>Nội dung chính:</strong> Feature-level fusion; maxDepth5/minLeaf50/seed2026; thresholds chọn bằng3folds.</p>
+<p><strong>Nguồn/visual:</strong> <a href="tables/model_families.csv">model_families.csv</a>.</p>
+<p><strong>Lời trình bày:</strong> T+C+M+L so với factorial subsets và novelty control; không chọn threshold trên test.</p>
+<h2>Slide 8: Temporal protocol</h2>
+<p><strong>Nội dung chính:</strong> Train40→val50; train50→val65; train65→val80; refit80→test.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/temporal_protocol.png">temporal_protocol.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Dùng counts/timestamp thật trong evaluation_splits.csv; ties làm tỷ lệ không chính xác20%.</p>
+<h2>Slide 9: IBM: operating point</h2>
+<p><strong>Nội dung chính:</strong> TP500/FP4,456; precision10.09%, recall27.79%, F1=14.80%, AP=5.87%.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/confusion.png">confusion.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Baseline P9.07%,R48.30%,F115.27%,AP5.62%; fusion giảm alerts9,584→4,956. Không nói mọi metric tăng.</p>
+<h2>Slide 10: PaySim: operating point</h2>
+<p><strong>Nội dung chính:</strong> TP1,109/FP799; precision58.12%, recall26.09%, F1=36.02%, AP=26.58%.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/paysim/figures/confusion.png">confusion.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Winner T+M+L chọn ở validation; full fusion T+C+M+L có trong ablation, không đổi winner theo testAP.</p>
+<h2>Slide 11: Ablation và ranking</h2>
+<p><strong>Nội dung chính:</strong> Trình bày9families để thấy lợi ích từng cấu hình.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/ablation_and_pr.png">ablation_and_pr.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Dùng thêm PaySim cùng tên. So sánhAP với prevalence và baseline, giữ đơn vị % nhất quán.</p>
+<h2>Slide 12: Review budget</h2>
+<p><strong>Nội dung chính:</strong> Đánh giá top0.1%,0.5%,1% với K=ceil(fN), tie-break cố định.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/paysim/figures/review_budgets.png">review_budgets.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Lấy exactK/TP_at_K/precision/recall trong CSV; đừng suy từ threshold alerts ra topK.</p>
+<h2>Slide 13: Reliability</h2>
+<p><strong>Nội dung chính:</strong> 3validationfolds,5testperiods,Wilson95%,independent artifact verification.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/temporal_stability.png">temporal_stability.png</a>.</p>
+<p><strong>Lời trình bày:</strong> IBM selected test-periodF1≈3.32–28.79%; PaySim≈27.05–40.90%. Không cam kết ổn định ngoài dataset.</p>
+<h2>Slide 14: Case giải thích được</h2>
+<p><strong>Nội dung chính:</strong> IBM có chronology3-cycle witness; PaySim case là CASH_OUT TP không có motif witness.</p>
+<p><strong>Nguồn/visual:</strong> <a href="datasets/ibm_aml/figures/selected_case.png">selected_case.png</a>.</p>
+<p><strong>Lời trình bày:</strong> Đọc cả selected_case_evidence.csv; history witness không phải mọi cạnh đều là testTP hay nguyên nhân tree alert.</p>
+<h2>Slide 15: Kết luận có số liệu hỗ trợ</h2>
+<p><strong>Nội dung chính:</strong> Full pipeline, controlled fusion, measured precision/recall/workload và khác biệt datasets.</p>
+<p><strong>Nguồn/visual:</strong> <a href="05_COMPARISON_AND_FUSION.html">05_COMPARISON_AND_FUSION.md</a>.</p>
+<p><strong>Lời trình bày:</strong> Chốt bằng trade-off thực tế, không khẳng định phát hiện mọi fraud ring; dẫn nguồnCSV và mã định danh run.</p>
+<h2>Slide 16: Phụ lục kiểm nghiệm/code</h2>
+<p><strong>Nội dung chính:</strong> Saved output notebook, source snapshot,trained trees,hashmanifest.</p>
+<p><strong>Nguồn/visual:</strong> <a href="notebooks/CELL_GUIDE.html">CELL_GUIDE.md</a>.</p>
+<p><strong>Lời trình bày:</strong> Mở notebook HTML nếu thầy muốn đọc code; không cần chạy Spark lại trên máy thuyết trình.</p></body></html>
