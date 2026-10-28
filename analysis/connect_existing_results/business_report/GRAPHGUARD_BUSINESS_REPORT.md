@@ -1,160 +1,127 @@
-# Từ cấu trúc giao dịch đến giá trị kiểm tra
+# GraphGuard: nên kiểm tra giao dịch nào trước?
 
-Tín hiệu nào tập trung positive, thông tin nào được mô hình khai thác, và lợi ích xuất hiện ở đâu trong danh sách cần xem xét?
+Xem thêm lịch sử chuyển tiền và các tài khoản liên quan có giúp tìm đúng nhiều giao dịch cần kiểm tra hơn không? Báo cáo này giải thích kết quả thử nghiệm và ý nghĩa của chúng.
 
-Phân tích thăm dò từ kết quả đã xuất · Hai bộ dữ liệu mô phỏng · IBM: laundering; PaySim: fraud. Test nội bộ đã được xem trong quá trình phát triển. Mô hình/ngưỡng giữ theo mean validation F1; các mức ngân sách test không được dùng để chọn lại phương án tối ưu.
+Hai bộ dữ liệu đều mô phỏng các giao dịch tài chính. Giao dịch rửa tiền trong IBM và giao dịch gian lận trong PaySim đã được đánh dấu sẵn. Báo cáo dùng các dấu này để kiểm tra kết quả của từng cách làm.
 
-## 1. Ba phát hiện nối các phần của project
+## 1. Vì sao cần chọn giao dịch để kiểm tra trước?
 
-- **IBM · tín hiệu hiếm: 31,06%** — Tỷ lệ laundering trong 132 giao dịch có cycle trên test; chỉ phủ 2,28% laundering.
-- **PaySim · độ sâu danh sách: +509** — Chênh lệch ròng số fraud tìm đúng khi cùng xem 6.244 giao dịch; kết quả so với đối chứng chỉ thuộc tính giao dịch.
-- **Giá trị phụ thuộc cách dùng: 0,1% → 1%** — PaySim duy trì lợi ích khi mở rộng danh sách; IBM chuyển từ lợi thế nhỏ sang kém đối chứng ở mức 1% đã đánh giá.
+Một hệ thống tài chính có thể ghi nhận hàng triệu giao dịch, trong khi đội kiểm tra chỉ có thể xem xét một phần trong số đó. Vì vậy, câu hỏi quan trọng là: nên chọn những giao dịch nào để xem trước?
 
-Câu hỏi xuyên suốt là: **quan hệ và lịch sử bổ sung giá trị gì so với chỉ nhìn giao dịch riêng lẻ, và giá trị đó phụ thuộc vào dữ liệu và năng lực kiểm tra thế nào?**
+Cách cơ bản trong thử nghiệm này chỉ xem thông tin của từng giao dịch, chẳng hạn loại giao dịch và số tiền. GraphGuard xem thêm các giao dịch đã xảy ra trước đó và mối liên hệ giữa các tài khoản. Mục tiêu là chọn một danh sách có nhiều giao dịch cần kiểm tra hơn với cùng số lượt xem xét.
 
-Các task tạo thành một chuỗi bằng chứng: cấu trúc mạng → nhóm hành vi → thông tin cây sử dụng → kết quả ưu tiên kiểm tra. Mỗi bước trả lời một câu hỏi riêng; một pattern đáng chú ý chưa tự động trở thành một cảnh báo hiệu quả.
+Để biết cách nào chọn tốt hơn, chúng tôi đối chiếu danh sách được chọn với các giao dịch đã được bộ dữ liệu đánh dấu là rửa tiền hoặc gian lận. Một giao dịch được chọn và trùng với dấu có sẵn được tính là một giao dịch tìm đúng.
 
-> Phát hiện chính: thông tin graph có nhiều vai trò. Một số motif xác định nhóm nhỏ tập trung positive; lịch sử giúp phân biệt giao dịch; centrality/community cung cấp bối cảnh. Bằng chứng hiện tại chưa cho thấy cần kết hợp đủ ba nhóm để luôn đạt kết quả tốt hơn.
+> Kết quả chính: trên PaySim, GraphGuard tìm đúng nhiều giao dịch gian lận hơn cách cơ bản ở cả ba số lượng kiểm tra đã thử. Trên IBM, GraphGuard nhỉnh hơn khi kiểm tra ít giao dịch, nhưng kém hơn khi tăng số lượng kiểm tra. Các phần dưới đây giải thích vì sao cần đọc hai kết quả này riêng biệt.
 
-## 2. Hai môi trường giao dịch cung cấp ngữ cảnh khác nhau
+## 2. Degree/PageRank, Motif Finding và LPA giúp hiểu thêm điều gì?
 
-**Đặc điểm full graph dùng để đặt bối cảnh**
+Số tiền và loại giao dịch cho biết thông tin của một lần chuyển tiền. Để hiểu rõ hơn, GraphGuard còn xem tài khoản tham gia giao dịch ra sao, tiền đã đi qua những tài khoản nào và các tài khoản được phân thành nhóm như thế nào.
 
-| Dataset | Giao dịch full | Tài khoản full | Tài khoản degree = 1 | Degree trung bình |
-| --- | --- | --- | --- | --- |
-| IBM AML | 5.078.345 | 518.581 | 3,37% | 19,59 |
-| PaySim | 6.362.620 | 9.073.900 | 94,83% | 1,40 |
+**Ba phần được kết nối trong báo cáo này**
 
-PaySim có phần lớn tài khoản chỉ gắn với một giao dịch trong full graph. IBM ghi nhận nhiều giao dịch trên mỗi tài khoản hơn theo degree trung bình; chỉ số này chưa xác định số đối tác duy nhất hay mức lặp lại giữa cùng một cặp tài khoản. Đây là cơ sở đặt giả thuyết rằng lượng ngữ cảnh quan hệ có thể khai thác khác nhau giữa hai dataset; chưa chứng minh cấu trúc này gây ra chênh lệch hiệu năng.
-
-Các chỉ số full graph không mô tả trực tiếp lượng lịch sử có sẵn tại một thời điểm quyết định. Vì vậy, câu chuyện cấu trúc phải được đối chiếu tiếp với feature và kết quả predictive theo thời gian.
-
-Nguồn: [đặc điểm cấu trúc](insights/structure_summary.csv), [dataset overview](sources/tables/dataset_overview.csv).
-
-## 3. Tín hiệu phổ biến và tín hiệu tập trung positive có giá trị khác nhau
-
-Coverage trả lời tín hiệu có mặt ở bao nhiêu positive. Tỷ lệ positive trong nhóm và lift trả lời nhóm đó tập trung positive đến mức nào. Cần đọc cùng số giao dịch có tín hiệu; coverage cao có thể đến từ việc tín hiệu phổ biến trong cả dữ liệu bình thường.
-
-**Mức tập trung nhãn positive khi tín hiệu hiện diện; không phải kết quả classifier**
-
-| Nhóm trên test | Giao dịch | Positive | Positive trong nhóm | Bao phủ positive | Lift / nền |
-| --- | --- | --- | --- | --- | --- |
-| IBM · cycle | 132 | 41 | 31,061% | 2,28% | 175,73× |
-| IBM · qua lại 24h | 257 | 39 | 15,175% | 2,17% | 85,86× |
-| IBM · fan-in 168h | 706.216 | 1.395 | 0,198% | 77,54% | 1,12× |
-| PaySim · fan-in 168h | 602.017 | 895 | 0,149% | 21,06% | 0,44× |
-
-![Đối chiếu coverage và lift của các nhóm motif trên test](figures_insights/motif_coverage_lift.png)
-
-Trục dọc là lift theo thang log; đường ngang 1× là tỷ lệ positive nền của từng dataset. IBM có nhóm hiếm tập trung laundering cao, trong khi fan-in PaySim nằm dưới nền. Các điểm chỉ là cohort quan sát; nhóm rỗng hoặc có lift bằng 0 không được vẽ trên trục log.
-
-- **IBM: cycle và giao dịch qua lại là nhóm nhỏ tập trung laundering.** Có thể đặt giả thuyết kiểm tra chuyên biệt cho các nhóm này, nhưng coverage thấp giới hạn giá trị phát hiện diện rộng.
-- **IBM: fan-in 168h bao phủ rộng nhưng mức tập trung positive chỉ nhỉnh hơn nền.** Tín hiệu xuất hiện ở 69,39% toàn bộ giao dịch test; riêng sự hiện diện chưa đủ để ưu tiên một khối lượng lớn giao dịch.
-- **PaySim: có fan-in chưa đồng nghĩa fraud cao hơn.** Tỷ lệ fraud khi fan-in 168h hiện diện thấp hơn nền. Cycle không xuất hiện; relay 168h chỉ phủ 21 giao dịch test và không có fraud trong nhóm quan sát đó.
-
-> Hàm ý: phân biệt tín hiệu phục vụ rà soát nhóm nhỏ với thông tin phục vụ xếp hạng diện rộng. Những nhóm nhỏ có lift cao cần kiểm chứng ở thời gian khác trước khi đề xuất quy tắc cảnh báo. Các cohort chồng lấp, không cộng positive giữa các motif.
-
-Nền test: IBM 0,177%; PaySim 0,340%. [Bảng cohort, công thức và nguồn](insights/motif_cohort_insights.csv).
-
-## 4. PaySim: thiếu lịch sử cũng mang thông tin
-
-Cây PaySim được chọn sử dụng loại giao dịch, số tiền chuẩn hóa và lịch sử nhận tiền trong 168 giờ. Các nhánh cây cho thấy giá trị không chỉ đến từ việc phát hiện một pattern dòng tiền đã hiện diện.
-
-**Hai leaf của cây đã lưu chỉ khác điều kiện lịch sử nhận tiền**
-
-| Điều kiện được giữ giống nhau | Lịch sử nhận tiền | Score của leaf |
+| Phần phân tích | Câu hỏi được giải đáp | Cách dùng trong báo cáo |
 | --- | --- | --- |
-| CASH_OUT; cùng nhánh số tiền chuẩn hóa | Không có lượt nhận tiền hợp lệ được ghi nhận trong 168h trước | 0,7904 |
-| CASH_OUT; cùng nhánh số tiền chuẩn hóa | Có lịch sử nhận tiền hợp lệ trong 168h trước | 0,0000 |
+| Degree và PageRank | Tài khoản nào tham gia nhiều giao dịch hoặc giữ vị trí nổi bật trong mạng lưới chuyển tiền? | Xác định vai trò của tài khoản, trước khi xem xét hành vi chuyển tiền cụ thể. |
+| Motif Finding và lịch sử giao dịch | Có kiểu chuyển tiền nào lặp lại, chẳng hạn tiền đi qua ba tài khoản rồi quay về điểm xuất phát? Trước đó tài khoản đã nhận hoặc chuyển tiền ra sao? | Tìm các kiểu chuyển tiền đáng chú ý và bổ sung thông tin về những gì đã xảy ra trước giao dịch đang xem. |
+| Phân nhóm bằng LPA | Tài khoản được xếp vào nhóm nào? Giao dịch diễn ra trong nhóm hay giữa các nhóm? | Bổ sung thông tin về nhóm tài khoản khi đánh giá một giao dịch. |
 
-**Trong nhóm điều kiện này, sự vắng mặt của lịch sử nhận tiền là thông tin phân biệt mà cây sử dụng.** Điều đó nối kết quả task history với hiệu quả mô hình dù cycle/relay gần như không cung cấp coverage fraud trên PaySim.
+Các kết quả trên được dùng để thử nhiều cách chọn giao dịch cần kiểm tra. Sau đó, chúng tôi đo xem mỗi cách tìm đúng được bao nhiêu giao dịch. Nhờ vậy, báo cáo vừa giải thích các thuật toán tìm thấy điều gì, vừa kiểm tra xem thông tin đó có thực sự giúp ích hay không.
 
-> Đây là logic tổng quát của mô hình đã fit. Chưa có lịch sử trong 168 giờ không chứng minh tài khoản vừa mở; score của weighted tree không phải xác suất fraud đã hiệu chỉnh. Nhánh minh họa chưa xác minh đường đi của bất kỳ case cụ thể nào.
+Các nhóm do LPA tạo ra dựa trên mối liên hệ giao dịch giữa các tài khoản. Một tài khoản giao dịch nhiều hoặc thuộc một nhóm nhất định chưa đủ để kết luận có sai phạm.
 
-IBM dùng feature thuộc cả C/M/L. Trên PaySim, L có trong cấu hình nhưng không được cây được chọn dùng để chia nhánh; C không nằm trong cấu hình được chọn. Vì vậy, kết quả PaySim hỗ trợ giá trị của bối cảnh lịch sử, chưa chứng minh mô hình phát hiện đường dây hoặc cần đủ ba nhóm graph.
+## 3. Vì sao cần đọc kết quả IBM và PaySim riêng biệt?
 
-Nguồn: [leaf rules PaySim](sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv), [vocabulary loại giao dịch](sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json), [feature usage](sources/feature_usage.csv).
+Hai bộ dữ liệu có cách các tài khoản tham gia giao dịch rất khác nhau. Trên PaySim, khoảng 95 trong mỗi 100 tài khoản chỉ xuất hiện trong một giao dịch của toàn bộ dữ liệu. Trên IBM, con số này chỉ khoảng 3 trong mỗi 100 tài khoản.
 
-## 5. Giá trị nằm ở đâu trong danh sách cần kiểm tra?
+Điều đó có nghĩa là với nhiều tài khoản PaySim, có rất ít giao dịch khác của cùng tài khoản để xem lại. IBM ghi nhận nhiều giao dịch trên mỗi tài khoản hơn, nên có thêm thông tin để xem tài khoản đã tham gia chuyển tiền ra sao. Những con số này chưa cho biết một tài khoản giao dịch với bao nhiêu đối tác khác nhau.
 
-Đối chứng T chỉ dùng thuộc tính giao dịch. T + novelty bổ sung cờ tài khoản đã xuất hiện trong lịch sử prefix; đây là đối chứng đơn giản cần giữ để đánh giá giá trị vượt quá thông tin đã thấy tài khoản. Mô hình chọn là full_fusion ở IBM và without_centrality ở PaySim.
+Tuy nhiên, có nhiều thông tin hơn chưa chắc đã chọn được giao dịch tốt hơn. Cần xem thông tin cụ thể nào đi kèm với rửa tiền hoặc gian lận, rồi mới so sánh kết quả chọn giao dịch. Vì vậy, chúng tôi bắt đầu từ các kiểu chuyển tiền mà Motif Finding tìm thấy.
 
-**Cùng số lượt kiểm tra trong từng dataset; số đếm là TP@K**
+## 4. Tiền chuyển theo vòng có đáng chú ý không?
 
-| Dataset | Phần test được xem | K giao dịch | T tìm đúng | T + novelty tìm đúng | Mô hình chọn tìm đúng |
-| --- | --- | --- | --- | --- | --- |
-| IBM AML | 0,1% | 1.018 | 92 | 92 | 105 |
-| IBM AML | 0,5% | 5.090 | 488 | 488 | 505 |
-| IBM AML | 1,0% | 10.179 | 877 | 877 | 789 |
-| PaySim | 0,1% | 1.249 | 844 | 913 | 900 |
-| PaySim | 0,5% | 6.244 | 1.014 | 1.122 | 1.523 |
-| PaySim | 1,0% | 12.488 | 1.120 | 1.134 | 2.044 |
+Một kiểu được xem xét là tiền đi qua ba tài khoản rồi quay về tài khoản ban đầu: **A → B → C → A**. Có thể hình dung A chuyển cho B, B chuyển cho C, rồi C chuyển lại cho A. Công cụ tìm những giao dịch liên quan đến kiểu chuyển tiền này theo điều kiện của dự án.
 
-![TP ở ba mức ngân sách cho baseline, novelty và mô hình được chọn](figures_insights/ranking_depth.png)
+Trong phần dữ liệu IBM dùng để đánh giá, có 132 giao dịch liên quan đến kiểu chuyển tiền theo vòng này. Trong đó, 41 giao dịch được đánh dấu là rửa tiền. Nói cách khác, trong nhóm 132 giao dịch đang xét, khoảng 31 trong mỗi 100 giao dịch có dấu rửa tiền.
 
-Mỗi điểm là một mức đã xuất; đoạn nối chỉ hỗ trợ đọc xu hướng, không xác định điểm giao hay ngân sách tối ưu ở giữa. PaySim: novelty cạnh tranh ở đầu danh sách, mô hình dùng lịch sử nổi bật khi mở rộng. IBM: lợi thế nhỏ chuyển thành bất lợi tại mức 1%.
+Nhưng toàn bộ phần dữ liệu đánh giá có 1.799 giao dịch được đánh dấu là rửa tiền. Nhóm chuyển tiền theo vòng chỉ chứa 41 giao dịch trong số đó; 1.758 giao dịch còn lại nằm ngoài nhóm này. Vì vậy, chỉ tìm vòng chuyển tiền sẽ bỏ qua phần lớn các giao dịch rửa tiền trong dữ liệu.
 
-**PaySim: giá trị nổi bật là độ sâu hữu ích của danh sách.** Ở 0,1%, novelty tìm đúng 913 fraud so với 900 của mô hình được chọn. Khi mở rộng tới 0,5% và 1%, mô hình được chọn lần lượt tìm đúng 1.523 và 2.044, cao hơn novelty 401 và 910. Đây là chênh lệch ròng, chưa xác định danh tính các fraud được thêm vào hoặc bị mất đi giữa hai danh sách.
+### Còn kiểu một tài khoản nhận tiền từ nhiều phía thì sao?
 
-**Mở rộng cùng danh sách từ 0,5% lên 1%; hiệu suất biên = positive thêm / lượt xem thêm**
+Ở IBM, kiểu nhận tiền từ nhiều phía trong bảy ngày trước đó xuất hiện trong 706.216 giao dịch của phần dữ liệu đánh giá. Trong số này, 1.395 giao dịch có dấu rửa tiền, tương đương khoảng 2 trong mỗi 1.000 giao dịch. Đây là kiểu chuyển tiền thường gặp ở cả giao dịch bình thường và giao dịch rửa tiền.
 
-| Dataset | Lượt xem thêm | T: positive thêm | T: hiệu suất biên | Mô hình: positive thêm | Mô hình: hiệu suất biên |
-| --- | --- | --- | --- | --- | --- |
-| IBM AML | 5.089 | 389 | 7,64% | 284 | 5,58% |
-| PaySim | 6.244 | 106 | 1,70% | 521 | 8,34% |
+Hai kết quả dẫn đến hai cách hiểu khác nhau. Chuyển tiền theo vòng xuất hiện ít, nhưng nhóm giao dịch đó có tỷ lệ rửa tiền cao trong dữ liệu IBM. Nhận tiền từ nhiều phía xuất hiện rộng hơn, nên riêng việc thấy kiểu này chưa đủ để đưa một giao dịch lên đầu danh sách kiểm tra.
 
-**IBM: hiệu quả phụ thuộc độ sâu kiểm tra.** Mô hình tìm hơn T 17 laundering ở 0,5%, nhưng phần danh sách mở rộng tiếp theo tìm ít hơn T 105 laundering; tổng chênh lệch tại 1% thành −88. Kết quả chưa ủng hộ ưu thế nhất quán khi thay T bằng mô hình được chọn.
+Trên PaySim, nhóm có kiểu nhận tiền từ nhiều phía còn có tỷ lệ gian lận thấp hơn tỷ lệ của toàn bộ phần dữ liệu đánh giá. Do đó, một kiểu chuyển tiền có thể đáng chú ý trong bộ dữ liệu này nhưng ít hữu ích hơn ở bộ dữ liệu khác.
 
-**Đọc số tìm thêm cùng mẫu số và phần positive còn bỏ sót**
+> Bài học từ Motif Finding: biết tiền đi theo kiểu nào giúp xác định nhóm giao dịch cần tìm hiểu thêm. Để tìm được nhiều trường hợp hơn, vẫn cần xem thêm lịch sử và các thông tin khác của giao dịch.
 
-| Dataset | K ở 0,5% | Tỷ lệ tìm đúng trong danh sách: T → mô hình | Bao phủ positive: T → mô hình |
+## 5. Lịch sử giao dịch giúp bổ sung điều gì?
+
+Kết quả PaySim cho thấy thông tin hữu ích đôi khi là điều chưa xuất hiện trong lịch sử. Trong một nhóm giao dịch rút tiền được hệ thống xếp cùng loại và cùng nhóm số tiền, GraphGuard phân biệt hai trường hợp: tài khoản nhận đã có giao dịch nhận tiền trong bảy ngày trước đó, hoặc chưa ghi nhận giao dịch nhận tiền nào trong khoảng thời gian này.
+
+Trong nhóm đang xét, GraphGuard ưu tiên kiểm tra trường hợp chưa có lịch sử nhận tiền hơn. Điều này cho thấy lịch sử có thể giúp phân biệt các giao dịch mà chỉ nhìn loại giao dịch và số tiền thì chưa thấy hết sự khác nhau.
+
+Chưa có lịch sử nhận tiền trong bảy ngày không có nghĩa là tài khoản mới mở hoặc chắc chắn có gian lận. Đây là một thông tin mà hệ thống kết hợp với các thông tin khác để xếp thứ tự kiểm tra.
+
+Phương án GraphGuard được chọn cho PaySim thực sự sử dụng thông tin lịch sử nhận tiền. Thông tin nhóm LPA đã được cung cấp nhưng không được phương án này dùng để đưa ra quyết định. Với IBM, phương án được chọn có sử dụng thông tin từ Degree/PageRank, lịch sử chuyển tiền và LPA. Việc sử dụng cả ba phần vẫn cần được kiểm tra bằng kết quả thực tế dưới đây.
+
+## 6. Cùng số lượt kiểm tra, tìm đúng được bao nhiêu giao dịch?
+
+Để so sánh công bằng về số lượt xem xét, chúng tôi cho cách cơ bản và GraphGuard cùng chọn một số lượng giao dịch như nhau trong mỗi bộ dữ liệu. Hai cách có thể chọn những giao dịch khác nhau; điều được giữ bằng nhau là số giao dịch đội kiểm tra sẽ phải xem.
+
+![Số giao dịch tìm đúng khi hai cách có cùng số lượt kiểm tra](figures_insights/cung_so_luot_kiem_tra.png)
+
+Mỗi hình so sánh hai cách trong cùng một bộ dữ liệu. Cột biểu diễn số giao dịch chọn đúng theo dấu có sẵn trong dữ liệu, không phải số vụ án hoặc số khách hàng.
+
+**PaySim:** cùng kiểm tra 6.244 giao dịch, cách cơ bản tìm đúng 1.014 giao dịch gian lận, còn GraphGuard tìm đúng 1.523. Như vậy, GraphGuard tìm đúng nhiều hơn 509 giao dịch trong phép so sánh này.
+
+**IBM:** cùng kiểm tra 5.090 giao dịch, cách cơ bản tìm đúng 488 giao dịch rửa tiền, còn GraphGuard tìm đúng 505. Chênh lệch là 17 giao dịch, nhỏ hơn nhiều so với ví dụ PaySim.
+
+Đây mới là kết quả ở một số lượng kiểm tra cụ thể. Nếu đội kiểm tra xem ít hơn hoặc nhiều hơn, lợi thế có thể thay đổi. Vì vậy, chúng tôi tiếp tục so sánh ở ba số lượng khác nhau.
+
+**IBM: số giao dịch rửa tiền tìm đúng**
+
+| Số giao dịch được kiểm tra | Cách cơ bản tìm đúng | GraphGuard tìm đúng | Chênh lệch của GraphGuard |
 | --- | --- | --- | --- |
-| IBM AML | 5.090 | 9,59% → 9,92% | 27,13% → 28,07% |
-| PaySim | 6.244 | 16,24% → 24,39% | 23,86% → 35,84% |
+| 1.018 | 92 | 105 | Nhiều hơn 13 |
+| 5.090 | 488 | 505 | Nhiều hơn 17 |
+| 10.179 | 877 | 789 | Ít hơn 88 |
 
-### Một đánh đổi khác: dùng ngưỡng cảnh báo đã cố định
+**PaySim: số giao dịch gian lận tìm đúng**
 
-IBM: cảnh báo 9.584 → 4.956; tìm đúng 869 → 500; cảnh báo nhầm 8.715 → 4.456. Danh sách ngắn hơn đi cùng mức phát hiện thấp hơn.
+| Số giao dịch được kiểm tra | Cách cơ bản tìm đúng | GraphGuard tìm đúng | Chênh lệch của GraphGuard |
+| --- | --- | --- | --- |
+| 1.249 | 844 | 900 | Nhiều hơn 56 |
+| 6.244 | 1.014 | 1.523 | Nhiều hơn 509 |
+| 12.488 | 1.120 | 2.044 | Nhiều hơn 924 |
 
-PaySim: so với T, mô hình tìm đúng 836 → 1.109 nhưng cảnh báo nhầm 196 → 799. Đối chứng novelty cũng tìm đúng 1.109 với 628 cảnh báo nhầm, ít hơn mô hình được chọn 171. Mô hình được chọn không dẫn đầu ở mọi mục tiêu test.
+**PaySim:** GraphGuard tìm đúng nhiều hơn cách cơ bản ở cả ba số lượng đã thử. Khi mở rộng từ 6.244 lên 12.488 lượt kiểm tra, GraphGuard tìm thêm 521 giao dịch gian lận, còn cách cơ bản tìm thêm 106. Điều này cho thấy thông tin bổ sung vẫn giúp ích khi đội kiểm tra xem thêm giao dịch.
 
-> Các số tại ngưỡng cố định và các số top-K trả lời hai câu hỏi khác nhau. Chưa có kiểm định paired cho chênh lệch mô hình. Nhiều giao dịch có cùng score nên TP@K còn phụ thuộc thứ tự hòa điểm; bản kỹ thuật trình bày độ nhạy này.
+**IBM:** GraphGuard nhỉnh hơn ở hai số lượng kiểm tra thấp, nhưng khi cùng xem 10.179 giao dịch, GraphGuard tìm đúng 789 giao dịch rửa tiền, thấp hơn 877 của cách cơ bản. Kết quả IBM vì vậy chưa cho thấy GraphGuard luôn là lựa chọn tốt hơn.
 
-Nguồn: [54 dòng ngân sách](sources/review_budget_comparison.csv), [hiệu suất biên](insights/marginal_review_yield.csv), [18 cấu hình và confusion](sources/model_comparison.csv).
+### So với một cách làm đơn giản khác thì thế nào?
 
-## 6. Kết quả theo thời gian và hàm ý sử dụng
+Chúng tôi còn thử một cách chỉ bổ sung thông tin tài khoản đã từng xuất hiện trong các giao dịch trước đó hay chưa. Trên PaySim, khi cùng xem 1.249 giao dịch, cách này tìm đúng 913 giao dịch gian lận, còn GraphGuard tìm đúng 900. Khi cùng xem 6.244 giao dịch, hai kết quả lần lượt là 1.122 và 1.523.
 
-Phân bố positive thay đổi mạnh giữa các kỳ: kỳ cuối chứa 60,92% laundering test IBM; hai kỳ cuối chứa 86,87% fraud test PaySim. Đếm số kỳ thắng như những kỳ có sức nặng bằng nhau sẽ bỏ qua cấu trúc này.
+Như vậy, thêm nhiều loại thông tin chưa chắc luôn tốt hơn một cách làm đơn giản. Cần chọn và kiểm tra cách sử dụng theo số giao dịch mà đội kiểm tra thực sự có thể xem xét.
 
-![Prevalence và recall theo năm kỳ test có thứ tự thời gian](figures_insights/temporal_prevalence_recall.png)
+## 7. Kết quả này có ý nghĩa gì?
 
-Hai hàng cùng thứ tự kỳ: tỷ lệ positive ở trên, recall ở dưới. IBM có recall mô hình thấp hơn T ở cả 5 kỳ; PaySim có recall cao hơn T ở cả 5 kỳ. Đây là kết quả tại ngưỡng đã cố định, không phải top-K theo từng kỳ.
+Ba phần phân tích có thể nối với nhau theo một mạch: Degree/PageRank cho biết vị trí của tài khoản; Motif Finding cho biết các kiểu chuyển tiền và lịch sử liên quan; LPA bổ sung thông tin về nhóm tài khoản. Cuối cùng, phép so sánh cùng số lượt kiểm tra cho biết việc thêm những thông tin này giúp chọn giao dịch tốt hơn đến mức nào.
 
-IBM có F1 cao hơn T ở 3/5 kỳ, nhưng recall thấp hơn ở cả 5/5 kỳ: một kết quả F1 cao hơn chưa đồng nghĩa tìm được nhiều laundering hơn. PaySim cải thiện recall ở cả năm kỳ quan sát; hướng cải thiện này chưa xác nhận khả năng khái quát ngoài dữ liệu mô phỏng.
+Với PaySim, kết quả cho thấy lịch sử nhận tiền có thể giúp GraphGuard chọn được nhiều giao dịch gian lận hơn cách chỉ xem từng giao dịch. Với IBM, một số kiểu chuyển tiền giúp nhận ra nhóm giao dịch đáng tìm hiểu, nhưng lợi ích khi chọn giao dịch để kiểm tra còn nhỏ và thay đổi theo số lượt xem xét.
 
-**Phân biệt phát hiện hiện có với giả thuyết và bước đánh giá tiếp theo**
+> Hướng sử dụng phù hợp là hỗ trợ sắp xếp thứ tự xem xét giao dịch. Trước khi áp dụng thực tế, cần xác định đội kiểm tra xem được bao nhiêu giao dịch, thử trên dữ liệu ở giai đoạn khác và đo cả thời gian xử lý mỗi trường hợp.
 
-| Bằng chứng | Hàm ý hiện tại | Câu hỏi kiểm chứng tiếp theo |
-| --- | --- | --- |
-| IBM: cycle/reciprocal tập trung laundering trong nhóm nhỏ | Giữ như giả thuyết rà soát nhóm hành vi chuyên biệt | Mức tập trung có lặp lại ở giai đoạn khác? Các nhóm này bổ sung positive nào cho danh sách hiện tại? |
-| PaySim: lịch sử tạo giá trị ở danh sách sâu hơn | Đánh giá mô hình theo năng lực kiểm tra dự kiến | Nếu chọn theo ngân sách trên validation, lợi thế còn giữ ở giai đoạn mới? |
-| IBM: không có ưu thế nhất quán theo ngân sách/recall | Giữ đối chứng và nêu rõ đánh đổi | Có nhóm hành vi nào hưởng lợi và nhóm nào bị giảm phát hiện? |
-| C/L có giá trị mô tả; lợi ích predictive khác nhau | Nối các task bằng vai trò bằng chứng | Thông tin nào giúp người kiểm tra hiểu giao dịch hơn, dù không tăng metric tổng hợp? |
+## Giới hạn và nguồn số liệu
 
-Các câu hỏi về positive mới/mất đi, tác động theo nhóm tài khoản và giải thích case cần predictions/feature ở từng giao dịch. Báo cáo này không suy các kết quả đó từ vài examples. Hướng dùng được nêu là đề xuất đánh giá tiếp, chưa phải quyết định triển khai ngân hàng.
+- Hai bộ dữ liệu đều là mô phỏng. Kết quả chưa xác nhận hiệu quả trên giao dịch thật của một ngân hàng.
+- Phương án sử dụng cho mỗi bộ dữ liệu được chọn từ bước đánh giá trước đó. Báo cáo giữ nguyên phương án này khi so sánh kết quả cuối cùng. Đây là đánh giá nội bộ; dữ liệu đánh giá đã được xem trong quá trình phát triển dự án.
+- Tìm đúng được tính bằng việc trùng với dấu rửa tiền hoặc gian lận có sẵn trong dữ liệu. Số giao dịch tìm đúng không cho biết đã phát hiện bao nhiêu khách hàng, vụ án hoặc đường dây.
+- Hai cách có cùng số lượt kiểm tra vẫn có thể tốn thời gian khác nhau vì mức độ phức tạp của từng giao dịch khác nhau. Dự án chưa đo số giờ tiết kiệm hoặc số tiền thiệt hại được ngăn chặn.
+- Các giao dịch có thể được cho cùng điểm ưu tiên. Khi đó, thứ tự sắp xếp tiếp theo cũng ảnh hưởng đến số giao dịch được chọn. Cách tính chi tiết được giải thích trong bản kỹ thuật.
 
-Chi tiết bằng chứng và giới hạn: [bản kỹ thuật](../generated/CONNECTED_RESULTS_REPORT.html). Số liệu thời gian: [temporal insights](insights/temporal_insights.csv).
+Nguồn: [bảng so sánh các phương án](sources/model_comparison.csv), [bảng kết quả theo số lượt kiểm tra](sources/review_budget_comparison.csv), [thống kê các kiểu chuyển tiền](insights/motif_cohort_insights.csv).
 
-## Nguồn số liệu và cách đọc
-
-Nguồn là các lần chạy full ngày 24/10/2026 và bản kiểm tra aggregate ngày 26/10/2026. Lift, hiệu suất biên, tỷ trọng positive theo kỳ và phân tích hòa điểm được tính bổ sung từ exports; không phải một lần huấn luyện hay đánh giá predictions mới.
-
-- Đơn vị đánh giá là giao dịch có nhãn: IBM laundering và PaySim fraud. Không cộng kết quả giữa hai dataset; TP không đồng nghĩa số vụ án, khách hàng hoặc đường dây.
-- Mô hình và ngưỡng giữ nguyên theo mean F1 của 3-fold walk-forward validation. Chưa tối ưu riêng cho từng ngân sách kiểm tra; không chọn lại mô hình bằng kết quả test.
-- Full graph chỉ mô tả cấu trúc. Feature C/L của mô hình lấy từ snapshot quá khứ, M dùng strict-past; hình full graph không phải bằng chứng mô hình biết trước tương lai.
-- Không có dữ liệu thời gian điều tra, chi phí mỗi ca hoặc tổn thất được ngăn chặn. Cùng số giao dịch được xem chưa đồng nghĩa cùng thời gian hoặc chi phí.
-- Các case cũ thiếu feature values để xác minh rule path (CP5 LIMITED). Nhánh cây minh họa là logic tổng quát từ model đã lưu, không phải lời giải thích đã xác nhận cho một case cụ thể.
-
-Phương pháp: [tham số và protocol](sources/02_METHODS_AND_PARAMETERS.md). Phạm vi bằng chứng: [reliability](sources/06_RELIABILITY_AND_VALIDATION.md). Nghiệm thu aggregate gốc: [completion.json](sources/completion.json). Kiểm tra revision hiện tại: [revision_validation.json](revision_validation.json).
-
-Giữ cả hai thư mục `generated` và `business_report` cạnh nhau để dùng các liên kết qua lại offline. Các hình, bảng và tài liệu dẫn trực tiếp đều nằm trong bộ này.
+[Bản kỹ thuật và cách tính chi tiết](../generated/CONNECTED_RESULTS_REPORT.html) trình bày đầy đủ các phép so sánh, kết quả theo thời gian và giới hạn của từng cách đo. [Tệp kiểm tra báo cáo](revision_validation.json) lưu thông tin đối chiếu nguồn số liệu.

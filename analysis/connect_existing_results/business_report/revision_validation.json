@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "revision": "20261028T104333509390Z",
-  "created_utc": "2026-10-28T10:43:58.119791+00:00",
+  "revision": "business-language-20261028T124413468572Z",
+  "created_utc": "2026-10-28T12:44:17.347136+00:00",
   "user_facing_date": "2026-10-28",
   "status": "PASS",
-  "scope": "aggregate-derived insight/report revision; not full pipeline acceptance",
+  "scope": "plain-language business report rewrite; original numerical results unchanged",
   "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
   "executable": "C:\\Users\\Admin\\Desktop\\DSEB\\Ki_7\\Big_Data\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
   "platform": "win32",
-  "builder_sha256": "22699a43c075171c0efe58899accf2aaa1e540d59320a5eb0d9983147be4f38c",
+  "builder_sha256": "6ee0a0f8fd57f542b49745f1edd4eb7c9a220529fb38901d09af4ff0e0e6d7d3",
   "builder": "revise_insight_reports.py",
   "repository_bundle": "Report_Bundle",
-  "verification_scope": "published report files and frozen evidence; local caches/checkpoint bookkeeping are excluded",
+  "verification_scope": "business text, links, chart and frozen numerical evidence; technical files unchanged",
   "no_spark": true,
   "no_training": true,
   "no_scoring": true,
@@ -19,13 +19,7 @@
   "html_browser_render_verified": false,
   "html_browser_render_limitation": "Local file navigation blocked by browser policy; HTML structure, links and native PNG figures verified separately.",
   "case_rule_paths": "LIMITED: unchanged historical CP5; saved tree branch is global logic, not case verification",
-  "new_derived_tables": [
-    "motif_cohort_insights",
-    "marginal_review_yield",
-    "temporal_insights",
-    "tie_sensitivity",
-    "structure_summary"
-  ],
+  "new_derived_tables": [],
   "tie_sensitivity_scope": "analytic uniform allocation inside boundary score bin; not model CI or significance",
   "supplemented_sources": [
     {
@@ -4096,1323 +4090,1488 @@
       "pass": true
     },
     {
-      "check": "frozen supplement SHA-256 preserved: tables/full_time_blocks.csv",
+      "check": "pre-edit business artifact matches recorded hash: GRAPHGUARD_BUSINESS_REPORT.html",
       "pass": true
     },
     {
-      "check": "frozen supplement SHA-256 preserved: tables/evaluation_splits.csv",
+      "check": "pre-edit business artifact matches recorded hash: GRAPHGUARD_BUSINESS_REPORT.md",
       "pass": true
     },
     {
-      "check": "frozen supplement SHA-256 preserved: src/motif/modeling.py",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/cung_so_luot_kiem_tra.png",
       "pass": true
     },
     {
-      "check": "frozen supplement SHA-256 preserved: evidence/existing_full_artifact_verification.log",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/cung_so_luot_kiem_tra.svg",
       "pass": true
     },
     {
-      "check": "frozen supplement SHA-256 preserved: validation/bundle_checks.json",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/marginal_review_yield.png",
       "pass": true
     },
     {
-      "check": "business aggregate snapshot matches: model_comparison.csv",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/marginal_review_yield.svg",
       "pass": true
     },
     {
-      "check": "business aggregate snapshot matches: review_budget_comparison.csv",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/motif_coverage_lift.png",
       "pass": true
     },
     {
-      "check": "business aggregate snapshot matches: feature_usage.csv",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/motif_coverage_lift.svg",
       "pass": true
     },
     {
-      "check": "business aggregate snapshot matches: completion.json",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/ranking_depth.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/ablation_deltas.csv",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/ranking_depth.svg",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/analysis_config.json",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/temporal_prevalence_recall.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/case_examples.csv",
+      "check": "pre-edit business artifact matches recorded hash: figures_insights/temporal_prevalence_recall.svg",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/checkpoint_status.csv",
+      "check": "pre-edit business artifact matches recorded hash: insights/marginal_review_yield.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/completion.json",
+      "check": "pre-edit business artifact matches recorded hash: insights/motif_cohort_insights.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/feature_usage.csv",
+      "check": "pre-edit business artifact matches recorded hash: insights/structure_summary.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/input_hashes.json",
+      "check": "pre-edit business artifact matches recorded hash: insights/temporal_insights.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/model_comparison.csv",
+      "check": "pre-edit business artifact matches recorded hash: insights/tie_sensitivity.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/review_budget_comparison.csv",
+      "check": "compact pre-edit report backup verified",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/run_identity.csv",
+      "check": "business report uses no unexplained statistical/model jargon from user feedback",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/source_inventory.csv",
+      "check": "business report names the actual analysis tasks",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/structural_evidence_matrix.csv",
+      "check": "no ambiguous statistic cards or duplicate anchors",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/temporal_comparison.csv",
+      "check": "main examples include concrete numerators and denominators",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/validation_findings.csv",
+      "check": "plain-language report local link: #van-de",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/figures/ablation_deltas.png",
+      "check": "plain-language report anchor: #van-de",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/figures/feature_importance.png",
+      "check": "plain-language report local link: #cac-phan-phan-tich",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/figures/metric_comparison.png",
+      "check": "plain-language report anchor: #cac-phan-phan-tich",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/figures/review_budgets.png",
+      "check": "plain-language report local link: #hai-bo-du-lieu",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/02_METHODS_AND_PARAMETERS.md",
+      "check": "plain-language report anchor: #hai-bo-du-lieu",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/06_RELIABILITY_AND_VALIDATION.md",
+      "check": "plain-language report local link: #kieu-chuyen-tien",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/evidence/existing_full_artifact_verification.log",
+      "check": "plain-language report anchor: #kieu-chuyen-tien",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/tables/dataset_overview.csv",
+      "check": "plain-language report local link: #lich-su",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/tables/evaluation_splits.csv",
+      "check": "plain-language report anchor: #lich-su",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/tables/exact_feature_allowlists.csv",
+      "check": "plain-language report local link: #ket-qua",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/tables/full_time_blocks.csv",
+      "check": "plain-language report anchor: #ket-qua",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/tables/model_families.csv",
+      "check": "plain-language report local link: #y-nghia",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/validation/bundle_checks.json",
+      "check": "plain-language report anchor: #y-nghia",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_FN.json",
+      "check": "plain-language report local link: #nguon",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_FP.json",
+      "check": "plain-language report anchor: #nguon",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_TP.json",
+      "check": "plain-language report local link: figures_insights/cung_so_luot_kiem_tra.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/provenance/frozen_rules.json",
+      "check": "plain-language report local link: sources/model_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/provenance/report.json",
+      "check": "plain-language report local link: sources/review_budget_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/provenance/run.json",
+      "check": "plain-language report local link: insights/motif_cohort_insights.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/baseline_summary.csv",
+      "check": "plain-language report local link: ../generated/CONNECTED_RESULTS_REPORT.html",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/community_size_distribution.csv",
+      "check": "plain-language report local link: revision_validation.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/degree_distribution.csv",
+      "check": "plain-language report local link: figures_insights/cung_so_luot_kiem_tra.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/feature_importance.csv",
+      "check": "plain-language report local link: sources/model_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/graph_contributions.csv",
+      "check": "plain-language report local link: sources/review_budget_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/motif_coverage.csv",
+      "check": "plain-language report local link: insights/motif_cohort_insights.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
+      "check": "plain-language report local link: ../generated/CONNECTED_RESULTS_REPORT.html",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
+      "check": "plain-language report local link: revision_validation.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/ablation_deltas.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
+      "check": "frozen numerical evidence preserved: generated/analysis_config.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
+      "check": "frozen numerical evidence preserved: generated/case_examples.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
+      "check": "frozen numerical evidence preserved: generated/checkpoint_status.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/completion.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_without_community.csv",
+      "check": "frozen numerical evidence preserved: generated/feature_usage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
+      "check": "frozen numerical evidence preserved: generated/input_hashes.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/review_budgets.csv",
+      "check": "frozen numerical evidence preserved: generated/model_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/test_metrics.csv",
+      "check": "frozen numerical evidence preserved: generated/review_budget_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/tables/test_temporal_stability.csv",
+      "check": "frozen numerical evidence preserved: generated/run_identity.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/full_fusion/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/source_inventory.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/structural_evidence_matrix.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/temporal_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/full_fusion/training.json",
+      "check": "frozen numerical evidence preserved: generated/validation_findings.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/figures/ablation_deltas.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/figures/feature_importance.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/figures/metric_comparison.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/figures/review_budgets.png",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/motif_assisted/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/02_METHODS_AND_PARAMETERS.md",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/06_RELIABILITY_AND_VALIDATION.md",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/evidence/existing_full_artifact_verification.log",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/tables/dataset_overview.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/tables/evaluation_splits.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/tables/exact_feature_allowlists.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/tables/full_time_blocks.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/tables/model_families.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/validation/bundle_checks.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_FN.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_community/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_FP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/examples/examples_full_fusion_TP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/provenance/frozen_rules.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/provenance/report.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/provenance/run.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/baseline_summary.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/community_size_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_only/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/degree_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/feature_importance.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/graph_contributions.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_only/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/motif_coverage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_centrality/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_without_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_community/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/review_budgets.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/test_metrics.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_motifs/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/tables/test_temporal_stability.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/full_fusion/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_motifs/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/full_fusion/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/examples/examples_without_centrality_FN.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/examples/examples_without_centrality_FP.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/examples/examples_without_centrality_TP.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/provenance/frozen_rules.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/provenance/report.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/motif_assisted/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/provenance/run.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/baseline_summary.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/community_size_distribution.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/degree_distribution.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/feature_importance.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/graph_contributions.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/motif_coverage.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_full_fusion.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_motif_assisted.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_transaction_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_transaction_community.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_transaction_novelty.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_transaction_only.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_without_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_without_community.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/pr_curve_without_motifs.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/review_budgets.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_only/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/test_metrics.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/tables/test_temporal_stability.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/full_fusion/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_only/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/full_fusion/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/full_fusion/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/full_fusion/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/full_fusion/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/motif_assisted/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/motif_assisted/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/motif_assisted/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/motif_assisted/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/motif_assisted/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_motifs/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_centrality/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_motifs/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/examples/examples_without_centrality_FN.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_community/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/examples/examples_without_centrality_FP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/examples/examples_without_centrality_TP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_novelty/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/provenance/frozen_rules.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_novelty/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/provenance/report.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/provenance/run.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_novelty/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/baseline_summary.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_novelty/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/community_size_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_only/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/degree_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_only/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/feature_importance.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_only/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/graph_contributions.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_only/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/motif_coverage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/transaction_only/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_full_fusion.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_motif_assisted.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_transaction_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_transaction_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_centrality/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_transaction_novelty.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_transaction_only.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_without_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_without_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/pr_curve_without_motifs.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_community/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/review_budgets.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/test_metrics.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_motifs/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/tables/test_temporal_stability.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_motifs/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/full_fusion/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_motifs/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/full_fusion/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_motifs/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/full_fusion/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/datasets/paysim/model_details/without_motifs/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/full_fusion/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: generated/sources/src/motif/modeling.py",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/full_fusion/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/02_METHODS_AND_PARAMETERS.md",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/motif_assisted/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/06_RELIABILITY_AND_VALIDATION.md",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/motif_assisted/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/completion.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/motif_assisted/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/feature_usage.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/motif_assisted/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/model_comparison.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/motif_assisted/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/review_budget_comparison.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/evidence/existing_full_artifact_verification.log",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/tables/dataset_overview.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/tables/evaluation_splits.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/tables/exact_feature_allowlists.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/tables/full_time_blocks.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/tables/model_families.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/validation/bundle_checks.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_FN.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_FP.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_TP.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_novelty/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/provenance/frozen_rules.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_novelty/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/provenance/report.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/provenance/run.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_novelty/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/baseline_summary.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_novelty/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/community_size_distribution.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_only/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/degree_distribution.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_only/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/feature_importance.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_only/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/graph_contributions.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_only/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/motif_coverage.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/transaction_only/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_community.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/review_budgets.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/test_metrics.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_motifs/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/tables/test_temporal_stability.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_motifs/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/full_fusion/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_motifs/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_motifs/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: generated/sources/datasets/paysim/model_details/without_motifs/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/full_fusion/training.json",
+      "check": "frozen numerical evidence preserved: generated/sources/src/motif/modeling.py",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/02_METHODS_AND_PARAMETERS.md",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/06_RELIABILITY_AND_VALIDATION.md",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/completion.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/feature_usage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/model_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/review_budget_comparison.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/evidence/existing_full_artifact_verification.log",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/tables/dataset_overview.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/tables/evaluation_splits.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/tables/exact_feature_allowlists.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/tables/full_time_blocks.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/tables/model_families.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/validation/bundle_checks.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_FN.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_community/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_FP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/examples/examples_full_fusion_TP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/provenance/frozen_rules.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/provenance/report.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/provenance/run.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/baseline_summary.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/community_size_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_only/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/degree_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/feature_importance.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/graph_contributions.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_only/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/motif_coverage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_full_fusion.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_motif_assisted.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_centrality/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_transaction_only.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/pr_curve_without_motifs.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_community/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/review_budgets.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/test_metrics.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_motifs/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/tables/test_temporal_stability.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/full_fusion/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_motifs/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/full_fusion/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/examples/examples_without_centrality_FN.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/examples/examples_without_centrality_FP.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/examples/examples_without_centrality_TP.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/provenance/frozen_rules.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/provenance/report.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/provenance/run.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/baseline_summary.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/community_size_distribution.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/degree_distribution.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/feature_importance.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/graph_contributions.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/motif_coverage.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_full_fusion.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_motif_assisted.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_transaction_centrality.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_transaction_community.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_transaction_novelty.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_transaction_only.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_without_centrality.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_without_community.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/pr_curve_without_motifs.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/review_budgets.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_only/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/test_metrics.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/tables/test_temporal_stability.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/full_fusion/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_only/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/full_fusion/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/full_fusion/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_centrality/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/full_fusion/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/full_fusion/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/motif_assisted/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_centrality/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/motif_assisted/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/motif_assisted/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_community/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/motif_assisted/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_community/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/motif_assisted/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_community/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_community/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_community/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_motifs/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_centrality/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_motifs/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/examples/examples_without_centrality_FN.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_community/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/examples/examples_without_centrality_FP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/examples/examples_without_centrality_TP.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_novelty/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/provenance/frozen_rules.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_novelty/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/provenance/report.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/provenance/run.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_novelty/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/baseline_summary.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_novelty/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/community_size_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_only/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/degree_distribution.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_only/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/feature_importance.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_only/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/graph_contributions.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_only/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/motif_coverage.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/transaction_only/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_full_fusion.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_centrality/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_motif_assisted.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_transaction_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_transaction_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_centrality/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_transaction_novelty.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_centrality/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_transaction_only.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_community/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_without_centrality.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_community/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_without_community.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_community/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/pr_curve_without_motifs.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_community/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/review_budgets.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_community/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/test_metrics.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_motifs/amount_scales.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/tables/test_temporal_stability.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_motifs/leaf_rules.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/full_fusion/amount_scales.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_motifs/saved_model_parameters.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/full_fusion/leaf_rules.csv",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_motifs/training.json",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/full_fusion/saved_model_parameters.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/datasets/paysim/model_details/without_motifs/tree_nodes.csv",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/full_fusion/training.json",
       "pass": true
     },
     {
-      "check": "preserved original and staged evidence: business_report/sources/src/motif/modeling.py",
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/full_fusion/tree_nodes.csv",
       "pass": true
     },
     {
-      "check": "recursive HTML/Markdown links, anchors, no scripts, no duplicate IDs",
-      "pass": true,
-      "links_checked": 118
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/motif_assisted/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/motif_assisted/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/motif_assisted/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/motif_assisted/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/motif_assisted/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_centrality/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_centrality/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_centrality/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_centrality/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_community/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_community/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_community/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_community/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_community/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_novelty/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_novelty/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_novelty/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_novelty/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_only/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_only/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_only/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_only/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/transaction_only/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_centrality/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_centrality/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_centrality/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_community/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_community/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_community/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_community/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_community/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_motifs/amount_scales.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_motifs/leaf_rules.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_motifs/saved_model_parameters.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_motifs/training.json",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/datasets/paysim/model_details/without_motifs/tree_nodes.csv",
+      "pass": true
+    },
+    {
+      "check": "frozen numerical evidence preserved: business_report/sources/src/motif/modeling.py",
+      "pass": true
+    },
+    {
+      "check": "technical report directory is byte-identical after business rewrite",
+      "pass": true
     }
   ],
   "report_directory": "business_report",
   "report_artifact_sha256": {
-    "GRAPHGUARD_BUSINESS_REPORT.html": "242be7634e7114932bdd911d08b3b32e01641af47e450dbaf43ed4f317656140",
-    "GRAPHGUARD_BUSINESS_REPORT.md": "09f4c2c4646b7b999c43a2cf14c406e7aec408779585a788a3ecce1361143e4f",
+    "GRAPHGUARD_BUSINESS_REPORT.html": "a026f4082a26c0ce338583d2784fab230d5135aa208c4d8a63ded7e62c3e7fa8",
+    "GRAPHGUARD_BUSINESS_REPORT.md": "2898a28dd88ca6221e26228b73a2e29c1932653e009e7536d105641e8c338e4d",
+    "figures_insights/cung_so_luot_kiem_tra.png": "5c2dd79612e0e3fd74ceee5ae827420d2cb16a88f0bcc0ac873fa4e66f69bfca",
+    "figures_insights/cung_so_luot_kiem_tra.svg": "516bbe47deef7ccf178202a94c84872be027d27b519ff25ce08e6d88da72440f",
     "figures_insights/marginal_review_yield.png": "c636b43da87eaec1d8cf24fb50a215c0f547e2ed76fa693310f4bf435ea60f7a",
     "figures_insights/marginal_review_yield.svg": "6db818459c9db846d6ff470aeead56ca03b2e88ade133fb83b6beabdb41b28b6",
     "figures_insights/motif_coverage_lift.png": "067dda4244fba531d3e1aa7bd148cd627f28974c10a93f14b5b8265750b3f4ea",
@@ -5427,5 +5586,39 @@
     "insights/temporal_insights.csv": "67cf9b40d852155171d5153f4f98ab5fcf321b110ec593acef6a8a62df3b3fa6",
     "insights/tie_sensitivity.csv": "49ff3c222836e443f4c0f0327703cde403715c7b34f97ca9330408c39d1d874d"
   },
-  "recursive_links_checked": 118
+  "builder_sources_sha256": {
+    "revise_insight_reports.py": "6ee0a0f8fd57f542b49745f1edd4eb7c9a220529fb38901d09af4ff0e0e6d7d3",
+    "business_language.py": "5ef9e8d8cf496887d66864e79d4f5cb0f225a81af20577d0c9a930aecd7cf781"
+  },
+  "previous_report_revision": {
+    "revision": "business-language-20261028T124119088660Z",
+    "builder_sha256": "4d7de8c3b28fa7db751ec373a2a367cc07ddadf1a935f314af1f395a97f8bd59",
+    "artifact_sha256": {
+      "GRAPHGUARD_BUSINESS_REPORT.html": "7e1556f37bd51b3e97287ee302dd3a95321c9a2c42566402611ababa6627d6a8",
+      "GRAPHGUARD_BUSINESS_REPORT.md": "860d91a3a95c9d7cdc84a3fefb0412c2dbf293746cf2784f093b456302e54408",
+      "figures_insights/cung_so_luot_kiem_tra.png": "5c2dd79612e0e3fd74ceee5ae827420d2cb16a88f0bcc0ac873fa4e66f69bfca",
+      "figures_insights/cung_so_luot_kiem_tra.svg": "641541b2d287b0f82ba9a4934080d8dc4c7fb6741cd3d78936becc4a32c7fae9",
+      "figures_insights/marginal_review_yield.png": "c636b43da87eaec1d8cf24fb50a215c0f547e2ed76fa693310f4bf435ea60f7a",
+      "figures_insights/marginal_review_yield.svg": "6db818459c9db846d6ff470aeead56ca03b2e88ade133fb83b6beabdb41b28b6",
+      "figures_insights/motif_coverage_lift.png": "067dda4244fba531d3e1aa7bd148cd627f28974c10a93f14b5b8265750b3f4ea",
+      "figures_insights/motif_coverage_lift.svg": "a4fa97ab3b73b8078826117a91d62f945b7049728b060b207c988239cfb46b9b",
+      "figures_insights/ranking_depth.png": "8f956666b7297fbb0244c9ff21b857dece1efd55964968dd3de6d43ee1d05e2e",
+      "figures_insights/ranking_depth.svg": "1b8658065aaca015027c7cedc58a2cde653ce8abbe1d507eec89ab2bb2e2901c",
+      "figures_insights/temporal_prevalence_recall.png": "ffefb6edf431af564a3926a095716d978c9e25f121a7e686440b7061c42cb2af",
+      "figures_insights/temporal_prevalence_recall.svg": "881d6acbb2ed647ad53e8c5f1f35f59d338ae95a126f9f5136ef647e7e177bd3",
+      "insights/marginal_review_yield.csv": "b8cb09f70e1981350d4bee3ec01760ebf765cf464b8df4fe040f5980645d1a01",
+      "insights/motif_cohort_insights.csv": "26db93625207cc04c43466672ccb73b400a8e16d77feccf72024372acbd5ff71",
+      "insights/structure_summary.csv": "b6cb91a8a0e0c164a9cffd20c8140ed65a6106c40bb6dd37bdce521b86a72ce1",
+      "insights/temporal_insights.csv": "67cf9b40d852155171d5153f4f98ab5fcf321b110ec593acef6a8a62df3b3fa6",
+      "insights/tie_sensitivity.csv": "49ff3c222836e443f4c0f0327703cde403715c7b34f97ca9330408c39d1d874d"
+    }
+  },
+  "technical_report_unchanged": true,
+  "reused_derived_tables": [
+    "motif_cohort_insights",
+    "marginal_review_yield",
+    "temporal_insights",
+    "tie_sensitivity",
+    "structure_summary"
+  ]
 }

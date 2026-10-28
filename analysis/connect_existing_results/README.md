@@ -25,6 +25,14 @@ Lệnh kiểm tra đối chiếu nguồn, số liệu, hash artifact, liên kế
 
 Script tạo revision mới, giữ bản trước trong `report_revisions/` local, kiểm tra staging rồi mới cập nhật báo cáo. Nguồn bổ sung đã có được đối chiếu với SHA-256 lịch sử. Chỉ khi thiếu nguồn, script mới tìm tệp khớp hash trong `Report_Bundle`; khác hash thì dừng thay vì sửa provenance.
 
+Để chỉ sửa cách diễn giải và biểu đồ của bản nghiệp vụ, giữ nguyên bản kỹ thuật:
+
+```powershell
+& '.\.venv\Scripts\python.exe' -B 'analysis/connect_existing_results/revise_insight_reports.py' --business-only --update-reports
+```
+
+Chế độ này lưu bản trước trong một tệp ZIP local, kiểm tra các nguồn số liệu và không dựng lại bản kỹ thuật. Nội dung tiếng Việt dễ đọc nằm trong `business_language.py`.
+
 Hai script `build_analysis.py` và `build_business_report.py` được giữ làm nguồn thực thi của các bản tổng hợp ban đầu. Dùng `revise_insight_reports.py` để duy trì phiên bản insight hiện tại.
 
 ## Phạm vi bằng chứng

@@ -19,6 +19,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
+import zipfile
 from urllib.parse import unquote, urlsplit
 
 
@@ -164,18 +165,26 @@ class Document:
         if self.open_section:
             self.parts.append("</section>")
         nav = '<nav aria-label="Mục lục"><ol>' + "".join(f'<li><a href="#{anchor}">{inline(title)}</a></li>' for title, anchor in self.toc) + "</ol></nav>"
-        scope = ("Phân tích thăm dò từ kết quả đã xuất · Hai bộ dữ liệu mô phỏng · IBM: laundering; PaySim: fraud. "
-                 "Test nội bộ đã được xem trong quá trình phát triển. Mô hình/ngưỡng giữ theo mean validation F1; "
-                 "các mức ngân sách test không được dùng để chọn lại phương án tối ưu.")
+        if self.technical:
+            scope = ("Phân tích thăm dò từ kết quả đã xuất · Hai bộ dữ liệu mô phỏng · IBM: laundering; PaySim: fraud. "
+                     "Test nội bộ đã được xem trong quá trình phát triển. Mô hình/ngưỡng giữ theo mean validation F1; "
+                     "các mức ngân sách test không được dùng để chọn lại phương án tối ưu.")
+            eyebrow = "GraphGuard / Phân tích tổng hợp / Cập nhật 28.10.2026"
+            footer = ("Chỉ tổng hợp và diễn giải evidence đã có. Không chạy lại Spark, huấn luyện hoặc chấm điểm giao dịch. "
+                      "Số liệu lịch sử và định danh thực thi được giữ nguyên; kiểm tra bản báo cáo này có manifest riêng.")
+        else:
+            scope = ("Hai bộ dữ liệu đều mô phỏng các giao dịch tài chính. Giao dịch rửa tiền trong IBM và giao dịch gian lận "
+                     "trong PaySim đã được đánh dấu sẵn. Báo cáo dùng các dấu này để kiểm tra kết quả của từng cách làm.")
+            eyebrow = "GraphGuard / Kết quả thử nghiệm / Cập nhật 28.10.2026"
+            footer = "Báo cáo trình bày kết quả trên dữ liệu mô phỏng. Các bảng số liệu và cách tính được dẫn ở phần cuối."
         page = ('<!doctype html>\n<html lang="vi"><head><meta charset="utf-8">'
                 '<meta name="viewport" content="width=device-width, initial-scale=1">'
                 '<title>' + html.escape(self.title) + '</title><style>' + CSS + '</style></head>'
                 f'<body class="{"technical" if self.technical else "business"}"><main><header>'
-                '<div class="eyebrow">GraphGuard / Phân tích tổng hợp / Cập nhật 28.10.2026</div><h1>' + inline(self.title) +
+                '<div class="eyebrow">' + inline(eyebrow) + '</div><h1>' + inline(self.title) +
                 '</h1><p class="lead">' + inline(self.subtitle) + '</p><div class="scope">' + inline(scope) +
                 '</div></header>' + nav + "\n".join(self.parts) +
-                '<footer>Chỉ tổng hợp và diễn giải evidence đã có. Không chạy lại Spark, huấn luyện hoặc chấm điểm giao dịch. '
-                'Số liệu lịch sử và định danh thực thi được giữ nguyên; kiểm tra bản báo cáo này có manifest riêng.</footer></main></body></html>')
+                '<footer>' + inline(footer) + '</footer></main></body></html>')
         self.md[4:4] = [scope, ""]
         (folder / (stem + ".html")).write_text(page, encoding="utf-8")
         (folder / (stem + ".md")).write_text("\n".join(self.md), encoding="utf-8")
@@ -427,104 +436,8 @@ def common_budget_table(d, e):
 
 
 def business_report(e, folder):
-    d = Document("Từ cấu trúc giao dịch đến giá trị kiểm tra",
-        "Tín hiệu nào tập trung positive, thông tin nào được mô hình khai thác, và lợi ích xuất hiện ở đâu trong danh sách cần xem xét?")
-    cycle = e.motif("ibm_aml", "cycle3_count")
-    ibm_base, ibm_sel = e.model("ibm_aml", "transaction_only"), e.model("ibm_aml")
-    ps_base, ps_sel, ps_novel = (e.model("paysim", f) for f in ("transaction_only", SELECTED["paysim"], "transaction_novelty"))
-    d.section("1. Ba phát hiện nối các phần của project", "findings")
-    d.cards([
-        ("IBM · tín hiệu hiếm", pct(cycle["positive_rate_when_present"]), f'Tỷ lệ laundering trong {n(cycle["covered_transactions"])} giao dịch có cycle trên test; chỉ phủ {pct(cycle["positive_coverage"])} laundering.'),
-        ("PaySim · độ sâu danh sách", "+" + n(e.budget("paysim", SELECTED["paysim"], .005)["TP_at_K"] - e.budget("paysim", "transaction_only", .005)["TP_at_K"]), "Chênh lệch ròng số fraud tìm đúng khi cùng xem 6.244 giao dịch; kết quả so với đối chứng chỉ thuộc tính giao dịch."),
-        ("Giá trị phụ thuộc cách dùng", "0,1% → 1%", "PaySim duy trì lợi ích khi mở rộng danh sách; IBM chuyển từ lợi thế nhỏ sang kém đối chứng ở mức 1% đã đánh giá."),
-    ])
-    d.p("Câu hỏi xuyên suốt là: **quan hệ và lịch sử bổ sung giá trị gì so với chỉ nhìn giao dịch riêng lẻ, và giá trị đó phụ thuộc vào dữ liệu và năng lực kiểm tra thế nào?**")
-    d.p("Các task tạo thành một chuỗi bằng chứng: cấu trúc mạng → nhóm hành vi → thông tin cây sử dụng → kết quả ưu tiên kiểm tra. Mỗi bước trả lời một câu hỏi riêng; một pattern đáng chú ý chưa tự động trở thành một cảnh báo hiệu quả.")
-    d.note("Phát hiện chính: thông tin graph có nhiều vai trò. Một số motif xác định nhóm nhỏ tập trung positive; lịch sử giúp phân biệt giao dịch; centrality/community cung cấp bối cảnh. Bằng chứng hiện tại chưa cho thấy cần kết hợp đủ ba nhóm để luôn đạt kết quả tốt hơn.")
-
-    d.section("2. Hai môi trường giao dịch cung cấp ngữ cảnh khác nhau", "context")
-    rows = []
-    for ds in SELECTED:
-        r = next(x for x in e.structure if x["dataset"] == ds)
-        ov = next(x for x in e.overview if x["dataset"] == ds)
-        rows.append([LABEL[ds], n(ov["transactions"]), n(r["accounts"]), pct(r["degree_one_fraction"]), dec(r["mean_degree"])])
-    d.table(["Dataset", "Giao dịch full", "Tài khoản full", "Tài khoản degree = 1", "Degree trung bình"], rows, "Đặc điểm full graph dùng để đặt bối cảnh")
-    d.p("PaySim có phần lớn tài khoản chỉ gắn với một giao dịch trong full graph. IBM ghi nhận nhiều giao dịch trên mỗi tài khoản hơn theo degree trung bình; chỉ số này chưa xác định số đối tác duy nhất hay mức lặp lại giữa cùng một cặp tài khoản. Đây là cơ sở đặt giả thuyết rằng lượng ngữ cảnh quan hệ có thể khai thác khác nhau giữa hai dataset; chưa chứng minh cấu trúc này gây ra chênh lệch hiệu năng.")
-    d.p("Các chỉ số full graph không mô tả trực tiếp lượng lịch sử có sẵn tại một thời điểm quyết định. Vì vậy, câu chuyện cấu trúc phải được đối chiếu tiếp với feature và kết quả predictive theo thời gian.")
-    d.p("Nguồn: [đặc điểm cấu trúc](insights/structure_summary.csv), [dataset overview](sources/tables/dataset_overview.csv).", small=True)
-
-    d.section("3. Tín hiệu phổ biến và tín hiệu tập trung positive có giá trị khác nhau", "signals")
-    d.p("Coverage trả lời tín hiệu có mặt ở bao nhiêu positive. Tỷ lệ positive trong nhóm và lift trả lời nhóm đó tập trung positive đến mức nào. Cần đọc cùng số giao dịch có tín hiệu; coverage cao có thể đến từ việc tín hiệu phổ biến trong cả dữ liệu bình thường.")
-    rows = []
-    for ds, motif, label in [("ibm_aml", "cycle3_count", "IBM · cycle"), ("ibm_aml", "reciprocal_24h", "IBM · qua lại 24h"),
-                              ("ibm_aml", "fanin_168h", "IBM · fan-in 168h"), ("paysim", "fanin_168h", "PaySim · fan-in 168h")]:
-        r = e.motif(ds, motif)
-        rows.append([label, n(r["covered_transactions"]), n(r["covered_positives"]), pct(r["positive_rate_when_present"], 3), pct(r["positive_coverage"]), dec(r["lift"]) + "×"])
-    d.table(["Nhóm trên test", "Giao dịch", "Positive", "Positive trong nhóm", "Bao phủ positive", "Lift / nền"], rows, "Mức tập trung nhãn positive khi tín hiệu hiện diện; không phải kết quả classifier")
-    d.figure("motif_coverage_lift", "Đối chiếu coverage và lift của các nhóm motif trên test",
-             "Trục dọc là lift theo thang log; đường ngang 1× là tỷ lệ positive nền của từng dataset. IBM có nhóm hiếm tập trung laundering cao, trong khi fan-in PaySim nằm dưới nền. Các điểm chỉ là cohort quan sát; nhóm rỗng hoặc có lift bằng 0 không được vẽ trên trục log.")
-    d.bullets([
-        "**IBM: cycle và giao dịch qua lại là nhóm nhỏ tập trung laundering.** Có thể đặt giả thuyết kiểm tra chuyên biệt cho các nhóm này, nhưng coverage thấp giới hạn giá trị phát hiện diện rộng.",
-        "**IBM: fan-in 168h bao phủ rộng nhưng mức tập trung positive chỉ nhỉnh hơn nền.** Tín hiệu xuất hiện ở " + pct(e.motif("ibm_aml", "fanin_168h")["population_share"]) + " toàn bộ giao dịch test; riêng sự hiện diện chưa đủ để ưu tiên một khối lượng lớn giao dịch.",
-        "**PaySim: có fan-in chưa đồng nghĩa fraud cao hơn.** Tỷ lệ fraud khi fan-in 168h hiện diện thấp hơn nền. Cycle không xuất hiện; relay 168h chỉ phủ 21 giao dịch test và không có fraud trong nhóm quan sát đó.",
-    ])
-    d.note("Hàm ý: phân biệt tín hiệu phục vụ rà soát nhóm nhỏ với thông tin phục vụ xếp hạng diện rộng. Những nhóm nhỏ có lift cao cần kiểm chứng ở thời gian khác trước khi đề xuất quy tắc cảnh báo. Các cohort chồng lấp, không cộng positive giữa các motif.", caution=True)
-    d.p("Nền test: IBM " + pct(e.model("ibm_aml")["test_positives"] / e.model("ibm_aml")["test_transactions"], 3) + "; PaySim " + pct(e.model("paysim")["test_positives"] / e.model("paysim")["test_transactions"], 3) + ". [Bảng cohort, công thức và nguồn](insights/motif_cohort_insights.csv).", small=True)
-
-    d.section("4. PaySim: thiếu lịch sử cũng mang thông tin", "history")
-    d.p("Cây PaySim được chọn sử dụng loại giao dịch, số tiền chuẩn hóa và lịch sử nhận tiền trong 168 giờ. Các nhánh cây cho thấy giá trị không chỉ đến từ việc phát hiện một pattern dòng tiền đã hiện diện.")
-    d.table(["Điều kiện được giữ giống nhau", "Lịch sử nhận tiền", "Score của leaf"], [
-        ["CASH_OUT; cùng nhánh số tiền chuẩn hóa", "Không có lượt nhận tiền hợp lệ được ghi nhận trong 168h trước", dec(e.leaf14["risk_score"], 4)],
-        ["CASH_OUT; cùng nhánh số tiền chuẩn hóa", "Có lịch sử nhận tiền hợp lệ trong 168h trước", dec(e.leaf15["risk_score"], 4)],
-    ], "Hai leaf của cây đã lưu chỉ khác điều kiện lịch sử nhận tiền")
-    d.p("**Trong nhóm điều kiện này, sự vắng mặt của lịch sử nhận tiền là thông tin phân biệt mà cây sử dụng.** Điều đó nối kết quả task history với hiệu quả mô hình dù cycle/relay gần như không cung cấp coverage fraud trên PaySim.")
-    d.note("Đây là logic tổng quát của mô hình đã fit. Chưa có lịch sử trong 168 giờ không chứng minh tài khoản vừa mở; score của weighted tree không phải xác suất fraud đã hiệu chỉnh. Nhánh minh họa chưa xác minh đường đi của bất kỳ case cụ thể nào.", caution=True)
-    d.p("IBM dùng feature thuộc cả C/M/L. Trên PaySim, L có trong cấu hình nhưng không được cây được chọn dùng để chia nhánh; C không nằm trong cấu hình được chọn. Vì vậy, kết quả PaySim hỗ trợ giá trị của bối cảnh lịch sử, chưa chứng minh mô hình phát hiện đường dây hoặc cần đủ ba nhóm graph.")
-    d.p("Nguồn: [leaf rules PaySim](sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv), [vocabulary loại giao dịch](sources/datasets/paysim/model_details/without_centrality/saved_model_parameters.json), [feature usage](sources/feature_usage.csv).", small=True)
-
-    d.section("5. Giá trị nằm ở đâu trong danh sách cần kiểm tra?", "review")
-    d.p("Đối chứng T chỉ dùng thuộc tính giao dịch. T + novelty bổ sung cờ tài khoản đã xuất hiện trong lịch sử prefix; đây là đối chứng đơn giản cần giữ để đánh giá giá trị vượt quá thông tin đã thấy tài khoản. Mô hình chọn là full_fusion ở IBM và without_centrality ở PaySim.")
-    common_budget_table(d, e)
-    d.figure("ranking_depth", "TP ở ba mức ngân sách cho baseline, novelty và mô hình được chọn",
-             "Mỗi điểm là một mức đã xuất; đoạn nối chỉ hỗ trợ đọc xu hướng, không xác định điểm giao hay ngân sách tối ưu ở giữa. PaySim: novelty cạnh tranh ở đầu danh sách, mô hình dùng lịch sử nổi bật khi mở rộng. IBM: lợi thế nhỏ chuyển thành bất lợi tại mức 1%.")
-    d.p("**PaySim: giá trị nổi bật là độ sâu hữu ích của danh sách.** Ở 0,1%, novelty tìm đúng 913 fraud so với 900 của mô hình được chọn. Khi mở rộng tới 0,5% và 1%, mô hình được chọn lần lượt tìm đúng 1.523 và 2.044, cao hơn novelty 401 và 910. Đây là chênh lệch ròng, chưa xác định danh tính các fraud được thêm vào hoặc bị mất đi giữa hai danh sách.")
-    rows = []
-    for ds in SELECTED:
-        a, b = (next(r for r in e.marginal if r["dataset"] == ds and r["model"] == family and r["from_fraction"] == .005)
-                for family in ("transaction_only", SELECTED[ds]))
-        rows.append([LABEL[ds], n(a["added_reviews"]), n(a["added_TP"]), pct(a["marginal_positive_rate"]), n(b["added_TP"]), pct(b["marginal_positive_rate"])])
-    d.table(["Dataset", "Lượt xem thêm", "T: positive thêm", "T: hiệu suất biên", "Mô hình: positive thêm", "Mô hình: hiệu suất biên"], rows,
-            "Mở rộng cùng danh sách từ 0,5% lên 1%; hiệu suất biên = positive thêm / lượt xem thêm")
-    d.p("**IBM: hiệu quả phụ thuộc độ sâu kiểm tra.** Mô hình tìm hơn T 17 laundering ở 0,5%, nhưng phần danh sách mở rộng tiếp theo tìm ít hơn T 105 laundering; tổng chênh lệch tại 1% thành −88. Kết quả chưa ủng hộ ưu thế nhất quán khi thay T bằng mô hình được chọn.")
-    rates = []
-    for ds in SELECTED:
-        a, b = (e.budget(ds, family, .005) for family in ("transaction_only", SELECTED[ds]))
-        rates.append([LABEL[ds], n(a["K"]), pct(a["precision_at_K"]) + " → " + pct(b["precision_at_K"]), pct(a["recall_at_K"]) + " → " + pct(b["recall_at_K"])])
-    d.table(["Dataset", "K ở 0,5%", "Tỷ lệ tìm đúng trong danh sách: T → mô hình", "Bao phủ positive: T → mô hình"], rates, "Đọc số tìm thêm cùng mẫu số và phần positive còn bỏ sót")
-    d.h3("Một đánh đổi khác: dùng ngưỡng cảnh báo đã cố định")
-    d.p(f'IBM: cảnh báo {n(ibm_base["alerts"])} → {n(ibm_sel["alerts"])}; tìm đúng {n(ibm_base["TP"])} → {n(ibm_sel["TP"])}; cảnh báo nhầm {n(ibm_base["FP"])} → {n(ibm_sel["FP"])}. Danh sách ngắn hơn đi cùng mức phát hiện thấp hơn.')
-    d.p(f'PaySim: so với T, mô hình tìm đúng {n(ps_base["TP"])} → {n(ps_sel["TP"])} nhưng cảnh báo nhầm {n(ps_base["FP"])} → {n(ps_sel["FP"])}. Đối chứng novelty cũng tìm đúng {n(ps_novel["TP"])} với {n(ps_novel["FP"])} cảnh báo nhầm, ít hơn mô hình được chọn {n(ps_sel["FP"] - ps_novel["FP"])}. Mô hình được chọn không dẫn đầu ở mọi mục tiêu test.')
-    d.note("Các số tại ngưỡng cố định và các số top-K trả lời hai câu hỏi khác nhau. Chưa có kiểm định paired cho chênh lệch mô hình. Nhiều giao dịch có cùng score nên TP@K còn phụ thuộc thứ tự hòa điểm; bản kỹ thuật trình bày độ nhạy này.", caution=True)
-    d.p("Nguồn: [54 dòng ngân sách](sources/review_budget_comparison.csv), [hiệu suất biên](insights/marginal_review_yield.csv), [18 cấu hình và confusion](sources/model_comparison.csv).", small=True)
-
-    d.section("6. Kết quả theo thời gian và hàm ý sử dụng", "implications")
-    ibm_last = next(r for r in e.periods if r["dataset"] == "ibm_aml" and r["period"] == 5)
-    ps_last = sum(r["share_of_test_positives"] for r in e.periods if r["dataset"] == "paysim" and r["period"] >= 4)
-    d.p(f'Phân bố positive thay đổi mạnh giữa các kỳ: kỳ cuối chứa {pct(ibm_last["share_of_test_positives"])} laundering test IBM; hai kỳ cuối chứa {pct(ps_last)} fraud test PaySim. Đếm số kỳ thắng như những kỳ có sức nặng bằng nhau sẽ bỏ qua cấu trúc này.')
-    d.figure("temporal_prevalence_recall", "Prevalence và recall theo năm kỳ test có thứ tự thời gian",
-             "Hai hàng cùng thứ tự kỳ: tỷ lệ positive ở trên, recall ở dưới. IBM có recall mô hình thấp hơn T ở cả 5 kỳ; PaySim có recall cao hơn T ở cả 5 kỳ. Đây là kết quả tại ngưỡng đã cố định, không phải top-K theo từng kỳ.")
-    d.p("IBM có F1 cao hơn T ở 3/5 kỳ, nhưng recall thấp hơn ở cả 5/5 kỳ: một kết quả F1 cao hơn chưa đồng nghĩa tìm được nhiều laundering hơn. PaySim cải thiện recall ở cả năm kỳ quan sát; hướng cải thiện này chưa xác nhận khả năng khái quát ngoài dữ liệu mô phỏng.")
-    d.table(["Bằng chứng", "Hàm ý hiện tại", "Câu hỏi kiểm chứng tiếp theo"], [
-        ["IBM: cycle/reciprocal tập trung laundering trong nhóm nhỏ", "Giữ như giả thuyết rà soát nhóm hành vi chuyên biệt", "Mức tập trung có lặp lại ở giai đoạn khác? Các nhóm này bổ sung positive nào cho danh sách hiện tại?"],
-        ["PaySim: lịch sử tạo giá trị ở danh sách sâu hơn", "Đánh giá mô hình theo năng lực kiểm tra dự kiến", "Nếu chọn theo ngân sách trên validation, lợi thế còn giữ ở giai đoạn mới?"],
-        ["IBM: không có ưu thế nhất quán theo ngân sách/recall", "Giữ đối chứng và nêu rõ đánh đổi", "Có nhóm hành vi nào hưởng lợi và nhóm nào bị giảm phát hiện?"],
-        ["C/L có giá trị mô tả; lợi ích predictive khác nhau", "Nối các task bằng vai trò bằng chứng", "Thông tin nào giúp người kiểm tra hiểu giao dịch hơn, dù không tăng metric tổng hợp?"],
-    ], "Phân biệt phát hiện hiện có với giả thuyết và bước đánh giá tiếp theo")
-    d.p("Các câu hỏi về positive mới/mất đi, tác động theo nhóm tài khoản và giải thích case cần predictions/feature ở từng giao dịch. Báo cáo này không suy các kết quả đó từ vài examples. Hướng dùng được nêu là đề xuất đánh giá tiếp, chưa phải quyết định triển khai ngân hàng.")
-    d.p("Chi tiết bằng chứng và giới hạn: [bản kỹ thuật](../generated/CONNECTED_RESULTS_REPORT.html). Số liệu thời gian: [temporal insights](insights/temporal_insights.csv).", small=True)
-    d.section("Nguồn số liệu và cách đọc", "sources")
-    scope_and_sources(d)
-    d.save(folder, "GRAPHGUARD_BUSINESS_REPORT")
+    from business_language import write_business_report
+    write_business_report(e, folder, Document, n, pct)
 
 
 def technical_report(e, folder):
@@ -785,6 +698,7 @@ def revision_manifest(stage, e, before, supplemented, stamp):
              "user_facing_date": "2026-10-28", "status": "PASS", "scope": "aggregate-derived insight/report revision; not full pipeline acceptance",
              "python": sys.version, "executable": sys.executable, "platform": sys.platform,
              "builder_sha256": sha(__file__), "builder": Path(__file__).name,
+             "builder_sources_sha256": {p.name: sha(p) for p in (Path(__file__), BASE / "business_language.py")},
              "repository_bundle": "Report_Bundle",
              "verification_scope": "published report files and frozen evidence; local caches/checkpoint bookkeeping are excluded",
              "no_spark": True, "no_training": True, "no_scoring": True,
@@ -821,19 +735,125 @@ def revision_manifest(stage, e, before, supplemented, stamp):
     return facts
 
 
+class BusinessText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.text, self.hidden = [], 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"style", "script"}:
+            self.hidden += 1
+
+    def handle_endtag(self, tag):
+        if tag in {"style", "script"}:
+            self.hidden -= 1
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.text.append(data)
+
+
+def update_business_language(e):
+    folder = BASE / "business_report"
+    stamp = "business-language-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    revision = BASE / "report_revisions" / stamp
+    stage = revision / "staged_business"
+    stage.mkdir(parents=True)
+    before = protected_hashes(BASE)
+    technical_files = {p: sha(p) for p in (BASE / "generated").rglob("*") if p.is_file()}
+    previous = json.loads((folder / "revision_validation.json").read_text(encoding="utf-8"))
+    for rel, digest in previous["report_artifact_sha256"].items():
+        e.check(sha(folder / rel) == digest, "pre-edit business artifact matches recorded hash: " + rel)
+    backup_files = [folder / name for name in ("GRAPHGUARD_BUSINESS_REPORT.html", "GRAPHGUARD_BUSINESS_REPORT.md",
+                    "revision_validation.json", "validation.json", "revision_source_inventory.csv")]
+    backup_files += [p for p in (folder / "figures_insights").glob("cung_so_luot_kiem_tra.*")]
+    backup = revision / "before.zip"
+    with zipfile.ZipFile(backup, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for p in backup_files:
+            archive.write(p, p.relative_to(folder).as_posix())
+    with zipfile.ZipFile(backup) as archive:
+        e.check(archive.testzip() is None, "compact pre-edit report backup verified")
+    for p in (Path(__file__), BASE / "business_language.py"):
+        shutil.copy2(p, revision / p.name)
+    os.environ["MPLCONFIGDIR"] = str(BASE / "report_revisions" / ".mplconfig-business")
+    business_report(e, stage)
+
+    page = stage / "GRAPHGUARD_BUSINESS_REPORT.html"
+    visible = BusinessText()
+    visible.feed(page.read_text(encoding="utf-8"))
+    text = " ".join(visible.text)
+    jargon = re.compile(r"\b(?:positive|coverage|lift|novelty|F1|test|feature|predictive|validation|score|leaf|cohort|TP)\b|top.?K|ngân sách|độ sâu danh sách|full graph", re.IGNORECASE)
+    e.check(not jargon.search(text), "business report uses no unexplained statistical/model jargon from user feedback")
+    e.check(all(term in text for term in ("Degree", "PageRank", "Motif Finding", "LPA")), "business report names the actual analysis tasks")
+    parsed = PageLinks()
+    parsed.feed(page.read_text(encoding="utf-8"))
+    e.check(not parsed.duplicates and not parsed.tags.get("article", 0), "no ambiguous statistic cards or duplicate anchors")
+    e.check("132" in text and "41" in text and "1.799" in text and "6.244" in text and "1.523" in text,
+            "main examples include concrete numerators and denominators")
+    for p in (page, stage / "GRAPHGUARD_BUSINESS_REPORT.md"):
+        links = parsed.links if p.suffix == ".html" else re.findall(r"!?\[[^\]]*\]\(([^)]+)\)", p.read_text(encoding="utf-8"))
+        for link in links:
+            target = urlsplit(html.unescape(link))
+            dest = (folder / unquote(target.path)).resolve() if target.path else folder / page.name
+            candidate = stage / unquote(target.path) if target.path and not target.path.startswith("../") else dest
+            exists = candidate.is_file() or dest.is_file()
+            e.check(not target.scheme and not target.netloc and BASE in dest.parents and exists,
+                    "plain-language report local link: " + link)
+            if target.fragment and not target.path:
+                e.check(target.fragment in parsed.ids, "plain-language report anchor: " + link)
+    for rel, digest in before.items():
+        e.check(sha(BASE / rel) == digest, "frozen numerical evidence preserved: " + rel)
+    for p in stage.rglob("*"):
+        if p.is_file():
+            dest = folder / p.relative_to(stage)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(p, dest)
+    e.check(all(sha(p) == digest for p, digest in technical_files.items()), "technical report directory is byte-identical after business rewrite")
+    current = dict(previous)
+    current.pop("recursive_links_checked", None)
+    current.update({"revision": stamp, "created_utc": datetime.now(timezone.utc).isoformat(),
+        "scope": "plain-language business report rewrite; original numerical results unchanged",
+        "verification_scope": "business text, links, chart and frozen numerical evidence; technical files unchanged",
+        "builder_sha256": sha(__file__), "builder": Path(__file__).name,
+        "builder_sources_sha256": {p.name: sha(p) for p in (Path(__file__), BASE / "business_language.py")},
+        "previous_report_revision": {"revision": previous["revision"], "builder_sha256": previous["builder_sha256"],
+                                     "artifact_sha256": previous["report_artifact_sha256"]},
+        "technical_report_unchanged": True, "protected_evidence_sha256_before": before,
+        "new_derived_tables": [], "reused_derived_tables": previous.get("reused_derived_tables", previous.get("new_derived_tables", [])),
+        "checks": e.checks, "report_artifact_sha256": {}})
+    for p in folder.rglob("*"):
+        if p.is_file():
+            rel = p.relative_to(folder).as_posix()
+            if p.name in {"GRAPHGUARD_BUSINESS_REPORT.html", "GRAPHGUARD_BUSINESS_REPORT.md"} or rel.startswith(("insights/", "figures_insights/")):
+                current["report_artifact_sha256"][rel] = sha(p)
+    write_json(folder / "revision_validation.json", current)
+    shutil.copy2(folder / "revision_validation.json", folder / "validation.json")
+    summary = {"status": "PASS", "scope": "business report text and one plain-language chart",
+               "backup": str(backup), "checks": len(e.checks), "numerical_evidence_unchanged": True,
+               "technical_report_unchanged": True, "no_spark": True}
+    write_json(revision / "revision_summary.json", summary)
+    print(json.dumps(summary, ensure_ascii=False))
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--update-reports", action="store_true", help="After successful staging validation, update the two user-facing files with backups")
     parser.add_argument("--check-only", action="store_true", help="Read-only verification of current reports, evidence and current artifact manifests")
     parser.add_argument("--report-root", type=Path, help="With --check-only, verify an exported report pair using this repository's Windows .venv")
+    parser.add_argument("--business-only", action="store_true", help="With --update-reports, rewrite only the business report, preserving the technical report")
     args = parser.parse_args()
     if args.report_root is not None and not args.check_only:
         parser.error("--report-root is only supported with --check-only")
+    if args.business_only and (not args.update_reports or args.check_only):
+        parser.error("--business-only requires --update-reports and cannot be combined with --check-only")
     if sys.platform != "win32" or sys.version_info[:2] != (3, 12) or Path(sys.executable).resolve() != (REPO / ".venv/Scripts/python.exe").resolve():
         parser.error("Use native Windows repository .venv Python 3.12")
     report_root = args.report_root.resolve() if args.report_root is not None else BASE
     e = Evidence(report_root / "generated")
     validate_narrative(e)
+    if args.business_only:
+        return update_business_language(e)
     if args.check_only:
         counts = []
         for name in ("generated", "business_report"):
