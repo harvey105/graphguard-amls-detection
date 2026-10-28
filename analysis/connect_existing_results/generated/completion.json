@@ -1,0 +1,18 @@
+{
+  "status": "COMPLETE",
+  "checkpoint_status": {
+    "CP0": "PASS",
+    "CP1": "PASS",
+    "CP2": "PASS",
+    "CP3": "PASS",
+    "CP4": "PASS",
+    "CP5": "LIMITED",
+    "CP6": "PASS",
+    "CP7": "PASS"
+  },
+  "finding_count": 2797,
+  "failure_count": 0,
+  "input_files_including_copies": 191,
+  "no_spark": true,
+  "scope": "aggregate export validation; not full pipeline acceptance"
+}

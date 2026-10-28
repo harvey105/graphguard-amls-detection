@@ -1,0 +1,3 @@
+﻿dataset,scope,accounts,degree_one_accounts,degree_one_fraction,mean_degree,source_file
+ibm_aml,full descriptive graph; not predictive feature snapshot,518581,17478,0.03370351015559768,19.585542085035897,sources/datasets/ibm_aml/tables/degree_distribution.csv
+paysim,full descriptive graph; not predictive feature snapshot,9073900,8604623,0.948282767057164,1.402400290944357,sources/datasets/paysim/tables/degree_distribution.csv

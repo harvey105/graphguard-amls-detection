@@ -1,0 +1,6 @@
+﻿leaf_id,condition,risk_score,alert_at_frozen_threshold,training_raw_count
+1,scaled_amount <= 1.1517823480932849,0.02093744068926844,False,5082365
+4,"scaled_amount > 1.1517823480932849 AND type_index IN [0.0, 2.0, 3.0, 4.0] AND type_index IN [0.0, 2.0, 3.0]",0.0,False,16571
+6,"scaled_amount > 1.1517823480932849 AND type_index IN [0.0, 2.0, 3.0, 4.0] AND type_index NOT IN [0.0, 2.0, 3.0] AND dst_seen <= 0.5",0.72990137779269,True,2929
+7,"scaled_amount > 1.1517823480932849 AND type_index IN [0.0, 2.0, 3.0, 4.0] AND type_index NOT IN [0.0, 2.0, 3.0] AND dst_seen > 0.5",0.0037358156502596248,False,9577
+8,"scaled_amount > 1.1517823480932849 AND type_index NOT IN [0.0, 2.0, 3.0, 4.0]",0.9389174204234455,True,2442

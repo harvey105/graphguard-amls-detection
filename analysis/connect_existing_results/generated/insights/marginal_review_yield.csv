@@ -1,0 +1,13 @@
+﻿dataset,model,from_fraction,to_fraction,from_K,to_K,added_reviews,added_TP,added_FP,marginal_positive_rate,scope,source_file
+ibm_aml,transaction_only,0.001,0.005,1018,5090,4072,396,3676,0.09724950884086445,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+ibm_aml,transaction_only,0.005,0.01,5090,10179,5089,389,4700,0.07643937905285911,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+ibm_aml,transaction_novelty,0.001,0.005,1018,5090,4072,396,3676,0.09724950884086445,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+ibm_aml,transaction_novelty,0.005,0.01,5090,10179,5089,389,4700,0.07643937905285911,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+ibm_aml,full_fusion,0.001,0.005,1018,5090,4072,400,3672,0.09823182711198428,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+ibm_aml,full_fusion,0.005,0.01,5090,10179,5089,284,4805,0.05580664177638043,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,transaction_only,0.001,0.005,1249,6244,4995,170,4825,0.03403403403403404,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,transaction_only,0.005,0.01,6244,12488,6244,106,6138,0.016976297245355543,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,transaction_novelty,0.001,0.005,1249,6244,4995,209,4786,0.041841841841841844,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,transaction_novelty,0.005,0.01,6244,12488,6244,12,6232,0.0019218449711723255,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,without_centrality,0.001,0.005,1249,6244,4995,623,4372,0.12472472472472472,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv
+paysim,without_centrality,0.005,0.01,6244,12488,6244,521,5723,0.08344010249839846,same fitted model and exported deterministic tie order; not switch-policy evaluation,review_budget_comparison.csv

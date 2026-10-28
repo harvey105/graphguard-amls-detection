@@ -1,0 +1,12 @@
+﻿leaf_id,condition,risk_score,alert_at_frozen_threshold,training_raw_count
+1,"type_index IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]",0.00525926947868985,False,3599180
+4,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank <= 0.8577698995813583",0.0323885675604183,False,212453
+6,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount <= 0.0018133467186479144",0.035925924402732005,False,3724
+8,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 0.0018133467186479144 AND dst_community_cross_fraction <= 0.84698996655518388",0.22895379374620872,False,11418
+9,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount <= 0.016910214633845108 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 0.0018133467186479144 AND dst_community_cross_fraction > 0.84698996655518388",0.5145798166150171,True,876
+12,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount <= 0.084770401717523453",0.2459328369038959,False,119167
+14,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fx_payment <= 0.5",0.5572272991967513,True,35501
+15,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount <= 0.2987789251452882 AND scaled_amount > 0.084770401717523453 AND fx_payment > 0.5",0.0,False,7296
+17,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank <= 0.8577698995813583",0.03705097266445648,False,64923
+19,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank > 0.8577698995813583 AND scaled_amount <= 4.9901270682958172",0.23954366299034494,False,5662
+20,"type_index NOT IN [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] AND scaled_amount > 0.016910214633845108 AND scaled_amount > 0.2987789251452882 AND src_pagerank > 0.8577698995813583 AND scaled_amount > 4.9901270682958172",0.6834349690829333,True,324

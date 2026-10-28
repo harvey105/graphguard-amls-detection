@@ -1,0 +1,2798 @@
+﻿checkpoint,status,check
+CP0,PASS,Input exists: tables/model_families.csv
+CP0,PASS,Input exists: tables/exact_feature_allowlists.csv
+CP0,PASS,Input exists: tables/dataset_overview.csv
+CP0,PASS,Input exists: 02_METHODS_AND_PARAMETERS.md
+CP0,PASS,Input exists: 06_RELIABILITY_AND_VALIDATION.md
+CP0,PASS,Nine family mappings
+CP0,PASS,Two dataset overview rows
+CP0,PASS,Input exists: datasets/ibm_aml/provenance/report.json
+CP0,PASS,Duplicate hash: datasets/ibm_aml/provenance/report.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/report.json
+CP0,PASS,Input exists: datasets/ibm_aml/provenance/run.json
+CP0,PASS,Duplicate hash: datasets/ibm_aml/provenance/run.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/run.json
+CP0,PASS,Input exists: datasets/ibm_aml/provenance/frozen_rules.json
+CP0,PASS,Duplicate hash: datasets/ibm_aml/provenance/frozen_rules.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/frozen_rules.json
+CP0,PASS,ibm_aml: completed full
+CP0,PASS,ibm_aml: selected rule
+CP0,PASS,ibm_aml: overview identity
+CP0,PASS,Input exists: datasets/paysim/provenance/report.json
+CP0,PASS,Duplicate hash: datasets/paysim/provenance/report.json vs results/full_system/paysim/run_20261024T084918669391Z/report.json
+CP0,PASS,Input exists: datasets/paysim/provenance/run.json
+CP0,PASS,Duplicate hash: datasets/paysim/provenance/run.json vs results/full_system/paysim/run_20261024T084918669391Z/run.json
+CP0,PASS,Input exists: datasets/paysim/provenance/frozen_rules.json
+CP0,PASS,Duplicate hash: datasets/paysim/provenance/frozen_rules.json vs results/full_system/paysim/run_20261024T084918669391Z/frozen_rules.json
+CP0,PASS,paysim: completed full
+CP0,PASS,paysim: selected rule
+CP0,PASS,paysim: overview identity
+CP1,PASS,Input exists: datasets/ibm_aml/tables/test_metrics.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/test_metrics.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/test_metrics.csv
+CP1,PASS,ibm_aml: 9 unique models
+CP1,PASS,ibm_aml/transaction_only: nonnegative integers
+CP1,PASS,ibm_aml/transaction_only: alerts
+CP1,PASS,ibm_aml/transaction_only: positives
+CP1,PASS,ibm_aml/transaction_only: total
+CP1,PASS,ibm_aml/transaction_only: precision
+CP1,PASS,ibm_aml/transaction_only: recall
+CP1,PASS,ibm_aml/transaction_only: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_only/TP
+CP1,PASS,ibm_aml: report vs CSV transaction_only/FP
+CP1,PASS,ibm_aml: report vs CSV transaction_only/FN
+CP1,PASS,ibm_aml: report vs CSV transaction_only/TN
+CP1,PASS,ibm_aml: report vs CSV transaction_only/alerts
+CP1,PASS,ibm_aml: report vs CSV transaction_only/transactions
+CP1,PASS,ibm_aml: report vs CSV transaction_only/fraud
+CP1,PASS,ibm_aml: report vs CSV transaction_only/threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_only/precision
+CP1,PASS,ibm_aml: report vs CSV transaction_only/recall
+CP1,PASS,ibm_aml: report vs CSV transaction_only/F1
+CP1,PASS,ibm_aml: report vs CSV transaction_only/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_transaction_only.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_transaction_only.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_only.csv
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: unique descending scores
+CP1,PASS,ibm_aml/transaction_only: bin bounds
+CP1,PASS,ibm_aml/transaction_only: cumulative precision
+CP1,PASS,ibm_aml/transaction_only: cumulative recall
+CP1,PASS,ibm_aml/transaction_only: populations
+CP1,PASS,ibm_aml/transaction_only: AP
+CP1,PASS,ibm_aml/transaction_novelty: nonnegative integers
+CP1,PASS,ibm_aml/transaction_novelty: alerts
+CP1,PASS,ibm_aml/transaction_novelty: positives
+CP1,PASS,ibm_aml/transaction_novelty: total
+CP1,PASS,ibm_aml/transaction_novelty: precision
+CP1,PASS,ibm_aml/transaction_novelty: recall
+CP1,PASS,ibm_aml/transaction_novelty: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/TP
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/FP
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/FN
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/TN
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/alerts
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/transactions
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/fraud
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/precision
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/recall
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/F1
+CP1,PASS,ibm_aml: report vs CSV transaction_novelty/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_novelty.csv
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: unique descending scores
+CP1,PASS,ibm_aml/transaction_novelty: bin bounds
+CP1,PASS,ibm_aml/transaction_novelty: cumulative precision
+CP1,PASS,ibm_aml/transaction_novelty: cumulative recall
+CP1,PASS,ibm_aml/transaction_novelty: populations
+CP1,PASS,ibm_aml/transaction_novelty: AP
+CP1,PASS,ibm_aml/transaction_centrality: nonnegative integers
+CP1,PASS,ibm_aml/transaction_centrality: alerts
+CP1,PASS,ibm_aml/transaction_centrality: positives
+CP1,PASS,ibm_aml/transaction_centrality: total
+CP1,PASS,ibm_aml/transaction_centrality: precision
+CP1,PASS,ibm_aml/transaction_centrality: recall
+CP1,PASS,ibm_aml/transaction_centrality: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/TP
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/FP
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/FN
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/TN
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/alerts
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/transactions
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/fraud
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/precision
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/recall
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/F1
+CP1,PASS,ibm_aml: report vs CSV transaction_centrality/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_centrality.csv
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: unique descending scores
+CP1,PASS,ibm_aml/transaction_centrality: bin bounds
+CP1,PASS,ibm_aml/transaction_centrality: cumulative precision
+CP1,PASS,ibm_aml/transaction_centrality: cumulative recall
+CP1,PASS,ibm_aml/transaction_centrality: populations
+CP1,PASS,ibm_aml/transaction_centrality: AP
+CP1,PASS,ibm_aml/motif_assisted: nonnegative integers
+CP1,PASS,ibm_aml/motif_assisted: alerts
+CP1,PASS,ibm_aml/motif_assisted: positives
+CP1,PASS,ibm_aml/motif_assisted: total
+CP1,PASS,ibm_aml/motif_assisted: precision
+CP1,PASS,ibm_aml/motif_assisted: recall
+CP1,PASS,ibm_aml/motif_assisted: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/TP
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/FP
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/FN
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/TN
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/alerts
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/transactions
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/fraud
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/threshold
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/precision
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/recall
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/F1
+CP1,PASS,ibm_aml: report vs CSV motif_assisted/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_motif_assisted.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_motif_assisted.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_motif_assisted.csv
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: unique descending scores
+CP1,PASS,ibm_aml/motif_assisted: bin bounds
+CP1,PASS,ibm_aml/motif_assisted: cumulative precision
+CP1,PASS,ibm_aml/motif_assisted: cumulative recall
+CP1,PASS,ibm_aml/motif_assisted: populations
+CP1,PASS,ibm_aml/motif_assisted: AP
+CP1,PASS,ibm_aml/transaction_community: nonnegative integers
+CP1,PASS,ibm_aml/transaction_community: alerts
+CP1,PASS,ibm_aml/transaction_community: positives
+CP1,PASS,ibm_aml/transaction_community: total
+CP1,PASS,ibm_aml/transaction_community: precision
+CP1,PASS,ibm_aml/transaction_community: recall
+CP1,PASS,ibm_aml/transaction_community: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_community/TP
+CP1,PASS,ibm_aml: report vs CSV transaction_community/FP
+CP1,PASS,ibm_aml: report vs CSV transaction_community/FN
+CP1,PASS,ibm_aml: report vs CSV transaction_community/TN
+CP1,PASS,ibm_aml: report vs CSV transaction_community/alerts
+CP1,PASS,ibm_aml: report vs CSV transaction_community/transactions
+CP1,PASS,ibm_aml: report vs CSV transaction_community/fraud
+CP1,PASS,ibm_aml: report vs CSV transaction_community/threshold
+CP1,PASS,ibm_aml: report vs CSV transaction_community/precision
+CP1,PASS,ibm_aml: report vs CSV transaction_community/recall
+CP1,PASS,ibm_aml: report vs CSV transaction_community/F1
+CP1,PASS,ibm_aml: report vs CSV transaction_community/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_transaction_community.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_transaction_community.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_community.csv
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: unique descending scores
+CP1,PASS,ibm_aml/transaction_community: bin bounds
+CP1,PASS,ibm_aml/transaction_community: cumulative precision
+CP1,PASS,ibm_aml/transaction_community: cumulative recall
+CP1,PASS,ibm_aml/transaction_community: populations
+CP1,PASS,ibm_aml/transaction_community: AP
+CP1,PASS,ibm_aml/full_fusion: nonnegative integers
+CP1,PASS,ibm_aml/full_fusion: alerts
+CP1,PASS,ibm_aml/full_fusion: positives
+CP1,PASS,ibm_aml/full_fusion: total
+CP1,PASS,ibm_aml/full_fusion: precision
+CP1,PASS,ibm_aml/full_fusion: recall
+CP1,PASS,ibm_aml/full_fusion: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV full_fusion/TP
+CP1,PASS,ibm_aml: report vs CSV full_fusion/FP
+CP1,PASS,ibm_aml: report vs CSV full_fusion/FN
+CP1,PASS,ibm_aml: report vs CSV full_fusion/TN
+CP1,PASS,ibm_aml: report vs CSV full_fusion/alerts
+CP1,PASS,ibm_aml: report vs CSV full_fusion/transactions
+CP1,PASS,ibm_aml: report vs CSV full_fusion/fraud
+CP1,PASS,ibm_aml: report vs CSV full_fusion/threshold
+CP1,PASS,ibm_aml: report vs CSV full_fusion/precision
+CP1,PASS,ibm_aml: report vs CSV full_fusion/recall
+CP1,PASS,ibm_aml: report vs CSV full_fusion/F1
+CP1,PASS,ibm_aml: report vs CSV full_fusion/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_full_fusion.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_full_fusion.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_full_fusion.csv
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: unique descending scores
+CP1,PASS,ibm_aml/full_fusion: bin bounds
+CP1,PASS,ibm_aml/full_fusion: cumulative precision
+CP1,PASS,ibm_aml/full_fusion: cumulative recall
+CP1,PASS,ibm_aml/full_fusion: populations
+CP1,PASS,ibm_aml/full_fusion: AP
+CP1,PASS,ibm_aml/without_centrality: nonnegative integers
+CP1,PASS,ibm_aml/without_centrality: alerts
+CP1,PASS,ibm_aml/without_centrality: positives
+CP1,PASS,ibm_aml/without_centrality: total
+CP1,PASS,ibm_aml/without_centrality: precision
+CP1,PASS,ibm_aml/without_centrality: recall
+CP1,PASS,ibm_aml/without_centrality: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV without_centrality/TP
+CP1,PASS,ibm_aml: report vs CSV without_centrality/FP
+CP1,PASS,ibm_aml: report vs CSV without_centrality/FN
+CP1,PASS,ibm_aml: report vs CSV without_centrality/TN
+CP1,PASS,ibm_aml: report vs CSV without_centrality/alerts
+CP1,PASS,ibm_aml: report vs CSV without_centrality/transactions
+CP1,PASS,ibm_aml: report vs CSV without_centrality/fraud
+CP1,PASS,ibm_aml: report vs CSV without_centrality/threshold
+CP1,PASS,ibm_aml: report vs CSV without_centrality/precision
+CP1,PASS,ibm_aml: report vs CSV without_centrality/recall
+CP1,PASS,ibm_aml: report vs CSV without_centrality/F1
+CP1,PASS,ibm_aml: report vs CSV without_centrality/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_without_centrality.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_without_centrality.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_centrality.csv
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: unique descending scores
+CP1,PASS,ibm_aml/without_centrality: bin bounds
+CP1,PASS,ibm_aml/without_centrality: cumulative precision
+CP1,PASS,ibm_aml/without_centrality: cumulative recall
+CP1,PASS,ibm_aml/without_centrality: populations
+CP1,PASS,ibm_aml/without_centrality: AP
+CP1,PASS,ibm_aml/without_motifs: nonnegative integers
+CP1,PASS,ibm_aml/without_motifs: alerts
+CP1,PASS,ibm_aml/without_motifs: positives
+CP1,PASS,ibm_aml/without_motifs: total
+CP1,PASS,ibm_aml/without_motifs: precision
+CP1,PASS,ibm_aml/without_motifs: recall
+CP1,PASS,ibm_aml/without_motifs: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV without_motifs/TP
+CP1,PASS,ibm_aml: report vs CSV without_motifs/FP
+CP1,PASS,ibm_aml: report vs CSV without_motifs/FN
+CP1,PASS,ibm_aml: report vs CSV without_motifs/TN
+CP1,PASS,ibm_aml: report vs CSV without_motifs/alerts
+CP1,PASS,ibm_aml: report vs CSV without_motifs/transactions
+CP1,PASS,ibm_aml: report vs CSV without_motifs/fraud
+CP1,PASS,ibm_aml: report vs CSV without_motifs/threshold
+CP1,PASS,ibm_aml: report vs CSV without_motifs/precision
+CP1,PASS,ibm_aml: report vs CSV without_motifs/recall
+CP1,PASS,ibm_aml: report vs CSV without_motifs/F1
+CP1,PASS,ibm_aml: report vs CSV without_motifs/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_without_motifs.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_without_motifs.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_motifs.csv
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: unique descending scores
+CP1,PASS,ibm_aml/without_motifs: bin bounds
+CP1,PASS,ibm_aml/without_motifs: cumulative precision
+CP1,PASS,ibm_aml/without_motifs: cumulative recall
+CP1,PASS,ibm_aml/without_motifs: populations
+CP1,PASS,ibm_aml/without_motifs: AP
+CP1,PASS,ibm_aml/without_community: nonnegative integers
+CP1,PASS,ibm_aml/without_community: alerts
+CP1,PASS,ibm_aml/without_community: positives
+CP1,PASS,ibm_aml/without_community: total
+CP1,PASS,ibm_aml/without_community: precision
+CP1,PASS,ibm_aml/without_community: recall
+CP1,PASS,ibm_aml/without_community: F1
+CP1,PASS,ibm_aml: test population
+CP1,PASS,ibm_aml: selected flag
+CP1,PASS,ibm_aml: frozen family threshold
+CP1,PASS,ibm_aml: report vs CSV without_community/TP
+CP1,PASS,ibm_aml: report vs CSV without_community/FP
+CP1,PASS,ibm_aml: report vs CSV without_community/FN
+CP1,PASS,ibm_aml: report vs CSV without_community/TN
+CP1,PASS,ibm_aml: report vs CSV without_community/alerts
+CP1,PASS,ibm_aml: report vs CSV without_community/transactions
+CP1,PASS,ibm_aml: report vs CSV without_community/fraud
+CP1,PASS,ibm_aml: report vs CSV without_community/threshold
+CP1,PASS,ibm_aml: report vs CSV without_community/precision
+CP1,PASS,ibm_aml: report vs CSV without_community/recall
+CP1,PASS,ibm_aml: report vs CSV without_community/F1
+CP1,PASS,ibm_aml: report vs CSV without_community/average_precision
+CP1,PASS,Input exists: datasets/ibm_aml/tables/pr_curve_without_community.csv
+CP1,PASS,Duplicate hash: datasets/ibm_aml/tables/pr_curve_without_community.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_community.csv
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: unique descending scores
+CP1,PASS,ibm_aml/without_community: bin bounds
+CP1,PASS,ibm_aml/without_community: cumulative precision
+CP1,PASS,ibm_aml/without_community: cumulative recall
+CP1,PASS,ibm_aml/without_community: populations
+CP1,PASS,ibm_aml/without_community: AP
+CP1,PASS,Input exists: datasets/paysim/tables/test_metrics.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/test_metrics.csv vs results/full_system/paysim/run_20261024T084918669391Z/test_metrics.csv
+CP1,PASS,paysim: 9 unique models
+CP1,PASS,paysim/transaction_only: nonnegative integers
+CP1,PASS,paysim/transaction_only: alerts
+CP1,PASS,paysim/transaction_only: positives
+CP1,PASS,paysim/transaction_only: total
+CP1,PASS,paysim/transaction_only: precision
+CP1,PASS,paysim/transaction_only: recall
+CP1,PASS,paysim/transaction_only: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV transaction_only/TP
+CP1,PASS,paysim: report vs CSV transaction_only/FP
+CP1,PASS,paysim: report vs CSV transaction_only/FN
+CP1,PASS,paysim: report vs CSV transaction_only/TN
+CP1,PASS,paysim: report vs CSV transaction_only/alerts
+CP1,PASS,paysim: report vs CSV transaction_only/transactions
+CP1,PASS,paysim: report vs CSV transaction_only/fraud
+CP1,PASS,paysim: report vs CSV transaction_only/threshold
+CP1,PASS,paysim: report vs CSV transaction_only/precision
+CP1,PASS,paysim: report vs CSV transaction_only/recall
+CP1,PASS,paysim: report vs CSV transaction_only/F1
+CP1,PASS,paysim: report vs CSV transaction_only/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_transaction_only.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_transaction_only.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_only.csv
+CP1,PASS,paysim/transaction_only: unique descending scores
+CP1,PASS,paysim/transaction_only: bin bounds
+CP1,PASS,paysim/transaction_only: cumulative precision
+CP1,PASS,paysim/transaction_only: cumulative recall
+CP1,PASS,paysim/transaction_only: unique descending scores
+CP1,PASS,paysim/transaction_only: bin bounds
+CP1,PASS,paysim/transaction_only: cumulative precision
+CP1,PASS,paysim/transaction_only: cumulative recall
+CP1,PASS,paysim/transaction_only: unique descending scores
+CP1,PASS,paysim/transaction_only: bin bounds
+CP1,PASS,paysim/transaction_only: cumulative precision
+CP1,PASS,paysim/transaction_only: cumulative recall
+CP1,PASS,paysim/transaction_only: populations
+CP1,PASS,paysim/transaction_only: AP
+CP1,PASS,paysim/transaction_novelty: nonnegative integers
+CP1,PASS,paysim/transaction_novelty: alerts
+CP1,PASS,paysim/transaction_novelty: positives
+CP1,PASS,paysim/transaction_novelty: total
+CP1,PASS,paysim/transaction_novelty: precision
+CP1,PASS,paysim/transaction_novelty: recall
+CP1,PASS,paysim/transaction_novelty: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV transaction_novelty/TP
+CP1,PASS,paysim: report vs CSV transaction_novelty/FP
+CP1,PASS,paysim: report vs CSV transaction_novelty/FN
+CP1,PASS,paysim: report vs CSV transaction_novelty/TN
+CP1,PASS,paysim: report vs CSV transaction_novelty/alerts
+CP1,PASS,paysim: report vs CSV transaction_novelty/transactions
+CP1,PASS,paysim: report vs CSV transaction_novelty/fraud
+CP1,PASS,paysim: report vs CSV transaction_novelty/threshold
+CP1,PASS,paysim: report vs CSV transaction_novelty/precision
+CP1,PASS,paysim: report vs CSV transaction_novelty/recall
+CP1,PASS,paysim: report vs CSV transaction_novelty/F1
+CP1,PASS,paysim: report vs CSV transaction_novelty/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_transaction_novelty.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_transaction_novelty.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_novelty.csv
+CP1,PASS,paysim/transaction_novelty: unique descending scores
+CP1,PASS,paysim/transaction_novelty: bin bounds
+CP1,PASS,paysim/transaction_novelty: cumulative precision
+CP1,PASS,paysim/transaction_novelty: cumulative recall
+CP1,PASS,paysim/transaction_novelty: unique descending scores
+CP1,PASS,paysim/transaction_novelty: bin bounds
+CP1,PASS,paysim/transaction_novelty: cumulative precision
+CP1,PASS,paysim/transaction_novelty: cumulative recall
+CP1,PASS,paysim/transaction_novelty: unique descending scores
+CP1,PASS,paysim/transaction_novelty: bin bounds
+CP1,PASS,paysim/transaction_novelty: cumulative precision
+CP1,PASS,paysim/transaction_novelty: cumulative recall
+CP1,PASS,paysim/transaction_novelty: unique descending scores
+CP1,PASS,paysim/transaction_novelty: bin bounds
+CP1,PASS,paysim/transaction_novelty: cumulative precision
+CP1,PASS,paysim/transaction_novelty: cumulative recall
+CP1,PASS,paysim/transaction_novelty: unique descending scores
+CP1,PASS,paysim/transaction_novelty: bin bounds
+CP1,PASS,paysim/transaction_novelty: cumulative precision
+CP1,PASS,paysim/transaction_novelty: cumulative recall
+CP1,PASS,paysim/transaction_novelty: populations
+CP1,PASS,paysim/transaction_novelty: AP
+CP1,PASS,paysim/transaction_centrality: nonnegative integers
+CP1,PASS,paysim/transaction_centrality: alerts
+CP1,PASS,paysim/transaction_centrality: positives
+CP1,PASS,paysim/transaction_centrality: total
+CP1,PASS,paysim/transaction_centrality: precision
+CP1,PASS,paysim/transaction_centrality: recall
+CP1,PASS,paysim/transaction_centrality: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV transaction_centrality/TP
+CP1,PASS,paysim: report vs CSV transaction_centrality/FP
+CP1,PASS,paysim: report vs CSV transaction_centrality/FN
+CP1,PASS,paysim: report vs CSV transaction_centrality/TN
+CP1,PASS,paysim: report vs CSV transaction_centrality/alerts
+CP1,PASS,paysim: report vs CSV transaction_centrality/transactions
+CP1,PASS,paysim: report vs CSV transaction_centrality/fraud
+CP1,PASS,paysim: report vs CSV transaction_centrality/threshold
+CP1,PASS,paysim: report vs CSV transaction_centrality/precision
+CP1,PASS,paysim: report vs CSV transaction_centrality/recall
+CP1,PASS,paysim: report vs CSV transaction_centrality/F1
+CP1,PASS,paysim: report vs CSV transaction_centrality/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_transaction_centrality.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_transaction_centrality.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_centrality.csv
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: unique descending scores
+CP1,PASS,paysim/transaction_centrality: bin bounds
+CP1,PASS,paysim/transaction_centrality: cumulative precision
+CP1,PASS,paysim/transaction_centrality: cumulative recall
+CP1,PASS,paysim/transaction_centrality: populations
+CP1,PASS,paysim/transaction_centrality: AP
+CP1,PASS,paysim/motif_assisted: nonnegative integers
+CP1,PASS,paysim/motif_assisted: alerts
+CP1,PASS,paysim/motif_assisted: positives
+CP1,PASS,paysim/motif_assisted: total
+CP1,PASS,paysim/motif_assisted: precision
+CP1,PASS,paysim/motif_assisted: recall
+CP1,PASS,paysim/motif_assisted: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV motif_assisted/TP
+CP1,PASS,paysim: report vs CSV motif_assisted/FP
+CP1,PASS,paysim: report vs CSV motif_assisted/FN
+CP1,PASS,paysim: report vs CSV motif_assisted/TN
+CP1,PASS,paysim: report vs CSV motif_assisted/alerts
+CP1,PASS,paysim: report vs CSV motif_assisted/transactions
+CP1,PASS,paysim: report vs CSV motif_assisted/fraud
+CP1,PASS,paysim: report vs CSV motif_assisted/threshold
+CP1,PASS,paysim: report vs CSV motif_assisted/precision
+CP1,PASS,paysim: report vs CSV motif_assisted/recall
+CP1,PASS,paysim: report vs CSV motif_assisted/F1
+CP1,PASS,paysim: report vs CSV motif_assisted/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_motif_assisted.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_motif_assisted.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_motif_assisted.csv
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: unique descending scores
+CP1,PASS,paysim/motif_assisted: bin bounds
+CP1,PASS,paysim/motif_assisted: cumulative precision
+CP1,PASS,paysim/motif_assisted: cumulative recall
+CP1,PASS,paysim/motif_assisted: populations
+CP1,PASS,paysim/motif_assisted: AP
+CP1,PASS,paysim/transaction_community: nonnegative integers
+CP1,PASS,paysim/transaction_community: alerts
+CP1,PASS,paysim/transaction_community: positives
+CP1,PASS,paysim/transaction_community: total
+CP1,PASS,paysim/transaction_community: precision
+CP1,PASS,paysim/transaction_community: recall
+CP1,PASS,paysim/transaction_community: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV transaction_community/TP
+CP1,PASS,paysim: report vs CSV transaction_community/FP
+CP1,PASS,paysim: report vs CSV transaction_community/FN
+CP1,PASS,paysim: report vs CSV transaction_community/TN
+CP1,PASS,paysim: report vs CSV transaction_community/alerts
+CP1,PASS,paysim: report vs CSV transaction_community/transactions
+CP1,PASS,paysim: report vs CSV transaction_community/fraud
+CP1,PASS,paysim: report vs CSV transaction_community/threshold
+CP1,PASS,paysim: report vs CSV transaction_community/precision
+CP1,PASS,paysim: report vs CSV transaction_community/recall
+CP1,PASS,paysim: report vs CSV transaction_community/F1
+CP1,PASS,paysim: report vs CSV transaction_community/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_transaction_community.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_transaction_community.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_community.csv
+CP1,PASS,paysim/transaction_community: unique descending scores
+CP1,PASS,paysim/transaction_community: bin bounds
+CP1,PASS,paysim/transaction_community: cumulative precision
+CP1,PASS,paysim/transaction_community: cumulative recall
+CP1,PASS,paysim/transaction_community: unique descending scores
+CP1,PASS,paysim/transaction_community: bin bounds
+CP1,PASS,paysim/transaction_community: cumulative precision
+CP1,PASS,paysim/transaction_community: cumulative recall
+CP1,PASS,paysim/transaction_community: unique descending scores
+CP1,PASS,paysim/transaction_community: bin bounds
+CP1,PASS,paysim/transaction_community: cumulative precision
+CP1,PASS,paysim/transaction_community: cumulative recall
+CP1,PASS,paysim/transaction_community: unique descending scores
+CP1,PASS,paysim/transaction_community: bin bounds
+CP1,PASS,paysim/transaction_community: cumulative precision
+CP1,PASS,paysim/transaction_community: cumulative recall
+CP1,PASS,paysim/transaction_community: unique descending scores
+CP1,PASS,paysim/transaction_community: bin bounds
+CP1,PASS,paysim/transaction_community: cumulative precision
+CP1,PASS,paysim/transaction_community: cumulative recall
+CP1,PASS,paysim/transaction_community: populations
+CP1,PASS,paysim/transaction_community: AP
+CP1,PASS,paysim/full_fusion: nonnegative integers
+CP1,PASS,paysim/full_fusion: alerts
+CP1,PASS,paysim/full_fusion: positives
+CP1,PASS,paysim/full_fusion: total
+CP1,PASS,paysim/full_fusion: precision
+CP1,PASS,paysim/full_fusion: recall
+CP1,PASS,paysim/full_fusion: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV full_fusion/TP
+CP1,PASS,paysim: report vs CSV full_fusion/FP
+CP1,PASS,paysim: report vs CSV full_fusion/FN
+CP1,PASS,paysim: report vs CSV full_fusion/TN
+CP1,PASS,paysim: report vs CSV full_fusion/alerts
+CP1,PASS,paysim: report vs CSV full_fusion/transactions
+CP1,PASS,paysim: report vs CSV full_fusion/fraud
+CP1,PASS,paysim: report vs CSV full_fusion/threshold
+CP1,PASS,paysim: report vs CSV full_fusion/precision
+CP1,PASS,paysim: report vs CSV full_fusion/recall
+CP1,PASS,paysim: report vs CSV full_fusion/F1
+CP1,PASS,paysim: report vs CSV full_fusion/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_full_fusion.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_full_fusion.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_full_fusion.csv
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: unique descending scores
+CP1,PASS,paysim/full_fusion: bin bounds
+CP1,PASS,paysim/full_fusion: cumulative precision
+CP1,PASS,paysim/full_fusion: cumulative recall
+CP1,PASS,paysim/full_fusion: populations
+CP1,PASS,paysim/full_fusion: AP
+CP1,PASS,paysim/without_centrality: nonnegative integers
+CP1,PASS,paysim/without_centrality: alerts
+CP1,PASS,paysim/without_centrality: positives
+CP1,PASS,paysim/without_centrality: total
+CP1,PASS,paysim/without_centrality: precision
+CP1,PASS,paysim/without_centrality: recall
+CP1,PASS,paysim/without_centrality: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV without_centrality/TP
+CP1,PASS,paysim: report vs CSV without_centrality/FP
+CP1,PASS,paysim: report vs CSV without_centrality/FN
+CP1,PASS,paysim: report vs CSV without_centrality/TN
+CP1,PASS,paysim: report vs CSV without_centrality/alerts
+CP1,PASS,paysim: report vs CSV without_centrality/transactions
+CP1,PASS,paysim: report vs CSV without_centrality/fraud
+CP1,PASS,paysim: report vs CSV without_centrality/threshold
+CP1,PASS,paysim: report vs CSV without_centrality/precision
+CP1,PASS,paysim: report vs CSV without_centrality/recall
+CP1,PASS,paysim: report vs CSV without_centrality/F1
+CP1,PASS,paysim: report vs CSV without_centrality/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_without_centrality.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_without_centrality.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_centrality.csv
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: unique descending scores
+CP1,PASS,paysim/without_centrality: bin bounds
+CP1,PASS,paysim/without_centrality: cumulative precision
+CP1,PASS,paysim/without_centrality: cumulative recall
+CP1,PASS,paysim/without_centrality: populations
+CP1,PASS,paysim/without_centrality: AP
+CP1,PASS,paysim/without_motifs: nonnegative integers
+CP1,PASS,paysim/without_motifs: alerts
+CP1,PASS,paysim/without_motifs: positives
+CP1,PASS,paysim/without_motifs: total
+CP1,PASS,paysim/without_motifs: precision
+CP1,PASS,paysim/without_motifs: recall
+CP1,PASS,paysim/without_motifs: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV without_motifs/TP
+CP1,PASS,paysim: report vs CSV without_motifs/FP
+CP1,PASS,paysim: report vs CSV without_motifs/FN
+CP1,PASS,paysim: report vs CSV without_motifs/TN
+CP1,PASS,paysim: report vs CSV without_motifs/alerts
+CP1,PASS,paysim: report vs CSV without_motifs/transactions
+CP1,PASS,paysim: report vs CSV without_motifs/fraud
+CP1,PASS,paysim: report vs CSV without_motifs/threshold
+CP1,PASS,paysim: report vs CSV without_motifs/precision
+CP1,PASS,paysim: report vs CSV without_motifs/recall
+CP1,PASS,paysim: report vs CSV without_motifs/F1
+CP1,PASS,paysim: report vs CSV without_motifs/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_without_motifs.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_without_motifs.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_motifs.csv
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: unique descending scores
+CP1,PASS,paysim/without_motifs: bin bounds
+CP1,PASS,paysim/without_motifs: cumulative precision
+CP1,PASS,paysim/without_motifs: cumulative recall
+CP1,PASS,paysim/without_motifs: populations
+CP1,PASS,paysim/without_motifs: AP
+CP1,PASS,paysim/without_community: nonnegative integers
+CP1,PASS,paysim/without_community: alerts
+CP1,PASS,paysim/without_community: positives
+CP1,PASS,paysim/without_community: total
+CP1,PASS,paysim/without_community: precision
+CP1,PASS,paysim/without_community: recall
+CP1,PASS,paysim/without_community: F1
+CP1,PASS,paysim: test population
+CP1,PASS,paysim: selected flag
+CP1,PASS,paysim: frozen family threshold
+CP1,PASS,paysim: report vs CSV without_community/TP
+CP1,PASS,paysim: report vs CSV without_community/FP
+CP1,PASS,paysim: report vs CSV without_community/FN
+CP1,PASS,paysim: report vs CSV without_community/TN
+CP1,PASS,paysim: report vs CSV without_community/alerts
+CP1,PASS,paysim: report vs CSV without_community/transactions
+CP1,PASS,paysim: report vs CSV without_community/fraud
+CP1,PASS,paysim: report vs CSV without_community/threshold
+CP1,PASS,paysim: report vs CSV without_community/precision
+CP1,PASS,paysim: report vs CSV without_community/recall
+CP1,PASS,paysim: report vs CSV without_community/F1
+CP1,PASS,paysim: report vs CSV without_community/average_precision
+CP1,PASS,Input exists: datasets/paysim/tables/pr_curve_without_community.csv
+CP1,PASS,Duplicate hash: datasets/paysim/tables/pr_curve_without_community.csv vs results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_community.csv
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: unique descending scores
+CP1,PASS,paysim/without_community: bin bounds
+CP1,PASS,paysim/without_community: cumulative precision
+CP1,PASS,paysim/without_community: cumulative recall
+CP1,PASS,paysim/without_community: populations
+CP1,PASS,paysim/without_community: AP
+CP2,PASS,Input exists: datasets/ibm_aml/tables/feature_importance.csv
+CP2,PASS,Duplicate hash: datasets/ibm_aml/tables/feature_importance.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/feature_importance.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_only/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_only/amount_scales.csv
+CP2,PASS,ibm_aml/transaction_only: feature order
+CP2,PASS,ibm_aml/transaction_only: importance coverage
+CP2,PASS,ibm_aml/transaction_only: importance sum
+CP2,PASS,ibm_aml/transaction_only: split allowlist
+CP2,PASS,ibm_aml/transaction_only: splits vs importance
+CP2,PASS,ibm_aml/transaction_only: leaf identities
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_only: leaf alert
+CP2,PASS,ibm_aml/transaction_only: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_novelty/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv
+CP2,PASS,ibm_aml/transaction_novelty: feature order
+CP2,PASS,ibm_aml/transaction_novelty: importance coverage
+CP2,PASS,ibm_aml/transaction_novelty: importance sum
+CP2,PASS,ibm_aml/transaction_novelty: split allowlist
+CP2,PASS,ibm_aml/transaction_novelty: splits vs importance
+CP2,PASS,ibm_aml/transaction_novelty: leaf identities
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_novelty: leaf alert
+CP2,PASS,ibm_aml/transaction_novelty: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_centrality/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv
+CP2,PASS,ibm_aml/transaction_centrality: feature order
+CP2,PASS,ibm_aml/transaction_centrality: importance coverage
+CP2,PASS,ibm_aml/transaction_centrality: importance sum
+CP2,PASS,ibm_aml/transaction_centrality: split allowlist
+CP2,PASS,ibm_aml/transaction_centrality: splits vs importance
+CP2,PASS,ibm_aml/transaction_centrality: leaf identities
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_centrality: leaf alert
+CP2,PASS,ibm_aml/transaction_centrality: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/motif_assisted/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv
+CP2,PASS,ibm_aml/motif_assisted: feature order
+CP2,PASS,ibm_aml/motif_assisted: importance coverage
+CP2,PASS,ibm_aml/motif_assisted: importance sum
+CP2,PASS,ibm_aml/motif_assisted: split allowlist
+CP2,PASS,ibm_aml/motif_assisted: splits vs importance
+CP2,PASS,ibm_aml/motif_assisted: leaf identities
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,ibm_aml/motif_assisted: leaf alert
+CP2,PASS,ibm_aml/motif_assisted: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_community/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/transaction_community/amount_scales.csv
+CP2,PASS,ibm_aml/transaction_community: feature order
+CP2,PASS,ibm_aml/transaction_community: importance coverage
+CP2,PASS,ibm_aml/transaction_community: importance sum
+CP2,PASS,ibm_aml/transaction_community: split allowlist
+CP2,PASS,ibm_aml/transaction_community: splits vs importance
+CP2,PASS,ibm_aml/transaction_community: leaf identities
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,ibm_aml/transaction_community: leaf alert
+CP2,PASS,ibm_aml/transaction_community: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/full_fusion/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/full_fusion/amount_scales.csv
+CP2,PASS,ibm_aml/full_fusion: feature order
+CP2,PASS,ibm_aml/full_fusion: importance coverage
+CP2,PASS,ibm_aml/full_fusion: importance sum
+CP2,PASS,ibm_aml/full_fusion: split allowlist
+CP2,PASS,ibm_aml/full_fusion: splits vs importance
+CP2,PASS,ibm_aml/full_fusion: leaf identities
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,ibm_aml/full_fusion: leaf alert
+CP2,PASS,ibm_aml/full_fusion: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_centrality/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_centrality/amount_scales.csv
+CP2,PASS,ibm_aml/without_centrality: feature order
+CP2,PASS,ibm_aml/without_centrality: importance coverage
+CP2,PASS,ibm_aml/without_centrality: importance sum
+CP2,PASS,ibm_aml/without_centrality: split allowlist
+CP2,PASS,ibm_aml/without_centrality: splits vs importance
+CP2,PASS,ibm_aml/without_centrality: leaf identities
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,ibm_aml/without_centrality: leaf alert
+CP2,PASS,ibm_aml/without_centrality: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_motifs/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_motifs/amount_scales.csv
+CP2,PASS,ibm_aml/without_motifs: feature order
+CP2,PASS,ibm_aml/without_motifs: importance coverage
+CP2,PASS,ibm_aml/without_motifs: importance sum
+CP2,PASS,ibm_aml/without_motifs: split allowlist
+CP2,PASS,ibm_aml/without_motifs: splits vs importance
+CP2,PASS,ibm_aml/without_motifs: leaf identities
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,ibm_aml/without_motifs: leaf alert
+CP2,PASS,ibm_aml/without_motifs: leaf condition allowlist
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_community/tree_nodes.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_community/leaf_rules.csv
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_community/training.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_community/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/ibm_aml/model_details/without_community/amount_scales.csv
+CP2,PASS,ibm_aml/without_community: feature order
+CP2,PASS,ibm_aml/without_community: importance coverage
+CP2,PASS,ibm_aml/without_community: importance sum
+CP2,PASS,ibm_aml/without_community: split allowlist
+CP2,PASS,ibm_aml/without_community: splits vs importance
+CP2,PASS,ibm_aml/without_community: leaf identities
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,ibm_aml/without_community: leaf alert
+CP2,PASS,ibm_aml/without_community: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/tables/feature_importance.csv
+CP2,PASS,Duplicate hash: datasets/paysim/tables/feature_importance.csv vs results/full_system/paysim/run_20261024T084918669391Z/feature_importance.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_only/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_only/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_only/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_only/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_only/amount_scales.csv
+CP2,PASS,paysim/transaction_only: feature order
+CP2,PASS,paysim/transaction_only: importance coverage
+CP2,PASS,paysim/transaction_only: importance sum
+CP2,PASS,paysim/transaction_only: split allowlist
+CP2,PASS,paysim/transaction_only: splits vs importance
+CP2,PASS,paysim/transaction_only: leaf identities
+CP2,PASS,paysim/transaction_only: leaf alert
+CP2,PASS,paysim/transaction_only: leaf condition allowlist
+CP2,PASS,paysim/transaction_only: leaf alert
+CP2,PASS,paysim/transaction_only: leaf condition allowlist
+CP2,PASS,paysim/transaction_only: leaf alert
+CP2,PASS,paysim/transaction_only: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_novelty/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_novelty/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_novelty/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_novelty/amount_scales.csv
+CP2,PASS,paysim/transaction_novelty: feature order
+CP2,PASS,paysim/transaction_novelty: importance coverage
+CP2,PASS,paysim/transaction_novelty: importance sum
+CP2,PASS,paysim/transaction_novelty: split allowlist
+CP2,PASS,paysim/transaction_novelty: splits vs importance
+CP2,PASS,paysim/transaction_novelty: leaf identities
+CP2,PASS,paysim/transaction_novelty: leaf alert
+CP2,PASS,paysim/transaction_novelty: leaf condition allowlist
+CP2,PASS,paysim/transaction_novelty: leaf alert
+CP2,PASS,paysim/transaction_novelty: leaf condition allowlist
+CP2,PASS,paysim/transaction_novelty: leaf alert
+CP2,PASS,paysim/transaction_novelty: leaf condition allowlist
+CP2,PASS,paysim/transaction_novelty: leaf alert
+CP2,PASS,paysim/transaction_novelty: leaf condition allowlist
+CP2,PASS,paysim/transaction_novelty: leaf alert
+CP2,PASS,paysim/transaction_novelty: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_centrality/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_centrality/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_centrality/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_centrality/amount_scales.csv
+CP2,PASS,paysim/transaction_centrality: feature order
+CP2,PASS,paysim/transaction_centrality: importance coverage
+CP2,PASS,paysim/transaction_centrality: importance sum
+CP2,PASS,paysim/transaction_centrality: split allowlist
+CP2,PASS,paysim/transaction_centrality: splits vs importance
+CP2,PASS,paysim/transaction_centrality: leaf identities
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,paysim/transaction_centrality: leaf alert
+CP2,PASS,paysim/transaction_centrality: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/motif_assisted/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/motif_assisted/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/motif_assisted/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/motif_assisted/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/motif_assisted/amount_scales.csv
+CP2,PASS,paysim/motif_assisted: feature order
+CP2,PASS,paysim/motif_assisted: importance coverage
+CP2,PASS,paysim/motif_assisted: importance sum
+CP2,PASS,paysim/motif_assisted: split allowlist
+CP2,PASS,paysim/motif_assisted: splits vs importance
+CP2,PASS,paysim/motif_assisted: leaf identities
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,paysim/motif_assisted: leaf alert
+CP2,PASS,paysim/motif_assisted: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_community/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_community/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_community/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_community/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/transaction_community/amount_scales.csv
+CP2,PASS,paysim/transaction_community: feature order
+CP2,PASS,paysim/transaction_community: importance coverage
+CP2,PASS,paysim/transaction_community: importance sum
+CP2,PASS,paysim/transaction_community: split allowlist
+CP2,PASS,paysim/transaction_community: splits vs importance
+CP2,PASS,paysim/transaction_community: leaf identities
+CP2,PASS,paysim/transaction_community: leaf alert
+CP2,PASS,paysim/transaction_community: leaf condition allowlist
+CP2,PASS,paysim/transaction_community: leaf alert
+CP2,PASS,paysim/transaction_community: leaf condition allowlist
+CP2,PASS,paysim/transaction_community: leaf alert
+CP2,PASS,paysim/transaction_community: leaf condition allowlist
+CP2,PASS,paysim/transaction_community: leaf alert
+CP2,PASS,paysim/transaction_community: leaf condition allowlist
+CP2,PASS,paysim/transaction_community: leaf alert
+CP2,PASS,paysim/transaction_community: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/full_fusion/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/full_fusion/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/full_fusion/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/full_fusion/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/full_fusion/amount_scales.csv
+CP2,PASS,paysim/full_fusion: feature order
+CP2,PASS,paysim/full_fusion: importance coverage
+CP2,PASS,paysim/full_fusion: importance sum
+CP2,PASS,paysim/full_fusion: split allowlist
+CP2,PASS,paysim/full_fusion: splits vs importance
+CP2,PASS,paysim/full_fusion: leaf identities
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,paysim/full_fusion: leaf alert
+CP2,PASS,paysim/full_fusion: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/without_centrality/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_centrality/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_centrality/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_centrality/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_centrality/amount_scales.csv
+CP2,PASS,paysim/without_centrality: feature order
+CP2,PASS,paysim/without_centrality: importance coverage
+CP2,PASS,paysim/without_centrality: importance sum
+CP2,PASS,paysim/without_centrality: split allowlist
+CP2,PASS,paysim/without_centrality: splits vs importance
+CP2,PASS,paysim/without_centrality: leaf identities
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,paysim/without_centrality: leaf alert
+CP2,PASS,paysim/without_centrality: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/without_motifs/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_motifs/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_motifs/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_motifs/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_motifs/amount_scales.csv
+CP2,PASS,paysim/without_motifs: feature order
+CP2,PASS,paysim/without_motifs: importance coverage
+CP2,PASS,paysim/without_motifs: importance sum
+CP2,PASS,paysim/without_motifs: split allowlist
+CP2,PASS,paysim/without_motifs: splits vs importance
+CP2,PASS,paysim/without_motifs: leaf identities
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,paysim/without_motifs: leaf alert
+CP2,PASS,paysim/without_motifs: leaf condition allowlist
+CP2,PASS,Input exists: datasets/paysim/model_details/without_community/tree_nodes.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_community/leaf_rules.csv
+CP2,PASS,Input exists: datasets/paysim/model_details/without_community/training.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_community/saved_model_parameters.json
+CP2,PASS,Input exists: datasets/paysim/model_details/without_community/amount_scales.csv
+CP2,PASS,paysim/without_community: feature order
+CP2,PASS,paysim/without_community: importance coverage
+CP2,PASS,paysim/without_community: importance sum
+CP2,PASS,paysim/without_community: split allowlist
+CP2,PASS,paysim/without_community: splits vs importance
+CP2,PASS,paysim/without_community: leaf identities
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP2,PASS,paysim/without_community: leaf alert
+CP2,PASS,paysim/without_community: leaf condition allowlist
+CP3,PASS,Input exists: datasets/ibm_aml/tables/graph_contributions.csv
+CP3,PASS,Duplicate hash: datasets/ibm_aml/tables/graph_contributions.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/graph_contributions.csv
+CP3,PASS,ibm_aml: exported delta centrality_alone/precision
+CP3,PASS,ibm_aml: exported delta centrality_alone/recall
+CP3,PASS,ibm_aml: exported delta centrality_alone/F1
+CP3,PASS,ibm_aml: exported delta centrality_alone/average_precision
+CP3,PASS,ibm_aml: exported delta motif_alone/precision
+CP3,PASS,ibm_aml: exported delta motif_alone/recall
+CP3,PASS,ibm_aml: exported delta motif_alone/F1
+CP3,PASS,ibm_aml: exported delta motif_alone/average_precision
+CP3,PASS,ibm_aml: exported delta community_alone/precision
+CP3,PASS,ibm_aml: exported delta community_alone/recall
+CP3,PASS,ibm_aml: exported delta community_alone/F1
+CP3,PASS,ibm_aml: exported delta community_alone/average_precision
+CP3,PASS,ibm_aml: exported delta all_graph/precision
+CP3,PASS,ibm_aml: exported delta all_graph/recall
+CP3,PASS,ibm_aml: exported delta all_graph/F1
+CP3,PASS,ibm_aml: exported delta all_graph/average_precision
+CP3,PASS,ibm_aml: exported delta centrality_in_fusion/precision
+CP3,PASS,ibm_aml: exported delta centrality_in_fusion/recall
+CP3,PASS,ibm_aml: exported delta centrality_in_fusion/F1
+CP3,PASS,ibm_aml: exported delta centrality_in_fusion/average_precision
+CP3,PASS,ibm_aml: exported delta motif_in_fusion/precision
+CP3,PASS,ibm_aml: exported delta motif_in_fusion/recall
+CP3,PASS,ibm_aml: exported delta motif_in_fusion/F1
+CP3,PASS,ibm_aml: exported delta motif_in_fusion/average_precision
+CP3,PASS,ibm_aml: exported delta community_in_fusion/precision
+CP3,PASS,ibm_aml: exported delta community_in_fusion/recall
+CP3,PASS,ibm_aml: exported delta community_in_fusion/F1
+CP3,PASS,ibm_aml: exported delta community_in_fusion/average_precision
+CP3,PASS,ibm_aml: seven original contrasts
+CP3,PASS,Input exists: datasets/paysim/tables/graph_contributions.csv
+CP3,PASS,Duplicate hash: datasets/paysim/tables/graph_contributions.csv vs results/full_system/paysim/run_20261024T084918669391Z/graph_contributions.csv
+CP3,PASS,paysim: exported delta centrality_alone/precision
+CP3,PASS,paysim: exported delta centrality_alone/recall
+CP3,PASS,paysim: exported delta centrality_alone/F1
+CP3,PASS,paysim: exported delta centrality_alone/average_precision
+CP3,PASS,paysim: exported delta motif_alone/precision
+CP3,PASS,paysim: exported delta motif_alone/recall
+CP3,PASS,paysim: exported delta motif_alone/F1
+CP3,PASS,paysim: exported delta motif_alone/average_precision
+CP3,PASS,paysim: exported delta community_alone/precision
+CP3,PASS,paysim: exported delta community_alone/recall
+CP3,PASS,paysim: exported delta community_alone/F1
+CP3,PASS,paysim: exported delta community_alone/average_precision
+CP3,PASS,paysim: exported delta all_graph/precision
+CP3,PASS,paysim: exported delta all_graph/recall
+CP3,PASS,paysim: exported delta all_graph/F1
+CP3,PASS,paysim: exported delta all_graph/average_precision
+CP3,PASS,paysim: exported delta centrality_in_fusion/precision
+CP3,PASS,paysim: exported delta centrality_in_fusion/recall
+CP3,PASS,paysim: exported delta centrality_in_fusion/F1
+CP3,PASS,paysim: exported delta centrality_in_fusion/average_precision
+CP3,PASS,paysim: exported delta motif_in_fusion/precision
+CP3,PASS,paysim: exported delta motif_in_fusion/recall
+CP3,PASS,paysim: exported delta motif_in_fusion/F1
+CP3,PASS,paysim: exported delta motif_in_fusion/average_precision
+CP3,PASS,paysim: exported delta community_in_fusion/precision
+CP3,PASS,paysim: exported delta community_in_fusion/recall
+CP3,PASS,paysim: exported delta community_in_fusion/F1
+CP3,PASS,paysim: exported delta community_in_fusion/average_precision
+CP3,PASS,paysim: seven original contrasts
+CP4,PASS,Input exists: datasets/ibm_aml/tables/review_budgets.csv
+CP4,PASS,Duplicate hash: datasets/ibm_aml/tables/review_budgets.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/review_budgets.csv
+CP4,PASS,ibm_aml: 27 unique budgets
+CP4,PASS,ibm_aml: models/fractions
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,ibm_aml: budget population
+CP4,PASS,ibm_aml: ceil K
+CP4,PASS,ibm_aml: budget bounds
+CP4,PASS,ibm_aml: budget rates
+CP4,PASS,ibm_aml: matched K/ties
+CP4,PASS,Input exists: datasets/paysim/tables/review_budgets.csv
+CP4,PASS,Duplicate hash: datasets/paysim/tables/review_budgets.csv vs results/full_system/paysim/run_20261024T084918669391Z/review_budgets.csv
+CP4,PASS,paysim: 27 unique budgets
+CP4,PASS,paysim: models/fractions
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP4,PASS,paysim: budget population
+CP4,PASS,paysim: ceil K
+CP4,PASS,paysim: budget bounds
+CP4,PASS,paysim: budget rates
+CP4,PASS,paysim: matched K/ties
+CP5,PASS,Input exists: datasets/ibm_aml/examples/examples_full_fusion_TP.json
+CP5,PASS,Duplicate hash: datasets/ibm_aml/examples/examples_full_fusion_TP.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_TP.json
+CP5,PASS,ibm_aml: nonempty TP examples
+CP5,PASS,ibm_aml: case label TP
+CP5,PASS,ibm_aml: case threshold
+CP5,PASS,ibm_aml: case past snapshot
+CP5,PASS,Input exists: datasets/ibm_aml/examples/examples_full_fusion_FP.json
+CP5,PASS,Duplicate hash: datasets/ibm_aml/examples/examples_full_fusion_FP.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_FP.json
+CP5,PASS,ibm_aml: nonempty FP examples
+CP5,PASS,ibm_aml: case label FP
+CP5,PASS,ibm_aml: case threshold
+CP5,PASS,ibm_aml: case past snapshot
+CP5,PASS,Input exists: datasets/ibm_aml/examples/examples_full_fusion_FN.json
+CP5,PASS,Duplicate hash: datasets/ibm_aml/examples/examples_full_fusion_FN.json vs results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_FN.json
+CP5,PASS,ibm_aml: nonempty FN examples
+CP5,PASS,ibm_aml: case label FN
+CP5,PASS,ibm_aml: case threshold
+CP5,PASS,ibm_aml: case past snapshot
+CP5,PASS,Input exists: datasets/paysim/examples/examples_without_centrality_TP.json
+CP5,PASS,Duplicate hash: datasets/paysim/examples/examples_without_centrality_TP.json vs results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_TP.json
+CP5,PASS,paysim: nonempty TP examples
+CP5,PASS,paysim: case label TP
+CP5,PASS,paysim: case threshold
+CP5,PASS,paysim: case past snapshot
+CP5,PASS,Input exists: datasets/paysim/examples/examples_without_centrality_FP.json
+CP5,PASS,Duplicate hash: datasets/paysim/examples/examples_without_centrality_FP.json vs results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_FP.json
+CP5,PASS,paysim: nonempty FP examples
+CP5,PASS,paysim: case label FP
+CP5,PASS,paysim: case threshold
+CP5,PASS,paysim: case past snapshot
+CP5,PASS,Input exists: datasets/paysim/examples/examples_without_centrality_FN.json
+CP5,PASS,Duplicate hash: datasets/paysim/examples/examples_without_centrality_FN.json vs results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_FN.json
+CP5,PASS,paysim: nonempty FN examples
+CP5,PASS,paysim: case label FN
+CP5,PASS,paysim: case threshold
+CP5,PASS,paysim: case past snapshot
+CP6,PASS,Input exists: datasets/ibm_aml/tables/degree_distribution.csv
+CP6,PASS,Duplicate hash: datasets/ibm_aml/tables/degree_distribution.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/degree_distribution.csv
+CP6,PASS,Input exists: datasets/ibm_aml/tables/community_size_distribution.csv
+CP6,PASS,Duplicate hash: datasets/ibm_aml/tables/community_size_distribution.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/community_size_distribution.csv
+CP6,PASS,Input exists: datasets/ibm_aml/tables/motif_coverage.csv
+CP6,PASS,Duplicate hash: datasets/ibm_aml/tables/motif_coverage.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/motif_coverage.csv
+CP6,PASS,Input exists: datasets/ibm_aml/tables/baseline_summary.csv
+CP6,PASS,Duplicate hash: datasets/ibm_aml/tables/baseline_summary.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/baseline_summary.csv
+CP6,PASS,ibm_aml: degree accounts
+CP6,PASS,ibm_aml: degree sum=2E including loops
+CP6,PASS,ibm_aml: community members
+CP6,PASS,ibm_aml: community count
+CP6,PASS,ibm_aml: edge partitions
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,ibm_aml: motif population
+CP6,PASS,ibm_aml: motif bounds
+CP6,PASS,ibm_aml: motif coverage
+CP6,PASS,ibm_aml: motif fraction
+CP6,PASS,Input exists: datasets/ibm_aml/tables/test_temporal_stability.csv
+CP6,PASS,Duplicate hash: datasets/ibm_aml/tables/test_temporal_stability.csv vs results/full_system/ibm_aml/run_20261024T081350344149Z/test_temporal_stability.csv
+CP6,PASS,ibm_aml: five temporal periods transaction_only
+CP6,PASS,ibm_aml: temporal transaction_only: nonnegative integers
+CP6,PASS,ibm_aml: temporal transaction_only: alerts
+CP6,PASS,ibm_aml: temporal transaction_only: positives
+CP6,PASS,ibm_aml: temporal transaction_only: total
+CP6,PASS,ibm_aml: temporal transaction_only: precision
+CP6,PASS,ibm_aml: temporal transaction_only: recall
+CP6,PASS,ibm_aml: temporal transaction_only: F1
+CP6,PASS,ibm_aml: temporal transaction_only: nonnegative integers
+CP6,PASS,ibm_aml: temporal transaction_only: alerts
+CP6,PASS,ibm_aml: temporal transaction_only: positives
+CP6,PASS,ibm_aml: temporal transaction_only: total
+CP6,PASS,ibm_aml: temporal transaction_only: precision
+CP6,PASS,ibm_aml: temporal transaction_only: recall
+CP6,PASS,ibm_aml: temporal transaction_only: F1
+CP6,PASS,ibm_aml: temporal transaction_only: nonnegative integers
+CP6,PASS,ibm_aml: temporal transaction_only: alerts
+CP6,PASS,ibm_aml: temporal transaction_only: positives
+CP6,PASS,ibm_aml: temporal transaction_only: total
+CP6,PASS,ibm_aml: temporal transaction_only: precision
+CP6,PASS,ibm_aml: temporal transaction_only: recall
+CP6,PASS,ibm_aml: temporal transaction_only: F1
+CP6,PASS,ibm_aml: temporal transaction_only: nonnegative integers
+CP6,PASS,ibm_aml: temporal transaction_only: alerts
+CP6,PASS,ibm_aml: temporal transaction_only: positives
+CP6,PASS,ibm_aml: temporal transaction_only: total
+CP6,PASS,ibm_aml: temporal transaction_only: precision
+CP6,PASS,ibm_aml: temporal transaction_only: recall
+CP6,PASS,ibm_aml: temporal transaction_only: F1
+CP6,PASS,ibm_aml: temporal transaction_only: nonnegative integers
+CP6,PASS,ibm_aml: temporal transaction_only: alerts
+CP6,PASS,ibm_aml: temporal transaction_only: positives
+CP6,PASS,ibm_aml: temporal transaction_only: total
+CP6,PASS,ibm_aml: temporal transaction_only: precision
+CP6,PASS,ibm_aml: temporal transaction_only: recall
+CP6,PASS,ibm_aml: temporal transaction_only: F1
+CP6,PASS,ibm_aml: period sum TP
+CP6,PASS,ibm_aml: period sum FP
+CP6,PASS,ibm_aml: period sum FN
+CP6,PASS,ibm_aml: period sum TN
+CP6,PASS,ibm_aml: period sum alerts
+CP6,PASS,ibm_aml: five temporal periods full_fusion
+CP6,PASS,ibm_aml: temporal full_fusion: nonnegative integers
+CP6,PASS,ibm_aml: temporal full_fusion: alerts
+CP6,PASS,ibm_aml: temporal full_fusion: positives
+CP6,PASS,ibm_aml: temporal full_fusion: total
+CP6,PASS,ibm_aml: temporal full_fusion: precision
+CP6,PASS,ibm_aml: temporal full_fusion: recall
+CP6,PASS,ibm_aml: temporal full_fusion: F1
+CP6,PASS,ibm_aml: temporal full_fusion: nonnegative integers
+CP6,PASS,ibm_aml: temporal full_fusion: alerts
+CP6,PASS,ibm_aml: temporal full_fusion: positives
+CP6,PASS,ibm_aml: temporal full_fusion: total
+CP6,PASS,ibm_aml: temporal full_fusion: precision
+CP6,PASS,ibm_aml: temporal full_fusion: recall
+CP6,PASS,ibm_aml: temporal full_fusion: F1
+CP6,PASS,ibm_aml: temporal full_fusion: nonnegative integers
+CP6,PASS,ibm_aml: temporal full_fusion: alerts
+CP6,PASS,ibm_aml: temporal full_fusion: positives
+CP6,PASS,ibm_aml: temporal full_fusion: total
+CP6,PASS,ibm_aml: temporal full_fusion: precision
+CP6,PASS,ibm_aml: temporal full_fusion: recall
+CP6,PASS,ibm_aml: temporal full_fusion: F1
+CP6,PASS,ibm_aml: temporal full_fusion: nonnegative integers
+CP6,PASS,ibm_aml: temporal full_fusion: alerts
+CP6,PASS,ibm_aml: temporal full_fusion: positives
+CP6,PASS,ibm_aml: temporal full_fusion: total
+CP6,PASS,ibm_aml: temporal full_fusion: precision
+CP6,PASS,ibm_aml: temporal full_fusion: recall
+CP6,PASS,ibm_aml: temporal full_fusion: F1
+CP6,PASS,ibm_aml: temporal full_fusion: nonnegative integers
+CP6,PASS,ibm_aml: temporal full_fusion: alerts
+CP6,PASS,ibm_aml: temporal full_fusion: positives
+CP6,PASS,ibm_aml: temporal full_fusion: total
+CP6,PASS,ibm_aml: temporal full_fusion: precision
+CP6,PASS,ibm_aml: temporal full_fusion: recall
+CP6,PASS,ibm_aml: temporal full_fusion: F1
+CP6,PASS,ibm_aml: period sum TP
+CP6,PASS,ibm_aml: period sum FP
+CP6,PASS,ibm_aml: period sum FN
+CP6,PASS,ibm_aml: period sum TN
+CP6,PASS,ibm_aml: period sum alerts
+CP6,PASS,ibm_aml: same temporal population
+CP6,PASS,ibm_aml: same temporal population
+CP6,PASS,ibm_aml: same temporal population
+CP6,PASS,ibm_aml: same temporal population
+CP6,PASS,ibm_aml: same temporal population
+CP6,PASS,Input exists: datasets/paysim/tables/degree_distribution.csv
+CP6,PASS,Duplicate hash: datasets/paysim/tables/degree_distribution.csv vs results/full_system/paysim/run_20261024T084918669391Z/degree_distribution.csv
+CP6,PASS,Input exists: datasets/paysim/tables/community_size_distribution.csv
+CP6,PASS,Duplicate hash: datasets/paysim/tables/community_size_distribution.csv vs results/full_system/paysim/run_20261024T084918669391Z/community_size_distribution.csv
+CP6,PASS,Input exists: datasets/paysim/tables/motif_coverage.csv
+CP6,PASS,Duplicate hash: datasets/paysim/tables/motif_coverage.csv vs results/full_system/paysim/run_20261024T084918669391Z/motif_coverage.csv
+CP6,PASS,Input exists: datasets/paysim/tables/baseline_summary.csv
+CP6,PASS,Duplicate hash: datasets/paysim/tables/baseline_summary.csv vs results/full_system/paysim/run_20261024T084918669391Z/baseline_summary.csv
+CP6,PASS,paysim: degree accounts
+CP6,PASS,paysim: degree sum=2E including loops
+CP6,PASS,paysim: community members
+CP6,PASS,paysim: community count
+CP6,PASS,paysim: edge partitions
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,paysim: motif population
+CP6,PASS,paysim: motif bounds
+CP6,PASS,paysim: motif coverage
+CP6,PASS,paysim: motif fraction
+CP6,PASS,Input exists: datasets/paysim/tables/test_temporal_stability.csv
+CP6,PASS,Duplicate hash: datasets/paysim/tables/test_temporal_stability.csv vs results/full_system/paysim/run_20261024T084918669391Z/test_temporal_stability.csv
+CP6,PASS,paysim: five temporal periods transaction_only
+CP6,PASS,paysim: temporal transaction_only: nonnegative integers
+CP6,PASS,paysim: temporal transaction_only: alerts
+CP6,PASS,paysim: temporal transaction_only: positives
+CP6,PASS,paysim: temporal transaction_only: total
+CP6,PASS,paysim: temporal transaction_only: precision
+CP6,PASS,paysim: temporal transaction_only: recall
+CP6,PASS,paysim: temporal transaction_only: F1
+CP6,PASS,paysim: temporal transaction_only: nonnegative integers
+CP6,PASS,paysim: temporal transaction_only: alerts
+CP6,PASS,paysim: temporal transaction_only: positives
+CP6,PASS,paysim: temporal transaction_only: total
+CP6,PASS,paysim: temporal transaction_only: precision
+CP6,PASS,paysim: temporal transaction_only: recall
+CP6,PASS,paysim: temporal transaction_only: F1
+CP6,PASS,paysim: temporal transaction_only: nonnegative integers
+CP6,PASS,paysim: temporal transaction_only: alerts
+CP6,PASS,paysim: temporal transaction_only: positives
+CP6,PASS,paysim: temporal transaction_only: total
+CP6,PASS,paysim: temporal transaction_only: precision
+CP6,PASS,paysim: temporal transaction_only: recall
+CP6,PASS,paysim: temporal transaction_only: F1
+CP6,PASS,paysim: temporal transaction_only: nonnegative integers
+CP6,PASS,paysim: temporal transaction_only: alerts
+CP6,PASS,paysim: temporal transaction_only: positives
+CP6,PASS,paysim: temporal transaction_only: total
+CP6,PASS,paysim: temporal transaction_only: precision
+CP6,PASS,paysim: temporal transaction_only: recall
+CP6,PASS,paysim: temporal transaction_only: F1
+CP6,PASS,paysim: temporal transaction_only: nonnegative integers
+CP6,PASS,paysim: temporal transaction_only: alerts
+CP6,PASS,paysim: temporal transaction_only: positives
+CP6,PASS,paysim: temporal transaction_only: total
+CP6,PASS,paysim: temporal transaction_only: precision
+CP6,PASS,paysim: temporal transaction_only: recall
+CP6,PASS,paysim: temporal transaction_only: F1
+CP6,PASS,paysim: period sum TP
+CP6,PASS,paysim: period sum FP
+CP6,PASS,paysim: period sum FN
+CP6,PASS,paysim: period sum TN
+CP6,PASS,paysim: period sum alerts
+CP6,PASS,paysim: five temporal periods without_centrality
+CP6,PASS,paysim: temporal without_centrality: nonnegative integers
+CP6,PASS,paysim: temporal without_centrality: alerts
+CP6,PASS,paysim: temporal without_centrality: positives
+CP6,PASS,paysim: temporal without_centrality: total
+CP6,PASS,paysim: temporal without_centrality: precision
+CP6,PASS,paysim: temporal without_centrality: recall
+CP6,PASS,paysim: temporal without_centrality: F1
+CP6,PASS,paysim: temporal without_centrality: nonnegative integers
+CP6,PASS,paysim: temporal without_centrality: alerts
+CP6,PASS,paysim: temporal without_centrality: positives
+CP6,PASS,paysim: temporal without_centrality: total
+CP6,PASS,paysim: temporal without_centrality: precision
+CP6,PASS,paysim: temporal without_centrality: recall
+CP6,PASS,paysim: temporal without_centrality: F1
+CP6,PASS,paysim: temporal without_centrality: nonnegative integers
+CP6,PASS,paysim: temporal without_centrality: alerts
+CP6,PASS,paysim: temporal without_centrality: positives
+CP6,PASS,paysim: temporal without_centrality: total
+CP6,PASS,paysim: temporal without_centrality: precision
+CP6,PASS,paysim: temporal without_centrality: recall
+CP6,PASS,paysim: temporal without_centrality: F1
+CP6,PASS,paysim: temporal without_centrality: nonnegative integers
+CP6,PASS,paysim: temporal without_centrality: alerts
+CP6,PASS,paysim: temporal without_centrality: positives
+CP6,PASS,paysim: temporal without_centrality: total
+CP6,PASS,paysim: temporal without_centrality: precision
+CP6,PASS,paysim: temporal without_centrality: recall
+CP6,PASS,paysim: temporal without_centrality: F1
+CP6,PASS,paysim: temporal without_centrality: nonnegative integers
+CP6,PASS,paysim: temporal without_centrality: alerts
+CP6,PASS,paysim: temporal without_centrality: positives
+CP6,PASS,paysim: temporal without_centrality: total
+CP6,PASS,paysim: temporal without_centrality: precision
+CP6,PASS,paysim: temporal without_centrality: recall
+CP6,PASS,paysim: temporal without_centrality: F1
+CP6,PASS,paysim: period sum TP
+CP6,PASS,paysim: period sum FP
+CP6,PASS,paysim: period sum FN
+CP6,PASS,paysim: period sum TN
+CP6,PASS,paysim: period sum alerts
+CP6,PASS,paysim: same temporal population
+CP6,PASS,paysim: same temporal population
+CP6,PASS,paysim: same temporal population
+CP6,PASS,paysim: same temporal population
+CP6,PASS,paysim: same temporal population
+CP6,PASS,Four PNG charts produced
+CP6,PASS,Report populations and cases
+CP7,PASS,Source unchanged: tables/model_families.csv
+CP7,PASS,Source unchanged: tables/exact_feature_allowlists.csv
+CP7,PASS,Source unchanged: tables/dataset_overview.csv
+CP7,PASS,Source unchanged: 02_METHODS_AND_PARAMETERS.md
+CP7,PASS,Source unchanged: 06_RELIABILITY_AND_VALIDATION.md
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/report.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/provenance/report.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/run.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/provenance/run.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/frozen_rules.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/provenance/frozen_rules.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/report.json
+CP7,PASS,Source unchanged: datasets/paysim/provenance/report.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/run.json
+CP7,PASS,Source unchanged: datasets/paysim/provenance/run.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/frozen_rules.json
+CP7,PASS,Source unchanged: datasets/paysim/provenance/frozen_rules.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/test_metrics.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/test_metrics.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_only.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_transaction_only.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_novelty.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_centrality.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_motif_assisted.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_motif_assisted.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_transaction_community.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_transaction_community.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_full_fusion.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_full_fusion.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_centrality.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_without_centrality.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_motifs.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_without_motifs.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/pr_curve_without_community.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/pr_curve_without_community.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/test_metrics.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/test_metrics.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_only.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_transaction_only.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_novelty.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_transaction_novelty.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_centrality.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_transaction_centrality.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_motif_assisted.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_motif_assisted.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_transaction_community.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_transaction_community.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_full_fusion.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_full_fusion.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_centrality.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_without_centrality.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_motifs.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_without_motifs.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/pr_curve_without_community.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/pr_curve_without_community.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/feature_importance.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/feature_importance.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_only/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_only/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_novelty/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_centrality/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/motif_assisted/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_community/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/transaction_community/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/full_fusion/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/full_fusion/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_centrality/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_centrality/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_motifs/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_motifs/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_community/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_community/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_community/training.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_community/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/model_details/without_community/amount_scales.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/feature_importance.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/feature_importance.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_only/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_only/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_only/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_only/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_only/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_novelty/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_novelty/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_novelty/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_novelty/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_centrality/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_centrality/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_centrality/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_centrality/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/motif_assisted/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/motif_assisted/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/motif_assisted/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/motif_assisted/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/motif_assisted/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_community/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_community/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_community/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_community/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/transaction_community/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/full_fusion/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/full_fusion/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/full_fusion/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/full_fusion/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_centrality/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_centrality/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_centrality/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_centrality/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_motifs/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_motifs/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_motifs/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_motifs/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_motifs/amount_scales.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_community/tree_nodes.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_community/leaf_rules.csv
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_community/training.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_community/saved_model_parameters.json
+CP7,PASS,Source unchanged: datasets/paysim/model_details/without_community/amount_scales.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/graph_contributions.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/graph_contributions.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/graph_contributions.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/graph_contributions.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/review_budgets.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/review_budgets.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/review_budgets.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/review_budgets.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_TP.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/examples/examples_full_fusion_TP.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_FP.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/examples/examples_full_fusion_FP.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/examples_full_fusion_FN.json
+CP7,PASS,Source unchanged: datasets/ibm_aml/examples/examples_full_fusion_FN.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_TP.json
+CP7,PASS,Source unchanged: datasets/paysim/examples/examples_without_centrality_TP.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_FP.json
+CP7,PASS,Source unchanged: datasets/paysim/examples/examples_without_centrality_FP.json
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/examples_without_centrality_FN.json
+CP7,PASS,Source unchanged: datasets/paysim/examples/examples_without_centrality_FN.json
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/degree_distribution.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/degree_distribution.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/community_size_distribution.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/community_size_distribution.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/motif_coverage.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/motif_coverage.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/baseline_summary.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/baseline_summary.csv
+CP7,PASS,Source unchanged: results/full_system/ibm_aml/run_20261024T081350344149Z/test_temporal_stability.csv
+CP7,PASS,Source unchanged: datasets/ibm_aml/tables/test_temporal_stability.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/degree_distribution.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/degree_distribution.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/community_size_distribution.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/community_size_distribution.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/motif_coverage.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/motif_coverage.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/baseline_summary.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/baseline_summary.csv
+CP7,PASS,Source unchanged: results/full_system/paysim/run_20261024T084918669391Z/test_temporal_stability.csv
+CP7,PASS,Source unchanged: datasets/paysim/tables/test_temporal_stability.csv
+CP7,PASS,Snapshot exact bytes: tables/model_families.csv
+CP7,PASS,Snapshot exact bytes: tables/exact_feature_allowlists.csv
+CP7,PASS,Snapshot exact bytes: tables/dataset_overview.csv
+CP7,PASS,Snapshot exact bytes: 02_METHODS_AND_PARAMETERS.md
+CP7,PASS,Snapshot exact bytes: 06_RELIABILITY_AND_VALIDATION.md
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/provenance/report.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/provenance/run.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/provenance/frozen_rules.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/provenance/report.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/provenance/run.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/provenance/frozen_rules.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/test_metrics.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_transaction_only.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_transaction_novelty.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_transaction_centrality.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_motif_assisted.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_transaction_community.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_full_fusion.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_without_centrality.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_without_motifs.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/pr_curve_without_community.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/test_metrics.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_transaction_only.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_transaction_novelty.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_transaction_centrality.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_motif_assisted.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_transaction_community.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_full_fusion.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_without_centrality.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_without_motifs.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/pr_curve_without_community.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/feature_importance.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_only/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_only/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_only/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_only/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_only/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_novelty/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_novelty/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_novelty/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_novelty/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_novelty/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_centrality/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_centrality/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_centrality/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_centrality/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_centrality/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/motif_assisted/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/motif_assisted/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/motif_assisted/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/motif_assisted/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/motif_assisted/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_community/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_community/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_community/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_community/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/transaction_community/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/full_fusion/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/full_fusion/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/full_fusion/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/full_fusion/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_centrality/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_centrality/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_centrality/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_centrality/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_motifs/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_motifs/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_motifs/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_motifs/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_motifs/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_community/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_community/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_community/training.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_community/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/model_details/without_community/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/feature_importance.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_only/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_only/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_only/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_only/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_only/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_novelty/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_novelty/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_novelty/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_novelty/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_novelty/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_centrality/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_centrality/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_centrality/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_centrality/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_centrality/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/motif_assisted/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/motif_assisted/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/motif_assisted/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/motif_assisted/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/motif_assisted/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_community/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_community/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_community/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_community/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/transaction_community/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/full_fusion/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/full_fusion/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/full_fusion/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/full_fusion/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_centrality/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_centrality/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_centrality/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_centrality/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_motifs/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_motifs/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_motifs/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_motifs/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_motifs/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_community/tree_nodes.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_community/leaf_rules.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_community/training.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_community/saved_model_parameters.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/model_details/without_community/amount_scales.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/graph_contributions.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/graph_contributions.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/review_budgets.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/review_budgets.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/examples/examples_full_fusion_TP.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/examples/examples_full_fusion_FP.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/examples/examples_full_fusion_FN.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/examples/examples_without_centrality_TP.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/examples/examples_without_centrality_FP.json
+CP7,PASS,Snapshot exact bytes: datasets/paysim/examples/examples_without_centrality_FN.json
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/degree_distribution.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/community_size_distribution.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/motif_coverage.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/baseline_summary.csv
+CP7,PASS,Snapshot exact bytes: datasets/ibm_aml/tables/test_temporal_stability.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/degree_distribution.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/community_size_distribution.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/motif_coverage.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/baseline_summary.csv
+CP7,PASS,Snapshot exact bytes: datasets/paysim/tables/test_temporal_stability.csv
+CP7,PASS,HTML links present
+CP7,PASS,Offline local link: sources/02_METHODS_AND_PARAMETERS.md
+CP7,PASS,Link resolves within output: sources/02_METHODS_AND_PARAMETERS.md
+CP7,PASS,Offline local link: sources/06_RELIABILITY_AND_VALIDATION.md
+CP7,PASS,Link resolves within output: sources/06_RELIABILITY_AND_VALIDATION.md
+CP7,PASS,Offline local link: sources/tables/dataset_overview.csv
+CP7,PASS,Link resolves within output: sources/tables/dataset_overview.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/tables/motif_coverage.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/tables/motif_coverage.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/tables/baseline_summary.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/tables/baseline_summary.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/tables/motif_coverage.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/tables/motif_coverage.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/tables/baseline_summary.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/tables/baseline_summary.csv
+CP7,PASS,Offline local link: feature_usage.csv
+CP7,PASS,Link resolves within output: feature_usage.csv
+CP7,PASS,Offline local link: sources/tables/exact_feature_allowlists.csv
+CP7,PASS,Link resolves within output: sources/tables/exact_feature_allowlists.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/tables/feature_importance.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/tables/feature_importance.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/model_details/full_fusion/leaf_rules.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/tables/feature_importance.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/tables/feature_importance.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/model_details/without_centrality/leaf_rules.csv
+CP7,PASS,Offline local link: model_comparison.csv
+CP7,PASS,Link resolves within output: model_comparison.csv
+CP7,PASS,Offline local link: ablation_deltas.csv
+CP7,PASS,Link resolves within output: ablation_deltas.csv
+CP7,PASS,Offline local link: review_budget_comparison.csv
+CP7,PASS,Link resolves within output: review_budget_comparison.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/tables/test_temporal_stability.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/tables/test_temporal_stability.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/tables/test_temporal_stability.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/tables/test_temporal_stability.csv
+CP7,PASS,Offline local link: case_examples.csv
+CP7,PASS,Link resolves within output: case_examples.csv
+CP7,PASS,Offline local link: sources/datasets/ibm_aml/tables/test_metrics.csv
+CP7,PASS,Link resolves within output: sources/datasets/ibm_aml/tables/test_metrics.csv
+CP7,PASS,Offline local link: sources/datasets/paysim/tables/test_metrics.csv
+CP7,PASS,Link resolves within output: sources/datasets/paysim/tables/test_metrics.csv
+CP7,PASS,Offline local link: figures/metric_comparison.png
+CP7,PASS,Link resolves within output: figures/metric_comparison.png
+CP7,PASS,Offline local link: figures/ablation_deltas.png
+CP7,PASS,Link resolves within output: figures/ablation_deltas.png
+CP7,PASS,Offline local link: figures/review_budgets.png
+CP7,PASS,Link resolves within output: figures/review_budgets.png
+CP7,PASS,Offline local link: figures/feature_importance.png
+CP7,PASS,Link resolves within output: figures/feature_importance.png
+CP7,PASS,Offline local link: checkpoint_status.csv
+CP7,PASS,Link resolves within output: checkpoint_status.csv
+CP7,PASS,Offline local link: validation_findings.csv
+CP7,PASS,Link resolves within output: validation_findings.csv
+CP7,PASS,Offline local link: source_inventory.csv
+CP7,PASS,Link resolves within output: source_inventory.csv
+CP7,PASS,Offline local link: input_hashes.json
+CP7,PASS,Link resolves within output: input_hashes.json
+CP7,PASS,Offline local link: structural_evidence_matrix.csv
+CP7,PASS,Link resolves within output: structural_evidence_matrix.csv
+CP7,PASS,Offline local link: temporal_comparison.csv
+CP7,PASS,Link resolves within output: temporal_comparison.csv
+CP7,PASS,No external scripts or dynamic dependencies

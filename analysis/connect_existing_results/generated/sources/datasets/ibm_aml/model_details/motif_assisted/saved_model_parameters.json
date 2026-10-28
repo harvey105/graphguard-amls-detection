@@ -1,0 +1,591 @@
+[
+  {
+    "stage": "0_StringIndexer_41744788cdf7",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.StringIndexerModel",
+        "timestamp": 1792831435914,
+        "sparkVersion": "3.5.1",
+        "uid": "StringIndexer_41744788cdf7",
+        "paramMap": {
+          "stringOrderType": "alphabetAsc",
+          "inputCols": [
+            "type",
+            "payment_currency"
+          ],
+          "outputCols": [
+            "type_index",
+            "currency_index"
+          ],
+          "handleInvalid": "keep"
+        },
+        "defaultParamMap": {
+          "stringOrderType": "frequencyDesc",
+          "handleInvalid": "error",
+          "outputCol": "StringIndexer_41744788cdf7__output"
+        }
+      }
+    ],
+    "saved_data": [
+      {
+        "labelsArray": [
+          [
+            "ACH",
+            "Bitcoin",
+            "Cash",
+            "Cheque",
+            "Credit Card",
+            "Reinvestment",
+            "Wire"
+          ],
+          [
+            "Australian Dollar",
+            "Bitcoin",
+            "Brazil Real",
+            "Canadian Dollar",
+            "Euro",
+            "Mexican Peso",
+            "Ruble",
+            "Rupee",
+            "Saudi Riyal",
+            "Shekel",
+            "Swiss Franc",
+            "UK Pound",
+            "US Dollar",
+            "Yen",
+            "Yuan"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "1_VectorAssembler_272b1071e32b",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.VectorAssembler",
+        "timestamp": 1792831436085,
+        "sparkVersion": "3.5.1",
+        "uid": "VectorAssembler_272b1071e32b",
+        "paramMap": {
+          "inputCols": [
+            "type_index",
+            "currency_index",
+            "scaled_amount",
+            "unseen_amount_group",
+            "fx_payment",
+            "sender_in_24h",
+            "sender_out_24h",
+            "receiver_in_24h",
+            "receiver_out_24h",
+            "fanin_24h",
+            "fanout_24h",
+            "relay_24h",
+            "reciprocal_24h",
+            "sender_in_168h",
+            "sender_out_168h",
+            "receiver_in_168h",
+            "receiver_out_168h",
+            "fanin_168h",
+            "fanout_168h",
+            "relay_168h",
+            "reciprocal_168h",
+            "cycle3_count",
+            "cycle3_best_ratio",
+            "cycle3_min_gap_seconds"
+          ],
+          "outputCol": "features",
+          "handleInvalid": "error"
+        },
+        "defaultParamMap": {
+          "outputCol": "VectorAssembler_272b1071e32b__output",
+          "handleInvalid": "error"
+        }
+      }
+    ],
+    "saved_data": []
+  },
+  {
+    "stage": "2_DecisionTreeClassifier_413d0e5442bf",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+        "timestamp": 1792831436133,
+        "sparkVersion": "3.5.1",
+        "uid": "DecisionTreeClassifier_413d0e5442bf",
+        "paramMap": {
+          "maxDepth": 5,
+          "seed": 2026,
+          "featuresCol": "features",
+          "labelCol": "isFraud",
+          "minInstancesPerNode": 50,
+          "weightCol": "_weight",
+          "maxBins": 64
+        },
+        "defaultParamMap": {
+          "checkpointInterval": 10,
+          "maxDepth": 5,
+          "impurity": "gini",
+          "predictionCol": "prediction",
+          "seed": 4383055063736402936,
+          "featuresCol": "features",
+          "labelCol": "label",
+          "minInstancesPerNode": 1,
+          "leafCol": "",
+          "rawPredictionCol": "rawPrediction",
+          "minWeightFractionPerNode": 0.0,
+          "probabilityCol": "probability",
+          "minInfoGain": 0.0,
+          "maxBins": 32,
+          "maxMemoryInMB": 256,
+          "cacheNodeIds": false
+        },
+        "numFeatures": 24,
+        "numClasses": 2
+      }
+    ],
+    "saved_data": [
+      {
+        "id": 0,
+        "prediction": 0.0,
+        "impurity": 0.054518166715694656,
+        "impurityStats": [
+          4057146.0,
+          117068.52347236639
+        ],
+        "rawCount": 4060524,
+        "gain": 0.006749908696220663,
+        "leftChild": 1,
+        "rightChild": 8,
+        "split": {
+          "featureIndex": 0,
+          "leftCategoriesOrThreshold": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0
+          ],
+          "numCategories": 8
+        }
+      },
+      {
+        "id": 1,
+        "prediction": 0.0,
+        "impurity": 0.010463219126480655,
+        "impurityStats": [
+          3598631.0,
+          19026.23427659242
+        ],
+        "rawCount": 3599180,
+        "gain": 0.0003974865543156028,
+        "leftChild": 2,
+        "rightChild": 7,
+        "split": {
+          "featureIndex": 10,
+          "leftCategoriesOrThreshold": [
+            37.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 2,
+        "prediction": 0.0,
+        "impurity": 0.0010025540131189308,
+        "impurityStats": [
+          3246122.0,
+          1628.8397285971632
+        ],
+        "rawCount": 3246169,
+        "gain": 3.0960516915883715e-05,
+        "leftChild": 3,
+        "rightChild": 4,
+        "split": {
+          "featureIndex": 20,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 3,
+        "prediction": 0.0,
+        "impurity": 0.0008961113295178681,
+        "impurityStats": [
+          3245700.0,
+          1455.5589064059757
+        ],
+        "rawCount": 3245742,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 4,
+        "prediction": 0.0,
+        "impurity": 0.4127139645134221,
+        "impurityStats": [
+          422.0,
+          173.28082219118755
+        ],
+        "rawCount": 427,
+        "gain": 0.21516167171857156,
+        "leftChild": 5,
+        "rightChild": 6,
+        "split": {
+          "featureIndex": 9,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 5,
+        "prediction": 0.0,
+        "impurity": 0.0,
+        "impurityStats": [
+          333.0,
+          0.0
+        ],
+        "rawCount": 333,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 6,
+        "prediction": 1.0,
+        "impurity": -1.0,
+        "impurityStats": [
+          89.0,
+          173.28082219118767
+        ],
+        "rawCount": 94,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 7,
+        "prediction": 0.0,
+        "impurity": 0.08963977132788892,
+        "impurityStats": [
+          352509.0,
+          17397.394547995253
+        ],
+        "rawCount": 353011,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 8,
+        "prediction": 0.0,
+        "impurity": 0.29025334705895056,
+        "impurityStats": [
+          458515.0,
+          98042.28919577398
+        ],
+        "rawCount": 461344,
+        "gain": 0.024835430013833343,
+        "leftChild": 9,
+        "rightChild": 16,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.016910214633845108
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 9,
+        "prediction": 0.0,
+        "impurity": 0.09141383316039638,
+        "impurityStats": [
+          228139.0,
+          11505.846593494858
+        ],
+        "rawCount": 228471,
+        "gain": 0.004723102002207002,
+        "leftChild": 10,
+        "rightChild": 11,
+        "split": {
+          "featureIndex": 20,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 10,
+        "prediction": 0.0,
+        "impurity": 0.08454605795424901,
+        "impurityStats": [
+          227666.0,
+          10535.473989224218
+        ],
+        "rawCount": 227970,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 11,
+        "prediction": 1.0,
+        "impurity": 0.44062866575126747,
+        "impurityStats": [
+          473.0,
+          970.3726042706494
+        ],
+        "rawCount": 501,
+        "gain": 0.09835652233398343,
+        "leftChild": 12,
+        "rightChild": 15,
+        "split": {
+          "featureIndex": 6,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 12,
+        "prediction": 0.0,
+        "impurity": 0.4938105243512295,
+        "impurityStats": [
+          390.0,
+          311.90547994413777
+        ],
+        "rawCount": 399,
+        "gain": 0.10905073921174877,
+        "leftChild": 13,
+        "rightChild": 14,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.005385643741250395
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 13,
+        "prediction": 1.0,
+        "impurity": 0.4415858014677286,
+        "impurityStats": [
+          119.0,
+          242.59315106766272
+        ],
+        "rawCount": 126,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 14,
+        "prediction": 0.0,
+        "impurity": 0.3243802556214303,
+        "impurityStats": [
+          271.0,
+          69.31232887647505
+        ],
+        "rawCount": 273,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 15,
+        "prediction": 1.0,
+        "impurity": 0.19881922890538006,
+        "impurityStats": [
+          83.0,
+          658.4671243265132
+        ],
+        "rawCount": 102,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 16,
+        "prediction": 0.0,
+        "impurity": 0.3969974209825106,
+        "impurityStats": [
+          230376.0,
+          86536.44260227916
+        ],
+        "rawCount": 232873,
+        "gain": 0.027160573602684354,
+        "leftChild": 17,
+        "rightChild": 22,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.2987789251452882
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 17,
+        "prediction": 0.0,
+        "impurity": 0.4477306108618089,
+        "impurityStats": [
+          159609.0,
+          81615.26725204944
+        ],
+        "rawCount": 161964,
+        "gain": 0.03157857527143479,
+        "leftChild": 18,
+        "rightChild": 19,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.08477040171752345
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 18,
+        "prediction": 0.0,
+        "impurity": 0.3708997532725953,
+        "impurityStats": [
+          118056.0,
+          38502.99869088191
+        ],
+        "rawCount": 119167,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 19,
+        "prediction": 1.0,
+        "impurity": 0.499830409598367,
+        "impurityStats": [
+          41553.0,
+          43112.268561167526
+        ],
+        "rawCount": 42797,
+        "gain": 0.07210307092634284,
+        "leftChild": 20,
+        "rightChild": 21,
+        "split": {
+          "featureIndex": 17,
+          "leftCategoriesOrThreshold": [
+            5.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 20,
+        "prediction": 0.0,
+        "impurity": 0.4695030397758686,
+        "impurityStats": [
+          35466.0,
+          21417.509622830814
+        ],
+        "rawCount": 36084,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 21,
+        "prediction": 1.0,
+        "impurity": 0.342191052038212,
+        "impurityStats": [
+          6087.0,
+          21694.758938336683
+        ],
+        "rawCount": 6713,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 22,
+        "prediction": 0.0,
+        "impurity": 0.12158319438185283,
+        "impurityStats": [
+          70767.0,
+          4921.175350229736
+        ],
+        "rawCount": 70909,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      }
+    ]
+  }
+]

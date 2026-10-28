@@ -1,0 +1,35 @@
+{
+  "feature_names": [
+    "type_index",
+    "currency_index",
+    "scaled_amount",
+    "unseen_amount_group",
+    "fx_payment",
+    "src_inDegree",
+    "src_outDegree",
+    "src_degree",
+    "src_pagerank",
+    "src_seen",
+    "dst_inDegree",
+    "dst_outDegree",
+    "dst_degree",
+    "dst_pagerank",
+    "dst_seen",
+    "src_community_size",
+    "src_community_cross_fraction",
+    "src_community_out_transactions",
+    "dst_community_size",
+    "dst_community_cross_fraction",
+    "dst_community_out_transactions",
+    "same_community",
+    "community_endpoints_seen"
+  ],
+  "training": {
+    "train_end": 1662627900,
+    "rows": 4060524,
+    "fraud": 3378,
+    "positive_class_weight": 34.65616443823753,
+    "status": "fitted"
+  },
+  "has_model": true
+}

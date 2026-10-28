@@ -1,0 +1,344 @@
+[
+  {
+    "stage": "0_StringIndexer_41744788cdf7",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.StringIndexerModel",
+        "timestamp": 1792831372922,
+        "sparkVersion": "3.5.1",
+        "uid": "StringIndexer_41744788cdf7",
+        "paramMap": {
+          "stringOrderType": "alphabetAsc",
+          "inputCols": [
+            "type",
+            "payment_currency"
+          ],
+          "outputCols": [
+            "type_index",
+            "currency_index"
+          ],
+          "handleInvalid": "keep"
+        },
+        "defaultParamMap": {
+          "stringOrderType": "frequencyDesc",
+          "handleInvalid": "error",
+          "outputCol": "StringIndexer_41744788cdf7__output"
+        }
+      }
+    ],
+    "saved_data": [
+      {
+        "labelsArray": [
+          [
+            "ACH",
+            "Bitcoin",
+            "Cash",
+            "Cheque",
+            "Credit Card",
+            "Reinvestment",
+            "Wire"
+          ],
+          [
+            "Australian Dollar",
+            "Bitcoin",
+            "Brazil Real",
+            "Canadian Dollar",
+            "Euro",
+            "Mexican Peso",
+            "Ruble",
+            "Rupee",
+            "Saudi Riyal",
+            "Shekel",
+            "Swiss Franc",
+            "UK Pound",
+            "US Dollar",
+            "Yen",
+            "Yuan"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "1_VectorAssembler_1bceacc96bc1",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.VectorAssembler",
+        "timestamp": 1792831373257,
+        "sparkVersion": "3.5.1",
+        "uid": "VectorAssembler_1bceacc96bc1",
+        "paramMap": {
+          "outputCol": "features",
+          "inputCols": [
+            "type_index",
+            "currency_index",
+            "scaled_amount",
+            "unseen_amount_group",
+            "fx_payment"
+          ],
+          "handleInvalid": "error"
+        },
+        "defaultParamMap": {
+          "outputCol": "VectorAssembler_1bceacc96bc1__output",
+          "handleInvalid": "error"
+        }
+      }
+    ],
+    "saved_data": []
+  },
+  {
+    "stage": "2_DecisionTreeClassifier_00c17d8603df",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+        "timestamp": 1792831373307,
+        "sparkVersion": "3.5.1",
+        "uid": "DecisionTreeClassifier_00c17d8603df",
+        "paramMap": {
+          "seed": 2026,
+          "maxBins": 64,
+          "maxDepth": 5,
+          "labelCol": "isFraud",
+          "featuresCol": "features",
+          "minInstancesPerNode": 50,
+          "weightCol": "_weight"
+        },
+        "defaultParamMap": {
+          "seed": 4383055063736402936,
+          "impurity": "gini",
+          "maxBins": 32,
+          "maxDepth": 5,
+          "maxMemoryInMB": 256,
+          "labelCol": "label",
+          "featuresCol": "features",
+          "checkpointInterval": 10,
+          "predictionCol": "prediction",
+          "minInstancesPerNode": 1,
+          "rawPredictionCol": "rawPrediction",
+          "minInfoGain": 0.0,
+          "leafCol": "",
+          "minWeightFractionPerNode": 0.0,
+          "cacheNodeIds": false,
+          "probabilityCol": "probability"
+        },
+        "numFeatures": 5,
+        "numClasses": 2
+      }
+    ],
+    "saved_data": [
+      {
+        "id": 0,
+        "prediction": 0.0,
+        "impurity": 0.054518166715694656,
+        "impurityStats": [
+          4057146.0,
+          117068.52347236639
+        ],
+        "rawCount": 4060524,
+        "gain": 0.006749908696220663,
+        "leftChild": 1,
+        "rightChild": 2,
+        "split": {
+          "featureIndex": 0,
+          "leftCategoriesOrThreshold": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0
+          ],
+          "numCategories": 8
+        }
+      },
+      {
+        "id": 1,
+        "prediction": 0.0,
+        "impurity": 0.010463219126480655,
+        "impurityStats": [
+          3598631.0,
+          19026.23427659242
+        ],
+        "rawCount": 3599180,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 2,
+        "prediction": 0.0,
+        "impurity": 0.29025334705895056,
+        "impurityStats": [
+          458515.0,
+          98042.28919577398
+        ],
+        "rawCount": 461344,
+        "gain": 0.024835430013833343,
+        "leftChild": 3,
+        "rightChild": 4,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.016910214633845108
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 3,
+        "prediction": 0.0,
+        "impurity": 0.09141383316039638,
+        "impurityStats": [
+          228139.0,
+          11505.846593494858
+        ],
+        "rawCount": 228471,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 4,
+        "prediction": 0.0,
+        "impurity": 0.3969974209825106,
+        "impurityStats": [
+          230376.0,
+          86536.44260227916
+        ],
+        "rawCount": 232873,
+        "gain": 0.027160573602684354,
+        "leftChild": 5,
+        "rightChild": 10,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.2987789251452882
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 5,
+        "prediction": 0.0,
+        "impurity": 0.4477306108618089,
+        "impurityStats": [
+          159609.0,
+          81615.26725204944
+        ],
+        "rawCount": 161964,
+        "gain": 0.03157857527143479,
+        "leftChild": 6,
+        "rightChild": 7,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.08477040171752345
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 6,
+        "prediction": 0.0,
+        "impurity": 0.3708997532725953,
+        "impurityStats": [
+          118056.0,
+          38502.99869088191
+        ],
+        "rawCount": 119167,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 7,
+        "prediction": 1.0,
+        "impurity": 0.499830409598367,
+        "impurityStats": [
+          41553.0,
+          43112.268561167526
+        ],
+        "rawCount": 42797,
+        "gain": 0.04890322509904488,
+        "leftChild": 8,
+        "rightChild": 9,
+        "split": {
+          "featureIndex": 4,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 8,
+        "prediction": 1.0,
+        "impurity": 0.49345007245329103,
+        "impurityStats": [
+          34257.0,
+          43112.26856116747
+        ],
+        "rawCount": 35501,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 9,
+        "prediction": 0.0,
+        "impurity": 0.0,
+        "impurityStats": [
+          7296.0,
+          0.0
+        ],
+        "rawCount": 7296,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 10,
+        "prediction": 0.0,
+        "impurity": 0.12158319438185283,
+        "impurityStats": [
+          70767.0,
+          4921.175350229736
+        ],
+        "rawCount": 70909,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      }
+    ]
+  }
+]

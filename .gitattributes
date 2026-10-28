@@ -1,0 +1,2 @@
+# Report evidence and recorded SHA-256 hashes must survive every checkout byte-for-byte.
+/analysis/connect_existing_results/** -text whitespace=cr-at-eol

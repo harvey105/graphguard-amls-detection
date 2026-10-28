@@ -80,3 +80,7 @@ results/full_system/
 /designs_Explain.md
 /designs.md
 /GraphGuard_FULL_Report_Bundle_2026-10-24
+
+# Local report revision backups and Matplotlib caches
+/analysis/connect_existing_results/report_revisions/
+/analysis/connect_existing_results/**/.mplconfig*/

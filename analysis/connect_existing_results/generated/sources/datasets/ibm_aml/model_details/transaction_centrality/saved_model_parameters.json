@@ -1,0 +1,582 @@
+[
+  {
+    "stage": "0_StringIndexer_41744788cdf7",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.StringIndexerModel",
+        "timestamp": 1792831415287,
+        "sparkVersion": "3.5.1",
+        "uid": "StringIndexer_41744788cdf7",
+        "paramMap": {
+          "stringOrderType": "alphabetAsc",
+          "inputCols": [
+            "type",
+            "payment_currency"
+          ],
+          "outputCols": [
+            "type_index",
+            "currency_index"
+          ],
+          "handleInvalid": "keep"
+        },
+        "defaultParamMap": {
+          "stringOrderType": "frequencyDesc",
+          "handleInvalid": "error",
+          "outputCol": "StringIndexer_41744788cdf7__output"
+        }
+      }
+    ],
+    "saved_data": [
+      {
+        "labelsArray": [
+          [
+            "ACH",
+            "Bitcoin",
+            "Cash",
+            "Cheque",
+            "Credit Card",
+            "Reinvestment",
+            "Wire"
+          ],
+          [
+            "Australian Dollar",
+            "Bitcoin",
+            "Brazil Real",
+            "Canadian Dollar",
+            "Euro",
+            "Mexican Peso",
+            "Ruble",
+            "Rupee",
+            "Saudi Riyal",
+            "Shekel",
+            "Swiss Franc",
+            "UK Pound",
+            "US Dollar",
+            "Yen",
+            "Yuan"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "1_VectorAssembler_d466a10d36f9",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.feature.VectorAssembler",
+        "timestamp": 1792831415401,
+        "sparkVersion": "3.5.1",
+        "uid": "VectorAssembler_d466a10d36f9",
+        "paramMap": {
+          "inputCols": [
+            "type_index",
+            "currency_index",
+            "scaled_amount",
+            "unseen_amount_group",
+            "fx_payment",
+            "src_inDegree",
+            "src_outDegree",
+            "src_degree",
+            "src_pagerank",
+            "src_seen",
+            "dst_inDegree",
+            "dst_outDegree",
+            "dst_degree",
+            "dst_pagerank",
+            "dst_seen"
+          ],
+          "handleInvalid": "error",
+          "outputCol": "features"
+        },
+        "defaultParamMap": {
+          "handleInvalid": "error",
+          "outputCol": "VectorAssembler_d466a10d36f9__output"
+        }
+      }
+    ],
+    "saved_data": []
+  },
+  {
+    "stage": "2_DecisionTreeClassifier_db2d77335652",
+    "metadata": [
+      {
+        "class": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+        "timestamp": 1792831415420,
+        "sparkVersion": "3.5.1",
+        "uid": "DecisionTreeClassifier_db2d77335652",
+        "paramMap": {
+          "seed": 2026,
+          "minInstancesPerNode": 50,
+          "weightCol": "_weight",
+          "maxDepth": 5,
+          "labelCol": "isFraud",
+          "maxBins": 64,
+          "featuresCol": "features"
+        },
+        "defaultParamMap": {
+          "minWeightFractionPerNode": 0.0,
+          "seed": 4383055063736402936,
+          "probabilityCol": "probability",
+          "minInstancesPerNode": 1,
+          "predictionCol": "prediction",
+          "leafCol": "",
+          "minInfoGain": 0.0,
+          "rawPredictionCol": "rawPrediction",
+          "impurity": "gini",
+          "labelCol": "label",
+          "maxDepth": 5,
+          "maxBins": 32,
+          "maxMemoryInMB": 256,
+          "cacheNodeIds": false,
+          "featuresCol": "features",
+          "checkpointInterval": 10
+        },
+        "numFeatures": 15,
+        "numClasses": 2
+      }
+    ],
+    "saved_data": [
+      {
+        "id": 0,
+        "prediction": 0.0,
+        "impurity": 0.054518166715694656,
+        "impurityStats": [
+          4057146.0,
+          117068.52347236639
+        ],
+        "rawCount": 4060524,
+        "gain": 0.006749908696220663,
+        "leftChild": 1,
+        "rightChild": 10,
+        "split": {
+          "featureIndex": 0,
+          "leftCategoriesOrThreshold": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0
+          ],
+          "numCategories": 8
+        }
+      },
+      {
+        "id": 1,
+        "prediction": 0.0,
+        "impurity": 0.010463219126480655,
+        "impurityStats": [
+          3598631.0,
+          19026.23427659242
+        ],
+        "rawCount": 3599180,
+        "gain": 0.00029420925580735027,
+        "leftChild": 2,
+        "rightChild": 3,
+        "split": {
+          "featureIndex": 7,
+          "leftCategoriesOrThreshold": [
+            1829.0
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 2,
+        "prediction": 0.0,
+        "impurity": 0.0032901628997053164,
+        "impurityStats": [
+          3317552.0,
+          5475.6739812415335
+        ],
+        "rawCount": 3317710,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 3,
+        "prediction": 0.0,
+        "impurity": 0.08775321027030088,
+        "impurityStats": [
+          281079.0,
+          13550.560295350882
+        ],
+        "rawCount": 281470,
+        "gain": 6.811912406316095e-05,
+        "leftChild": 4,
+        "rightChild": 9,
+        "split": {
+          "featureIndex": 12,
+          "leftCategoriesOrThreshold": [
+            9.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 4,
+        "prediction": 0.0,
+        "impurity": 0.10416063495621236,
+        "impurityStats": [
+          80798.0,
+          4713.238363600303
+        ],
+        "rawCount": 80934,
+        "gain": 0.0002465238384235218,
+        "leftChild": 5,
+        "rightChild": 6,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            4.990127068295817
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 5,
+        "prediction": 0.0,
+        "impurity": 0.10259592462569847,
+        "impurityStats": [
+          80370.0,
+          4609.269870285592
+        ],
+        "rawCount": 80503,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 6,
+        "prediction": 0.0,
+        "impurity": 0.31448772037934725,
+        "impurityStats": [
+          428.0,
+          103.96849331471276
+        ],
+        "rawCount": 431,
+        "gain": 0.071414105769341,
+        "leftChild": 7,
+        "rightChild": 8,
+        "split": {
+          "featureIndex": 12,
+          "leftCategoriesOrThreshold": [
+            3.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 7,
+        "prediction": 1.0,
+        "impurity": 0.4988619833592457,
+        "impurityStats": [
+          63.0,
+          69.31232887647506
+        ],
+        "rawCount": 65,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 8,
+        "prediction": 0.0,
+        "impurity": 0.15839093539674298,
+        "impurityStats": [
+          365.0,
+          34.656164438237525
+        ],
+        "rawCount": 366,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 9,
+        "prediction": 0.0,
+        "impurity": 0.08094802410739409,
+        "impurityStats": [
+          200281.0,
+          8837.321931750572
+        ],
+        "rawCount": 200536,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 10,
+        "prediction": 0.0,
+        "impurity": 0.29025334705895056,
+        "impurityStats": [
+          458515.0,
+          98042.28919577398
+        ],
+        "rawCount": 461344,
+        "gain": 0.024835430013833343,
+        "leftChild": 11,
+        "rightChild": 12,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.016910214633845108
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 11,
+        "prediction": 0.0,
+        "impurity": 0.09141383316039638,
+        "impurityStats": [
+          228139.0,
+          11505.846593494858
+        ],
+        "rawCount": 228471,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 12,
+        "prediction": 0.0,
+        "impurity": 0.3969974209825106,
+        "impurityStats": [
+          230376.0,
+          86536.44260227916
+        ],
+        "rawCount": 232873,
+        "gain": 0.027160573602684354,
+        "leftChild": 13,
+        "rightChild": 18,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.2987789251452882
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 13,
+        "prediction": 0.0,
+        "impurity": 0.4477306108618089,
+        "impurityStats": [
+          159609.0,
+          81615.26725204944
+        ],
+        "rawCount": 161964,
+        "gain": 0.03157857527143479,
+        "leftChild": 14,
+        "rightChild": 15,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            0.08477040171752345
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 14,
+        "prediction": 0.0,
+        "impurity": 0.3708997532725953,
+        "impurityStats": [
+          118056.0,
+          38502.99869088191
+        ],
+        "rawCount": 119167,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 15,
+        "prediction": 1.0,
+        "impurity": 0.499830409598367,
+        "impurityStats": [
+          41553.0,
+          43112.268561167526
+        ],
+        "rawCount": 42797,
+        "gain": 0.04890322509904488,
+        "leftChild": 16,
+        "rightChild": 17,
+        "split": {
+          "featureIndex": 4,
+          "leftCategoriesOrThreshold": [
+            0.5
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 16,
+        "prediction": 1.0,
+        "impurity": 0.49345007245329103,
+        "impurityStats": [
+          34257.0,
+          43112.26856116747
+        ],
+        "rawCount": 35501,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 17,
+        "prediction": 0.0,
+        "impurity": 0.0,
+        "impurityStats": [
+          7296.0,
+          0.0
+        ],
+        "rawCount": 7296,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 18,
+        "prediction": 0.0,
+        "impurity": 0.12158319438185283,
+        "impurityStats": [
+          70767.0,
+          4921.175350229736
+        ],
+        "rawCount": 70909,
+        "gain": 0.012629985054022408,
+        "leftChild": 19,
+        "rightChild": 20,
+        "split": {
+          "featureIndex": 8,
+          "leftCategoriesOrThreshold": [
+            0.8577698995813583
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 19,
+        "prediction": 0.0,
+        "impurity": 0.0713563961781485,
+        "impurityStats": [
+          64851.0,
+          2495.2438395531026
+        ],
+        "rawCount": 64923,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 20,
+        "prediction": 0.0,
+        "impurity": 0.4124805330331316,
+        "impurityStats": [
+          5916.0,
+          2425.931510676626
+        ],
+        "rawCount": 5986,
+        "gain": 0.04025806713969207,
+        "leftChild": 21,
+        "rightChild": 22,
+        "split": {
+          "featureIndex": 2,
+          "leftCategoriesOrThreshold": [
+            4.990127068295817
+          ],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 21,
+        "prediction": 0.0,
+        "impurity": 0.3643249930230259,
+        "impurityStats": [
+          5611.0,
+          1767.464386350114
+        ],
+        "rawCount": 5662,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      },
+      {
+        "id": 22,
+        "prediction": 1.0,
+        "impurity": 0.43270322423508656,
+        "impurityStats": [
+          305.0,
+          658.4671243265132
+        ],
+        "rawCount": 324,
+        "gain": -1.0,
+        "leftChild": -1,
+        "rightChild": -1,
+        "split": {
+          "featureIndex": -1,
+          "leftCategoriesOrThreshold": [],
+          "numCategories": -1
+        }
+      }
+    ]
+  }
+]

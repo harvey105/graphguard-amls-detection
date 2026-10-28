@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-26T06:45:33.516980+00:00",
+  "datasets": {
+    "ibm_aml": [
+      "run_20261024T081350344149Z",
+      "full_fusion",
+      0.5
+    ],
+    "paysim": [
+      "run_20261024T084918669391Z",
+      "without_centrality",
+      0.7
+    ]
+  },
+  "tolerance": 1e-09,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "win32",
+  "builder_sha256": "8f5d3c9b0a26d979d30a13e52aaa2a3d51ac1abbfd9c3776e49331e8805fec37",
+  "bundle_root": "C:\\Users\\Admin\\Desktop\\DSEB\\Ki_7\\Big_Data\\graphguard-amls-detection\\GraphGuard_FULL_Report_Bundle_2026-10-24",
+  "output_root": "C:\\Users\\Admin\\Desktop\\DSEB\\Ki_7\\Big_Data\\graphguard-amls-detection\\analysis\\connect_existing_results\\generated",
+  "no_spark": true,
+  "no_training": true,
+  "no_scoring": true,
+  "resume_policy": "No checkpoint reuse: nonempty outputs are refused; use a fresh output directory."
+}

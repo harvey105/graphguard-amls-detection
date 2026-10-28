@@ -1,0 +1,19 @@
+﻿scope,motif,transactions,positives,covered_transactions,covered_positives,positive_coverage,positive_fraction_when_present,population_prevalence,interpretation
+full,cycle3_count,6362620,8213,0,0,0.0,,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,relay_24h,6362620,8213,24,0,0.0,0.0,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,relay_168h,6362620,8213,94,0,0.0,0.0,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,reciprocal_24h,6362620,8213,0,0,0.0,,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,reciprocal_168h,6362620,8213,0,0,0.0,,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,fanin_24h,6362620,8213,2354211,1026,0.12492390113235115,0.0004358148016469212,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,fanin_168h,6362620,8213,3486578,2342,0.2851576768537684,0.0006717188027917344,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,fanout_24h,6362620,8213,1105,2,0.00024351637647631802,0.0018099547511312218,0.001290820448180152,overlapping structural coverage; not a detector prediction
+full,fanout_168h,6362620,8213,5558,6,0.0007305491294289541,0.0010795250089960418,0.001290820448180152,overlapping structural coverage; not a detector prediction
+test,cycle3_count,1248736,4250,0,0,0.0,,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,relay_24h,1248736,4250,5,0,0.0,0.0,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,relay_168h,1248736,4250,21,0,0.0,0.0,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,reciprocal_24h,1248736,4250,0,0,0.0,,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,reciprocal_168h,1248736,4250,0,0,0.0,,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,fanin_24h,1248736,4250,240844,154,0.03623529411764706,0.0006394180465363471,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,fanin_168h,1248736,4250,602017,895,0.21058823529411766,0.001486668981108507,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,fanout_24h,1248736,4250,186,0,0.0,0.0,0.0034034415601055788,overlapping structural coverage; not a detector prediction
+test,fanout_168h,1248736,4250,1226,1,0.00023529411764705883,0.0008156606851549756,0.0034034415601055788,overlapping structural coverage; not a detector prediction
