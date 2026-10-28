@@ -24,7 +24,7 @@ from urllib.parse import unquote, urlsplit
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parent.parent
-BUNDLE = REPO / "GraphGuard_FULL_Report_Bundle_2026-10-24"
+BUNDLE = REPO / "Report_Bundle"
 SELECTED = {"ibm_aml": "full_fusion", "paysim": "without_centrality"}
 LABEL = {"ibm_aml": "IBM AML", "paysim": "PaySim"}
 SHORT = {"transaction_only": "Giao dịch", "transaction_novelty": "Giao dịch + đã thấy tài khoản",
@@ -675,7 +675,8 @@ def protected_hashes(root):
             if not p.is_file():
                 continue
             rel = p.relative_to(folder).as_posix()
-            if (rel.startswith(("insights/", "figures_insights/", ".mplconfig_insights/")) or
+            if (any(part.startswith(".mplconfig") or part == "checkpoints" for part in p.relative_to(folder).parts) or
+                rel.startswith(("insights/", "figures_insights/")) or
                 rel in {"CONNECTED_RESULTS_REPORT.html", "CONNECTED_RESULTS_REPORT.md", "GRAPHGUARD_BUSINESS_REPORT.html",
                         "GRAPHGUARD_BUSINESS_REPORT.md", "revision_validation.json", "revision_source_inventory.csv"} or
                 name == "business_report" and rel == "validation.json"):
@@ -690,15 +691,30 @@ def supplement_sources(stage, evidence):
     # Keep the old Markdown byte-identical and satisfy its relative references.
     required = ["tables/full_time_blocks.csv", "tables/evaluation_splits.csv", "src/motif/modeling.py",
                 "evidence/existing_full_artifact_verification.log", "validation/bundle_checks.json"]
+    old_manifest = evidence.root / "revision_validation.json"
+    known_hashes = {}
+    if old_manifest.is_file():
+        known_hashes = {r["source_file"]: r["sha256"] for r in
+                       json.loads(old_manifest.read_text(encoding="utf-8"))["supplemented_sources"]}
     for rel in required:
         source, dest = BUNDLE / rel, technical / "sources" / rel
-        evidence.check(source.is_file(), "deep-link original exists: " + rel)
         dest.parent.mkdir(parents=True, exist_ok=True)
+        # Frozen report snapshots remain the evidence for the historical run.
+        # A later repository bundle can have different bytes; do not relabel it.
         if dest.exists():
-            evidence.check(sha(dest) == sha(source), "existing supplement matches original: " + rel)
+            digest = sha(dest)
+            if rel in known_hashes:
+                evidence.check(digest == known_hashes[rel], "frozen supplement SHA-256 preserved: " + rel)
+            else:
+                evidence.check(source.is_file() and digest == sha(source), "initial supplement matches repository bundle: " + rel)
         else:
+            evidence.check(source.is_file(), "repository bundle supplement exists: " + rel)
+            digest = sha(source)
+            if rel in known_hashes:
+                evidence.check(digest == known_hashes[rel], "missing frozen supplement must match recorded SHA-256: " + rel)
             shutil.copy2(source, dest)
-        supplemented.append({"source_file": rel, "sha256": sha(source), "origin": "original full report bundle; byte-identical supplement"})
+        supplemented.append({"source_file": rel, "sha256": digest,
+                             "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"})
     business = stage / "business_report"
     shutil.copytree(technical / "sources", business / "sources", dirs_exist_ok=True)
     for name in ("model_comparison.csv", "review_budget_comparison.csv", "feature_usage.csv", "completion.json"):
@@ -764,11 +780,13 @@ def revision_manifest(stage, e, before, supplemented, stamp):
     input_paths = [BASE / key for key in before]
     inventory = [{"path": str(p.relative_to(BASE)).replace("\\", "/"), "sha256": sha(p), "role": "preserved pre-revision evidence"}
                  for p in input_paths]
-    inventory += [{"path": "bundle/" + r["source_file"], "sha256": r["sha256"], "role": r["origin"]} for r in supplemented]
+    inventory += [{"path": "generated/sources/" + r["source_file"], "sha256": r["sha256"], "role": r["origin"]} for r in supplemented]
     facts = {"schema_version": 1, "revision": stamp, "created_utc": datetime.now(timezone.utc).isoformat(),
              "user_facing_date": "2026-10-28", "status": "PASS", "scope": "aggregate-derived insight/report revision; not full pipeline acceptance",
              "python": sys.version, "executable": sys.executable, "platform": sys.platform,
              "builder_sha256": sha(__file__), "builder": Path(__file__).name,
+             "repository_bundle": "Report_Bundle",
+             "verification_scope": "published report files and frozen evidence; local caches/checkpoint bookkeeping are excluded",
              "no_spark": True, "no_training": True, "no_scoring": True,
              "historical_source_and_result_hashes_preserved": True,
              "html_browser_render_verified": False,
@@ -807,41 +825,45 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--update-reports", action="store_true", help="After successful staging validation, update the two user-facing files with backups")
     parser.add_argument("--check-only", action="store_true", help="Read-only verification of current reports, evidence and current artifact manifests")
+    parser.add_argument("--report-root", type=Path, help="With --check-only, verify an exported report pair using this repository's Windows .venv")
     args = parser.parse_args()
+    if args.report_root is not None and not args.check_only:
+        parser.error("--report-root is only supported with --check-only")
     if sys.platform != "win32" or sys.version_info[:2] != (3, 12) or Path(sys.executable).resolve() != (REPO / ".venv/Scripts/python.exe").resolve():
         parser.error("Use native Windows repository .venv Python 3.12")
-    e = Evidence(BASE / "generated")
+    report_root = args.report_root.resolve() if args.report_root is not None else BASE
+    e = Evidence(report_root / "generated")
     validate_narrative(e)
     if args.check_only:
         counts = []
         for name in ("generated", "business_report"):
-            manifest = json.loads((BASE / name / "revision_validation.json").read_text(encoding="utf-8"))
+            manifest = json.loads((report_root / name / "revision_validation.json").read_text(encoding="utf-8"))
             for rel, digest in manifest["report_artifact_sha256"].items():
-                e.check(sha(BASE / name / rel) == digest, name + ": current artifact hash " + rel)
+                e.check(sha(report_root / name / rel) == digest, name + ": current artifact hash " + rel)
             for rel, digest in manifest["protected_evidence_sha256_before"].items():
-                e.check(sha(BASE / rel) == digest, "preserved evidence " + rel)
+                e.check(sha(report_root / rel) == digest, "preserved evidence " + rel)
             for r in manifest["supplemented_sources"]:
-                e.check(sha(BASE / name / "sources" / r["source_file"]) == r["sha256"], name + ": supplementary source " + r["source_file"])
+                e.check(sha(report_root / name / "sources" / r["source_file"]) == r["sha256"], name + ": supplementary source " + r["source_file"])
             counts.append(len(manifest["report_artifact_sha256"]))
         # Check only the current report pair; revision archives intentionally preserve old broken links.
-        temp_root = BASE / "report_revisions"
+        temp_root = report_root / "report_revisions"
         pages = []
         for name in ("generated", "business_report"):
-            for p in (BASE / name).rglob("*.html"):
+            for p in (report_root / name).rglob("*.html"):
                 parser_ = PageLinks()
                 parser_.feed(p.read_text(encoding="utf-8"))
                 pages.append((p, parser_))
         page_map = {p.resolve(): parsed for p, parsed in pages}
         link_count = 0
         for name in ("generated", "business_report"):
-            for p in (BASE / name).rglob("*"):
+            for p in (report_root / name).rglob("*"):
                 if not p.is_file() or p.suffix not in {".html", ".md"}:
                     continue
                 links = page_map[p.resolve()].links if p.suffix == ".html" else re.findall(r"!?\[[^\]]*\]\(([^)]+)\)", p.read_text(encoding="utf-8"))
                 for link in links:
                     target = urlsplit(html.unescape(link))
                     dest = (p.parent / unquote(target.path)).resolve() if target.path else p.resolve()
-                    e.check(not target.scheme and not target.netloc and BASE in dest.parents and temp_root not in dest.parents and dest.is_file(), "current link: " + link)
+                    e.check(not target.scheme and not target.netloc and report_root in dest.parents and temp_root not in dest.parents and dest.is_file(), "current link: " + link)
                     if target.fragment and dest.suffix == ".html":
                         e.check(target.fragment in page_map[dest].ids, "current anchor: " + link)
                     link_count += 1

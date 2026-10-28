@@ -1,15 +1,17 @@
 {
   "schema_version": 1,
-  "revision": "20261028T101554502372Z",
-  "created_utc": "2026-10-28T10:17:20.134586+00:00",
+  "revision": "20261028T104333509390Z",
+  "created_utc": "2026-10-28T10:43:58.119791+00:00",
   "user_facing_date": "2026-10-28",
   "status": "PASS",
   "scope": "aggregate-derived insight/report revision; not full pipeline acceptance",
   "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
   "executable": "C:\\Users\\Admin\\Desktop\\DSEB\\Ki_7\\Big_Data\\graphguard-amls-detection\\.venv\\Scripts\\python.exe",
   "platform": "win32",
-  "builder_sha256": "cb1bff90285a51eb2799ab83132d005de6f6c899be750ffeb93b9b5a2b049fd6",
+  "builder_sha256": "22699a43c075171c0efe58899accf2aaa1e540d59320a5eb0d9983147be4f38c",
   "builder": "revise_insight_reports.py",
+  "repository_bundle": "Report_Bundle",
+  "verification_scope": "published report files and frozen evidence; local caches/checkpoint bookkeeping are excluded",
   "no_spark": true,
   "no_training": true,
   "no_scoring": true,
@@ -29,27 +31,27 @@
     {
       "source_file": "tables/full_time_blocks.csv",
       "sha256": "167a03a248592c873d60c0674c2f039d8d52579a4a3871a337c704d065d5d870",
-      "origin": "original full report bundle; byte-identical supplement"
+      "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"
     },
     {
       "source_file": "tables/evaluation_splits.csv",
       "sha256": "545e2763025ead2843c0fa7bce878586a6513eb459996aa149205b0b734bd899",
-      "origin": "original full report bundle; byte-identical supplement"
+      "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"
     },
     {
       "source_file": "src/motif/modeling.py",
       "sha256": "98d0b8382e1b06ced24710f9312a5cbd3524ecc6730c3563631b18a3a1693bbc",
-      "origin": "original full report bundle; byte-identical supplement"
+      "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"
     },
     {
       "source_file": "evidence/existing_full_artifact_verification.log",
       "sha256": "d819bbaec22f8a482975f7b3e43fb78f37387330bb8527478e23e180906962bc",
-      "origin": "original full report bundle; byte-identical supplement"
+      "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"
     },
     {
       "source_file": "validation/bundle_checks.json",
       "sha256": "3fa476ddbae0a78e4767da2c1cb1d9727307c34d63ed7b876a473555fc41c48e",
-      "origin": "original full report bundle; byte-identical supplement"
+      "origin": "frozen historical source snapshot; Report_Bundle is used only to restore a matching missing file"
     }
   ],
   "protected_evidence_sha256_before": {
@@ -67,15 +69,6 @@
     "generated/structural_evidence_matrix.csv": "e427b765ba1865ebc378f4253bc9e32727f6909d8a40f4371bfd56568f4b02ec",
     "generated/temporal_comparison.csv": "88dd20ca7e72a1aed8f8ad8cdd664cf54e903ba59de0944d54d77b24227b8435",
     "generated/validation_findings.csv": "0f4bb547a764568cc0723d2738c846cabec9d709de5e5dc208ed5a685ecc711a",
-    "generated/.mplconfig/fontlist-v3.11.0.json": "a8dab3ac7a81ffde025578b85a4ad7166da901de94d027ba6ca66119d485e85f",
-    "generated/checkpoints/CP0.json": "08f587c8512f6d3b0413963afeca3185a30eb6bc0a458c2b7317101a84a9f587",
-    "generated/checkpoints/CP1.json": "3fcc61f3497e1ef84dbdd48ed0353887aedecdd22d7429a6ad18e21f6aa1e69d",
-    "generated/checkpoints/CP2.json": "3e99a11992578669ba5b547ee64989626e0bd2bfb0c3a1ecf9d8386d8972b65d",
-    "generated/checkpoints/CP3.json": "26e126276eced0e5908094818581a84effdda83b2da2c939610ba01c9ccdb185",
-    "generated/checkpoints/CP4.json": "b84939bfdcd26f8a7a40e59d81dffc2543d59141636401052b149153bfc59ac6",
-    "generated/checkpoints/CP5.json": "ec3d14b2f089d22ed98d83ce70603a81817cf75494282c25e4803bfee8257cec",
-    "generated/checkpoints/CP6.json": "0f58ca5f5187404042bd51ee0e87a75e8b27ebe5c08b4b6f030ea03413f126b7",
-    "generated/checkpoints/CP7.json": "5aac66ac625a19e3f6badf8d7c45fa25dccb0704ab0908bdc7495c11a85fdbaf",
     "generated/figures/ablation_deltas.png": "ab0b78065c55c5ba0a840a5b02b86dc26386f3463fdca6322ce7ebde87a58d4d",
     "generated/figures/feature_importance.png": "7dd5050615e1b89d62b2434e605bca7ba17e015895afaa95b50c9a5a497c904e",
     "generated/figures/metric_comparison.png": "ef6697542a038652054fac4f00c68e74189b2a6b572958ceaf5377e9e7f4333e",
@@ -4103,43 +4096,23 @@
       "pass": true
     },
     {
-      "check": "deep-link original exists: tables/full_time_blocks.csv",
+      "check": "frozen supplement SHA-256 preserved: tables/full_time_blocks.csv",
       "pass": true
     },
     {
-      "check": "existing supplement matches original: tables/full_time_blocks.csv",
+      "check": "frozen supplement SHA-256 preserved: tables/evaluation_splits.csv",
       "pass": true
     },
     {
-      "check": "deep-link original exists: tables/evaluation_splits.csv",
+      "check": "frozen supplement SHA-256 preserved: src/motif/modeling.py",
       "pass": true
     },
     {
-      "check": "existing supplement matches original: tables/evaluation_splits.csv",
+      "check": "frozen supplement SHA-256 preserved: evidence/existing_full_artifact_verification.log",
       "pass": true
     },
     {
-      "check": "deep-link original exists: src/motif/modeling.py",
-      "pass": true
-    },
-    {
-      "check": "existing supplement matches original: src/motif/modeling.py",
-      "pass": true
-    },
-    {
-      "check": "deep-link original exists: evidence/existing_full_artifact_verification.log",
-      "pass": true
-    },
-    {
-      "check": "existing supplement matches original: evidence/existing_full_artifact_verification.log",
-      "pass": true
-    },
-    {
-      "check": "deep-link original exists: validation/bundle_checks.json",
-      "pass": true
-    },
-    {
-      "check": "existing supplement matches original: validation/bundle_checks.json",
+      "check": "frozen supplement SHA-256 preserved: validation/bundle_checks.json",
       "pass": true
     },
     {
@@ -4212,42 +4185,6 @@
     },
     {
       "check": "preserved original and staged evidence: generated/validation_findings.csv",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/.mplconfig/fontlist-v3.11.0.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP0.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP1.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP2.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP3.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP4.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP5.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP6.json",
-      "pass": true
-    },
-    {
-      "check": "preserved original and staged evidence: generated/checkpoints/CP7.json",
       "pass": true
     },
     {
@@ -5477,13 +5414,13 @@
     "GRAPHGUARD_BUSINESS_REPORT.html": "242be7634e7114932bdd911d08b3b32e01641af47e450dbaf43ed4f317656140",
     "GRAPHGUARD_BUSINESS_REPORT.md": "09f4c2c4646b7b999c43a2cf14c406e7aec408779585a788a3ecce1361143e4f",
     "figures_insights/marginal_review_yield.png": "c636b43da87eaec1d8cf24fb50a215c0f547e2ed76fa693310f4bf435ea60f7a",
-    "figures_insights/marginal_review_yield.svg": "850678194b2e123ffbadec8299f5b1b8f4d99f079a73ae9477ea1ded60e8f443",
+    "figures_insights/marginal_review_yield.svg": "6db818459c9db846d6ff470aeead56ca03b2e88ade133fb83b6beabdb41b28b6",
     "figures_insights/motif_coverage_lift.png": "067dda4244fba531d3e1aa7bd148cd627f28974c10a93f14b5b8265750b3f4ea",
-    "figures_insights/motif_coverage_lift.svg": "ddfc4bad48fdb1727d42b0cefd036ddea40d143a7be37870e00fe042625479e5",
+    "figures_insights/motif_coverage_lift.svg": "a4fa97ab3b73b8078826117a91d62f945b7049728b060b207c988239cfb46b9b",
     "figures_insights/ranking_depth.png": "8f956666b7297fbb0244c9ff21b857dece1efd55964968dd3de6d43ee1d05e2e",
-    "figures_insights/ranking_depth.svg": "24bc18cdd840610c370899e64fc0014f624c11ae630cae40868422d7e0a33945",
+    "figures_insights/ranking_depth.svg": "1b8658065aaca015027c7cedc58a2cde653ce8abbe1d507eec89ab2bb2e2901c",
     "figures_insights/temporal_prevalence_recall.png": "ffefb6edf431af564a3926a095716d978c9e25f121a7e686440b7061c42cb2af",
-    "figures_insights/temporal_prevalence_recall.svg": "b25a1879f2151b1215debeabb20caa565307a18aec0763f98692852efc3961ec",
+    "figures_insights/temporal_prevalence_recall.svg": "881d6acbb2ed647ad53e8c5f1f35f59d338ae95a126f9f5136ef647e7e177bd3",
     "insights/marginal_review_yield.csv": "b8cb09f70e1981350d4bee3ec01760ebf765cf464b8df4fe040f5980645d1a01",
     "insights/motif_cohort_insights.csv": "26db93625207cc04c43466672ccb73b400a8e16d77feccf72024372acbd5ff71",
     "insights/structure_summary.csv": "b6cb91a8a0e0c164a9cffd20c8140ed65a6106c40bb6dd37bdce521b86a72ce1",
