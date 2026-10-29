@@ -567,7 +567,7 @@ graphguard-amls_detection/
 | **Lý thuyết phân cụm CC vs LPA** | [CC vs LPA Note](docs/CC_vs_LPA_Note.md) | So sánh chi tiết giữa Connected Components và Label Propagation Algorithm. |
 | **Đối chiếu chi tiết 9 mô hình** | [Thực nghiệm Part B](docs/PartB_Experiments.md) | Bảng số liệu chi tiết 9 families, khoảng tin cậy Wilson và phân tích 5 chu kỳ. |
 | **So sánh hình thái hai đồ thị** | [So sánh Hình thái Đồ thị](docs/PartB_Comparison.md) | Phân tích đối chiếu chuyên sâu hình thái mạng và độ lệch hiệu năng hai datasets. |
-| **Từ điển dữ liệu chi tiết** | [Data Dictionary](Report_Bundle/09_DATA_DICTIONARY.md) | Toàn bộ định nghĩa trường dữ liệu, kiểu dữ liệu, ràng buộc và ngưỡng biến đổi. |
+| **Từ điển dữ liệu chi tiết** | [Data Dictionary](docs/COMPREHENSIVE_DATA_DICTIONARY.md) | Toàn bộ định nghĩa trường dữ liệu, kiểu dữ liệu, ràng buộc và ngưỡng biến đổi. |
 | **Bản đồ ánh xạ tập tin** | [File Map](Report_Bundle/10_FILE_MAP.md) | Bản đồ chi tiết giải thích vai trò của từng file trong bundle báo cáo. |
 | **Nhật ký kiểm toán phần mềm** | [Project Code Audit](docs/Project_Code_Audit_2026-10-22.md) | Minh chứng PASS toàn diện của native gate, lịch sử sửa bug và bảo vệ phần cứng. |
 | **Quy trình vận hành PowerShell** | [PowerShell Skill](.agents/skills/graphguard-powershell/SKILL.md) | Hướng dẫn chuẩn hóa môi trường Windows, quy tắc CPU/RAM và các lệnh vận hành. |

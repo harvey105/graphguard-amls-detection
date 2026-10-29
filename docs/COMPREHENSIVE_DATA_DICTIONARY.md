@@ -129,7 +129,7 @@ Nhằm đảm bảo sự xuyên suốt giữa các giai đoạn từ ETL đến 
    - **IBM AML**: Chuyển đổi từ `Timestamp` sang Unix epoch seconds (giây nguyên bản). Mặc dù đơn vị khác nhau, cả hai đều có tính chất thứ tự đơn điệu ($s < t$), đáp ứng hoàn hảo cho việc lọc lịch sử nhân quả.
 
 3. **Số tiền giao dịch (`amount`)**:
-   - Được bảo toàn xuyên suốt ở dạng số thực (`DoubleType`). Tuy nhiên, ở IBM AML có tới 15 loại tiền tệ khác nhau. Quy tắc bất khả xâm phạm: **Không bao giờ so sánh hoặc trừ trực tiếp số tiền danh nghĩa giữa hai loại tiền tệ khác nhau**. Thay vào đó, số tiền được chuẩn hóa theo phân vị $q_{90}$ của từng cặp `(payment_currency, type)`.
+   - Được bảo toàn xuyên suốt ở dạng số thực (`DoubleType`). Tuy nhiên, ở IBM AML có tới 15 loại tiền tệ khác nhau. Quy tắc bất khả xâm phạm: **Không bao giờ so sánh hoặc trừ trực tiếp số tiền danh nghĩa giữa hai loại tiền tệ khác nhau**. Thay vào đó, số tiền được chuẩn hóa theo phân vị $q\_{90}$ của từng cặp `(payment_currency, type)`.
 
 4. **Loại giao dịch (`type`)**:
    - Ở PaySim, `type` thể hiện phương thức thanh toán (`TRANSFER`, `CASH_OUT`, v.v.).
@@ -198,7 +198,7 @@ Các đặc trưng này được tiền xử lý độc lập trên từng khố
 
 | Tên đặc trưng (Feature) | Kiểu dữ liệu | Công thức / Định nghĩa kỹ thuật | Lý do thiết kế & Tầm quan trọng nghiệp vụ |
 |---|---|---|---|
-| `scaled_amount` | `DoubleType` | $\log\left(1 + \min\left(\frac{\text{amount}}{q_{90}}, 10^{12}\right)\right)$ | **Co giãn phi tuyến theo phân vị**: Phân vị $q_{90}$ được tính riêng cho từng cặp `(payment_currency, type)` trên tập train. Giúp triệt tiêu sự chênh lệch mệnh giá giữa các đồng tiền (ví dụ Yen Nhật với Bitcoin) và làm mịn các giá trị ngoại lai cực lớn mà không làm mất thông tin tỷ lệ. |
+| `scaled_amount` | `DoubleType` | $\log\left(1 + \min\left(\frac{\text{amount}}{q\_{90}}, 10^{12}\right)\right)$ | **Co giãn phi tuyến theo phân vị**: Phân vị $q\_{90}$ được tính riêng cho từng cặp `(payment_currency, type)` trên tập train. Giúp triệt tiêu sự chênh lệch mệnh giá giữa các đồng tiền (ví dụ Yen Nhật với Bitcoin) và làm mịn các giá trị ngoại lai cực lớn mà không làm mất thông tin tỷ lệ. |
 | `unseen_amount_group` | `DoubleType` | $1.0$ nếu cặp `(currency, type)` chưa từng xuất hiện ở tập train; ngược lại $0.0$. | **Phát hiện hành vi dị biệt (Novelty)**: Nhận diện các kênh giao dịch mới hoặc đồng tiền lạ đột ngột xuất hiện ở giai đoạn sau, cảnh báo rủi ro gian lận tiềm ẩn. |
 | `fx_payment` | `DoubleType` | $1.0$ nếu `payment_currency != receiving_currency`; ngược lại $0.0$. | **Giao dịch ngoại hối xuyên biên giới**: Rửa tiền quốc tế thường lợi dụng các giao dịch đổi ngoại tệ để làm phức tạp hóa việc truy vết của cơ quan quản lý. |
 | `type_index` | `DoubleType` | `StringIndexer(type)` (thứ tự chữ cái) | Mã hóa phân loại kênh giao dịch thành số để cây quyết định phân nhánh. Ở PaySim, cây sẽ tách biệt rạch ròi giữa `TRANSFER`/`CASH_OUT` với các loại hình khác. |
@@ -432,7 +432,7 @@ Dưới đây là từ điển chuẩn hóa 5 cột cho toàn bộ **29 tệp CS
 | Tên cột (Column Name) | Kiểu dữ liệu | Đơn vị / Phạm vi | Mô tả nghiệp vụ & Thuật toán | Vai trò trong Pipeline |
 |---|---|---|---|---|
 | `degree` | `LongType` | $\ge 0$ | Giá trị bậc kết nối (tổng số giao dịch vào và ra của tài khoản). | Trục hoành phân bố ($k$) |
-| `account_count` | `LongType` | Số lượng tài khoản | Số lượng tài khoản trong mạng lưới có đúng giá trị bậc kết nối tương ứng. | Trục tung phân bố ($N_k$) |
+| `account_count` | `LongType` | Số lượng tài khoản | Số lượng tài khoản trong mạng lưới có đúng giá trị bậc kết nối tương ứng. | Trục tung phân bố ($N\_k$) |
 
 #### 5. `top10_pagerank.csv`
 - **Mô tả**: Danh sách 10 tài khoản có điểm PageRank cao nhất trích xuất từ phân tích mô tả toàn bộ đồ thị.
@@ -486,8 +486,8 @@ Dưới đây là từ điển chuẩn hóa 5 cột cho toàn bộ **29 tệp CS
 | `positives` | `LongType` | Số đếm nguyên | Tổng số giao dịch gian lận thực tế trong phạm vi đánh giá. | Nhãn dương thực tế |
 | `covered_transactions` | `LongType` | Số đếm nguyên | Số lượng giao dịch có sự xuất hiện của mẫu hình motif này. | Giao dịch kích hoạt motif |
 | `covered_positives` | `LongType` | Số đếm nguyên | Số lượng giao dịch gian lận có chứa mẫu hình motif này (giao điểm giữa motif và nhãn). | Gian lận được motif bao phủ |
-| `positive_coverage` | `DoubleType` | Tỷ lệ $0.0 - 1.0$ | Tỷ lệ bao phủ gian lận: $\frac{\text{covered\_positives}}{\text{positives}}$. Đo lường khả năng bắt trúng gian lận của motif. | Recall tiềm năng của motif |
-| `positive_fraction_when_present` | `DoubleType` | Tỷ lệ $0.0 - 1.0$ | Mật độ gian lận khi có mặt motif: $\frac{\text{covered\_positives}}{\text{covered\_transactions}}$. Thể hiện độ chuẩn xác thô của motif. | Precision tiềm năng của motif |
+| `positive_coverage` | `DoubleType` | Tỷ lệ $0.0 - 1.0$ | Tỷ lệ bao phủ gian lận: $\frac{\text{covered\\_positives}}{\text{positives}}$. Đo lường khả năng bắt trúng gian lận của motif. | Recall tiềm năng của motif |
+| `positive_fraction_when_present` | `DoubleType` | Tỷ lệ $0.0 - 1.0$ | Mật độ gian lận khi có mặt motif: $\frac{\text{covered\\_positives}}{\text{covered\\_transactions}}$. Thể hiện độ chuẩn xác thô của motif. | Precision tiềm năng của motif |
 | `population_prevalence` | `DoubleType` | Tỷ lệ $0.0 - 1.0$ | Tỷ lệ gian lận tự nhiên trong toàn bộ tập dữ liệu: $\frac{\text{positives}}{\text{transactions}}$. | Đường cơ sở ngẫu nhiên |
 | `interpretation` | `StringType` | Chuỗi diễn giải | Ý nghĩa định tính của mẫu hình trong bối cảnh phòng chống tội phạm tài chính. | Diễn giải nghiệp vụ |
 
@@ -530,7 +530,7 @@ Dưới đây là từ điển chuẩn hóa 5 cột cho toàn bộ **29 tệp CS
 | `std_F1` | `DoubleType` | $\ge 0$ | Độ lệch chuẩn F1 giữa 3 folds. | Độ biến động F1 |
 | `mean_precision` | `DoubleType` | $0.0 - 1.0$ | Độ chính xác trung bình trên 3 folds. | Độ chuẩn xác trung bình |
 | `TP`, `FP`, `FN` | `LongType` | Số đếm | Tổng số lượng TP, FP, FN tích lũy trên cả 3 folds. | Thống kê số lượng tích lũy |
-| `transactions` | `LongType` | Số đếm | Tổng số giao dịch validation được đánh giá ($n_{\text{val1}} + n_{\text{val2}} + n_{\text{val3}}$). | Quy mô kiểm tra |
+| `transactions` | `LongType` | Số đếm | Tổng số giao dịch validation được đánh giá ($n\_{\text{val1}} + n\_{\text{val2}} + n\_{\text{val3}}$). | Quy mô kiểm tra |
 | `folds` | `Integer` | Thường là 3 | Số lượng folds tham gia tính toán. | Số nếp gấp kiểm định |
 
 #### 11. `validation_average_precision.csv`
@@ -611,8 +611,8 @@ Dưới đây là từ điển chuẩn hóa 5 cột cho toàn bộ **29 tệp CS
 | `contrast` | `StringType` | Chuỗi mô tả cặp đối chiếu | Cặp mô hình so sánh đối chứng (ví dụ: `full_fusion vs transaction_only`). | Định danh kịch bản ablation |
 | `enhanced` | `StringType` | Mã họ mô hình nâng cao | Mô hình được bổ sung thêm nhóm đặc trưng đồ thị. | Mô hình thử nghiệm |
 | `reference` | `StringType` | Mã họ mô hình cơ sở | Mô hình đối chứng cơ sở bị cắt giảm đặc trưng. | Mô hình đối chứng |
-| `delta_precision` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm Precision: $\text{Precision}_{\text{enhanced}} - \text{Precision}_{\text{ref}}$. | Mức đóng góp Precision |
-| `delta_recall` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm Recall: $\text{Recall}_{\text{enhanced}} - \text{Recall}_{\text{ref}}$. | Mức đóng góp Recall |
+| `delta_precision` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm Precision: $\text{Precision}\_{\text{enhanced}} - \text{Precision}\_{\text{ref}}$. | Mức đóng góp Precision |
+| `delta_recall` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm Recall: $\text{Recall}\_{\text{enhanced}} - \text{Recall}\_{\text{ref}}$. | Mức đóng góp Recall |
 | `delta_F1` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm điểm F1 tổng thể ($\times 100$ để ra điểm phần trăm). | Mức đóng góp F1 |
 | `delta_average_precision` | `DoubleType` | Chênh lệch tỷ lệ ($-1.0 \dots +1.0$) | Mức tăng/giảm Average Precision trên toàn đường cong. | Mức đóng góp Ranking AP |
 
@@ -624,12 +624,12 @@ Dưới đây là từ điển chuẩn hóa 5 cột cho toàn bộ **29 tệp CS
 |---|---|---|---|---|
 | `model` | `StringType` | Mã họ mô hình | Tên họ mô hình được xếp hạng rủi ro. | Định danh mô hình |
 | `review_fraction` | `DoubleType` | $0.001, 0.005, 0.01$ | Tỷ lệ ngân sách kiểm tra trên toàn bộ tập test ($0.1\%, 0.5\%, 1.0\%$). | Tỷ lệ phân bổ ngân sách |
-| `K` | `LongType` | Số lượng giao dịch | Ngưỡng số lượng giao dịch tối đa điều tra viên có thể rà soát: $K = \text{round}(N_{\text{test}} \times \text{fraction})$. | Dung lượng hồ sơ tối đa |
+| `K` | `LongType` | Số lượng giao dịch | Ngưỡng số lượng giao dịch tối đa điều tra viên có thể rà soát: $K = \text{round}(N\_{\text{test}} \times \text{fraction})$. | Dung lượng hồ sơ tối đa |
 | `transactions` | `LongType` | Số lượng mẫu | Tổng số giao dịch trong tập kiểm thử. | Tổng thể test |
 | `fraud` | `LongType` | Số lượng mẫu | Tổng số giao dịch gian lận trong tập kiểm thử. | Tổng gian lận test |
 | `TP_at_K` | `LongType` | Số lượng mẫu | Số lượng giao dịch gian lận thực sự bắt trúng trong Top-$K$ hồ sơ có rủi ro cao nhất. | Gian lận phát hiện tại K |
-| `precision_at_K` | `DoubleType` | $0.0 - 1.0$ | Tỷ lệ phát hiện chính xác trong Top-$K$: $\frac{\text{TP}_K}{K}$. | Hiệu suất điều tra tại K |
-| `recall_at_K` | `DoubleType` | $0.0 - 1.0$ | Tỷ lệ gian lận tóm được trên tổng số gian lận: $\frac{\text{TP}_K}{\text{fraud}}$. | Năng lực thu hồi vốn tại K |
+| `precision_at_K` | `DoubleType` | $0.0 - 1.0$ | Tỷ lệ phát hiện chính xác trong Top-$K$: $\frac{\text{TP}\_K}{K}$. | Hiệu suất điều tra tại K |
+| `recall_at_K` | `DoubleType` | $0.0 - 1.0$ | Tỷ lệ gian lận tóm được trên tổng số gian lận: $\frac{\text{TP}\_K}{\text{fraud}}$. | Năng lực thu hồi vốn tại K |
 | `tie_policy` | `StringType` | `deterministic` | Quy tắc xử lý hòa điểm số: Sử dụng thứ tự ổn định định sẵn, không tối ưu sau kiểm thử. | Chính sách chống vị sai |
 
 ---
@@ -650,8 +650,8 @@ Gồm 8 tệp CSV độc lập tương ứng với các họ mô hình:
 | Tên cột (Column Name) | Kiểu dữ liệu | Đơn vị / Phạm vi | Mô tả nghiệp vụ & Thuật toán | Vai trò trong Pipeline |
 |---|---|---|---|---|
 | `risk_score` | `DoubleType` | $0.0 - 1.0$ | Ngưỡng điểm số rủi ro do cây quyết định tính toán (tỷ lệ trọng số dương tại nút lá). | Ngưỡng phân định ranh giới |
-| `positives` | `LongType` | Số đếm nguyên | Số lượng giao dịch gian lận thực tế có điểm số rủi ro $\ge \text{risk\_score}$. | Dương tính thực tế tích lũy |
-| `transactions` | `LongType` | Số đếm nguyên | Tổng số giao dịch có điểm số rủi ro $\ge \text{risk\_score}$. | Tổng số cảnh báo kích hoạt |
+| `positives` | `LongType` | Số đếm nguyên | Số lượng giao dịch gian lận thực tế có điểm số rủi ro $\ge \text{risk\\_score}$. | Dương tính thực tế tích lũy |
+| `transactions` | `LongType` | Số đếm nguyên | Tổng số giao dịch có điểm số rủi ro $\ge \text{risk\\_score}$. | Tổng số cảnh báo kích hoạt |
 | `precision` | `DoubleType` | $0.0 - 1.0$ | Độ chính xác tại ngưỡng tương ứng: $\frac{\text{positives}}{\text{transactions}}$. | Tọa độ trục tung PR curve |
 | `recall` | `DoubleType` | $0.0 - 1.0$ | Độ bao phủ tại ngưỡng tương ứng: $\frac{\text{positives}}{\text{Total Fraud}}$. | Tọa độ trục hoành PR curve |
 
@@ -737,7 +737,7 @@ Nằm tại thư mục `Report_Bundle/tables/`:
 ### 6.9 Cấu trúc bảng và Metadata lưu trữ mô hình (Model Artifacts)
 Nằm tại thư mục `Report_Bundle/datasets/<dataset>/model_details/<family>/`:
 - `training.json`: Lưu trữ siêu dữ liệu huấn luyện gồm số lượng mẫu ($N$), số mẫu dương ($P$), trọng số cân bằng lớp (`positive_class_weight`), danh sách tên đặc trưng và trạng thái hội tụ.
-- `amount_scales.csv`: Bảng phân vị $q_{90}$ của số tiền giao dịch theo từng cặp `(payment_currency, type)` được học từ tập huấn luyện.
+- `amount_scales.csv`: Bảng phân vị $q\_{90}$ của số tiền giao dịch theo từng cặp `(payment_currency, type)` được học từ tập huấn luyện.
 - `saved_model_parameters.json`: Lưu cấu trúc tham số gốc của Pipeline Spark ML (StringIndexer labels, cây quyết định độ sâu 5, số nút).
 - `tree_nodes.csv`: Bảng phẳng hóa cấu trúc cây quyết định nhị phân:
   - `node_id`, `left_child`, `right_child`, `split_feature_index`, `split_threshold`, `split_categories`, `is_leaf`, `prediction_raw_count`, `impurity_stats`.
